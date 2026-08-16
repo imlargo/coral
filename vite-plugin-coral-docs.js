@@ -51,6 +51,8 @@ function isPage(file) {
  */
 function parsePage(markdown) {
 	const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---/.exec(markdown)?.[1] ?? '';
+
+	/** @param {string} name @returns {string} */
 	const field = (name) =>
 		new RegExp(`^${name}:\\s*(.*)$`, 'm')
 			.exec(frontmatter)?.[1]
