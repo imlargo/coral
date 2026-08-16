@@ -12,7 +12,8 @@
 
 import { createHighlighter } from 'shiki';
 
-// Matched to the shadcn theme in `layout.css`: Catppuccin Latte / Mocha.
+// Code blocks run Catppuccin regardless of the shadcn theme around them, which stays neutral.
+// Their backgrounds are the flavor's own, so a block reads as a tinted panel against the page.
 const LIGHT = 'catppuccin-latte';
 const DARK = 'catppuccin-mocha';
 
