@@ -22,7 +22,7 @@
 		],
 		[
 			'A primitives library',
-			'It has no primitives of its own — it assembles the ones already there.'
+			'It has no primitives of its own - it assembles the ones already there.'
 		],
 		['An npm package', 'One self-contained folder, copied into the project and owned by it.']
 	];
@@ -37,7 +37,7 @@
 </script>
 
 <svelte:head>
-	<title>Coral — Kora’s component library</title>
+	<title>Coral - Kora’s component library</title>
 	<meta
 		name="description"
 		content="An ergonomics layer on top of shadcn-svelte. One folder, copied into the project."
@@ -77,8 +77,8 @@
 
 		<p class="mt-5 max-w-2xl text-lg text-pretty text-muted-foreground">
 			Coral is an ergonomics layer on top of shadcn-svelte. Its only job is to remove the code
-			rewritten in every project — the combobox with search, the data table with sorting and
-			pagination, the form with validation, the confirm dialog — and hand it over already solved,
+			rewritten in every project - the combobox with search, the data table with sorting and
+			pagination, the form with validation, the confirm dialog - and hand it over already solved,
 			without closing the door on taking it apart.
 		</p>
 
@@ -109,7 +109,7 @@
 				</AvatarGroup>
 			</div>
 			<p class="max-w-xs text-sm leading-relaxed text-muted-foreground">
-				One line each, with initials derived from the full name — <code
+				One line each, with initials derived from the full name - <code
 					class="rounded bg-muted px-1 font-mono text-[0.85em] text-foreground">MG</code
 				>, not
 				<code class="rounded bg-muted px-1 font-mono text-[0.85em] text-foreground">MA</code>.

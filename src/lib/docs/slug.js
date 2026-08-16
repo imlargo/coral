@@ -2,7 +2,7 @@
  * Heading slugs, shared by the two things that must agree on them: `prose.svelte`, which assigns
  * ids to the rendered article, and the build-time docs index behind search, which links to them.
  *
- * Plain JS on purpose — the Vite plugin imports it from Node, outside the TypeScript build.
+ * Plain JS on purpose - the Vite plugin imports it from Node, outside the TypeScript build.
  */
 
 /**
@@ -18,7 +18,7 @@ export function slugify(text) {
 
 /**
  * Slugifies a list of heading texts in document order, disambiguating repeats the same way on
- * both sides — `Usage`, `Usage-2`, `Usage-3`.
+ * both sides - `Usage`, `Usage-2`, `Usage-3`.
  *
  * @param {string[]} texts
  * @returns {string[]}

@@ -7,7 +7,7 @@ Coral is not published. You copy it.
 
 ## Requirements
 
-A SvelteKit project already initialized with shadcn-svelte — meaning it has a `components.json`,
+A SvelteKit project already initialized with shadcn-svelte - meaning it has a `components.json`,
 a `$lib/components/ui/` folder and `$lib/utils.ts` exporting `cn`. Those two paths are the only
 things Coral reaches for outside its own folder, and both are guaranteed by any shadcn-svelte
 setup. That is what keeps the folder portable.
@@ -22,7 +22,7 @@ pnpm dlx shadcn-svelte@latest init
 cp -R coral/src/lib/coral your-project/src/lib/coral
 ```
 
-From here the folder belongs to the project. Editing it is allowed — but a change worth keeping
+From here the folder belongs to the project. Editing it is allowed - but a change worth keeping
 should come back upstream, or the copies drift apart.
 
 ## Install the primitives

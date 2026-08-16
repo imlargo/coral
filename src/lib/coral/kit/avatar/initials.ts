@@ -7,7 +7,7 @@
  * Derives display initials from a person's name.
  *
  * Takes the first letter of the first word and, when there is more than one word, the first
- * letter of the last one — so `María del Carmen García` yields `MG`, not `MD`. Single-word
+ * letter of the last one - so `María del Carmen García` yields `MG`, not `MD`. Single-word
  * names yield a single letter. Uppercased with `es-CO` rules, accents preserved.
  *
  * Returns an empty string for empty or whitespace-only input, so the caller decides what to

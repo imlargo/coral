@@ -19,7 +19,7 @@ Components reference semantic CSS variable tokens. Change the variables to chang
 
 1. CSS variables defined in `:root` (light) and `.dark` (dark mode).
 2. Tailwind maps them to utilities: `bg-primary`, `text-muted-foreground`, etc.
-3. Components use these utilities — changing a variable changes all components that reference it.
+3. Components use these utilities - changing a variable changes all components that reference it.
 
 ---
 
@@ -49,7 +49,7 @@ Colors use OKLCH: `--primary: oklch(0.205 0 0)` where values are lightness (0–
 
 ## Dark Mode
 
-Class-based toggle via `.dark` on the root element. In SvelteKit, use [mode-watcher](https://github.com/svecosystem/mode-watcher) (see [Dark mode — Svelte](https://shadcn-svelte.com/docs/dark-mode/svelte)):
+Class-based toggle via `.dark` on the root element. In SvelteKit, use [mode-watcher](https://github.com/svecosystem/mode-watcher) (see [Dark mode - Svelte](https://shadcn-svelte.com/docs/dark-mode/svelte)):
 
 ```svelte
 <script lang="ts">

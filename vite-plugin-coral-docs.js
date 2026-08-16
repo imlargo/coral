@@ -1,14 +1,14 @@
 /**
  * Build-time data for the docs site, exposed as two virtual modules.
  *
- * `virtual:coral-demo-sources` — every demo's own source, already highlighted. The point is that
+ * `virtual:coral-demo-sources` - every demo's own source, already highlighted. The point is that
  * a demo has exactly one source of truth: the `.svelte` file that renders in the preview is the
  * same text shown under the Code tab, so a demo cannot drift from the snippet documenting it.
  * Demos are any `.svelte` file under `src/routes/docs/<...>/demos/`, keyed by root-relative path
- * — the keys `import.meta.glob` produces — so `src/lib/docs/demos.ts` can pair each source with
+ * - the keys `import.meta.glob` produces - so `src/lib/docs/demos.ts` can pair each source with
  * its component and stays the only place that knows how a demo is named.
  *
- * `virtual:coral-docs-index` — one entry per docs page (title, description, headings) for the
+ * `virtual:coral-docs-index` - one entry per docs page (title, description, headings) for the
  * search palette. Extracted from the Markdown rather than the rendered DOM so search works before
  * a page has ever been visited.
  */
@@ -43,7 +43,7 @@ function isPage(file) {
 
 /**
  * Pulls the searchable shape out of a docs page: its frontmatter title and description, plus
- * every `##`/`###` heading. Fenced blocks are stripped first — the conventions page documents
+ * every `##`/`###` heading. Fenced blocks are stripped first - the conventions page documents
  * Markdown headings inside examples, and those are not sections of the page.
  *
  * @param {string} markdown
@@ -102,7 +102,7 @@ export function coralDocs() {
 				.filter((entry) => entry.isFile())
 				.map((entry) => path.join(entry.parentPath, entry.name));
 		} catch {
-			// No docs routes yet — an empty result is the honest answer, not a crash.
+			// No docs routes yet - an empty result is the honest answer, not a crash.
 			return [];
 		}
 	}

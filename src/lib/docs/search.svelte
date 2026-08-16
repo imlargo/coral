@@ -30,7 +30,7 @@
 	}
 
 	/**
-	 * Targets come from the build-time index, so they are real routes — but they carry a `#section`
+	 * Targets come from the build-time index, so they are real routes - but they carry a `#section`
 	 * fragment, which `resolve()` cannot express yet (sveltejs/kit#14750). Prefixing `base` by hand
 	 * is what `resolve()` would have contributed here, so the lint rule has nothing left to catch.
 	 */

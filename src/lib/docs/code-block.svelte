@@ -5,7 +5,7 @@
 	let {
 		/** Highlighted HTML produced at build time by `shiki.js`. */
 		html,
-		/** The same code as plain text — what the copy button puts on the clipboard. */
+		/** The same code as plain text - what the copy button puts on the clipboard. */
 		text,
 		/** Shown in the corner so the reader knows what they are looking at before reading it. */
 		lang,

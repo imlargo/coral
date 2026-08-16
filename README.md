@@ -2,23 +2,23 @@
 
 **Kora's internal component library. Built on top of [shadcn-svelte](https://www.shadcn-svelte.com/). No styles of its own.**
 
-> Coral is the layer that turns forty lines of composition into a single tag — without taking away your ability to recompose when you need to.
+> Coral is the layer that turns forty lines of composition into a single tag - without taking away your ability to recompose when you need to.
 
-📄 **Working in this repo?** [`AGENTS.md`](./AGENTS.md) holds the mandatory rules — architecture, import contract, conventions, and the checklist before anything is considered done. Read it before adding or modifying a component.
+📄 **Working in this repo?** [`AGENTS.md`](./AGENTS.md) holds the mandatory rules - architecture, import contract, conventions, and the checklist before anything is considered done. Read it before adding or modifying a component.
 
 ---
 
 ## Project status
 
-🚧 **Bootstrapping.** The SvelteKit + shadcn-svelte scaffold is ready (`src/lib/components/ui/`) and Coral lives in `src/lib/coral/`. Extracted so far: **`kit/avatar`**. The remaining folders (`blocks/`, `lib/`, `hooks/`) get created the day something actually needs them — never in advance.
+🚧 **Bootstrapping.** The SvelteKit + shadcn-svelte scaffold is ready (`src/lib/components/ui/`) and Coral lives in `src/lib/coral/`. Extracted so far: **`kit/avatar`**. The remaining folders (`blocks/`, `lib/`, `hooks/`) get created the day something actually needs them - never in advance.
 
-Coral is **never built in the abstract**: a component only gets added once it has already been written at least twice in a paid Kora project. It grows the way a reef does — by sedimentation of real work, extracted _during_ paid projects, never as a side project.
+Coral is **never built in the abstract**: a component only gets added once it has already been written at least twice in a paid Kora project. It grows the way a reef does - by sedimentation of real work, extracted _during_ paid projects, never as a side project.
 
 ---
 
 ## What Coral is
 
-Coral is an **ergonomics layer** on top of shadcn-svelte — not a design system, not a fork. It removes the boilerplate that gets rewritten on every project: a combobox with search, a data table with sorting/filtering/pagination, a form with validation, a confirmation dialog — without closing the door on disassembling it when the case calls for it.
+Coral is an **ergonomics layer** on top of shadcn-svelte - not a design system, not a fork. It removes the boilerplate that gets rewritten on every project: a combobox with search, a data table with sorting/filtering/pagination, a form with validation, a confirmation dialog - without closing the door on disassembling it when the case calls for it.
 
 - **No styles of its own**: all visual appearance comes from the project's shadcn theme.
 - **No business domain knowledge**: Coral never knows about invoices, clients, or courses.
@@ -31,11 +31,11 @@ The point isn't shorter markup. When you compose with Coral, this is already res
 wire it again: filtering and search, keyboard navigation, shared state between the pieces (through
 context, not hand-passed props), accessibility, debounce, multi-select, loading and empty states.
 
-That's the real difference between composing with Coral and composing with raw shadcn — and it's
+That's the real difference between composing with Coral and composing with raw shadcn - and it's
 what justifies the library even for the components that have no flat API. A composed component that
 only saves typing doesn't belong here.
 
-What justifies Coral even when you end up composing anyway: it ships the **behavior already resolved** — filtering, keyboard navigation, shared state through context, accessibility, debounce, loading and empty states. You assemble the pieces; you never re-wire the logic.
+What justifies Coral even when you end up composing anyway: it ships the **behavior already resolved** - filtering, keyboard navigation, shared state through context, accessibility, debounce, loading and empty states. You assemble the pieces; you never re-wire the logic.
 
 ---
 
@@ -45,7 +45,7 @@ Coral is a **single self-contained folder**. Installing it in a project is copyi
 
 ```
 src/lib/
-├─ components/ui/   → shadcn-svelte (owned by the project — Coral does NOT touch it)
+├─ components/ui/   → shadcn-svelte (owned by the project - Coral does NOT touch it)
 ├─ utils.ts         → cn (shadcn's)
 └─ coral/           → 📦 the folder that gets copied
    ├─ coral.json    → manifest: version + required shadcn primitives per component
@@ -61,7 +61,7 @@ src/lib/
 // ✅ inside Coral
 import { Avatar } from '$lib/components/ui/avatar/index.js';
 
-// ✅ from the project, consuming Coral — by file path, no barrels
+// ✅ from the project, consuming Coral - by file path, no barrels
 import Avatar from '$lib/coral/kit/avatar/avatar.svelte';
 
 // ❌
@@ -100,22 +100,22 @@ Flat props, because an avatar has a defensible canonical case: an image with a t
 | `src`      | `string`            | Absent or failing to load → the fallback shows                  |
 | `alt`      | `string`            | Defaults to `name`, then to `''` (decorative)                   |
 | `name`     | `string`            | Derives the initials and the default `alt`                      |
-| `fallback` | `string \| Snippet` | Overrides the derived initials — text, or a snippet for an icon |
+| `fallback` | `string \| Snippet` | Overrides the derived initials - text, or a snippet for an icon |
 | `children` | `Snippet`           | Extra content inside the root, e.g. an `AvatarBadge`            |
 
 Everything the shadcn root accepts is forwarded untouched: `size`, `class`, `delayMs`, `bind:ref`, `bind:loadingStatus`, any div attribute.
 
 **Initials rule:** first letter of the first word + first letter of the last word, so `María del Carmen García` → `MG`. A single word yields a single letter. Uppercased with `es-CO` rules, accents preserved. Exported on its own from [`initials.ts`](./src/lib/coral/kit/avatar/initials.ts) for when you drop down to raw shadcn.
 
-**Deliberately absent:** no `AvatarGroup` (shadcn already ships `AvatarGroup` and `AvatarGroupCount` for stacking and `+N` — Coral would only be aliasing them), no `square` variant (that's a radius, and radii belong to the theme), no hex `bg`/`color` props (they bypass the theme and break in dark mode — use `class`).
+**Deliberately absent:** no `AvatarGroup` (shadcn already ships `AvatarGroup` and `AvatarGroupCount` for stacking and `+N` - Coral would only be aliasing them), no `square` variant (that's a radius, and radii belong to the theme), no hex `bg`/`color` props (they bypass the theme and break in dark mode - use `class`).
 
 ---
 
 ## Stack
 
-- **[SvelteKit](https://svelte.dev/docs/kit)** (Svelte 5) — Svelte-first, no multi-framework support for now.
-- **[shadcn-svelte](https://www.shadcn-svelte.com/)** — base primitives, managed via `components.json`.
-- **[Tailwind CSS v4](https://tailwindcss.com/)** — layout-only classes inside Coral (`flex`, `gap`, `w-full`); never hardcoded color.
+- **[SvelteKit](https://svelte.dev/docs/kit)** (Svelte 5) - Svelte-first, no multi-framework support for now.
+- **[shadcn-svelte](https://www.shadcn-svelte.com/)** - base primitives, managed via `components.json`.
+- **[Tailwind CSS v4](https://tailwindcss.com/)** - layout-only classes inside Coral (`flex`, `gap`, `w-full`); never hardcoded color.
 - **TypeScript**, **Vitest**, **ESLint** + **Prettier**, **Husky** + **lint-staged**.
 - **Cloudflare Workers** (`wrangler`) as the deploy target for the playground.
 
@@ -156,8 +156,8 @@ pnpm dlx shadcn-svelte@latest add <component>
 | Rule                      | Detail                                                                            |
 | ------------------------- | --------------------------------------------------------------------------------- |
 | One component, one folder | `coral/kit/combobox/{combobox.svelte,types.ts}`                                   |
-| No barrels                | Import by file path. Filenames are public API — renaming one is a breaking change |
-| No name prefix            | `Combobox`, not `CCombobox` — the folder disambiguates                            |
+| No barrels                | Import by file path. Filenames are public API - renaming one is a breaking change |
+| No name prefix            | `Combobox`, not `CCombobox` - the folder disambiguates                            |
 | Layout classes only       | `flex`, `gap`, `w-full`. Never `bg-blue-500`                                      |
 | `class` always accepted   | Every component accepts and merges `class` for overrides                          |
 | Never lose capability     | Forward the primitive's props and bindables; Coral adds, it doesn't subtract      |
@@ -171,18 +171,18 @@ Full conventions, the import contract, and versioning in [`AGENTS.md`](./AGENTS.
 
 Ordered by rewrite cost × frequency (not by what's fun to build):
 
-1. Combobox / Select with search — the one that hurts most; it validates the whole architecture
-2. DataTable (sorting, filtering, pagination, empty state) — highest cost per project
+1. Combobox / Select with search - the one that hurts most; it validates the whole architecture
+2. DataTable (sorting, filtering, pagination, empty state) - highest cost per project
 3. Form field + validation + dynamic form
 4. Formatters for `es-CO` / COP / dates
 5. Confirm dialog
 6. ~~Avatar with flat props~~ ✅ `kit/avatar` 1.0.0
 7. Empty states and skeletons
 8. Charts with presets
-9. App shell (block) — needs the rule of 3
+9. App shell (block) - needs the rule of 3
 10. Generic CRUD page (block)
 
-**How the architecture gets validated:** extract the combobox from the project in flight, use it in the other project the same week, and see whether it survives untouched. If that cycle works — extract, reuse, don't modify — the architecture holds. Better to find out with one component than with twenty.
+**How the architecture gets validated:** extract the combobox from the project in flight, use it in the other project the same week, and see whether it survives untouched. If that cycle works - extract, reuse, don't modify - the architecture holds. Better to find out with one component than with twenty.
 
 ---
 

@@ -16,7 +16,7 @@ Raw shadcn asks for three components and a hand-written fallback every single ti
 </Avatar>
 ```
 
-That last line is the problem. It is rewritten in every project, and it is wrong in most of them —
+That last line is the problem. It is rewritten in every project, and it is wrong in most of them -
 `slice(0, 2)` on `María del Carmen García` gives `MA`, not `MG`.
 
 <Preview name="kit/avatar/basic" />
@@ -25,7 +25,7 @@ That last line is the problem. It is rewritten in every project, and it is wrong
 
 Avatar has a defensible canonical case: a person, maybe a photo, initials when there is no photo.
 The parts do not vary independently, so composition would be ceremony. This is the shape the
-[conventions](/docs/conventions) call for — flat props, and the pieces still reachable when the
+[conventions](/docs/conventions) call for - flat props, and the pieces still reachable when the
 rare case shows up.
 
 ## Installation
@@ -42,16 +42,16 @@ pnpm dlx shadcn-svelte@latest add avatar
 
 ## Props
 
-Everything the shadcn root accepts stays available — `size`, `class`, `delayMs`, `loadingStatus`,
+Everything the shadcn root accepts stays available - `size`, `class`, `delayMs`, `loadingStatus`,
 `ref` and any `div` attribute. On top of that:
 
 | Prop       | Type                  | Default | Description                                                         |
 | ---------- | --------------------- | ------- | ------------------------------------------------------------------- |
-| `src`      | `string`              | —       | Image URL. Absent or failed to load, the fallback shows instead.    |
+| `src`      | `string`              | -       | Image URL. Absent or failed to load, the fallback shows instead.    |
 | `alt`      | `string`              | `name`  | Alt text for the image. Falls back to `''`, i.e. decorative.        |
-| `name`     | `string`              | —       | Person's name. Derives the initials and acts as the default `alt`.  |
-| `fallback` | `string` \| `Snippet` | —       | Replaces the derived initials. Text, or a snippet for full control. |
-| `children` | `Snippet`             | —       | Extra content inside the root, alongside the image — e.g. a badge.  |
+| `name`     | `string`              | -       | Person's name. Derives the initials and acts as the default `alt`.  |
+| `fallback` | `string` \| `Snippet` | -       | Replaces the derived initials. Text, or a snippet for full control. |
+| `children` | `Snippet`             | -       | Extra content inside the root, alongside the image - e.g. a badge.  |
 
 ## Fallback
 
@@ -59,7 +59,7 @@ The fallback is shown when there is no `src`, and when the image fails to load. 
 from `name`: first letter of the first word, plus first letter of the last word when there is more
 than one. Single-word names give a single letter.
 
-An empty or missing `name` produces an empty string rather than a placeholder — the caller decides
+An empty or missing `name` produces an empty string rather than a placeholder - the caller decides
 what an unknown person looks like, and gets an empty circle until it says so.
 
 <Preview name="kit/avatar/fallback" />
@@ -72,7 +72,7 @@ what an unknown person looks like, and gets an empty circle until it says so.
 
 ## Custom fallback
 
-When initials are not the right answer — an unauthenticated user, a machine account — pass a
+When initials are not the right answer - an unauthenticated user, a machine account - pass a
 snippet instead of a string.
 
 <Preview name="kit/avatar/custom-fallback" />
@@ -92,7 +92,7 @@ unchanged.
 ## initials()
 
 The derivation lives in `kit/avatar/initials.ts` and is exported on its own, so a project that
-needs the same initials somewhere else — a mention chip, an export, a PDF — does not re-implement
+needs the same initials somewhere else - a mention chip, an export, a PDF - does not re-implement
 it.
 
 ```ts

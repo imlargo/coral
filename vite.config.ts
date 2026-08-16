@@ -4,7 +4,7 @@ import { playwright } from '@vitest/browser-playwright';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { coralDocs } from './vite-plugin-coral-docs.js';
 
-// Svelte options live in `svelte.config.js` — see the note there before moving any back here.
+// Svelte options live in `svelte.config.js` - see the note there before moving any back here.
 export default defineConfig({
 	plugins: [tailwindcss(), coralDocs(), sveltekit()],
 	test: {

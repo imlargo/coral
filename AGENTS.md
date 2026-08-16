@@ -5,19 +5,19 @@ Operating guide for AI agents (and humans) working in this repo. These rules are
 ## What this repo is
 
 Coral: Kora's internal component library, an ergonomics layer on top of shadcn-svelte. Not a
-design system, not a fork, not an npm package — it's a folder meant to be copied into client
+design system, not a fork, not an npm package - it's a folder meant to be copied into client
 projects. See [`README.md`](./README.md) for stack and status.
 
 This file is self-contained: every rule you need is here. (`context/coral.md` holds the long-form
-philosophy but is deliberately untracked — don't assume a reader has it.)
+philosophy but is deliberately untracked - don't assume a reader has it.)
 
-Coral lives in **`src/lib/coral/`** — one self-contained folder, copied whole into the target
+Coral lives in **`src/lib/coral/`** - one self-contained folder, copied whole into the target
 project. Currently extracted: `kit/avatar`.
 
 ## Hard rules
 
 - **Extraction only, never speculation.** A component enters Coral only after the same pattern has
-  been written twice in a real, paid project. If asked to add something unproven, push back —
+  been written twice in a real, paid project. If asked to add something unproven, push back -
   it belongs in the consuming project's `features/` first.
 - **No appearance.** No hardcoded colors, shadows, radii, or typography. Only layout utilities
   (`flex`, `gap-*`, `w-full`). Appearance is the shadcn theme's job, not Coral's.
@@ -25,15 +25,15 @@ project. Currently extracted: `kit/avatar`.
 - **`src/lib/components/ui/` is untouchable.** shadcn-managed, excluded from lint/format on
   purpose. Compose around it, never edit it.
 - **Import direction is one-way:** `blocks/` → `kit/` → `ui/`. `kit/` composing `kit/` is fine and
-  desirable; the reverse never is. Never a headless library directly (`bits-ui`) — derive its types
+  desirable; the reverse never is. Never a headless library directly (`bits-ui`) - derive its types
   from the shadcn component instead (`ComponentProps<typeof Avatar>`). Never project domain types.
 - **Nothing duplicated.** Two components needing the same logic means extracting a third, or
-  `lib/` — never copy-paste inside Coral.
+  `lib/` - never copy-paste inside Coral.
 - **Every composed component exposes its pieces.** If a rare case forces someone to drop Coral and
   rebuild from raw shadcn, the component failed.
-- **Composition must earn its keep.** What Coral contributes is resolved behavior — filtering,
+- **Composition must earn its keep.** What Coral contributes is resolved behavior - filtering,
   keyboard navigation, shared state through context, accessibility, debounce, loading and empty
-  states — not syntactic sugar. A composed component that only saves typing doesn't belong.
+  states - not syntactic sugar. A composed component that only saves typing doesn't belong.
 
 ## Architecture
 
@@ -43,28 +43,28 @@ src/lib/
 ├─ utils.ts         → cn (shadcn's)
 └─ coral/           → 📦 the folder that gets copied
    ├─ coral.json    → manifest: version + required shadcn primitives per component
-   └─ kit/          → composed, generic components — the actual product
+   └─ kit/          → composed, generic components - the actual product
       └─ avatar/
 ```
 
 Outside its own folder, Coral may reach for exactly two things: `$lib/components/ui/*` and
 `$lib/utils` (`cn`). Both are guaranteed by any shadcn-svelte project's `components.json`, which is
-what keeps the folder portable. Reach for as few as the component actually needs — `kit/avatar`
+what keeps the folder portable. Reach for as few as the component actually needs - `kit/avatar`
 uses only the first.
 
 **Folders are created when something needs them, never in advance.** `blocks/` (app-level
 compositions, rule of 3), `lib/` (shared utils, formatters, types) and `hooks/` don't exist yet
-because nothing lives in them. A util with one consumer stays inside its component's folder —
-`kit/avatar/initials.ts` — and moves to `lib/` the day a second component needs it.
+because nothing lives in them. A util with one consumer stays inside its component's folder -
+`kit/avatar/initials.ts` - and moves to `lib/` the day a second component needs it.
 
 **No barrels.** One component, one folder (`kit/avatar/{avatar.svelte,types.ts,initials.ts}`),
-imported by file path. Consequence to respect: filenames are public API — renaming one breaks
+imported by file path. Consequence to respect: filenames are public API - renaming one breaks
 every project that already copied it.
 
 ## Conventions
 
 - API shape follows the component's nature, not a fixed rule: flat props only when there's a
-  defensible canonical case, composition otherwise. When unsure, composition — a pile of boolean
+  defensible canonical case, composition otherwise. When unsure, composition - a pile of boolean
   props (`showSearch`, `compact`) is a sign it's needed.
 - Every component accepts and merges a `class` prop. Selectable components support two-way
   binding. Shared state in composed components flows through Svelte context, never hand-wired
@@ -86,12 +86,12 @@ every project that already copied it.
   	}
   }
   ```
-  `shadcn` and `npm` are what makes installing Coral "copy the folder, then install these" —
+  `shadcn` and `npm` are what makes installing Coral "copy the folder, then install these" -
   declare every primitive the component imports. Omit `npm` when there are none.
 
 ## Formatting
 
-Tabs, single quotes, no trailing commas, 100 cols — enforced by Prettier, don't fight it. Tailwind
+Tabs, single quotes, no trailing commas, 100 cols - enforced by Prettier, don't fight it. Tailwind
 classes are auto-sorted; don't hand-order them.
 
 ## Commands
@@ -123,23 +123,23 @@ Anything else is yours.
 > writes a bundled worker to `.svelte-kit/cloudflare/` plus `.svelte-kit/output/`, and that breaks
 > two things at once:
 >
-> - `svelte-check` discovers files by walking the workspace — it ignores tsconfig `exclude`, and
->   its own `--ignore` flag refuses to run alongside `--tsconfig` — so it type-checks the generated
+> - `svelte-check` discovers files by walking the workspace - it ignores tsconfig `exclude`, and
+>   its own `--ignore` flag refuses to run alongside `--tsconfig` - so it type-checks the generated
 >   worker and reports ~900 errors nobody wrote.
 > - `wrangler types` emits a `GlobalProps.mainModule` block **only when that worker exists**, so
 >   `wrangler types --check` passes on a clean tree and fails on a dirty one. Cloudflare restores a
 >   build-output cache between runs, which made CI fail on every build after the first.
 >
-> Consequence to respect: **run `check` before `build`, never after** — it deletes the artifact you
+> Consequence to respect: **run `check` before `build`, never after** - it deletes the artifact you
 > were about to deploy. And run `pnpm gen` on a clean tree, or you commit a
 > `worker-configuration.d.ts` that references build output and breaks CI.
 
 > ⚠️ `worker-configuration.d.ts` declares a global `Element` whose HTMLRewriter `append`/`prepend`
-> signatures merge with — and shadow — the DOM ones. Use `appendChild` / `insertBefore` in DOM code.
+> signatures merge with - and shadow - the DOM ones. Use `appendChild` / `insertBefore` in DOM code.
 
 > ⚠️ Cloudflare's build image defaults to **pnpm 10.11.1** and does not read `packageManager` from
 > `package.json`; the override is a `PNPM_VERSION` build variable in the dashboard. Keep
-> `pnpm-workspace.yaml`'s `packages: ['.']` — older 10.x refuses a workspace file without it.
+> `pnpm-workspace.yaml`'s `packages: ['.']` - older 10.x refuses a workspace file without it.
 
 Then re-check the **Coral test**:
 

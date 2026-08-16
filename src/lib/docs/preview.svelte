@@ -7,7 +7,7 @@
 	let {
 		/** Demo name, e.g. `kit/avatar/basic`. Unknown names fail the build. */
 		name,
-		/** Layout overrides for the preview stage — height, alignment, padding. */
+		/** Layout overrides for the preview stage - height, alignment, padding. */
 		class: className
 	}: { name: string; class?: string } = $props();
 

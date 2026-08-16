@@ -1,6 +1,6 @@
 # Not a monorepo. `packages` is stated explicitly anyway: some pnpm 10.x builds refuse to read a
 # workspace file without it ("packages field missing or empty"), and `['.']` is exactly what pnpm
-# documents as the default when the field is omitted — the root package and nothing else.
+# documents as the default when the field is omitted - the root package and nothing else.
 packages:
   - '.'
 

@@ -4,7 +4,7 @@
 	import { AvatarBadge } from '$lib/components/ui/avatar/index.js';
 </script>
 
-<!-- `children` renders inside the root, alongside the image — the primitive stays reachable -->
+<!-- `children` renders inside the root, alongside the image - the primitive stays reachable -->
 <Avatar src="https://github.com/shadcn.png" name="Shad CN" size="lg">
 	<AvatarBadge />
 </Avatar>

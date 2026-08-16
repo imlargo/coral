@@ -1,4 +1,4 @@
-/** Sidebar structure. Adding a page means adding a line here — there is no filesystem magic. */
+/** Sidebar structure. Adding a page means adding a line here - there is no filesystem magic. */
 
 import { resolve } from '$app/paths';
 import type { ResolvedPathname } from '$app/types';
@@ -37,5 +37,5 @@ export const nav: DocSection[] = [
 	}
 ];
 
-/** The flat, ordered list of pages — drives the prev/next footer. */
+/** The flat, ordered list of pages - drives the prev/next footer. */
 export const pages: DocLink[] = nav.flatMap((section) => section.items);

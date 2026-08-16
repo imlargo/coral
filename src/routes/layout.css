@@ -133,7 +133,7 @@
 /* ---------------------------------------------------------------------------------------------
  * Documentation site.
  *
- * Everything below styles the docs app only — never Coral, which defines no appearance and is
+ * Everything below styles the docs app only - never Coral, which defines no appearance and is
  * copied out of this repo without a single line of this file.
  * ------------------------------------------------------------------------------------------- */
 
@@ -243,7 +243,7 @@
 	}
 }
 
-/* Code blocks — shared by mdsvex fenced blocks and the Code tab of a preview. */
+/* Code blocks - shared by mdsvex fenced blocks and the Code tab of a preview. */
 @layer components {
 	.docs-md-code {
 		@apply relative mt-4 overflow-hidden rounded-lg border;

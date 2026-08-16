@@ -3,7 +3,7 @@
  *
  * Shared by two consumers so the site only ever has one code theme: mdsvex fenced blocks
  * (wired in `svelte.config.js`) and demo sources (wired in `vite-plugin-coral-demos.js`).
- * Runs in Node at build time — shiki is never shipped to the browser.
+ * Runs in Node at build time - shiki is never shipped to the browser.
  *
  * The highlighter is created lazily on first use rather than with a top-level `await`: this
  * module is reachable from both config files, and a config graph that suspends on TLA deadlocks

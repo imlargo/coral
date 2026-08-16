@@ -104,7 +104,7 @@
 </script>
 
 <svelte:head>
-	<title>{title ? `${title} — Coral` : 'Coral'}</title>
+	<title>{title ? `${title} - Coral` : 'Coral'}</title>
 	{#if description}<meta name="description" content={description} />{/if}
 </svelte:head>
 
