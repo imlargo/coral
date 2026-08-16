@@ -10,7 +10,7 @@
 
 ## Project status
 
-🚧 **Initializing.** No Coral components have been extracted yet — the repo has the SvelteKit + shadcn-svelte scaffold ready (`src/lib/components/ui/`), and Coral's own folders (`kit/`, `blocks/`, `lib/`, `hooks/`) will be created as components get extracted from real projects.
+🚧 **Bootstrapping.** The SvelteKit + shadcn-svelte scaffold is ready (`src/lib/components/ui/`) and Coral lives in `src/lib/coral/`. Extracted so far: **`kit/avatar`**. The remaining folders (`blocks/`, `lib/`, `hooks/`) get created the day something actually needs them — never in advance.
 
 Coral is **never built in the abstract**: a component only gets added once it has already been written at least twice in a paid Kora project. See [section 7 of `coral.md`](./context/coral.md#7-criterio-de-inclusión) before adding anything.
 
