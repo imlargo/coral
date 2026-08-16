@@ -1,0 +1,8 @@
+{
+	"components": {
+		"kit/avatar": {
+			"version": "1.0.0",
+			"shadcn": ["avatar"]
+		}
+	}
+}
