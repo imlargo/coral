@@ -129,3 +129,131 @@
 		@apply font-sans;
 	}
 }
+
+/* ---------------------------------------------------------------------------------------------
+ * Documentation site.
+ *
+ * Everything below styles the docs app only — never Coral, which defines no appearance and is
+ * copied out of this repo without a single line of this file.
+ * ------------------------------------------------------------------------------------------- */
+
+@layer components {
+	.docs-prose {
+		@apply max-w-3xl text-[0.95rem]/7;
+	}
+
+	.docs-prose h1 {
+		@apply text-3xl font-semibold tracking-tight text-balance;
+	}
+
+	.docs-prose .lead {
+		@apply mt-3 text-lg text-pretty text-muted-foreground;
+	}
+
+	.docs-prose h2 {
+		@apply mt-12 scroll-mt-20 border-b pb-2 text-xl font-semibold tracking-tight;
+	}
+
+	.docs-prose h3 {
+		@apply mt-8 scroll-mt-20 text-base font-semibold tracking-tight;
+	}
+
+	.docs-prose p,
+	.docs-prose ul,
+	.docs-prose ol {
+		@apply mt-4;
+	}
+
+	.docs-prose ul {
+		@apply list-disc pl-6;
+	}
+
+	.docs-prose ol {
+		@apply list-decimal pl-6;
+	}
+
+	.docs-prose li {
+		@apply mt-1.5;
+	}
+
+	.docs-prose a {
+		@apply font-medium underline underline-offset-4 hover:no-underline;
+	}
+
+	.docs-prose strong {
+		@apply font-semibold;
+	}
+
+	.docs-prose blockquote {
+		@apply mt-4 border-l-2 pl-4 text-muted-foreground italic;
+	}
+
+	/* Inline code — the fenced-block `code` lives inside `pre` and is excluded. */
+	.docs-prose :not(pre) > code {
+		@apply rounded-md bg-muted px-1.5 py-0.5 font-mono text-[0.85em];
+	}
+
+	.docs-prose table {
+		@apply mt-6 block w-full overflow-x-auto text-sm;
+	}
+
+	.docs-prose thead {
+		@apply border-b;
+	}
+
+	.docs-prose th {
+		@apply px-3 py-2 text-left font-medium whitespace-nowrap;
+	}
+
+	.docs-prose td {
+		@apply border-b px-3 py-2 align-top;
+	}
+
+	.docs-prose td:first-child {
+		@apply whitespace-nowrap;
+	}
+}
+
+/* Code blocks — shared by mdsvex fenced blocks and the Code tab of a preview. */
+@layer components {
+	/* The `group` marker class is added alongside this one by the mdsvex highlighter. */
+	.docs-md-code {
+		@apply relative mt-4 overflow-hidden rounded-lg border;
+	}
+
+	.docs-code pre,
+	.docs-md-code pre {
+		@apply overflow-x-auto p-4 font-mono text-[0.8rem]/6;
+	}
+
+	.docs-code pre:focus-visible,
+	.docs-md-code pre:focus-visible {
+		@apply outline-none;
+	}
+
+	.docs-copy {
+		@apply absolute top-2 right-2 z-10 inline-flex size-6 items-center justify-center rounded-md text-muted-foreground opacity-0 transition group-hover:opacity-100 hover:bg-accent hover:text-foreground focus-visible:opacity-100;
+	}
+}
+
+/*
+ * Shiki emits both themes as CSS variables (`defaultColor: false`) and writes no inline colors,
+ * so the theme switch costs nothing at runtime and needs no `!important` to win.
+ */
+.shiki,
+.shiki span {
+	color: var(--shiki-light);
+	background-color: var(--shiki-light-bg);
+	font-style: var(--shiki-light-font-style);
+	font-weight: var(--shiki-light-font-weight);
+	text-decoration: var(--shiki-light-text-decoration);
+}
+
+.dark .shiki,
+.dark .shiki span {
+	color: var(--shiki-dark);
+	background-color: var(--shiki-dark-bg);
+	font-style: var(--shiki-dark-font-style);
+	font-weight: var(--shiki-dark-font-weight);
+	text-decoration: var(--shiki-dark-text-decoration);
+}

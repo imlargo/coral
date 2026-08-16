@@ -116,10 +116,17 @@ pnpm test
 
 Run them for real, read the output.
 
-> ⚠️ `pnpm check` reports 914 pre-existing errors: 913 from generated `.svelte-kit/` output that
-> `svelte-check` shouldn't be reading at all, and 1 from shadcn's `ui/native-select` (untouchable).
-> Zero come from `src/lib/coral/`. Until the config stops type-checking build output, filter:
-> `pnpm check 2>&1 | grep src/lib/coral`.
+> ⚠️ `pnpm check` reports ~900 pre-existing errors, all but one from build output. `vite build`
+> writes a bundled worker to `.svelte-kit/cloudflare/` plus `.svelte-kit/output/`, and
+> `svelte-check` discovers files by walking the workspace — it ignores tsconfig `exclude`, and its
+> own `--ignore` flag refuses to run alongside `--tsconfig`. So there is no config fix: on a clean
+> tree the count is **1** (shadcn's `ui/native-select`, untouchable), and it only balloons after a
+> build. `rm -rf .svelte-kit/cloudflare .svelte-kit/output` before checking, or filter:
+> `pnpm check 2>&1 | grep -v '\.svelte-kit'`.
+>
+> Related landmine: `worker-configuration.d.ts` declares a global `Element` whose HTMLRewriter
+> `append`/`prepend` signatures merge with — and shadow — the DOM ones. Use `appendChild` /
+> `insertBefore` in DOM code.
 
 Then re-check the **Coral test**:
 
