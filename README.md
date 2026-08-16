@@ -4,7 +4,7 @@
 
 > Coral is the layer that turns forty lines of composition into a single tag — without taking away your ability to recompose when you need to.
 
-📄 **Full project context:** [`context/coral.md`](./context/coral.md) — read it before adding or modifying any component. This README is the operational entry point; that document is the source of truth on philosophy, inclusion criteria, and architecture.
+📄 **Working in this repo?** [`AGENTS.md`](./AGENTS.md) holds the mandatory rules — architecture, import contract, conventions, and the checklist before anything is considered done. Read it before adding or modifying a component.
 
 ---
 
@@ -12,7 +12,7 @@
 
 🚧 **Bootstrapping.** The SvelteKit + shadcn-svelte scaffold is ready (`src/lib/components/ui/`) and Coral lives in `src/lib/coral/`. Extracted so far: **`kit/avatar`**. The remaining folders (`blocks/`, `lib/`, `hooks/`) get created the day something actually needs them — never in advance.
 
-Coral is **never built in the abstract**: a component only gets added once it has already been written at least twice in a paid Kora project. See [section 7 of `coral.md`](./context/coral.md#7-criterio-de-inclusión) before adding anything.
+Coral is **never built in the abstract**: a component only gets added once it has already been written at least twice in a paid Kora project. It grows the way a reef does — by sedimentation of real work, extracted _during_ paid projects, never as a side project.
 
 ---
 
@@ -25,33 +25,89 @@ Coral is an **ergonomics layer** on top of shadcn-svelte — not a design system
 - **Copied, not installed**: the code becomes the project's own, not an npm dependency.
 - **Localized by default**: `es-CO`, COP currency, and local date formats out of the box.
 
-Full detail in [`context/coral.md`](./context/coral.md).
+### What it actually contributes
+
+The point isn't shorter markup. When you compose with Coral, this is already resolved and you never
+wire it again: filtering and search, keyboard navigation, shared state between the pieces (through
+context, not hand-passed props), accessibility, debounce, multi-select, loading and empty states.
+
+That's the real difference between composing with Coral and composing with raw shadcn — and it's
+what justifies the library even for the components that have no flat API. A composed component that
+only saves typing doesn't belong here.
+
+What justifies Coral even when you end up composing anyway: it ships the **behavior already resolved** — filtering, keyboard navigation, shared state through context, accessibility, debounce, loading and empty states. You assemble the pieces; you never re-wire the logic.
 
 ---
 
 ## Architecture
 
+Coral is a **single self-contained folder**. Installing it in a project is copying `src/lib/coral/` across; nothing else in this repo travels.
+
 ```
-src/lib/components/
-├─ ui/              → shadcn-svelte (owned by the project — Coral does NOT touch it)
-└─ coral/
-   ├─ kit/          → composed components ← the real product
-   ├─ blocks/       → app-level compositions (rule of 3)
-   ├─ lib/          → shared utils, formatters, types
-   └─ hooks/        → reusable logic without UI
+src/lib/
+├─ components/ui/   → shadcn-svelte (owned by the project — Coral does NOT touch it)
+├─ utils.ts         → cn (shadcn's)
+└─ coral/           → 📦 the folder that gets copied
+   ├─ coral.json    → manifest: version + required shadcn primitives per component
+   └─ kit/          → composed components ← the real product
+      └─ avatar/
 ```
 
-**Import contract (critical rule):** Coral only imports from `@/components/ui/*`, from other Coral components, and from its own `lib/`. Never directly from a headless library (`bits-ui`, etc.) or from project domain types.
+`blocks/` (rule of 3), `lib/` (shared utils, formatters, types) and `hooks/` appear when a component actually needs them. Until then, a util with one consumer stays in its component's folder.
+
+**Import contract (critical rule):** Coral only imports from `$lib/components/ui/*`, `$lib/utils` (`cn`), and other Coral files. Never directly from a headless library (`bits-ui`, etc.) or from project domain types.
 
 ```ts
-// ✅
-import { Popover } from '@/components/ui/popover';
-import { Pagination } from '@/components/coral/kit/pagination';
+// ✅ inside Coral
+import { Avatar } from '$lib/components/ui/avatar/index.js';
+
+// ✅ from the project, consuming Coral — by file path, no barrels
+import Avatar from '$lib/coral/kit/avatar/avatar.svelte';
 
 // ❌
-import { Popover } from 'bits-ui';
-import type { Invoice } from '@/lib/types';
+import { Avatar } from 'bits-ui';
+import type { Invoice } from '$lib/types';
 ```
+
+Need a type the headless library owns? Derive it from the shadcn component instead: `ComponentProps<typeof Avatar>`.
+
+---
+
+## Components
+
+| Component                                                | Version | shadcn primitives |
+| -------------------------------------------------------- | ------- | ----------------- |
+| [`kit/avatar`](./src/lib/coral/kit/avatar/avatar.svelte) | 1.0.0   | `avatar`          |
+
+### `kit/avatar`
+
+Flat props, because an avatar has a defensible canonical case: an image with a text fallback. What Coral resolves is deriving the initials and collapsing three shadcn tags into one.
+
+```svelte
+<script lang="ts">
+	import Avatar from '$lib/coral/kit/avatar/avatar.svelte';
+</script>
+
+<Avatar src="/juan.jpg" name="Juan Largo" />
+<!-- no src → falls back to JL -->
+<Avatar name="Juan Largo" size="lg" />
+<!-- explicit text wins over the derived initials -->
+<Avatar fallback="+3" />
+```
+
+| Prop       | Type                | Notes                                                           |
+| ---------- | ------------------- | --------------------------------------------------------------- |
+| `src`      | `string`            | Absent or failing to load → the fallback shows                  |
+| `alt`      | `string`            | Defaults to `name`, then to `''` (decorative)                   |
+| `name`     | `string`            | Derives the initials and the default `alt`                      |
+| `fallback` | `string \| Snippet` | Overrides the derived initials — text, or a snippet for an icon |
+| `children` | `Snippet`           | Extra content inside the root, e.g. an `AvatarBadge`            |
+
+Everything the shadcn root accepts is forwarded untouched: `size`, `class`, `delayMs`, `bind:ref`, `bind:loadingStatus`, any div attribute.
+
+**Initials rule:** first letter of the first word + first letter of the last word, so `María del Carmen García` → `MG`. A single word yields a single letter. Uppercased with `es-CO` rules, accents preserved. Exported on its own from [`initials.ts`](./src/lib/coral/kit/avatar/initials.ts) for when you drop down to raw shadcn.
+
+**Deliberately absent:** no `AvatarGroup` (shadcn already ships `AvatarGroup` and `AvatarGroupCount` for stacking and `+N` — Coral would only be aliasing them), no `square` variant (that's a radius, and radii belong to the theme), no hex `bg`/`color` props (they bypass the theme and break in dark mode — use `class`).
 
 ---
 
@@ -73,7 +129,7 @@ pnpm install
 # dev server
 pnpm dev
 
-# type-check + SvelteKit sync
+# type-check (wrangler types + SvelteKit sync + svelte-check)
 pnpm check
 
 # lint / format
@@ -97,16 +153,17 @@ pnpm dlx shadcn-svelte@latest add <component>
 
 ## Quick conventions
 
-| Rule                      | Detail                                                                          |
-| ------------------------- | ------------------------------------------------------------------------------- |
-| One component, one folder | `coral/kit/combobox/` with the component, types, and an `index.ts`              |
-| Export from `index.ts`    | Always. Never deep imports from outside.                                        |
-| No name prefix            | `Combobox`, not `CCombobox` — the folder disambiguates                          |
-| Layout classes only       | `flex`, `gap`, `w-full`. Never `bg-blue-500`                                    |
-| `class` always accepted   | Every component accepts and merges `class` for overrides                        |
-| Versioned header          | `@coral/kit/combobox` + `@version` in every file, plus an entry in `coral.json` |
+| Rule                      | Detail                                                                            |
+| ------------------------- | --------------------------------------------------------------------------------- |
+| One component, one folder | `coral/kit/combobox/{combobox.svelte,types.ts}`                                   |
+| No barrels                | Import by file path. Filenames are public API — renaming one is a breaking change |
+| No name prefix            | `Combobox`, not `CCombobox` — the folder disambiguates                            |
+| Layout classes only       | `flex`, `gap`, `w-full`. Never `bg-blue-500`                                      |
+| `class` always accepted   | Every component accepts and merges `class` for overrides                          |
+| Never lose capability     | Forward the primitive's props and bindables; Coral adds, it doesn't subtract      |
+| Versioned header          | `@coral/kit/combobox` + `@version` in every file, plus an entry in `coral.json`   |
 
-Full conventions, the `Option<T>` type, and versioning in [`context/coral.md` § 6–8](./context/coral.md#6-convenciones).
+Full conventions, the import contract, and versioning in [`AGENTS.md`](./AGENTS.md).
 
 ---
 
@@ -114,18 +171,18 @@ Full conventions, the `Option<T>` type, and versioning in [`context/coral.md` §
 
 Ordered by rewrite cost × frequency (not by what's fun to build):
 
-1. Combobox / Select with search
-2. DataTable (sorting, filtering, pagination, empty state)
+1. Combobox / Select with search — the one that hurts most; it validates the whole architecture
+2. DataTable (sorting, filtering, pagination, empty state) — highest cost per project
 3. Form field + validation + dynamic form
 4. Formatters for `es-CO` / COP / dates
 5. Confirm dialog
-6. Avatar with flat props
+6. ~~Avatar with flat props~~ ✅ `kit/avatar` 1.0.0
 7. Empty states and skeletons
 8. Charts with presets
-9. App shell (block)
+9. App shell (block) — needs the rule of 3
 10. Generic CRUD page (block)
 
-Detail in [`context/coral.md` § 9](./context/coral.md#9-roadmap-de-extracción).
+**How the architecture gets validated:** extract the combobox from the project in flight, use it in the other project the same week, and see whether it survives untouched. If that cycle works — extract, reuse, don't modify — the architecture holds. Better to find out with one component than with twenty.
 
 ---
 

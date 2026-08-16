@@ -6,9 +6,10 @@ Operating guide for AI agents (and humans) working in this repo. These rules are
 
 Coral: Kora's internal component library, an ergonomics layer on top of shadcn-svelte. Not a
 design system, not a fork, not an npm package — it's a folder meant to be copied into client
-projects. See [`README.md`](./README.md) for stack and status, and
-[`context/coral.md`](./context/coral.md) for the full philosophy — read it before any non-trivial
-change.
+projects. See [`README.md`](./README.md) for stack and status.
+
+This file is self-contained: every rule you need is here. (`context/coral.md` holds the long-form
+philosophy but is deliberately untracked — don't assume a reader has it.)
 
 Coral lives in **`src/lib/coral/`** — one self-contained folder, copied whole into the target
 project. Currently extracted: `kit/avatar`.
@@ -23,11 +24,16 @@ project. Currently extracted: `kit/avatar`.
 - **No domain knowledge.** Never reference client entities (invoice, student, contract...).
 - **`src/lib/components/ui/` is untouchable.** shadcn-managed, excluded from lint/format on
   purpose. Compose around it, never edit it.
-- **Import direction is one-way:** `blocks/` → `kit/` → `ui/`. Never a headless library directly
-  (`bits-ui`) — derive types from the shadcn component instead (`ComponentProps<typeof Avatar>`).
-  Never a step backwards, never project domain types.
+- **Import direction is one-way:** `blocks/` → `kit/` → `ui/`. `kit/` composing `kit/` is fine and
+  desirable; the reverse never is. Never a headless library directly (`bits-ui`) — derive its types
+  from the shadcn component instead (`ComponentProps<typeof Avatar>`). Never project domain types.
+- **Nothing duplicated.** Two components needing the same logic means extracting a third, or
+  `lib/` — never copy-paste inside Coral.
 - **Every composed component exposes its pieces.** If a rare case forces someone to drop Coral and
   rebuild from raw shadcn, the component failed.
+- **Composition must earn its keep.** What Coral contributes is resolved behavior — filtering,
+  keyboard navigation, shared state through context, accessibility, debounce, loading and empty
+  states — not syntactic sugar. A composed component that only saves typing doesn't belong.
 
 ## Architecture
 
@@ -41,8 +47,10 @@ src/lib/
       └─ avatar/
 ```
 
-Coral touches exactly two things outside its own folder: `$lib/components/ui/*` and `$lib/utils`
-(`cn`). Both are guaranteed by any shadcn-svelte project's `components.json`.
+Outside its own folder, Coral may reach for exactly two things: `$lib/components/ui/*` and
+`$lib/utils` (`cn`). Both are guaranteed by any shadcn-svelte project's `components.json`, which is
+what keeps the folder portable. Reach for as few as the component actually needs — `kit/avatar`
+uses only the first.
 
 **Folders are created when something needs them, never in advance.** `blocks/` (app-level
 compositions, rule of 3), `lib/` (shared utils, formatters, types) and `hooks/` don't exist yet
@@ -61,10 +69,10 @@ every project that already copied it.
 - Every component accepts and merges a `class` prop. Selectable components support two-way
   binding. Shared state in composed components flows through Svelte context, never hand-wired
   props.
-- Never remove capability the shadcn primitive already had. Forward its props (`ComponentProps`),
-  keep its bindables (`ref`, `loadingStatus`).
+- Never remove capability the wrapped primitive already had. Forward its props
+  (`ComponentProps<typeof X>`) and keep whatever it exposes for binding (`ref`, and friends).
 - Generic types (`Option<T = string>`), never closed/string-only shapes.
-- Every file carries a version header, matched to an entry in `coral/coral.json`:
+- Every file carries a version header, matched to an entry in `src/lib/coral/coral.json`:
   ```ts
   /**
    * @coral/kit/combobox
@@ -72,8 +80,14 @@ every project that already copied it.
    */
   ```
   ```json
-  { "kit/combobox": { "version": "1.2.0", "shadcn": ["popover", "command"], "npm": [] } }
+  {
+  	"components": {
+  		"kit/combobox": { "version": "1.2.0", "shadcn": ["popover", "command"], "npm": ["cmdk"] }
+  	}
+  }
   ```
+  `shadcn` and `npm` are what makes installing Coral "copy the folder, then install these" —
+  declare every primitive the component imports. Omit `npm` when there are none.
 
 ## Formatting
 
@@ -100,8 +114,18 @@ pnpm check
 pnpm test
 ```
 
-Run them for real, read the output. ⚠️ `pnpm check` currently reports ~910 pre-existing errors from
-generated `.svelte-kit/` output; filter with `pnpm check 2>&1 | grep src/lib/coral` until that's
-fixed. And re-check the [Coral test](./context/coral.md#el-test-de-coral):
-written twice already? defines appearance? knows the client's domain? right API shape? exposes its
-pieces for the rare case?
+Run them for real, read the output.
+
+> ⚠️ `pnpm check` reports 914 pre-existing errors: 913 from generated `.svelte-kit/` output that
+> `svelte-check` shouldn't be reading at all, and 1 from shadcn's `ui/native-select` (untouchable).
+> Zero come from `src/lib/coral/`. Until the config stops type-checking build output, filter:
+> `pnpm check 2>&1 | grep src/lib/coral`.
+
+Then re-check the **Coral test**:
+
+1. **Written twice already?** → If not, it doesn't enter yet.
+2. **Does it define appearance?** → If so, it doesn't belong in Coral.
+3. **Does it know the client's domain?** → If so, it belongs in the project's `features/`.
+4. **Does the API match the component's nature?** → Flat props only if there's a canonical case;
+   otherwise composition.
+5. **Does the rare case force abandoning Coral?** → If so, expose the pieces.
