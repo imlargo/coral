@@ -116,17 +116,30 @@ pnpm test
 
 Run them for real, read the output.
 
-> ⚠️ `pnpm check` reports ~900 pre-existing errors, all but one from build output. `vite build`
-> writes a bundled worker to `.svelte-kit/cloudflare/` plus `.svelte-kit/output/`, and
-> `svelte-check` discovers files by walking the workspace — it ignores tsconfig `exclude`, and its
-> own `--ignore` flag refuses to run alongside `--tsconfig`. So there is no config fix: on a clean
-> tree the count is **1** (shadcn's `ui/native-select`, untouchable), and it only balloons after a
-> build. `rm -rf .svelte-kit/cloudflare .svelte-kit/output` before checking, or filter:
-> `pnpm check 2>&1 | grep -v '\.svelte-kit'`.
+Expect `pnpm check` to report exactly **1** error: shadcn's `ui/native-select`, untouchable.
+Anything else is yours.
+
+> ⚠️ **Build output poisons both scripts, so `build` and `check` delete it first.** `vite build`
+> writes a bundled worker to `.svelte-kit/cloudflare/` plus `.svelte-kit/output/`, and that breaks
+> two things at once:
 >
-> Related landmine: `worker-configuration.d.ts` declares a global `Element` whose HTMLRewriter
-> `append`/`prepend` signatures merge with — and shadow — the DOM ones. Use `appendChild` /
-> `insertBefore` in DOM code.
+> - `svelte-check` discovers files by walking the workspace — it ignores tsconfig `exclude`, and
+>   its own `--ignore` flag refuses to run alongside `--tsconfig` — so it type-checks the generated
+>   worker and reports ~900 errors nobody wrote.
+> - `wrangler types` emits a `GlobalProps.mainModule` block **only when that worker exists**, so
+>   `wrangler types --check` passes on a clean tree and fails on a dirty one. Cloudflare restores a
+>   build-output cache between runs, which made CI fail on every build after the first.
+>
+> Consequence to respect: **run `check` before `build`, never after** — it deletes the artifact you
+> were about to deploy. And run `pnpm gen` on a clean tree, or you commit a
+> `worker-configuration.d.ts` that references build output and breaks CI.
+
+> ⚠️ `worker-configuration.d.ts` declares a global `Element` whose HTMLRewriter `append`/`prepend`
+> signatures merge with — and shadow — the DOM ones. Use `appendChild` / `insertBefore` in DOM code.
+
+> ⚠️ Cloudflare's build image defaults to **pnpm 10.11.1** and does not read `packageManager` from
+> `package.json`; the override is a `PNPM_VERSION` build variable in the dashboard. Keep
+> `pnpm-workspace.yaml`'s `packages: ['.']` — older 10.x refuses a workspace file without it.
 
 Then re-check the **Coral test**:
 
