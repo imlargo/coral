@@ -13,7 +13,7 @@
 <div
 	bind:this={ref}
 	data-slot="input-otp-group"
-	class={cn("rounded-md has-aria-invalid:border-destructive has-aria-invalid:ring-3 has-aria-invalid:ring-destructive/20 dark:has-aria-invalid:ring-destructive/40 flex items-center", className)}
+	class={cn("rounded-lg has-aria-invalid:border-destructive has-aria-invalid:ring-3 has-aria-invalid:ring-destructive/20 dark:has-aria-invalid:ring-destructive/40 flex items-center", className)}
 	{...restProps}
 >
 	{@render children?.()}
