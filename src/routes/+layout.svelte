@@ -3,9 +3,8 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import { Toaster } from '$lib/components/ui/sonner/index.js';
 	import { ModeWatcher } from 'mode-watcher';
-	import type { LayoutProps } from './$types';
 
-	let { data, children }: LayoutProps = $props();
+	let { children } = $props();
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
@@ -20,4 +19,4 @@
 	Skip to main content
 </a>
 
-{@render children?.()}
+{@render children()}
