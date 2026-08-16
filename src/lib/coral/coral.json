@@ -3,6 +3,10 @@
 		"kit/avatar": {
 			"version": "1.0.0",
 			"shadcn": ["avatar"]
+		},
+		"kit/combobox": {
+			"version": "1.0.0",
+			"shadcn": ["popover", "command", "button"]
 		}
 	}
 }
