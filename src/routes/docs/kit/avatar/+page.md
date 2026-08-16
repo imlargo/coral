@@ -45,13 +45,13 @@ pnpm dlx shadcn-svelte@latest add avatar
 Everything the shadcn root accepts stays available — `size`, `class`, `delayMs`, `loadingStatus`,
 `ref` and any `div` attribute. On top of that:
 
-| Prop       | Type                | Default | Description                                                         |
-| ---------- | ------------------- | ------- | ------------------------------------------------------------------- |
-| `src`      | `string`            | —       | Image URL. Absent or failed to load, the fallback shows instead.    |
-| `alt`      | `string`            | `name`  | Alt text for the image. Falls back to `''`, i.e. decorative.        |
-| `name`     | `string`            | —       | Person's name. Derives the initials and acts as the default `alt`.  |
-| `fallback` | `string \| Snippet` | —       | Replaces the derived initials. Text, or a snippet for full control. |
-| `children` | `Snippet`           | —       | Extra content inside the root, alongside the image — e.g. a badge.  |
+| Prop       | Type                  | Default | Description                                                         |
+| ---------- | --------------------- | ------- | ------------------------------------------------------------------- |
+| `src`      | `string`              | —       | Image URL. Absent or failed to load, the fallback shows instead.    |
+| `alt`      | `string`              | `name`  | Alt text for the image. Falls back to `''`, i.e. decorative.        |
+| `name`     | `string`              | —       | Person's name. Derives the initials and acts as the default `alt`.  |
+| `fallback` | `string` \| `Snippet` | —       | Replaces the derived initials. Text, or a snippet for full control. |
+| `children` | `Snippet`             | —       | Extra content inside the root, alongside the image — e.g. a badge.  |
 
 ## Fallback
 

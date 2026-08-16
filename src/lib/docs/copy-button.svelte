@@ -17,10 +17,18 @@
 	}
 </script>
 
+<!--
+	Always rendered, only dimmed. Gating visibility on `:hover` leaves touch devices with no way to
+	copy at all, and hands screen-reader users a control that appears out of nowhere.
+-->
 <Button
 	variant="ghost"
 	size="icon-xs"
-	class={cn('text-muted-foreground hover:text-foreground', className)}
+	class={cn(
+		'text-muted-foreground opacity-60 transition hover:bg-accent hover:text-foreground hover:opacity-100 focus-visible:opacity-100',
+		copied && 'text-foreground opacity-100',
+		className
+	)}
 	aria-label={copied ? 'Copied' : 'Copy to clipboard'}
 	onclick={copy}
 >

@@ -7,16 +7,24 @@
 		html,
 		/** The same code as plain text — what the copy button puts on the clipboard. */
 		text,
+		/** Shown in the corner so the reader knows what they are looking at before reading it. */
+		lang,
 		class: className
-	}: { html: string; text: string; class?: string } = $props();
+	}: { html: string; text: string; lang?: string; class?: string } = $props();
 </script>
 
-<div class={cn('group relative', className)}>
-	<CopyButton
-		{text}
-		class="absolute top-2 right-2 z-10 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
-	/>
-	<div class="docs-code overflow-x-auto">
+<div class={cn('relative', className)}>
+	<div class="absolute top-1.5 right-1.5 z-10 flex items-center gap-1.5">
+		{#if lang}
+			<span
+				class="hidden font-mono text-[0.7rem] tracking-wide text-muted-foreground uppercase sm:inline"
+			>
+				{lang}
+			</span>
+		{/if}
+		<CopyButton {text} />
+	</div>
+	<div class="docs-code">
 		<!-- eslint-disable-next-line svelte/no-at-html-tags -- build-time output of our own highlighter -->
 		{@html html}
 	</div>

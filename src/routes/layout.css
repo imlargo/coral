@@ -139,7 +139,7 @@
 
 @layer components {
 	.docs-prose {
-		@apply max-w-3xl text-[0.95rem]/7;
+		@apply text-[0.9375rem]/[1.75];
 	}
 
 	.docs-prose h1 {
@@ -147,15 +147,29 @@
 	}
 
 	.docs-prose .lead {
-		@apply mt-3 text-lg text-pretty text-muted-foreground;
+		@apply mt-3 text-base text-pretty text-muted-foreground sm:text-lg;
 	}
 
 	.docs-prose h2 {
-		@apply mt-12 scroll-mt-20 border-b pb-2 text-xl font-semibold tracking-tight;
+		@apply mt-14 scroll-mt-20 border-b pb-2 text-xl font-semibold tracking-tight;
 	}
 
 	.docs-prose h3 {
-		@apply mt-8 scroll-mt-20 text-base font-semibold tracking-tight;
+		@apply mt-10 scroll-mt-20 text-base font-semibold tracking-tight;
+	}
+
+	/* Permalink revealed on hover, and always reachable by keyboard through the heading itself. */
+	.docs-prose :is(h2, h3) {
+		@apply relative;
+	}
+
+	.docs-anchor {
+		@apply ml-2 inline-flex align-middle text-muted-foreground no-underline opacity-0 transition-opacity;
+	}
+
+	.docs-prose :is(h2, h3):hover .docs-anchor,
+	.docs-anchor:focus-visible {
+		@apply opacity-100;
 	}
 
 	.docs-prose p,
@@ -165,19 +179,19 @@
 	}
 
 	.docs-prose ul {
-		@apply list-disc pl-6;
+		@apply list-disc pl-5 marker:text-muted-foreground/50;
 	}
 
 	.docs-prose ol {
-		@apply list-decimal pl-6;
+		@apply list-decimal pl-5 marker:text-muted-foreground/50;
 	}
 
 	.docs-prose li {
-		@apply mt-1.5;
+		@apply mt-2 pl-1;
 	}
 
-	.docs-prose a {
-		@apply font-medium underline underline-offset-4 hover:no-underline;
+	.docs-prose a:not(.docs-anchor) {
+		@apply font-medium text-foreground underline decoration-muted-foreground/40 underline-offset-4 transition-colors hover:decoration-foreground;
 	}
 
 	.docs-prose strong {
@@ -185,12 +199,17 @@
 	}
 
 	.docs-prose blockquote {
-		@apply mt-4 border-l-2 pl-4 text-muted-foreground italic;
+		@apply mt-4 border-l-2 pl-4 text-muted-foreground;
 	}
 
-	/* Inline code — the fenced-block `code` lives inside `pre` and is excluded. */
+	/*
+	 * Inline code: no vertical padding. Padding on an inline box does not grow the line box, so it
+	 * overlaps neighbouring lines and makes paragraph leading look ragged wherever code appears.
+	 * The tint alone is enough to set it apart.
+	 */
 	.docs-prose :not(pre) > code {
-		@apply rounded-md bg-muted px-1.5 py-0.5 font-mono text-[0.85em];
+		@apply rounded bg-muted px-1 py-0 font-mono text-[0.85em] text-foreground;
+		box-decoration-break: clone;
 	}
 
 	.docs-prose table {
@@ -202,37 +221,60 @@
 	}
 
 	.docs-prose th {
-		@apply px-3 py-2 text-left font-medium whitespace-nowrap;
+		@apply px-3 py-2 text-left text-xs font-medium tracking-wide whitespace-nowrap text-muted-foreground uppercase;
 	}
 
 	.docs-prose td {
-		@apply border-b px-3 py-2 align-top;
+		@apply border-b px-3 py-2.5 align-top;
 	}
 
 	.docs-prose td:first-child {
-		@apply whitespace-nowrap;
+		@apply font-medium whitespace-nowrap;
+	}
+
+	/*
+	 * Preview stage. The dot grid marks it as a canvas rather than a card, so a demo with a
+	 * transparent background still reads as something staged for inspection.
+	 */
+	.docs-stage {
+		background-image: radial-gradient(var(--color-border) 1px, transparent 1px);
+		background-size: 16px 16px;
+		background-position: -1px -1px;
 	}
 }
 
 /* Code blocks — shared by mdsvex fenced blocks and the Code tab of a preview. */
 @layer components {
-	/* The `group` marker class is added alongside this one by the mdsvex highlighter. */
 	.docs-md-code {
 		@apply relative mt-4 overflow-hidden rounded-lg border;
 	}
 
 	.docs-code pre,
 	.docs-md-code pre {
-		@apply overflow-x-auto p-4 font-mono text-[0.8rem]/6;
+		@apply overflow-x-auto p-4 font-mono text-xs/6 sm:text-[0.8125rem]/6;
+		/*
+		 * A permanently visible scrollbar. Overlay scrollbars only appear mid-gesture, so on a phone
+		 * a wide snippet just looks truncated with no hint that the rest is one swipe away.
+		 */
+		scrollbar-width: thin;
+		scrollbar-color: var(--color-border) transparent;
 	}
 
 	.docs-code pre:focus-visible,
 	.docs-md-code pre:focus-visible {
-		@apply outline-none;
+		@apply rounded-lg outline-2 outline-offset-[-2px] outline-ring;
 	}
 
+	/*
+	 * Dimmed rather than hidden: a hover-gated control is unreachable on touch and invisible to
+	 * anyone tabbing through. Matches `copy-button.svelte`, which is the same control in Svelte.
+	 */
 	.docs-copy {
-		@apply absolute top-2 right-2 z-10 inline-flex size-6 items-center justify-center rounded-md text-muted-foreground opacity-0 transition group-hover:opacity-100 hover:bg-accent hover:text-foreground focus-visible:opacity-100;
+		@apply absolute top-2 right-2 z-10 inline-flex size-6 items-center justify-center rounded-md text-muted-foreground opacity-60 transition hover:bg-accent hover:text-foreground hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-2 focus-visible:outline-ring;
+	}
+
+	.docs-copy[data-copied] {
+		@apply text-foreground opacity-100;
 	}
 }
 
