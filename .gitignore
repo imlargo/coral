@@ -24,3 +24,4 @@ vite.config.ts.timestamp-*
 
 # Husky
 .husky/_
+context
