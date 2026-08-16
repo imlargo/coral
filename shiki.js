@@ -12,8 +12,9 @@
 
 import { createHighlighter } from 'shiki';
 
-const LIGHT = 'github-light-default';
-const DARK = 'github-dark-default';
+// Matched to the shadcn theme in `layout.css`: Catppuccin Latte / Mocha.
+const LIGHT = 'catppuccin-latte';
+const DARK = 'catppuccin-mocha';
 
 /** Languages the docs actually use. Anything else falls back to unhighlighted text. */
 const LANGS = [

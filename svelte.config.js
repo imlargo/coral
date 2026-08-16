@@ -24,6 +24,9 @@ const config = {
 			extensions: ['.md'],
 			// Every docs page is wrapped in the prose layout, which also receives its frontmatter.
 			layout: { _: PROSE_LAYOUT },
+			// Forward props to the layout with `$props()` instead of the legacy `$$props`, which
+			// runes mode rejects. Added in mdsvex 0.12.8; the default is still `'legacy'`.
+			layoutPropForwarding: 'runes',
 			highlight: {
 				// The wrapper is what `prose.svelte` hangs a copy button off — and what tells it
 				// apart from a `<Preview>` code tab, which brings its own.
@@ -35,14 +38,7 @@ const config = {
 
 	compilerOptions: {
 		// Force runes mode for the project, except for libraries. Can be removed in svelte 6.
-		runes: ({ filename }) => {
-			const parts = filename.split(/[/\\]/);
-			if (parts.includes('node_modules')) return undefined;
-			// mdsvex wraps each page as `<Layout {...$$props}>`, which runes mode rejects. Docs
-			// pages hold prose and component tags, never runes, so auto-detect is enough.
-			if (filename.endsWith('.md')) return undefined;
-			return true;
-		}
+		runes: ({ filename }) => (filename.split(/[/\\]/).includes('node_modules') ? undefined : true)
 	},
 
 	kit: {
