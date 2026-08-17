@@ -12,7 +12,7 @@
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { cn } from '$lib/utils.js';
-	import { flatten, includesValue, matches, terms, toGroups } from './options.js';
+	import { flatten, includesValue, matches, toGroups } from './options.js';
 	import type { ComboboxProps, ComboboxType, Option } from './types.js';
 
 	let {
@@ -51,7 +51,11 @@
 	}: ComboboxProps<T, Type> = $props();
 
 	let triggerRef = $state<HTMLButtonElement>(null!);
+	let searchRef = $state<HTMLInputElement>(null!);
 	let searchTimer: ReturnType<typeof setTimeout> | undefined;
+
+	// A pending debounce outliving the component would call `onsearch` for a screen that is gone.
+	$effect(() => () => clearTimeout(searchTimer));
 
 	const multiple = $derived(type === 'multiple');
 	const groups = $derived(toGroups(options));
@@ -66,7 +70,7 @@
 		let index = 0;
 		return groups.map((group) => ({
 			label: group.label,
-			options: group.options.map((option) => ({ option, index: index++ }))
+			entries: group.options.map((option) => ({ option, index: index++ }))
 		}));
 	});
 
@@ -82,21 +86,23 @@
 	const visible = $derived(shouldFilter ? all.filter((option) => match(option, search)) : all);
 
 	/**
-	 * Matching runs against the whole `Option` rather than inside Command's scorer, so a caller's
-	 * `filter` sees the value, the description and the keywords - not just the two strings Command
-	 * would otherwise hand it. Each item carries its own verdict as a sentinel keyword, and
-	 * Command's scorer does nothing but read it back.
+	 * Filtering happens here and only here: what does not match is not rendered, and Command is
+	 * told not to filter at all.
+	 *
+	 * The alternative - letting Command score each item - cannot work without smuggling the verdict
+	 * through some field it does score, because a caller's `filter` needs the whole `Option` and
+	 * Command's scorer only sees strings. That indirection also ran the match twice per option per
+	 * keystroke. Command keeps what it is good at, which is keyboard navigation.
 	 */
-	const KEEP = 'coral:keep';
-
-	function keywordsFor(option: Option<T>): string[] {
-		return match(option, search) ? [KEEP, ...terms(option)] : terms(option);
-	}
-
-	/** 1 keeps the item, 0 hides it. */
-	function score(_value: string, _search: string, keywords?: string[]): number {
-		return keywords?.includes(KEEP) ? 1 : 0;
-	}
+	const rendered = $derived.by(() => {
+		const keep = new Set(visible);
+		return indexed
+			.map((group) => ({
+				label: group.label,
+				entries: group.entries.filter((entry) => keep.has(entry.option))
+			}))
+			.filter((group) => group.entries.length > 0);
+	});
 
 	function commit(next: T | T[] | undefined, option: Option<T> | undefined) {
 		value = next as never;
@@ -122,7 +128,10 @@
 				? current.filter((candidate) => candidate !== option.value)
 				: [...current, option.value];
 			commit(next, option);
-			// The popover stays open: picking one of several is rarely picking the last one.
+			// The popover stays open - picking one of several is rarely picking the last one - and
+			// focus goes back to the search box, which the click moved to the list. Without this the
+			// user has to re-click the input before they can narrow the list again.
+			tick().then(() => searchRef?.focus());
 			return;
 		}
 
@@ -222,8 +231,13 @@
 	</div>
 
 	<Popover.Content class={cn('w-(--bits-popover-anchor-width) p-0', contentClass)}>
-		<Command.Root filter={score} {shouldFilter}>
-			<Command.Input placeholder={searchPlaceholder} bind:value={search} oninput={handleSearch} />
+		<Command.Root shouldFilter={false}>
+			<Command.Input
+				bind:ref={searchRef}
+				placeholder={searchPlaceholder}
+				bind:value={search}
+				oninput={handleSearch}
+			/>
 
 			<Command.List class={listClass}>
 				{#if loading}
@@ -241,13 +255,12 @@
 						{#if empty}{@render empty()}{:else}{emptyMessage}{/if}
 					</Command.Empty>
 
-					{#each indexed as group, groupIndex (groupIndex)}
+					{#each rendered as group, groupIndex (groupIndex)}
 						<Command.Group heading={group.label}>
-							{#each group.options as entry (entry.index)}
+							{#each group.entries as entry (entry.index)}
 								{@const isSelected = includesValue(values, entry.option.value)}
 								<Command.Item
 									value={String(entry.index)}
-									keywords={keywordsFor(entry.option)}
 									disabled={entry.option.disabled}
 									data-checked={isSelected ? 'true' : undefined}
 									onSelect={() => select(entry.option)}

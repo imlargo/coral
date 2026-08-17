@@ -150,6 +150,9 @@ Pass groups instead of options and each gets a heading. `description` renders as
 is searched. `keywords` are searched but never shown - synonyms, codes, an old name. Try `dc`,
 `boyaca` or `atlantico` in that demo.
 
+Filtering removes rows rather than hiding them, so a group whose options all fail the search
+disappears along with its heading - no empty section left behind.
+
 ## Server-side search
 
 `onsearch` fires as the user types, debounced by `searchDebounce`. Fetch, hand the results back
