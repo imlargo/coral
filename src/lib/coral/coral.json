@@ -11,6 +11,10 @@
 		"kit/confirm-dialog": {
 			"version": "1.0.0",
 			"shadcn": ["alert-dialog", "button", "spinner"]
+		},
+		"kit/number-input": {
+			"version": "1.0.0",
+			"shadcn": ["input-group", "input", "button"]
 		}
 	}
 }

@@ -31,7 +31,8 @@ export const nav: DocSection[] = [
 		items: [
 			{ title: 'Avatar', href: resolve('/docs/kit/avatar') },
 			{ title: 'Combobox', href: resolve('/docs/kit/combobox') },
-			{ title: 'Confirm dialog', href: resolve('/docs/kit/confirm-dialog') }
+			{ title: 'Confirm dialog', href: resolve('/docs/kit/confirm-dialog') },
+			{ title: 'Number input', href: resolve('/docs/kit/number-input') }
 		]
 	},
 	{
