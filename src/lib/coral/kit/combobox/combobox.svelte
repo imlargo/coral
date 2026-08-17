@@ -1,7 +1,7 @@
 <script lang="ts" generics="T, Type extends ComboboxType = 'single'">
 	/**
 	 * @coral/kit/combobox
-	 * @version 2.0.0
+	 * @version 2.1.0
 	 */
 	import { tick } from 'svelte';
 	import ChevronsUpDownIcon from '@lucide/svelte/icons/chevrons-up-down';
@@ -38,6 +38,7 @@
 		clearable = false,
 		loading = false,
 		name,
+		serialize,
 		maxDisplay = 3,
 		class: className,
 		contentClass,
@@ -58,6 +59,7 @@
 	$effect(() => () => clearTimeout(searchTimer));
 
 	const multiple = $derived(type === 'multiple');
+	const toText = $derived(serialize ?? ((entry: T) => String(entry)));
 	const groups = $derived(toGroups(options));
 	const all = $derived(flatten(options));
 
@@ -80,6 +82,7 @@
 	);
 	const selected = $derived(all.filter((option) => includesValue(values, option.value)));
 	const shown = $derived(selected.slice(0, maxDisplay));
+	const showClear = $derived(clearable && !trigger && selected.length > 0 && !disabled);
 	const overflow = $derived(Math.max(0, selected.length - maxDisplay));
 
 	const match = $derived(filter ?? matches<T>);
@@ -166,6 +169,10 @@
 	function handleOpenChange(next: boolean) {
 		if (!next) {
 			clearTimeout(searchTimer);
+			// The caller hears about it too, undebounced. When the server owns the search, clearing
+			// only this side leaves an empty search box sitting above a list still filtered by a
+			// term nobody can see any more.
+			if (search !== '') onsearch?.('');
 			search = '';
 		}
 		onOpenChange?.(next);
@@ -185,26 +192,32 @@
 						role="combobox"
 						aria-expanded={open}
 						{disabled}
-						class={cn(
-							'w-full justify-between gap-2',
-							clearable && selected.length > 0 && 'pe-14',
-							className
-						)}
+						class={cn('w-full justify-between gap-2', className)}
 					>
-						{#if selected.length === 0}
-							{placeholder}
-						{:else if multiple}
-							<span class="flex min-w-0 flex-wrap items-center gap-1">
+						<!--
+							The label reserves room for the clear control rather than the button padding
+							doing it: padding would push the chevron inwards too, leaving the clear
+							control stranded to the right of it.
+						-->
+						<span
+							class={cn(
+								'flex min-w-0 flex-1 flex-wrap items-center gap-1 text-start',
+								showClear && 'pe-7'
+							)}
+						>
+							{#if selected.length === 0}
+								{placeholder}
+							{:else if multiple}
 								{#each shown as option (option.value)}
 									<Badge variant="secondary">{option.label}</Badge>
 								{/each}
 								{#if overflow > 0}
 									<Badge variant="outline">+{overflow}</Badge>
 								{/if}
-							</span>
-						{:else}
-							<span class="min-w-0 truncate">{selected[0].label}</span>
-						{/if}
+							{:else}
+								<span class="min-w-0 truncate">{selected[0].label}</span>
+							{/if}
+						</span>
 						<ChevronsUpDownIcon class="opacity-50" />
 					</Button>
 				{/if}
@@ -216,7 +229,7 @@
 			button is invalid HTML, and browsers recover from it by dropping one of the two - which
 			is how a per-badge remove control ends up unreachable by keyboard.
 		-->
-		{#if clearable && !trigger && selected.length > 0 && !disabled}
+		{#if showClear}
 			<Button
 				type="button"
 				variant="ghost"
@@ -296,9 +309,9 @@
 {#if name}
 	{#if multiple}
 		{#each values as entry (entry)}
-			<input type="hidden" {name} value={String(entry)} />
+			<input type="hidden" {name} value={toText(entry)} />
 		{/each}
 	{:else}
-		<input type="hidden" {name} value={value === undefined ? '' : String(value)} />
+		<input type="hidden" {name} value={value === undefined ? '' : toText(value as T)} />
 	{/if}
 {/if}

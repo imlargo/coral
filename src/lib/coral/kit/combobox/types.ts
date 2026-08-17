@@ -1,6 +1,6 @@
 /**
  * @coral/kit/combobox
- * @version 2.0.0
+ * @version 2.1.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -90,6 +90,12 @@ type BaseProps<T> = RootProps & {
 	 * Submits with a surrounding form, as hidden inputs. One per value when `type="multiple"`.
 	 */
 	name?: string;
+	/**
+	 * Turns a value into the string a form submits. Defaults to `String`, which is right for ids,
+	 * numbers and enum members - and wrong for objects, which stringify to `[object Object]`.
+	 * Required when `name` is set and `T` is not a primitive.
+	 */
+	serialize?: (value: T) => string;
 	/** The search term. Bindable, so the caller can read or reset it. */
 	search?: string;
 	/**

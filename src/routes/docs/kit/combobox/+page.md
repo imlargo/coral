@@ -54,30 +54,31 @@ pnpm dlx shadcn-svelte@latest add popover command button
 Everything the shadcn popover root accepts stays available - `open`, `onOpenChange`,
 `onOpenChangeComplete`. On top of that:
 
-| Prop                | Type                                | Default               | Description                                              |
-| ------------------- | ----------------------------------- | --------------------- | -------------------------------------------------------- |
-| `options`           | `Option<T>[]` \| `OptionGroup<T>[]` | -                     | The list to choose from, flat or grouped.                |
-| `type`              | `'single'` \| `'multiple'`          | `'single'`            | Decides the shape of `value` and `onchange`.             |
-| `value`             | `T` \| `T[]`                        | -                     | The selection. Bindable.                                 |
-| `onchange`          | `(value, option) => void`           | -                     | Fired when the user picks, toggles or clears.            |
-| `open`              | `boolean`                           | `false`               | Popover state. Bindable.                                 |
-| `search`            | `string`                            | `''`                  | The search term. Bindable.                               |
-| `onsearch`          | `(search: string) => void`          | -                     | Fired as the user types. For server-side search.         |
-| `searchDebounce`    | `number`                            | `0`                   | Milliseconds to wait before `onsearch` fires.            |
-| `shouldFilter`      | `boolean`                           | `true`                | Client-side filtering. `false` when the server filtered. |
-| `filter`            | `(option, search) => boolean`       | folded match          | Replaces the built-in matching.                          |
-| `clearable`         | `boolean`                           | `false`               | Adds a clear control; re-picking deselects.              |
-| `loading`           | `boolean`                           | `false`               | Swaps the list for an indicator.                         |
-| `disabled`          | `boolean`                           | `false`               | Blocks the trigger.                                      |
-| `name`              | `string`                            | -                     | Submits with a surrounding form as hidden inputs.        |
-| `maxDisplay`        | `number`                            | `3`                   | Badges before collapsing into a counter.                 |
-| `placeholder`       | `string`                            | `Select an option...` | Trigger text while nothing is selected.                  |
-| `searchPlaceholder` | `string`                            | `Search...`           | Placeholder for the search box.                          |
-| `emptyMessage`      | `string`                            | `No results found.`   | Shown when the search matches nothing.                   |
-| `clearLabel`        | `string`                            | `Clear selection`     | Accessible label for the clear control.                  |
-| `class`             | `string`                            | -                     | Merged onto the trigger button.                          |
-| `contentClass`      | `string`                            | -                     | Merged onto the popover content.                         |
-| `listClass`         | `string`                            | -                     | Merged onto the scrolling list - e.g. its max height.    |
+| Prop                | Type                                | Default               | Description                                                     |
+| ------------------- | ----------------------------------- | --------------------- | --------------------------------------------------------------- |
+| `options`           | `Option<T>[]` \| `OptionGroup<T>[]` | -                     | The list to choose from, flat or grouped.                       |
+| `type`              | `'single'` \| `'multiple'`          | `'single'`            | Decides the shape of `value` and `onchange`.                    |
+| `value`             | `T` \| `T[]`                        | -                     | The selection. Bindable.                                        |
+| `onchange`          | `(value, option) => void`           | -                     | Fired when the user picks, toggles or clears.                   |
+| `open`              | `boolean`                           | `false`               | Popover state. Bindable.                                        |
+| `search`            | `string`                            | `''`                  | The search term. Bindable.                                      |
+| `onsearch`          | `(search: string) => void`          | -                     | Fired as the user types. For server-side search.                |
+| `searchDebounce`    | `number`                            | `0`                   | Milliseconds to wait before `onsearch` fires.                   |
+| `shouldFilter`      | `boolean`                           | `true`                | Client-side filtering. `false` when the server filtered.        |
+| `filter`            | `(option, search) => boolean`       | folded match          | Replaces the built-in matching.                                 |
+| `clearable`         | `boolean`                           | `false`               | Adds a clear control; re-picking deselects.                     |
+| `loading`           | `boolean`                           | `false`               | Swaps the list for an indicator.                                |
+| `disabled`          | `boolean`                           | `false`               | Blocks the trigger.                                             |
+| `name`              | `string`                            | -                     | Submits with a surrounding form as hidden inputs.               |
+| `serialize`         | `(value: T) => string`              | `String`              | Turns a value into the submitted string. Object values need it. |
+| `maxDisplay`        | `number`                            | `3`                   | Badges before collapsing into a counter.                        |
+| `placeholder`       | `string`                            | `Select an option...` | Trigger text while nothing is selected.                         |
+| `searchPlaceholder` | `string`                            | `Search...`           | Placeholder for the search box.                                 |
+| `emptyMessage`      | `string`                            | `No results found.`   | Shown when the search matches nothing.                          |
+| `clearLabel`        | `string`                            | `Clear selection`     | Accessible label for the clear control.                         |
+| `class`             | `string`                            | -                     | Merged onto the trigger button.                                 |
+| `contentClass`      | `string`                            | -                     | Merged onto the popover content.                                |
+| `listClass`         | `string`                            | -                     | Merged onto the scrolling list - e.g. its max height.           |
 
 ### Snippets
 
@@ -185,12 +186,32 @@ and comes back out the same type, with no conversion at the call site.
 Options are matched with `===`, so object values compare by reference. `disabled` on an option is
 forwarded to the command item.
 
-> **Known gap, upstream.** A disabled option is genuinely inert - it carries `aria-disabled`, it
-> cannot be selected by pointer or keyboard - but it currently looks identical to the others.
-> shadcn's command item styles `data-[disabled=true]`, while bits-ui renders `data-disabled=""`, so
-> the dimming never applies. Coral cannot fix it: `ui/` is shadcn-managed, and supplying the opacity
-> here would be Coral defining appearance. Pass a `class` on the option's own content if the
-> distinction matters before it is fixed upstream.
+## Forms
+
+`name` renders hidden inputs - one per value when `type="multiple"` - so the selection submits with
+a plain `<form>` and shows up in `FormData`.
+
+Values are stringified with `String` by default, which is right for ids, numbers and enum members.
+Object values need `serialize`, or they submit as `[object Object]`:
+
+```svelte
+<Combobox {options} bind:value name="client" serialize={(v) => String(v.id)} />
+```
+
+## Accessibility
+
+The trigger carries `role="combobox"` and `aria-expanded`; the list is a `listbox`; disabled
+options carry `aria-disabled` and are skipped by both pointer and keyboard. Selection returns focus
+to the trigger, and in `type="multiple"` to the search box, so the keyboard never lands back at the
+top of the document.
+
+Two caveats, both upstream and both outside what Coral can reach from `kit/`:
+
+- **The search box does not expose `aria-activedescendant`.** Arrowing through options moves the
+  visual highlight, but a screen reader is not told which option is active. This lives in bits-ui's
+  command input.
+- **Disabled options get no visual treatment.** shadcn's command item styles `data-[disabled=true]`
+  while bits-ui renders `data-disabled=""`, so the dimming never applies. They are still inert.
 
 ## Why flat props, for now
 
