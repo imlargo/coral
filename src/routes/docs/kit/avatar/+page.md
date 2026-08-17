@@ -64,6 +64,28 @@ what an unknown person looks like, and gets an empty circle until it says so.
 
 <Preview name="kit/avatar/fallback" />
 
+## Accessibility
+
+An avatar is called the same thing whether or not the photo loads. `name` becomes the image's
+`alt`, and - when the fallback is showing instead - a visually hidden label, so a screen reader
+reads _María del Carmen García_ rather than the letters _M G_.
+
+Only one of the two is ever in the accessibility tree: the fallback is `display: none` while the
+image is showing, so the name is never announced twice.
+
+| Given                     | A screen reader reads | On screen |
+| ------------------------- | --------------------- | --------- |
+| `name`                    | the name              | initials  |
+| `name` + a broken `src`   | the name              | initials  |
+| `name` + a working `src`  | the name (via `alt`)  | the photo |
+| `name` + `alt=""`         | nothing               | initials  |
+| `fallback` with no `name` | the fallback text     | that text |
+| nothing                   | nothing               | empty     |
+
+`alt=""` means here what it means everywhere else: this avatar is decorative, the name is already
+in the text next to it. Use it in a table row or a list item that already names the person, and the
+same name will not be read twice.
+
 ## Sizes
 
 `size` is forwarded straight to the shadcn root. Coral adds nothing here, and removes nothing.
