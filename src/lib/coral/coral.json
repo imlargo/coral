@@ -7,6 +7,10 @@
 		"kit/combobox": {
 			"version": "2.1.0",
 			"shadcn": ["popover", "command", "button", "badge"]
+		},
+		"kit/confirm-dialog": {
+			"version": "1.0.0",
+			"shadcn": ["alert-dialog", "button", "spinner"]
 		}
 	}
 }
