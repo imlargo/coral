@@ -11,6 +11,7 @@
 	];
 
 	let selected = $state<string[]>(['editor']);
+	let lastChange = $state('nothing yet');
 </script>
 
 <div class="flex w-72 flex-col gap-3">
@@ -21,6 +22,7 @@
 		clearable
 		placeholder="Select roles..."
 		searchPlaceholder="Search roles..."
+		onchange={(picked) => (lastChange = picked.map((option) => option.label).join(', ') || 'none')}
 	>
 		{#snippet footer({ selected: picked, visible, clear, selectAll })}
 			<div class="flex items-center justify-between gap-2 px-1">
@@ -36,4 +38,6 @@
 	</Combobox>
 
 	<p class="text-sm text-muted-foreground">{JSON.stringify(selected)}</p>
+	<!-- `type="multiple"` makes onchange receive every selected option, so `.label` is right here. -->
+	<p class="text-sm text-muted-foreground">onchange saw: {lastChange}</p>
 </div>

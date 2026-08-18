@@ -1,7 +1,7 @@
 <script lang="ts" generics="T">
 	/**
 	 * @coral/kit/select
-	 * @version 1.0.0
+	 * @version 2.0.0
 	 */
 	import XIcon from '@lucide/svelte/icons/x';
 	import * as Select from '$lib/components/ui/select/index.js';
@@ -79,12 +79,12 @@
 		// bits-ui reports a deselection as an empty string.
 		const option = key === '' ? undefined : all[Number(key)];
 		value = option?.value;
-		onchange?.(value, option);
+		onchange?.(option);
 	}
 
 	function clear() {
 		value = undefined;
-		onchange?.(undefined, undefined);
+		onchange?.(undefined);
 	}
 </script>
 

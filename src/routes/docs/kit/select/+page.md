@@ -105,7 +105,7 @@ Everything the shadcn root accepts stays available - `open`, `onOpenChange`, `lo
 | -------------- | ------------------------------------------------ | --------------------- | ------------------------------------------------------ |
 | `options`      | `Option<T>[] \| OptionGroup<T>[]`                | -                     | The list, flat or grouped.                             |
 | `value`        | `T`                                              | -                     | Bindable. Matched with `===`.                          |
-| `onchange`     | `(value, option) => void`                        | -                     | User-driven changes only. Never on mount.              |
+| `onchange`     | `(option: Option<T> \| undefined) => void`       | -                     | User-driven changes only. Never on mount.              |
 | `placeholder`  | `string`                                         | `Select an option...` | Shown while nothing is selected.                       |
 | `disabled`     | `boolean`                                        | `false`               | Blocks the trigger.                                    |
 | `clearable`    | `boolean`                                        | `false`               | Adds a clear control; re-picking deselects.            |

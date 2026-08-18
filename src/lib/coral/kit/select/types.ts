@@ -1,6 +1,6 @@
 /**
  * @coral/kit/select
- * @version 1.0.0
+ * @version 2.0.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -41,9 +41,13 @@ export type SelectProps<T> = RootProps & {
 	value?: T;
 	/**
 	 * Called when the user picks or clears - never on mount, and never when `value` is assigned
-	 * from code. `option` is `undefined` when the selection was cleared.
+	 * from code. `undefined` means the selection was cleared.
+	 *
+	 * It hands over the option, not the value: `value` is already available through binding, and
+	 * `option.value` recovers it anyway, while the reverse costs the caller a lookup against the
+	 * list it just handed in.
 	 */
-	onchange?: (value: T | undefined, option: Option<T> | undefined) => void;
+	onchange?: (option: Option<T> | undefined) => void;
 	/** Shown on the trigger while nothing is selected. */
 	placeholder?: string;
 	/** Blocks the trigger. */

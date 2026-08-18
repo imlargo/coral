@@ -1,7 +1,7 @@
 <script lang="ts" generics="T, Type extends ComboboxType = 'single'">
 	/**
 	 * @coral/kit/combobox
-	 * @version 3.0.0
+	 * @version 4.0.0
 	 */
 	import { tick } from 'svelte';
 	import ChevronsUpDownIcon from '@lucide/svelte/icons/chevrons-up-down';
@@ -82,7 +82,12 @@
 	const values = $derived<T[]>(
 		multiple ? ((value as T[] | undefined) ?? []) : value === undefined ? [] : [value as T]
 	);
-	const selected = $derived(all.filter((option) => includesValue(values, option.value)));
+	/** The options carrying these values, in list order. */
+	function hydrate(entries: T[]): Option<T>[] {
+		return all.filter((option) => includesValue(entries, option.value));
+	}
+
+	const selected = $derived(hydrate(values));
 	const shown = $derived(selected.slice(0, maxDisplay));
 	const showClear = $derived(clearable && !trigger && selected.length > 0 && !disabled);
 	const overflow = $derived(Math.max(0, selected.length - maxDisplay));
@@ -109,9 +114,19 @@
 			.filter((group) => group.entries.length > 0);
 	});
 
-	function commit(next: T | T[] | undefined, option: Option<T> | undefined) {
+	/**
+	 * The selection is hydrated from `next` rather than read back off `selected`, so what the
+	 * caller is handed cannot depend on when a derived happens to recompute.
+	 */
+	function commit(next: T | T[] | undefined) {
 		value = next as never;
-		(onchange as ((v: typeof next, o: Option<T> | undefined) => void) | undefined)?.(next, option);
+		if (!onchange) return;
+
+		const entries = multiple ? (next as T[]) : next === undefined ? [] : [next as T];
+		const options = hydrate(entries);
+		(onchange as (selection: Option<T> | Option<T>[] | undefined) => void)(
+			multiple ? options : options[0]
+		);
 	}
 
 	function close() {
@@ -132,7 +147,7 @@
 			const next = includesValue(current, option.value)
 				? current.filter((candidate) => candidate !== option.value)
 				: [...current, option.value];
-			commit(next, option);
+			commit(next);
 			// The popover stays open - picking one of several is rarely picking the last one - and
 			// focus goes back to the search box, which the click moved to the list. Without this the
 			// user has to re-click the input before they can narrow the list again.
@@ -142,18 +157,18 @@
 
 		const isSelected = value !== undefined && value === option.value;
 		const next = clearable && isSelected ? undefined : option.value;
-		commit(next, next === undefined ? undefined : option);
+		commit(next);
 		close();
 	}
 
 	function clear() {
-		commit(multiple ? [] : undefined, undefined);
+		commit(multiple ? [] : undefined);
 	}
 
 	function selectAll() {
 		if (!multiple) return;
 		const next = visible.filter((option) => !option.disabled).map((option) => option.value);
-		commit(next, undefined);
+		commit(next);
 	}
 
 	function handleSearch(event: Event & { currentTarget: HTMLInputElement }) {

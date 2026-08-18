@@ -17,7 +17,7 @@
 		options={cities}
 		bind:value={city}
 		placeholder="Select a city..."
-		onchange={(value, option) => (log = [...log, `${option?.label} (${value})`])}
+		onchange={(option) => (log = [...log, `${option?.label ?? 'cleared'} (${option?.value})`])}
 	/>
 
 	<!-- Assigning to `value` from code does not fire onchange - nobody chose anything. -->

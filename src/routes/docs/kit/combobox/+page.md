@@ -59,7 +59,7 @@ Everything the shadcn popover root accepts stays available - `open`, `onOpenChan
 | `options`           | `Option<T>[]` \| `OptionGroup<T>[]` | -                     | The list to choose from, flat or grouped.                       |
 | `type`              | `'single'` \| `'multiple'`          | `'single'`            | Decides the shape of `value` and `onchange`.                    |
 | `value`             | `T` \| `T[]`                        | -                     | The selection. Bindable.                                        |
-| `onchange`          | `(value, option) => void`           | -                     | Fired when the user picks, toggles or clears.                   |
+| `onchange`          | `(selection) => void`               | -                     | Fired when the user picks, toggles or clears.                   |
 | `open`              | `boolean`                           | `false`               | Popover state. Bindable.                                        |
 | `search`            | `string`                            | `''`                  | The search term. Bindable.                                      |
 | `onsearch`          | `(search: string) => void`          | -                     | Fired as the user types. For server-side search.                |
@@ -106,8 +106,12 @@ own copy - these exist so the component renders during a spike, not as a transla
 ## Reacting to a selection
 
 `bind:value` keeps state in sync. `onchange` answers a different question: _the user just chose
-something_. It receives the new value and the whole option, because the label is wanted often
-enough that a caller would otherwise look it up again on the next line.
+something_. It receives the **selection**, in the same shape as `value` but hydrated into options -
+`Option<T> | undefined` for a single select, `Option<T>[]` for a multiple one.
+
+It does not also receive the raw value, because that would be the same fact twice: `option.value`
+recovers it, and `bind:value` already has it. The reverse is not free - handed a bare value, a
+caller who wants the label has to search the list it just passed in.
 
 <Preview name="kit/combobox/onchange" />
 
@@ -127,6 +131,11 @@ before anyone has touched the control.
 
 Use `bind:value` when you only need the state, `onchange` when something should _happen_. Both
 together is fine.
+
+For `type="multiple"` the selection is the whole list, not the row that toggled - which is what
+makes a bulk change legible too: `clear` reports `[]` and the footer's `selectAll` reports the lot.
+A single changed row could only have reported nothing. When the delta is what matters, diff against
+the previous value.
 
 ## Multiple selection
 

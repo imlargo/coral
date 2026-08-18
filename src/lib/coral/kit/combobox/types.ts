@@ -1,6 +1,6 @@
 /**
  * @coral/kit/combobox
- * @version 3.0.0
+ * @version 4.0.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -115,6 +115,18 @@ export type ComboboxValue<T, Type extends ComboboxType> = Type extends 'multiple
 	: T | undefined;
 
 /**
+ * The shape of what `onchange` receives: the same shape as `value`, hydrated into options.
+ *
+ * Single hands over the option that was picked, or `undefined` when the selection was cleared.
+ * Multiple hands over every selected option, in list order - which is also what makes a bulk
+ * change legible: `clear` reports `[]` and `selectAll` reports the lot, where a single changed
+ * row could only have reported nothing.
+ */
+export type ComboboxSelection<T, Type extends ComboboxType> = Type extends 'multiple'
+	? Option<T>[]
+	: Option<T> | undefined;
+
+/**
  * `Type` decides the shape of `value` and of `onchange`'s first argument, the same way `type`
  * does on shadcn's select. It is inferred from the `type` prop and defaults to `single`, so the
  * common case stays a plain `<Combobox options value />`.
@@ -129,7 +141,11 @@ export type ComboboxProps<T, Type extends ComboboxType = 'single'> = BaseProps<T
 	value?: ComboboxValue<T, Type>;
 	/**
 	 * Called when the user picks, toggles or clears - never on mount, and never when `value` is
-	 * assigned from code. `option` is the row that changed, or `undefined` for a bulk change.
+	 * assigned from code.
+	 *
+	 * It hands over the selection itself, not the raw values: `value` is already available through
+	 * binding, and `option.value` recovers it anyway, while the reverse costs the caller a lookup
+	 * against the list it just handed in.
 	 */
-	onchange?: (value: ComboboxValue<T, Type>, option: Option<T> | undefined) => void;
+	onchange?: (selection: ComboboxSelection<T, Type>) => void;
 };
