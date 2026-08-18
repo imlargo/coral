@@ -1,39 +1,10 @@
 /**
  * @coral/kit/combobox
- * @version 2.1.0
+ * @version 3.0.0
  */
 
 import { fold } from './fold.js';
-import type { ComboboxOptions, Option, OptionGroup } from './types.js';
-
-/**
- * Whether an entry is a group rather than an option.
- *
- * Groups are told apart by carrying `options`, so an option may not have a property by that name.
- * The alternative - a `kind` discriminator - would have to be written on every option by hand,
- * which is a tax on the common case to make the rare one tidier.
- */
-export function isGroup<T>(entry: Option<T> | OptionGroup<T>): entry is OptionGroup<T> {
-	return entry !== null && typeof entry === 'object' && 'options' in entry;
-}
-
-/**
- * Reads either shape as groups, so the rest of the component only handles one.
- *
- * A flat list becomes a single unlabelled group. The first entry decides how the whole array is
- * read: a mixed array is a caller mistake, and guessing per entry would hide it.
- */
-export function toGroups<T>(options: ComboboxOptions<T>): OptionGroup<T>[] {
-	if (options.length === 0) return [];
-	return isGroup(options[0])
-		? (options as OptionGroup<T>[])
-		: [{ options: options as Option<T>[] }];
-}
-
-/** Every option, in order, with the grouping discarded. */
-export function flatten<T>(options: ComboboxOptions<T>): Option<T>[] {
-	return toGroups(options).flatMap((group) => group.options);
-}
+import type { Option } from '../../lib/options.js';
 
 /** The strings an option can be found by: what is shown, plus anything it was tagged with. */
 export function terms<T>(option: Option<T>): string[] {

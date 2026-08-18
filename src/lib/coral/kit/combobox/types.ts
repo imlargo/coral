@@ -1,40 +1,11 @@
 /**
  * @coral/kit/combobox
- * @version 2.1.0
+ * @version 3.0.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
 import type { Popover } from '$lib/components/ui/popover/index.js';
-
-/**
- * One entry in a selectable list.
- *
- * `value` is generic because the thing being selected is rarely a string - it is an id, an enum
- * member, a number. Closing this to `string` moves the conversion to every caller, and every
- * caller then converts it back on the way out.
- */
-export type Option<T = string> = {
-	value: T;
-	label: string;
-	/** Blocks selection. The option stays visible and searchable. */
-	disabled?: boolean;
-	/** Second line under the label. Searched along with it. */
-	description?: string;
-	/** Extra terms that should match this option without being shown - synonyms, codes, an old name. */
-	keywords?: string[];
-};
-
-/** A labelled run of options, rendered under a heading. */
-export type OptionGroup<T = string> = {
-	label?: string;
-	options: Option<T>[];
-};
-
-/**
- * Either a flat list or a grouped one. Do not mix the two in a single array - the first entry
- * decides how the whole array is read.
- */
-export type ComboboxOptions<T> = Option<T>[] | OptionGroup<T>[];
+import type { Option, Options } from '../../lib/options.js';
 
 /** What the `trigger` snippet receives. Spread `props` onto whatever element you render. */
 export type TriggerContext<T> = {
@@ -68,7 +39,7 @@ type RootProps = Omit<ComponentProps<typeof Popover>, 'children'>;
 
 type BaseProps<T> = RootProps & {
 	/** The list to choose from, flat or grouped. */
-	options: ComboboxOptions<T>;
+	options: Options<T>;
 	/** Shown on the trigger while nothing is selected. */
 	placeholder?: string;
 	/** Shown in the search box. */

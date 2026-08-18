@@ -1,7 +1,7 @@
 <script lang="ts" generics="T, Type extends ComboboxType = 'single'">
 	/**
 	 * @coral/kit/combobox
-	 * @version 2.1.0
+	 * @version 3.0.0
 	 */
 	import { tick } from 'svelte';
 	import ChevronsUpDownIcon from '@lucide/svelte/icons/chevrons-up-down';
@@ -12,8 +12,10 @@
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { cn } from '$lib/utils.js';
-	import { flatten, includesValue, matches, toGroups } from './options.js';
-	import type { ComboboxProps, ComboboxType, Option } from './types.js';
+	import { flatten, toGroups } from '../../lib/options.js';
+	import { includesValue, matches } from './matching.js';
+	import type { Option } from '../../lib/options.js';
+	import type { ComboboxProps, ComboboxType } from './types.js';
 
 	let {
 		options,

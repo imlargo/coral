@@ -14,12 +14,18 @@ src/lib/coral/
 │     ├─ types.ts
 │     └─ initials.ts
 ├─ blocks/         → app-level compositions (rule of 3)
-└─ lib/            → shared utils, formatters, types
+└─ lib/            → shared across components
+   └─ options.ts   → Option<T>, OptionGroup<T>, and reading either shape
 ```
 
-**Folders are created when something needs them, never in advance.** `blocks/` and `lib/` do not
-exist yet because nothing lives in them. A util with a single consumer stays inside its
-component's folder and moves to `lib/` the day a second component needs it.
+**Folders are created when something needs them, never in advance.** `blocks/` does not exist yet
+because nothing lives in it. A util with a single consumer stays inside its component's folder and
+moves to `lib/` the day a second component needs it - which is exactly how `lib/options.ts` came to
+be, when `select` became the second component to speak `Option<T>`.
+
+Moving a file is a breaking change: filenames are public API, so the component that gave the util up
+gets a major bump. `combobox` went to `3.0.0` for that reason and for no other - its props did not
+change.
 
 ## Props
 
@@ -54,15 +60,22 @@ Svelte context, never hand-wired props.
 Generic, never closed:
 
 ```ts
+// $lib/coral/lib/options.js
 export type Option<T = string> = {
 	value: T;
 	label: string;
 	disabled?: boolean;
+	description?: string;
+	keywords?: string[];
 };
 ```
 
 A `value: string` shape looks harmless until the first project selects by id, by object, or by
 enum - and then the component has to be rewritten.
+
+One vocabulary, not one per component: `select` and `combobox` both read `Option<T>`, so a list
+moves between them without being rewritten. A component ignores the fields it has no use for - a
+select does not search, so it never reads `keywords`.
 
 ## Version headers
 
