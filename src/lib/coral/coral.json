@@ -16,6 +16,10 @@
 			"version": "1.0.0",
 			"shadcn": ["alert-dialog", "button", "spinner"]
 		},
+		"kit/file-input": {
+			"version": "1.0.0",
+			"shadcn": ["empty", "item", "button"]
+		},
 		"kit/number-input": {
 			"version": "1.0.0",
 			"shadcn": ["input-group", "input", "button"]
