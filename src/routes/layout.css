@@ -212,23 +212,31 @@
 		box-decoration-break: clone;
 	}
 
-	.docs-prose table {
+	/*
+	 * Tables, stopping at `not-prose`.
+	 *
+	 * A preview stage is `not-prose`, but these rules are plain descendant selectors and outrank
+	 * anything a demo sets on its own cells - so a component that happens to render a `<table>`
+	 * gets the docs' padding, uppercasing and bottom borders on top of its own layout. The
+	 * `:where()` keeps the exclusion at zero specificity, so nothing else about them moves.
+	 */
+	.docs-prose table:not(:where(.not-prose *)) {
 		@apply mt-6 block w-full overflow-x-auto text-sm;
 	}
 
-	.docs-prose thead {
+	.docs-prose thead:not(:where(.not-prose *)) {
 		@apply border-b;
 	}
 
-	.docs-prose th {
+	.docs-prose th:not(:where(.not-prose *)) {
 		@apply px-3 py-2 text-left text-xs font-medium tracking-wide whitespace-nowrap text-muted-foreground uppercase;
 	}
 
-	.docs-prose td {
+	.docs-prose td:not(:where(.not-prose *)) {
 		@apply border-b px-3 py-2.5 align-top;
 	}
 
-	.docs-prose td:first-child {
+	.docs-prose td:first-child:not(:where(.not-prose *)) {
 		@apply font-medium whitespace-nowrap;
 	}
 

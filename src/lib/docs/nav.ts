@@ -29,6 +29,7 @@ export const nav: DocSection[] = [
 	{
 		title: 'Kit',
 		items: [
+			{ title: 'Activity calendar', href: resolve('/docs/kit/activity-calendar') },
 			{ title: 'Avatar', href: resolve('/docs/kit/avatar') },
 			{ title: 'Combobox', href: resolve('/docs/kit/combobox') },
 			{ title: 'Confirm dialog', href: resolve('/docs/kit/confirm-dialog') },
