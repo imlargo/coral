@@ -28,6 +28,10 @@
 			"version": "1.0.0",
 			"shadcn": ["input-group", "input", "button"]
 		},
+		"kit/rating-group": {
+			"version": "1.0.0",
+			"shadcn": []
+		},
 		"kit/select": {
 			"version": "2.0.0",
 			"shadcn": ["select", "button"]
