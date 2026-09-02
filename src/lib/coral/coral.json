@@ -39,6 +39,10 @@
 		"kit/select": {
 			"version": "2.0.0",
 			"shadcn": ["select", "button"]
+		},
+		"kit/tags-input": {
+			"version": "1.0.0",
+			"shadcn": ["input-group", "input", "badge", "button"]
 		}
 	}
 }

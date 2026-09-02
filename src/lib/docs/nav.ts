@@ -37,7 +37,8 @@ export const nav: DocSection[] = [
 			{ title: 'File input', href: resolve('/docs/kit/file-input') },
 			{ title: 'Number input', href: resolve('/docs/kit/number-input') },
 			{ title: 'Rating group', href: resolve('/docs/kit/rating-group') },
-			{ title: 'Select', href: resolve('/docs/kit/select') }
+			{ title: 'Select', href: resolve('/docs/kit/select') },
+			{ title: 'Tags input', href: resolve('/docs/kit/tags-input') }
 		]
 	},
 	{
