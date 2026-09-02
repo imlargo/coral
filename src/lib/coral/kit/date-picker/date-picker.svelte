@@ -1,0 +1,270 @@
+<script lang="ts" generics="Type extends DatePickerType = 'single'">
+	/**
+	 * @coral/kit/date-picker
+	 * @version 1.0.0
+	 */
+	import { tick } from 'svelte';
+	import CalendarIcon from '@lucide/svelte/icons/calendar';
+	import XIcon from '@lucide/svelte/icons/x';
+	import * as Popover from '$lib/components/ui/popover/index.js';
+	import { Calendar } from '$lib/components/ui/calendar/index.js';
+	import { RangeCalendar } from '$lib/components/ui/range-calendar/index.js';
+	import { Button } from '$lib/components/ui/button/index.js';
+	import { cn } from '$lib/utils.js';
+	import { formatDay, formatDayRange, isSameDay, isSameRange } from './format.js';
+	import { activePreset, resolvePreset } from './presets.js';
+	import type { Preset } from './presets.js';
+	import type {
+		DatePickerProps,
+		DatePickerType,
+		DatePickerValue,
+		DateRange,
+		DateValue
+	} from './types.js';
+
+	let {
+		// Left undefined rather than defaulted: `Type` is inferred, and writing a concrete
+		// `'single'` into it would not be assignable to whatever the caller instantiated it as.
+		// Absent means single, which is what `isRange` below reads.
+		type,
+		value = $bindable(),
+		open = $bindable(false),
+		month = $bindable(),
+		presets,
+		placeholder = 'Select a date...',
+		locale = 'es-CO',
+		format = { dateStyle: 'medium' },
+		disabled = false,
+		clearable = false,
+		clearLabel = 'Clear date',
+		name,
+		endName,
+		serialize,
+		id,
+		'aria-label': ariaLabel,
+		'aria-labelledby': ariaLabelledby,
+		align = 'start',
+		class: className,
+		contentClass,
+		trigger,
+		footer,
+		onchange,
+		onOpenChange,
+		...restProps
+	}: DatePickerProps<Type> = $props();
+
+	let triggerRef = $state<HTMLButtonElement>(null!);
+
+	const isRange = $derived(type === 'range');
+	const toText = $derived(serialize ?? ((day: DateValue) => String(day)));
+
+	/** The selection read as each shape, so one code path per shape stays readable. */
+	const day = $derived(isRange ? undefined : (value as DateValue | undefined));
+	const range = $derived(isRange ? (value as DateRange | undefined) : undefined);
+
+	/**
+	 * A half-picked range counts as selected. It is what the calendar is showing, and a trigger
+	 * that says "Select a date..." while a start day sits highlighted is lying about state.
+	 */
+	const empty = $derived(isRange ? !range?.start && !range?.end : day === undefined);
+
+	/**
+	 * The preset the current selection came from. Identity comparison would never match: a preset
+	 * relative to now hands back a fresh value on every call.
+	 */
+	const active = $derived.by(() => {
+		if (!presets?.length || empty) return undefined;
+		return isRange
+			? activePreset(presets as unknown as Preset<DateRange>[], range, isSameRange)
+			: activePreset(presets as unknown as Preset<DateValue>[], day, isSameDay);
+	});
+
+	/**
+	 * What the trigger prints. A preset's label wins over the dates it stands for - "Últimos 7
+	 * días" is what the user chose, and re-reading it back to them as two dates makes them do the
+	 * arithmetic to recognise their own selection.
+	 */
+	const label = $derived.by(() => {
+		if (active) return active.label;
+		if (empty) return placeholder;
+		return isRange
+			? formatDayRange(range as DateRange, locale, format)
+			: formatDay(day as DateValue, locale, format);
+	});
+
+	// A custom trigger positions itself; Coral's absolutely-placed clear control would land
+	// somewhere arbitrary on it. `clear` is handed to the snippet instead.
+	const showClear = $derived(clearable && !trigger && !empty && !disabled);
+
+	function close() {
+		open = false;
+		tick().then(() => triggerRef?.focus());
+	}
+
+	/**
+	 * `onchange` is called from here, from `pick` and from `clear`, and nowhere else. Deriving the
+	 * same signal from `value` with an `$effect` would also fire on mount and on every
+	 * programmatic assignment, announcing a selection nobody made.
+	 *
+	 * The calendar owns the write - `value` is bound to it - so these only report and close.
+	 */
+	function handleDayChange(next: DateValue | undefined) {
+		onchange?.(next as DatePickerValue<Type>);
+		close();
+	}
+
+	/**
+	 * A range passes through a half-picked state - a `start` and no `end` - and two things follow
+	 * from that, both of them bugs in the hand-rolled version:
+	 *
+	 * - **It closes when the range is complete**, not on the first click.
+	 * - **`onchange` skips the half state.** A whole range and a cleared one are both selections;
+	 *   half of one is the user still mid-gesture, and a caller that fetches on change would fire a
+	 *   request for a range that has no end yet. Anyone who does want the intermediate state has it
+	 *   through `bind:value`, which the calendar writes on every click.
+	 */
+	function handleRangeChange(next: DateRange) {
+		const whole = Boolean(next?.start) && Boolean(next?.end);
+		const half = Boolean(next?.start) !== Boolean(next?.end);
+
+		if (!half) onchange?.(next as DatePickerValue<Type>);
+		if (whole) close();
+	}
+
+	function pick(preset: Preset<NonNullable<DatePickerValue<Type>>>) {
+		const next = resolvePreset(preset);
+		value = next;
+		onchange?.(next);
+		close();
+	}
+
+	/** An empty range rather than `undefined`, which is how the calendar spells "nothing picked". */
+	function clear() {
+		const next = (
+			isRange ? { start: undefined, end: undefined } : undefined
+		) as DatePickerValue<Type>;
+		value = next;
+		onchange?.(next);
+	}
+</script>
+
+<Popover.Root bind:open {onOpenChange}>
+	<div class="relative">
+		<Popover.Trigger bind:ref={triggerRef}>
+			{#snippet child({ props })}
+				{#if trigger}
+					{@render trigger({ props, value, label, empty, open, disabled, clear })}
+				{:else}
+					<Button
+						{...props}
+						{id}
+						variant="outline"
+						{disabled}
+						aria-label={ariaLabel}
+						aria-labelledby={ariaLabelledby}
+						class={cn('w-full justify-between gap-2', className)}
+					>
+						<!--
+							The label reserves room for the clear control rather than the button padding
+							doing it: padding would push the icon inwards too, leaving the clear control
+							stranded to the right of it.
+						-->
+						<span
+							class={cn(
+								'min-w-0 flex-1 truncate text-start',
+								empty && 'text-muted-foreground',
+								showClear && 'pe-7'
+							)}
+						>
+							{label}
+						</span>
+						<CalendarIcon class="opacity-50" />
+					</Button>
+				{/if}
+			{/snippet}
+		</Popover.Trigger>
+
+		<!--
+			The clear control sits beside the trigger rather than inside it. A button nested in a
+			button is invalid HTML, and browsers recover from it by dropping one of the two.
+		-->
+		{#if showClear}
+			<Button
+				type="button"
+				variant="ghost"
+				size="icon-xs"
+				class="absolute inset-y-0 end-7 my-auto"
+				aria-label={clearLabel}
+				onclick={clear}
+			>
+				<XIcon class="opacity-50" />
+			</Button>
+		{/if}
+	</div>
+
+	<Popover.Content {align} class={cn('w-auto overflow-hidden p-0', contentClass)}>
+		<div class="flex flex-col sm:flex-row">
+			{#if presets?.length}
+				<div class="flex gap-1 overflow-x-auto border-b p-2 sm:flex-col sm:border-e sm:border-b-0">
+					{#each presets as preset (preset.label)}
+						<Button
+							type="button"
+							variant={preset === active ? 'secondary' : 'ghost'}
+							size="sm"
+							aria-pressed={preset === active}
+							class="justify-start whitespace-nowrap"
+							onclick={() => pick(preset)}
+						>
+							{preset.label}
+						</Button>
+					{/each}
+				</div>
+			{/if}
+
+			<!--
+				`restProps` is typed against whichever calendar `Type` selected, and TypeScript cannot
+				narrow a conditional type it has not resolved yet - the cast is the same one shadcn's
+				own calendar makes for `value`.
+			-->
+			{#if isRange}
+				<RangeCalendar
+					bind:value={value as never}
+					bind:placeholder={month}
+					{locale}
+					{disabled}
+					onValueChange={handleRangeChange}
+					{...restProps as Record<string, unknown>}
+				/>
+			{:else}
+				<Calendar
+					type="single"
+					bind:value={value as never}
+					bind:placeholder={month}
+					{locale}
+					{disabled}
+					onValueChange={handleDayChange}
+					{...restProps as Record<string, unknown>}
+				/>
+			{/if}
+		</div>
+
+		{#if footer}
+			<div class="border-t p-2">
+				{@render footer({ value, clear, close })}
+			</div>
+		{/if}
+	</Popover.Content>
+</Popover.Root>
+
+{#if name}
+	{#if isRange}
+		<input type="hidden" {name} value={range?.start ? toText(range.start) : ''} />
+		<input
+			type="hidden"
+			name={endName ?? `${name}-end`}
+			value={range?.end ? toText(range.end) : ''}
+		/>
+	{:else}
+		<input type="hidden" {name} value={day ? toText(day) : ''} />
+	{/if}
+{/if}

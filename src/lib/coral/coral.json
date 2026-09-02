@@ -20,6 +20,10 @@
 			"version": "1.0.0",
 			"shadcn": ["alert-dialog", "button", "spinner"]
 		},
+		"kit/date-picker": {
+			"version": "1.0.0",
+			"shadcn": ["popover", "calendar", "range-calendar", "button"]
+		},
 		"kit/file-input": {
 			"version": "1.0.0",
 			"shadcn": ["empty", "item", "button"]
