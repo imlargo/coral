@@ -8,9 +8,10 @@
  * - the keys `import.meta.glob` produces - so `src/lib/docs/demos.ts` can pair each source with
  * its component and stays the only place that knows how a demo is named.
  *
- * `virtual:coral-docs-index` - one entry per docs page (title, description, headings) for the
- * search palette. Extracted from the Markdown rather than the rendered DOM so search works before
- * a page has ever been visited.
+ * `virtual:coral-docs-index` - one entry per docs page (title, description, headings, raw source)
+ * for the search palette and the "Copy page" button. Extracted from the Markdown rather than the
+ * rendered DOM so search works before a page has ever been visited, and so the copied text is the
+ * page's actual source rather than a re-serialization of its rendered HTML.
  */
 
 import fs from 'node:fs/promises';
@@ -42,15 +43,23 @@ function isPage(file) {
 }
 
 /**
- * Pulls the searchable shape out of a docs page: its frontmatter title and description, plus
- * every `##`/`###` heading. Fenced blocks are stripped first - the conventions page documents
- * Markdown headings inside examples, and those are not sections of the page.
+ * Pulls the searchable shape out of a docs page: its frontmatter title and description, every
+ * `##`/`###` heading, and the raw body for the "Copy page" button. Fenced blocks are stripped
+ * before headings are extracted - the conventions page documents Markdown headings inside
+ * examples, and those are not sections of the page.
  *
  * @param {string} markdown
- * @returns {{ title: string; description: string; headings: { text: string; id: string }[] }}
+ * @returns {{
+ * 	title: string;
+ * 	description: string;
+ * 	headings: { text: string; id: string }[];
+ * 	raw: string;
+ * }}
  */
 function parsePage(markdown) {
-	const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---/.exec(markdown)?.[1] ?? '';
+	const frontmatterMatch = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/.exec(markdown);
+	const frontmatter = frontmatterMatch?.[1] ?? '';
+	const raw = markdown.slice(frontmatterMatch?.[0].length ?? 0).trim();
 
 	/** @param {string} name @returns {string} */
 	const field = (name) =>
@@ -59,10 +68,7 @@ function parsePage(markdown) {
 			?.trim()
 			.replace(/^['"]|['"]$/g, '') ?? '';
 
-	const body = markdown
-		.slice(frontmatter.length)
-		.replace(/^---[\s\S]*?---/, '')
-		.replace(/```[\s\S]*?```/g, '');
+	const body = raw.replace(/```[\s\S]*?```/g, '');
 
 	const texts = [...body.matchAll(/^(#{2,3})\s+(.+?)\s*$/gm)].map(([, , text]) =>
 		// Strip the inline Markdown that shows up in our headings: `code`, **bold**, [links](…).
@@ -78,7 +84,8 @@ function parsePage(markdown) {
 	return {
 		title: field('title'),
 		description: field('description'),
-		headings: texts.map((text, i) => ({ text, id: ids[i] }))
+		headings: texts.map((text, i) => ({ text, id: ids[i] })),
+		raw
 	};
 }
 

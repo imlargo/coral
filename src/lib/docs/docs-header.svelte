@@ -3,6 +3,7 @@
 	import SunIcon from '@lucide/svelte/icons/sun';
 	import { toggleMode } from 'mode-watcher';
 	import { page } from '$app/state';
+	import CopyPageButton from './copy-page-button.svelte';
 	import { nav } from './nav.js';
 	import Search from './search.svelte';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
@@ -41,6 +42,7 @@
 	{/if}
 
 	<div class="ml-auto flex items-center gap-2">
+		<CopyPageButton />
 		<Search />
 		<Button variant="ghost" size="icon" onclick={toggleMode} aria-label="Toggle theme">
 			<SunIcon class="dark:hidden" />
