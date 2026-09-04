@@ -14,10 +14,9 @@ export function terms<T>(option: Option<T>): string[] {
 }
 
 /**
- * The default matcher: does this option answer this search?
- *
- * Folded on both sides, so `bogota` finds `Bogotá`. An empty search matches everything, which is
- * what makes the list appear in full before anyone types.
+ * The default matcher: does this option answer this search? Folded on both sides, so `bogota` finds
+ * `Bogotá`. An empty search matches everything, which is what shows the list in full before anyone
+ * has typed.
  */
 export function matches<T>(option: Option<T>, search: string): boolean {
 	const needle = fold(search.trim());
@@ -26,11 +25,9 @@ export function matches<T>(option: Option<T>, search: string): boolean {
 }
 
 /**
- * Whether `value` is among `values`.
- *
- * Comparison is `===` throughout the component, so object values are matched by reference. That
- * is the predictable rule; a deep compare would silently make two equal-looking records the same
- * option, and there is no correct default for what "equal" means to a caller's domain type.
+ * Whether `value` is among `values`. Comparison is `===` throughout the component, so objects match
+ * by reference - the predictable rule. A deep compare would silently fuse two equal-looking
+ * records, and there is no correct default for what "equal" means to a caller's domain type.
  */
 export function includesValue<T>(values: T[], value: T): boolean {
 	return values.some((candidate) => candidate === value);

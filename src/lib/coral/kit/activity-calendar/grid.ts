@@ -80,11 +80,9 @@ export type BuildOptions = {
 type Entry<T> = { count: number; level?: number; meta?: T };
 
 /**
- * Folds the source days into the rectangular grid the component draws.
- *
- * Duplicate dates are summed rather than overwriting each other: activity data arrives as events -
- * three commits on Tuesday are three rows - and every wrapper that keys them into a map instead
- * silently keeps the last one.
+ * Folds the source days into the rectangular grid the component draws. Duplicate dates are summed
+ * rather than overwritten: activity arrives as events - three commits on Tuesday are three rows -
+ * and every wrapper that keys them into a map instead silently keeps the last.
  */
 export function buildGrid<T>(days: ActivityDay<T>[], options: BuildOptions = {}): Grid<T> {
 	const { weekStart = 1, levels = 4 } = options;
@@ -173,11 +171,9 @@ export function buildGrid<T>(days: ActivityDay<T>[], options: BuildOptions = {})
 }
 
 /**
- * Groups the columns into month runs.
- *
- * A column belongs to the month of its first drawn day, so the run for a month begins at the first
- * column that month reaches - which is what puts the label over the block it names rather than one
- * column early whenever a month starts mid-week.
+ * Groups the columns into month runs. A column belongs to the month of its first drawn day, so a
+ * run begins at the first column that month reaches - which puts the label over the block it names
+ * rather than one column early whenever a month starts mid-week.
  */
 function monthsOf<T>(weeks: ActivityWeek<T>[]): MonthSpan[] {
 	const months: MonthSpan[] = [];

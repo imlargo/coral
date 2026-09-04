@@ -89,10 +89,7 @@ type BaseProps<Type extends DatePickerType> = {
 	name?: string;
 	/** The end of a range's field name. Defaults to `${name}-end`. `type="range"` only. */
 	endName?: string;
-	/**
-	 * `id` of the form to submit with, for a picker that sits outside it - a portalled dialog, a
-	 * sticky toolbar. Ignored without `name`, which is what decides whether anything submits.
-	 */
+	/** `id` of the form to submit with, for a picker outside it. Ignored without `name`. */
 	form?: string;
 	/**
 	 * Blocks submission while nothing is selected. Needs `name`. On a range it holds for a
@@ -125,35 +122,28 @@ type BaseProps<Type extends DatePickerType> = {
 
 /**
  * Whatever the picker names itself, plus the two the calendar names differently: its `placeholder`
- * is Coral's `month`, and its `onValueChange` is Coral's `onchange`.
+ * is Coral's `month`, its `onValueChange` Coral's `onchange`.
  *
- * Derived from `keyof BaseProps` rather than listed by hand, because the calendar root is a `<div>`
- * and therefore accepts every HTML attribute - `onchange` among them, which is exactly the name
- * this component uses for the selection callback. A hand-kept list gets that wrong once and the
- * prop's type quietly becomes an intersection with a DOM event handler.
+ * Derived from `keyof BaseProps`, not listed by hand: the calendar root is a `<div>` and so accepts
+ * every HTML attribute - `onchange` among them, the very name this component uses. A hand-kept list
+ * gets that wrong once and the prop quietly becomes an intersection with a DOM event handler. The
+ * cost is the div's own bubbled `onchange`, the trade every named prop in Coral makes.
  *
- * It does cost the div's own bubbled `onchange`, which with `captionLayout="dropdown"` would carry
- * the month and year selects' change events. That is the trade every named prop in Coral makes.
- *
- * Instantiated at `DatePickerType` rather than at `Type`: the key set is the same either way -
- * `Type` only ever changes the value types - and leaving the generic unresolved here is enough to
- * make `Omit` over the div's attributes explode into a union TypeScript will not represent.
+ * Instantiated at `DatePickerType`, not `Type`: the key set is the same either way, and leaving the
+ * generic unresolved makes `Omit` over the div's attributes explode into an unrepresentable union.
  */
 type Driven = keyof BaseProps<DatePickerType> | 'onValueChange' | 'placeholder';
 
 /**
- * Everything the wrapped calendar accepts and Coral does not drive itself: `minValue`, `maxValue`,
- * `numberOfMonths`, `isDateDisabled`, `isDateUnavailable`, `captionLayout`, `weekStartsOn`,
- * `fixedWeeks`, the `day` snippet, and the rest.
+ * Everything the wrapped calendar accepts and Coral does not drive: `minValue`, `maxValue`,
+ * `numberOfMonths`, `isDateDisabled`, `captionLayout`, `fixedWeeks`, the `day` snippet, the rest.
  *
- * Coral forwards to the **calendar**, not to the popover - the calendar is the primitive with
- * capability worth keeping, and every popover knob a date picker actually needs (`open`, `align`,
- * the content class) is a named prop.
+ * Coral forwards to the **calendar**, not the popover - the calendar is the primitive with
+ * capability worth keeping, and every popover knob a picker needs is already a named prop.
  *
- * The single branch is extracted before anything is omitted from it. The shadcn calendar's props
- * are a union discriminated on `type` - `single` and `multiple` - and asking TypeScript to `Omit`
- * across that union while it is still crossed with every HTML div attribute produces a union it
- * refuses to represent. Narrowing first leaves one object type, which omits fine.
+ * The single branch is extracted before anything is omitted: the calendar's props are a union
+ * discriminated on `type`, and omitting across it while still crossed with every div attribute
+ * produces a union TypeScript refuses to represent. Narrowing first leaves one object type.
  */
 type ForwardedProps<Type extends DatePickerType> = Type extends 'range'
 	? Omit<ComponentProps<typeof RangeCalendar>, Driven>

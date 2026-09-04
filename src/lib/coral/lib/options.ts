@@ -6,13 +6,9 @@
 /**
  * One entry in a selectable list.
  *
- * `value` is generic because the thing being selected is rarely a string - it is an id, an enum
- * member, a number. Closing this to `string` moves the conversion to every caller, and every
- * caller then converts it back on the way out.
- *
- * This lives in `lib/` rather than inside one component because select and combobox both speak
- * it, and a list should move between them without being rewritten. Fields a given component has
- * no use for are ignored, not rejected: a select does not search, so it never reads `keywords`.
+ * `value` is generic because what gets selected is rarely a string - it is an id, an enum member,
+ * a number - and closing it to `string` moves the conversion into every caller, both ways. Fields
+ * a component has no use for are ignored, not rejected: a select never reads `keywords`.
  */
 export type Option<T = string> = {
 	value: T;
@@ -38,21 +34,18 @@ export type OptionGroup<T = string> = {
 export type Options<T> = Option<T>[] | OptionGroup<T>[];
 
 /**
- * Whether an entry is a group rather than an option.
- *
- * Groups are told apart by carrying `options`, so an option may not have a property by that name.
- * The alternative - a `kind` discriminator - would have to be written on every option by hand,
- * which is a tax on the common case to make the rare one tidier.
+ * Whether an entry is a group rather than an option. Told apart by carrying `options`, so an option
+ * may not have a property by that name. A `kind` discriminator would have to be written on every
+ * option by hand - a tax on the common case to tidy the rare one.
  */
 export function isGroup<T>(entry: Option<T> | OptionGroup<T>): entry is OptionGroup<T> {
 	return entry !== null && typeof entry === 'object' && 'options' in entry;
 }
 
 /**
- * Reads either shape as groups, so the rest of a component only handles one.
- *
- * A flat list becomes a single unlabelled group. The first entry decides how the whole array is
- * read: a mixed array is a caller mistake, and guessing per entry would hide it.
+ * Reads either shape as groups, so the rest of a component handles one. A flat list becomes a
+ * single unlabelled group; the first entry decides how the whole array is read, since a mixed
+ * array is a caller mistake and guessing per entry would hide it.
  */
 export function toGroups<T>(options: Options<T>): OptionGroup<T>[] {
 	if (options.length === 0) return [];

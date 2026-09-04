@@ -56,26 +56,19 @@ export type SelectProps<T> = RootProps & {
 	placeholder?: string;
 	/** Blocks the trigger. */
 	disabled?: boolean;
-	/**
-	 * Allows deselecting: adds a clear control to the trigger, and makes re-picking the selected
-	 * option unset it.
-	 */
+	/** Adds a clear control to the trigger, and makes re-picking the selected option unset it. */
 	clearable?: boolean;
 	/** Accessible label for the clear control. */
 	clearLabel?: string;
 	/** Submits with a surrounding form, as a single field carrying the serialized value. */
 	name?: string;
-	/**
-	 * `id` of the form to submit with, for a select that sits outside it - a portalled dialog, a
-	 * sticky toolbar. Ignored without `name`, which is what decides whether anything submits.
-	 */
+	/** `id` of the form to submit with, for a select outside it. Ignored without `name`. */
 	form?: string;
 	/** Blocks submission while nothing is selected. Needs `name`. */
 	required?: boolean;
 	/**
-	 * Turns a value into the string a form submits. Defaults to `String`, which is right for ids,
-	 * numbers and enum members - and wrong for objects, which stringify to `[object Object]`.
-	 * Required when `name` is set and `T` is not a primitive.
+	 * Turns a value into the string a form submits. Defaults to `String` - right for ids, numbers
+	 * and enum members, wrong for objects. Required when `name` is set and `T` is not a primitive.
 	 */
 	serialize?: (value: T) => string;
 	/** Trigger height, from the shadcn primitive. */
