@@ -17,7 +17,8 @@
 </script>
 
 <form {onsubmit} class="flex w-64 flex-col gap-3">
-	<Select options={cities} name="city" placeholder="Select a city..." clearable />
+	<!-- `required` blocks the submit while nothing is picked - try it with the field empty. -->
+	<Select options={cities} name="city" placeholder="Select a city..." clearable required />
 	<button type="submit" class="text-sm underline underline-offset-4">Submit</button>
 	{#if submitted}
 		<p class="text-sm text-muted-foreground">Posted city={submitted}</p>

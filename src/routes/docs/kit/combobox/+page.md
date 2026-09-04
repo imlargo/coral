@@ -69,7 +69,9 @@ Everything the shadcn popover root accepts stays available - `open`, `onOpenChan
 | `clearable`         | `boolean`                           | `false`               | Adds a clear control; re-picking deselects.                     |
 | `loading`           | `boolean`                           | `false`               | Swaps the list for an indicator.                                |
 | `disabled`          | `boolean`                           | `false`               | Blocks the trigger.                                             |
-| `name`              | `string`                            | -                     | Submits with a surrounding form as hidden inputs.               |
+| `name`              | `string`                            | -                     | Submits with a surrounding form, one field per value.           |
+| `form`              | `string`                            | -                     | `id` of the form, for a combobox outside it.                    |
+| `required`          | `boolean`                           | `false`               | Blocks submission while nothing is selected.                    |
 | `serialize`         | `(value: T) => string`              | `String`              | Turns a value into the submitted string. Object values need it. |
 | `maxDisplay`        | `number`                            | `3`                   | Badges before collapsing into a counter.                        |
 | `placeholder`       | `string`                            | `Select an option...` | Trigger text while nothing is selected.                         |
@@ -133,7 +135,8 @@ Use `bind:value` when you only need the state, `onchange` when something should 
 together is fine.
 
 For `type="multiple"` the selection is the whole list, not the row that toggled - which is what
-makes a bulk change legible too: `clear` reports `[]` and the footer's `selectAll` reports the lot.
+makes a bulk change legible too: `clear` reports `[]` and the footer's `selectAll` reports the whole
+resulting selection.
 A single changed row could only have reported nothing. When the delta is what matters, diff against
 the previous value.
 
@@ -147,6 +150,10 @@ choosing the last one.
 
 The `footer` snippet gets `selectAll`, `clear`, the current selection and everything passing the
 filter, which is enough to build bulk actions without Coral guessing what they should say.
+
+> `selectAll` adds what is visible to the selection rather than replacing it. With a search term
+> active the two differ, and replacing would deselect the options the filter is hiding - silently,
+> since they are exactly the rows the user cannot see.
 
 > Badges in the trigger are not individually removable. A button nested inside a button is invalid
 > HTML, and browsers recover by dropping one of the two - which is how a per-badge remove control
@@ -197,8 +204,9 @@ forwarded to the command item.
 
 ## Forms
 
-`name` renders hidden inputs - one per value when `type="multiple"` - so the selection submits with
-a plain `<form>` and shows up in `FormData`.
+`name` renders one field per selected value - so `type="multiple"` posts the shape
+`FormData.getAll(name)` already reads back as a list. `form` points those fields at a form by `id`,
+for a combobox that renders outside it. `required` blocks submission while nothing is selected.
 
 Values are stringified with `String` by default, which is right for ids, numbers and enum members.
 Object values need `serialize`, or they submit as `[object Object]`:

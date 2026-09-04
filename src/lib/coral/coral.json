@@ -1,5 +1,9 @@
 {
 	"components": {
+		"lib/hidden-field": {
+			"version": "1.0.0",
+			"shadcn": []
+		},
 		"lib/options": {
 			"version": "1.0.0",
 			"shadcn": []
@@ -13,36 +17,43 @@
 			"shadcn": ["avatar"]
 		},
 		"kit/combobox": {
-			"version": "4.0.0",
-			"shadcn": ["popover", "command", "button", "badge"]
+			"version": "4.1.0",
+			"shadcn": ["popover", "command", "button", "badge"],
+			"npm": ["@lucide/svelte"]
 		},
 		"kit/confirm-dialog": {
 			"version": "1.0.0",
 			"shadcn": ["alert-dialog", "button", "spinner"]
 		},
 		"kit/date-picker": {
-			"version": "1.0.0",
-			"shadcn": ["popover", "calendar", "range-calendar", "button"]
+			"version": "1.1.0",
+			"shadcn": ["popover", "calendar", "range-calendar", "button"],
+			"npm": ["@lucide/svelte"]
 		},
 		"kit/file-input": {
 			"version": "1.0.0",
-			"shadcn": ["empty", "item", "button"]
+			"shadcn": ["empty", "item", "button"],
+			"npm": ["@lucide/svelte"]
 		},
 		"kit/number-input": {
 			"version": "1.0.0",
-			"shadcn": ["input-group", "input", "button"]
+			"shadcn": ["input-group"],
+			"npm": ["@lucide/svelte"]
 		},
 		"kit/rating-group": {
 			"version": "1.0.0",
-			"shadcn": []
+			"shadcn": [],
+			"npm": ["@lucide/svelte"]
 		},
 		"kit/select": {
-			"version": "2.0.0",
-			"shadcn": ["select", "button"]
+			"version": "2.1.0",
+			"shadcn": ["select", "button"],
+			"npm": ["@lucide/svelte"]
 		},
 		"kit/tags-input": {
 			"version": "1.0.0",
-			"shadcn": ["input-group", "input", "badge", "button"]
+			"shadcn": ["input-group", "badge"],
+			"npm": ["@lucide/svelte"]
 		}
 	}
 }

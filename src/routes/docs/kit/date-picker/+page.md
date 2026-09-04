@@ -100,9 +100,13 @@ one name, one a string and one a date, is a coin flip every caller loses once.
 
 <Preview name="kit/date-picker/form" />
 
-`name` puts the selection in the request as a hidden input holding the ISO day - `2026-01-05`, which
-is what `String(dateValue)` already gives you. A range submits two inputs: `name`, and `endName`
-(defaulting to `${name}-end`).
+`name` puts the selection in the request as a field holding the ISO day - `2026-01-05`, which is
+what `String(dateValue)` already gives you. A range submits two: `name`, and `endName` (defaulting
+to `${name}-end`).
+
+`form` points those fields at a form by `id`, for a picker that renders outside it. `required`
+blocks submission while nothing is selected - and on a range it holds for a half-picked one too,
+which is the user mid-gesture rather than a selection.
 
 ## The pieces
 
@@ -155,8 +159,10 @@ Everything the wrapped calendar accepts stays available. On top of that:
 | `clearable`    | `boolean`                          | `false`                   | Adds a clear control to the trigger.                    |
 | `clearLabel`   | `string`                           | `Clear date`              | Accessible label for that control.                      |
 | `disabled`     | `boolean`                          | `false`                   | Blocks the trigger and the calendar.                    |
-| `name`         | `string`                           | -                         | Submits as a hidden input holding the ISO day.          |
+| `name`         | `string`                           | -                         | Submits as a field holding the ISO day.                 |
 | `endName`      | `string`                           | `${name}-end`             | Field name for the end of a range.                      |
+| `form`         | `string`                           | -                         | `id` of the form, for a picker outside it.              |
+| `required`     | `boolean`                          | `false`                   | Blocks submission while nothing is selected.            |
 | `serialize`    | `(value: DateValue) => string`     | `String`                  | Turns a day into the submitted string.                  |
 | `id`           | `string`                           | -                         | Put on the trigger, for a `<Label for>`.                |
 | `align`        | `'start'` \| `'center'` \| `'end'` | `'start'`                 | Which trigger edge the popover lines up with.           |

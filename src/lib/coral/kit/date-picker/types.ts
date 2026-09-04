@@ -1,6 +1,6 @@
 /**
  * @coral/kit/date-picker
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -89,6 +89,16 @@ type BaseProps<Type extends DatePickerType> = {
 	name?: string;
 	/** The end of a range's field name. Defaults to `${name}-end`. `type="range"` only. */
 	endName?: string;
+	/**
+	 * `id` of the form to submit with, for a picker that sits outside it - a portalled dialog, a
+	 * sticky toolbar. Ignored without `name`, which is what decides whether anything submits.
+	 */
+	form?: string;
+	/**
+	 * Blocks submission while nothing is selected. Needs `name`. On a range it holds for a
+	 * half-picked one too, which is not a selection.
+	 */
+	required?: boolean;
 	/** Turns a day into the string a form submits. Defaults to `String`, which is ISO already. */
 	serialize?: (value: DateValue) => string;
 	/** Put on the trigger, so a `<Label for>` can point at it. */

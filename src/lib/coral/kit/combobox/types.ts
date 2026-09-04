@@ -1,6 +1,6 @@
 /**
  * @coral/kit/combobox
- * @version 4.0.0
+ * @version 4.1.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -30,7 +30,10 @@ export type FooterContext<T> = {
 	/** Every option currently passing the filter. */
 	visible: Option<T>[];
 	clear: () => void;
-	/** Selects every enabled option. Only meaningful when `type="multiple"`. */
+	/**
+	 * Adds every option in `visible` to the selection, keeping what was already picked. Only
+	 * meaningful when `type="multiple"`.
+	 */
 	selectAll: () => void;
 	close: () => void;
 };
@@ -58,9 +61,17 @@ type BaseProps<T> = RootProps & {
 	/** Renders a loading row in place of the list. Pair with `onsearch` for server-side search. */
 	loading?: boolean;
 	/**
-	 * Submits with a surrounding form, as hidden inputs. One per value when `type="multiple"`.
+	 * Submits with a surrounding form, as one field per selected value - so `type="multiple"`
+	 * posts the shape a server already reads as a list.
 	 */
 	name?: string;
+	/**
+	 * `id` of the form to submit with, for a combobox that sits outside it - a portalled dialog, a
+	 * sticky toolbar. Ignored without `name`, which is what decides whether anything submits.
+	 */
+	form?: string;
+	/** Blocks submission while nothing is selected. Needs `name`. */
+	required?: boolean;
 	/**
 	 * Turns a value into the string a form submits. Defaults to `String`, which is right for ids,
 	 * numbers and enum members - and wrong for objects, which stringify to `[object Object]`.
@@ -119,8 +130,8 @@ export type ComboboxValue<T, Type extends ComboboxType> = Type extends 'multiple
  *
  * Single hands over the option that was picked, or `undefined` when the selection was cleared.
  * Multiple hands over every selected option, in list order - which is also what makes a bulk
- * change legible: `clear` reports `[]` and `selectAll` reports the lot, where a single changed
- * row could only have reported nothing.
+ * change legible: `clear` reports `[]` and `selectAll` reports the whole resulting selection,
+ * where a single changed row could only have reported nothing.
  */
 export type ComboboxSelection<T, Type extends ComboboxType> = Type extends 'multiple'
 	? Option<T>[]

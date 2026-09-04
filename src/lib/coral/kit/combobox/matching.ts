@@ -1,6 +1,6 @@
 /**
  * @coral/kit/combobox
- * @version 4.0.0
+ * @version 4.1.0
  */
 
 import { fold } from './fold.js';

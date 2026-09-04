@@ -78,10 +78,18 @@ button nested in a button is invalid HTML that browsers recover from by dropping
 
 <Preview name="kit/select/form" />
 
-`name` renders a hidden input. It is Coral's own rather than the primitive's, because bits-ui would
-submit the internal item key. `serialize` controls what gets written; it defaults to `String`, which
-is right for ids, numbers and enum members and wrong for objects - set it when `T` is not a
-primitive.
+`name` renders the field that submits. It is Coral's own rather than the primitive's, because
+bits-ui would submit the internal item key. `serialize` controls what gets written; it defaults to
+`String`, which is right for ids, numbers and enum members and wrong for objects - set it when `T`
+is not a primitive.
+
+`form` points the field at a form by `id`, for a select that renders outside it - a portalled
+dialog, a sticky toolbar. `required` blocks submission while nothing is selected.
+
+> The field is clipped to a pixel rather than `type="hidden"`, because a hidden input is barred
+> from constraint validation and `required` on one does nothing at all. It stays out of the tab
+> order and out of the accessibility tree; the only thing that reaches it is the browser's own
+> validation message.
 
 ## Installation
 
@@ -101,22 +109,24 @@ pnpm dlx shadcn-svelte@latest add select button
 Everything the shadcn root accepts stays available - `open`, `onOpenChange`, `loop`,
 `scrollAlignment`, `autocomplete`. On top of that:
 
-| Prop           | Type                                             | Default               | Description                                            |
-| -------------- | ------------------------------------------------ | --------------------- | ------------------------------------------------------ |
-| `options`      | `Option<T>[] \| OptionGroup<T>[]`                | -                     | The list, flat or grouped.                             |
-| `value`        | `T`                                              | -                     | Bindable. Matched with `===`.                          |
-| `onchange`     | `(option: Option<T> \| undefined) => void`       | -                     | User-driven changes only. Never on mount.              |
-| `placeholder`  | `string`                                         | `Select an option...` | Shown while nothing is selected.                       |
-| `disabled`     | `boolean`                                        | `false`               | Blocks the trigger.                                    |
-| `clearable`    | `boolean`                                        | `false`               | Adds a clear control; re-picking deselects.            |
-| `clearLabel`   | `string`                                         | `Clear selection`     | Accessible label for the clear control.                |
-| `name`         | `string`                                         | -                     | Submits with a surrounding form, as a hidden input.    |
-| `serialize`    | `(value: T) => string`                           | `String`              | What the hidden input writes. Required for object `T`. |
-| `size`         | `'sm' \| 'default'`                              | `'default'`           | Trigger height, from the primitive.                    |
-| `class`        | `string`                                         | -                     | Merged onto the trigger.                               |
-| `contentClass` | `string`                                         | -                     | Merged onto the dropdown.                              |
-| `trigger`      | `Snippet<[{ selected, placeholder, disabled }]>` | -                     | Replaces the label inside the trigger.                 |
-| `option`       | `Snippet<[{ option, selected }]>`                | -                     | Replaces the body of each row. The check stays.        |
+| Prop           | Type                                             | Default               | Description                                     |
+| -------------- | ------------------------------------------------ | --------------------- | ----------------------------------------------- |
+| `options`      | `Option<T>[] \| OptionGroup<T>[]`                | -                     | The list, flat or grouped.                      |
+| `value`        | `T`                                              | -                     | Bindable. Matched with `===`.                   |
+| `onchange`     | `(option: Option<T> \| undefined) => void`       | -                     | User-driven changes only. Never on mount.       |
+| `placeholder`  | `string`                                         | `Select an option...` | Shown while nothing is selected.                |
+| `disabled`     | `boolean`                                        | `false`               | Blocks the trigger.                             |
+| `clearable`    | `boolean`                                        | `false`               | Adds a clear control; re-picking deselects.     |
+| `clearLabel`   | `string`                                         | `Clear selection`     | Accessible label for the clear control.         |
+| `name`         | `string`                                         | -                     | Submits with a surrounding form.                |
+| `form`         | `string`                                         | -                     | `id` of the form, for a select outside it.      |
+| `required`     | `boolean`                                        | `false`               | Blocks submission while nothing is selected.    |
+| `serialize`    | `(value: T) => string`                           | `String`              | What the field writes. Required for object `T`. |
+| `size`         | `'sm' \| 'default'`                              | `'default'`           | Trigger height, from the primitive.             |
+| `class`        | `string`                                         | -                     | Merged onto the trigger.                        |
+| `contentClass` | `string`                                         | -                     | Merged onto the dropdown.                       |
+| `trigger`      | `Snippet<[{ selected, placeholder, disabled }]>` | -                     | Replaces the label inside the trigger.          |
+| `option`       | `Snippet<[{ option, selected }]>`                | -                     | Replaces the body of each row. The check stays. |
 
 ### `Option<T>`
 

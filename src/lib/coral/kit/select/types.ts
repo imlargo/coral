@@ -1,6 +1,6 @@
 /**
  * @coral/kit/select
- * @version 2.0.0
+ * @version 2.1.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -14,10 +14,14 @@ import type { Option, Options } from '../../lib/options.js';
  * component. `value` and `onValueChange` speak bits-ui's string keys rather than `T`. `items` is
  * derived from `options`, and `name` is re-declared because bits-ui's own hidden input would
  * submit the internal key instead of the value.
+ *
+ * `required` goes with `name`: the primitive only renders the field it would validate when it owns
+ * the name, so forwarding it would leave a prop that type-checks and does nothing. Coral honours it
+ * on its own field instead, and re-declares it below.
  */
 type RootProps = Omit<
 	ComponentProps<typeof Select>,
-	'type' | 'value' | 'onValueChange' | 'children' | 'items' | 'name' | 'allowDeselect'
+	'type' | 'value' | 'onValueChange' | 'children' | 'items' | 'name' | 'allowDeselect' | 'required'
 >;
 
 /** What the `trigger` snippet receives. Replaces the label inside the trigger, not the button. */
@@ -59,8 +63,15 @@ export type SelectProps<T> = RootProps & {
 	clearable?: boolean;
 	/** Accessible label for the clear control. */
 	clearLabel?: string;
-	/** Submits with a surrounding form, as a hidden input. */
+	/** Submits with a surrounding form, as a single field carrying the serialized value. */
 	name?: string;
+	/**
+	 * `id` of the form to submit with, for a select that sits outside it - a portalled dialog, a
+	 * sticky toolbar. Ignored without `name`, which is what decides whether anything submits.
+	 */
+	form?: string;
+	/** Blocks submission while nothing is selected. Needs `name`. */
+	required?: boolean;
 	/**
 	 * Turns a value into the string a form submits. Defaults to `String`, which is right for ids,
 	 * numbers and enum members - and wrong for objects, which stringify to `[object Object]`.

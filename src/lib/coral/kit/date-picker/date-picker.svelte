@@ -1,7 +1,7 @@
 <script lang="ts" generics="Type extends DatePickerType = 'single'">
 	/**
 	 * @coral/kit/date-picker
-	 * @version 1.0.0
+	 * @version 1.1.0
 	 */
 	import { tick } from 'svelte';
 	import CalendarIcon from '@lucide/svelte/icons/calendar';
@@ -11,6 +11,7 @@
 	import { RangeCalendar } from '$lib/components/ui/range-calendar/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { cn } from '$lib/utils.js';
+	import HiddenField from '../../lib/hidden-field.svelte';
 	import { formatDay, formatDayRange, isSameDay, isSameRange } from './format.js';
 	import { activePreset, resolvePreset } from './presets.js';
 	import type { Preset } from './presets.js';
@@ -39,6 +40,8 @@
 		clearLabel = 'Clear date',
 		name,
 		endName,
+		form,
+		required = false,
 		serialize,
 		id,
 		'aria-label': ariaLabel,
@@ -162,6 +165,7 @@
 						{disabled}
 						aria-label={ariaLabel}
 						aria-labelledby={ariaLabelledby}
+						aria-required={required ? 'true' : undefined}
 						class={cn('w-full justify-between gap-2', className)}
 					>
 						<!--
@@ -256,15 +260,21 @@
 	</Popover.Content>
 </Popover.Root>
 
+<!--
+	`required` is put on both ends of a range, so a half-picked one holds the submit up the same way
+	an empty one does. Half a range is not a selection - it is the user mid-gesture, which is the
+	same reading `onchange` takes.
+-->
 {#if name}
 	{#if isRange}
-		<input type="hidden" {name} value={range?.start ? toText(range.start) : ''} />
-		<input
-			type="hidden"
+		<HiddenField {name} {form} {required} value={range?.start ? toText(range.start) : ''} />
+		<HiddenField
 			name={endName ?? `${name}-end`}
+			{form}
+			{required}
 			value={range?.end ? toText(range.end) : ''}
 		/>
 	{:else}
-		<input type="hidden" {name} value={day ? toText(day) : ''} />
+		<HiddenField {name} {form} {required} value={day ? toText(day) : ''} />
 	{/if}
 {/if}

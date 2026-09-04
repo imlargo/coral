@@ -1,7 +1,7 @@
 <script lang="ts" generics="T, Type extends ComboboxType = 'single'">
 	/**
 	 * @coral/kit/combobox
-	 * @version 4.0.0
+	 * @version 4.1.0
 	 */
 	import { tick } from 'svelte';
 	import ChevronsUpDownIcon from '@lucide/svelte/icons/chevrons-up-down';
@@ -12,8 +12,10 @@
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { cn } from '$lib/utils.js';
+	import HiddenField from '../../lib/hidden-field.svelte';
 	import { flatten, toGroups } from '../../lib/options.js';
 	import { includesValue, matches } from './matching.js';
+	import { selectAllVisible } from './selection.js';
 	import type { Option } from '../../lib/options.js';
 	import type { ComboboxProps, ComboboxType } from './types.js';
 
@@ -40,6 +42,8 @@
 		clearable = false,
 		loading = false,
 		name,
+		form,
+		required = false,
 		serialize,
 		maxDisplay = 3,
 		class: className,
@@ -167,8 +171,7 @@
 
 	function selectAll() {
 		if (!multiple) return;
-		const next = visible.filter((option) => !option.disabled).map((option) => option.value);
-		commit(next);
+		commit(selectAllVisible(all, visible, (value as T[] | undefined) ?? []));
 	}
 
 	function handleSearch(event: Event & { currentTarget: HTMLInputElement }) {
@@ -208,6 +211,7 @@
 						variant="outline"
 						role="combobox"
 						aria-expanded={open}
+						aria-required={required ? 'true' : undefined}
 						{disabled}
 						class={cn('w-full justify-between gap-2', className)}
 					>
@@ -326,9 +330,17 @@
 {#if name}
 	{#if multiple}
 		{#each values as entry (entry)}
-			<input type="hidden" {name} value={toText(entry)} />
+			<HiddenField {name} {form} value={toText(entry)} />
 		{/each}
+		<!--
+			An empty selection renders no field at all, so there would be nothing for `required` to
+			hold up the submit on. This is that field - present only while there is nothing to submit,
+			the same shape `kit/tags-input` uses for the same reason.
+		-->
+		{#if required && values.length === 0}
+			<HiddenField {name} {form} required value="" />
+		{/if}
 	{:else}
-		<input type="hidden" {name} value={value === undefined ? '' : toText(value as T)} />
+		<HiddenField {name} {form} {required} value={value === undefined ? '' : toText(value as T)} />
 	{/if}
 {/if}

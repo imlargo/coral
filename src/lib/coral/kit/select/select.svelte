@@ -1,12 +1,13 @@
 <script lang="ts" generics="T">
 	/**
 	 * @coral/kit/select
-	 * @version 2.0.0
+	 * @version 2.1.0
 	 */
 	import XIcon from '@lucide/svelte/icons/x';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { cn } from '$lib/utils.js';
+	import HiddenField from '../../lib/hidden-field.svelte';
 	import { flatten, toGroups } from '../../lib/options.js';
 	import type { SelectProps } from './types.js';
 
@@ -20,6 +21,8 @@
 		disabled = false,
 		clearable = false,
 		name,
+		form,
+		required = false,
 		serialize,
 		size = 'default',
 		class: className,
@@ -99,10 +102,16 @@
 		onValueChange={handleValueChange}
 		{...restProps}
 	>
+		<!--
+			`aria-required` is Coral's: the primitive spends `required` on the field it submits and
+			never puts it on the trigger, so without this a required select announces exactly like
+			an optional one.
+		-->
 		<Select.Trigger
 			{size}
 			class={cn('w-full', showClear && 'pe-9', className)}
 			aria-label={selected ? undefined : placeholder}
+			aria-required={required ? 'true' : undefined}
 		>
 			{#if trigger}
 				{@render trigger({ selected, placeholder, disabled })}
@@ -166,6 +175,11 @@
 	{/if}
 </div>
 
+<!--
+	`required` is the primitive's own prop and is deliberately not forwarded to it: bits-ui only
+	renders the input it would validate when it owns `name`, and Coral owns `name` here so that
+	what submits is the value rather than the internal index key. It is honoured below instead.
+-->
 {#if name}
-	<input type="hidden" {name} value={value === undefined ? '' : toText(value)} />
+	<HiddenField {name} {form} {required} value={value === undefined ? '' : toText(value)} />
 {/if}
