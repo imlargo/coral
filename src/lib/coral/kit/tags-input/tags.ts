@@ -19,14 +19,10 @@ export type TagRejection = {
 const NEWLINES = /\r\n|\r|\n/;
 
 /**
- * Cuts a run of text into the tags it describes.
- *
- * One function for typing and for pasting: the delimiter separates tags wherever the text came
- * from. Splitting only on paste - which is what a `addOnPaste` switch buys - means the same string
- * becomes two tags or one depending on how it got into the field.
- *
- * An empty string delimiter would cut between every character, so it is read as "no delimiter" and
- * only newlines separate.
+ * Cuts a run of text into the tags it describes - one function for typing and for pasting, since
+ * splitting only on paste (what an `addOnPaste` switch buys) makes the same string one tag or two
+ * depending on how it got into the field. An empty delimiter would cut between every character, so
+ * it reads as "no delimiter" and only newlines separate.
  */
 export function split(raw: string, delimiter: string | RegExp = ','): string[] {
 	const lines = raw.split(NEWLINES);
@@ -48,14 +44,11 @@ export type AddOptions = {
 };
 
 /**
- * Works out what the list should be after some values arrive, and what got turned away.
+ * What the list should be after some values arrive, and what got turned away. All three routes in -
+ * a delimiter key, a paste, a blur - funnel through here, so the rules cannot drift between them.
  *
- * Values arrive from three places - a delimiter key, a paste, a field losing focus - and all three
- * funnel through here, so the rules cannot drift between them.
- *
- * The checks run per value against the list *as it grows*, not against the list that came in: that
- * is what makes pasting `a, a` add one tag, and what makes the last value of an oversized paste
- * report `max` instead of being counted against a length that never changed.
+ * Checks run per value against the list *as it grows*, not the one that came in: that is what makes
+ * pasting `a, a` add one tag, and the tail of an oversized paste report `max`.
  *
  * When nothing gets through, `current` is returned by identity rather than rebuilt - which is what
  * lets the caller tell "nothing changed" from "changed to the same thing", and keeps a rejected

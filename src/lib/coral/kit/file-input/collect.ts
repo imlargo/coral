@@ -25,25 +25,21 @@ export type CollectOptions = {
 };
 
 /**
- * Whether two files are, for a picker's purposes, the same one.
- *
- * Name, size and last-modified together are as close to identity as a `File` gets - there is no id
- * to compare. Every copy in the corpus concatenates without this check, so dropping the same file
- * twice puts two identical rows on screen and posts it twice.
+ * Whether two files are, for a picker's purposes, the same one. Name, size and last-modified are as
+ * close to identity as a `File` gets. Every copy in the corpus concatenates without this check, so
+ * dropping the same file twice puts two identical rows on screen and posts it twice.
  */
 function isSameFile(a: File, b: File): boolean {
 	return a.name === b.name && a.size === b.size && a.lastModified === b.lastModified;
 }
 
 /**
- * Works out what the new selection should be after some files arrive, and what got turned away.
+ * What the selection should be after some files arrive, and what got turned away. Both routes in -
+ * the picker and a drop - funnel through here, so the rules cannot drift between them.
  *
- * Files arrive from two places - the picker and a drop - and both funnel through here, so the rules
- * cannot drift between them.
- *
- * When nothing is accepted, the current selection is returned by identity rather than rebuilt. That
- * is what lets the caller tell "nothing changed" from "changed to the same thing", and it means a
- * rejected pick cannot quietly clear a single-file field.
+ * Accepting nothing returns `current` by identity rather than rebuilt, which lets the caller tell
+ * "nothing changed" from "changed to the same thing" - and stops a rejected pick quietly clearing
+ * a single-file field.
  */
 export function collect(
 	incoming: File[],
