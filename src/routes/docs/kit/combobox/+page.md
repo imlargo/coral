@@ -11,7 +11,7 @@ shadcn builds the combobox out of a popover and a command menu, and its docs are
 is a recipe rather than a component: around fifty lines of markup, a `triggerRef`, and a
 `closeAndFocusTrigger` that has to be written by hand every time.
 
-Three Kora projects wrote it. Two are byte-identical copies of each other; the third diverged and
+Three projects in the corpus wrote it. Two are byte-identical copies of each other; the third diverged and
 lost the accent handling on the way. That is the pattern this component ends.
 
 <Preview name="kit/combobox/basic" />

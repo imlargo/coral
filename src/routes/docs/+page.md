@@ -3,10 +3,10 @@ title: Introduction
 description: An ergonomics layer on top of shadcn-svelte, copied into the project as one folder.
 ---
 
-Coral is Kora's internal component library. It sits on top of shadcn-svelte and does one thing:
-remove the code that gets rewritten in every project - the combobox with search, the data table
-with sorting and pagination, the form with validation, the confirm dialog - and hand it over
-already resolved, without closing the door on taking it apart.
+Coral is an open-source ergonomics layer on top of shadcn-svelte. It does one thing: remove the
+code that gets rewritten in every project - the combobox with search, the date picker with ranges,
+the confirm dialog that waits on a request - and hand it over already resolved, without closing the
+door on taking it apart.
 
 It is not a design system, not a fork of shadcn, not a primitives library, and not an npm package.
 It is a folder.
@@ -27,8 +27,8 @@ same logic, it gets extracted into a third one or into `lib/`.
 
 ## What earns a place
 
-A component enters Coral only after the same pattern has been written **twice** in real, paid
-projects. An app-level composition - a `block` - waits for **three**.
+A component enters Coral only after the same pattern has been written **twice** in real production
+work. An app-level composition - a `block` - waits for **three**.
 
 What Coral contributes when it composes is resolved behavior, not syntactic sugar: filtering,
 keyboard navigation, shared state through context, accessibility, debounce, loading and empty

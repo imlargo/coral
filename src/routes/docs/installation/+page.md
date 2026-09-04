@@ -3,7 +3,7 @@ title: Installation
 description: Copy the folder, install the primitives it declares. There is nothing to add to package.json.
 ---
 
-Coral is not published. You copy it.
+Coral is not an npm package. You copy it, and from that moment it is yours.
 
 ## Requirements
 
@@ -20,11 +20,19 @@ pnpm dlx shadcn-svelte@latest init
 ## Copy the folder
 
 ```bash
-cp -R coral/src/lib/coral your-project/src/lib/coral
+npx degit imlargo/coral/src/lib/coral src/lib/coral
 ```
+
+Take the whole folder, or just the `kit/` directories you want plus `lib/` - each component folder
+is self-contained apart from what `lib/` holds.
 
 From here the folder belongs to the project. Editing it is allowed - but a change worth keeping
 should come back upstream, or the copies drift apart.
+
+> **Coming: one-command install.** shadcn-svelte can add components straight from a custom
+> registry, which is the right shape for Coral - still copied, still yours, but with the primitives
+> resolved for you. `pnpm dlx shadcn-svelte@latest add https://coral.imlargo.dev/r/combobox.json`
+> is the next milestone; until then, the steps on this page are the install.
 
 ## Install the primitives
 
@@ -69,3 +77,9 @@ There are no barrels. One component, one folder, imported directly:
 
 That makes filenames public API. Renaming one breaks every project that already copied it, so
 treat a rename as a breaking change and bump the version in `coral.json`.
+
+## Versioning
+
+Each component carries its own version in `coral.json` and follows semver, so a breaking change to
+one is visible without reading a diff. There is no single Coral version to track - you copied a
+folder, and what matters is which components in it are behind.

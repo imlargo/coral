@@ -4,9 +4,10 @@ Operating guide for AI agents (and humans) working in this repo. These rules are
 
 ## What this repo is
 
-Coral: Kora's internal component library, an ergonomics layer on top of shadcn-svelte. Not a
-design system, not a fork, not an npm package - it's a folder meant to be copied into client
-projects. See [`README.md`](./README.md) for stack and status.
+Coral: an open-source ergonomics layer on top of shadcn-svelte. Not a design system, not a fork,
+not an npm package - it's a folder meant to be copied into a project, which then owns it. Started
+as one studio's internal library, now public and built in public. See [`README.md`](./README.md)
+for stack, install and status.
 
 This file is self-contained: every rule you need is here. (`context/coral.md` holds the long-form
 philosophy but is deliberately untracked - don't assume a reader has it.)
@@ -20,8 +21,9 @@ than this sentence, which is the kind that goes stale.
 ## Hard rules
 
 - **Extraction only, never speculation.** A component enters Coral only after the same pattern has
-  been written twice in a real, paid project. If asked to add something unproven, push back -
-  it belongs in the consuming project's `features/` first.
+  been written twice in real production work - by the maintainer or by a contributor who can name
+  the two places. If asked to add something unproven, push back - it belongs in the consuming
+  project's `features/` first.
 - **No appearance.** No hardcoded colors, shadows, radii, or typography. Only layout utilities
   (`flex`, `gap-*`, `w-full`). Appearance is the shadcn theme's job, not Coral's.
 - **No domain knowledge.** Never reference client entities (invoice, student, contract...).
