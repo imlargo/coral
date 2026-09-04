@@ -37,13 +37,9 @@
 	const all = $derived(flatten(options));
 
 	/**
-	 * bits-ui keys an item by a string, and `T` is not one. A running index across all groups is
-	 * unique by construction.
-	 *
-	 * `String(value)` is the obvious alternative and it is what three of the four selects in the
-	 * corpus reached for. It is lossy twice over: two ids that stringify the same collapse onto
-	 * one item, and every object value becomes `[object Object]`, so the whole list shares a key.
-	 * An index cannot collide with itself.
+	 * bits-ui keys an item by a string, and `T` is not one. An index cannot collide with itself;
+	 * `String(value)` - what three of the four selects in the corpus used - collides twice over,
+	 * on ids that stringify alike and on objects, which all become `[object Object]`.
 	 */
 	const indexed = $derived.by(() => {
 		let index = 0;
@@ -59,9 +55,8 @@
 	const showClear = $derived(clearable && selected !== undefined && !disabled);
 
 	/**
-	 * Typeahead while the trigger is focused and the list is shut, the way a native `<select>`
-	 * behaves. bits-ui needs the labels up front for it, because an item that has never been
-	 * mounted cannot report its own.
+	 * Typeahead while the trigger is focused and the list is shut, the way a native `<select>` does.
+	 * bits-ui needs the labels up front: an item that never mounted cannot report its own.
 	 */
 	const items = $derived(
 		all.map((option, index) => ({
@@ -72,11 +67,9 @@
 	);
 
 	/**
-	 * The only place `onchange` is called from.
-	 *
-	 * Both selects in the corpus derived it from the value with an `$effect` instead, which fires
-	 * on mount and on every programmatic assignment - so a form that loads a saved record
-	 * announces a change nobody made, and does it again on every rehydrate.
+	 * The only place `onchange` is called from. Deriving it from `value` with an `$effect`, as both
+	 * selects in the corpus did, also fires on mount and on every programmatic assignment - so a
+	 * form loading a saved record announces a change nobody made.
 	 */
 	function handleValueChange(key: string) {
 		// bits-ui reports a deselection as an empty string.
@@ -102,11 +95,7 @@
 		onValueChange={handleValueChange}
 		{...restProps}
 	>
-		<!--
-			`aria-required` is Coral's: the primitive spends `required` on the field it submits and
-			never puts it on the trigger, so without this a required select announces exactly like
-			an optional one.
-		-->
+		<!-- `aria-required`: the primitive spends `required` on the field it submits, never here. -->
 		<Select.Trigger
 			{size}
 			class={cn('w-full', showClear && 'pe-9', className)}
@@ -118,11 +107,8 @@
 			{:else if selected}
 				<span class="min-w-0 truncate">{selected.label}</span>
 			{:else}
-				<!--
-					`data-placeholder` on the trigger is what dims placeholder text, and the primitive
-					only sets it when its own value is empty. Coral drives the value, so the empty case
-					is spelled out here rather than inherited.
-				-->
+				<!-- The primitive dims placeholder text off `data-placeholder`, which it only sets when
+				     its own value is empty. Coral drives the value, so the dimming is spelled out. -->
 				<span class="min-w-0 truncate text-muted-foreground">{placeholder}</span>
 			{/if}
 		</Select.Trigger>
@@ -157,10 +143,8 @@
 		</Select.Content>
 	</Select.Root>
 
-	<!--
-		Beside the trigger, not inside it. The trigger is a `<button>`, and a button nested in a
-		button is invalid HTML that browsers recover from by dropping one of the two.
-	-->
+	<!-- Beside the trigger, not inside: a button within a button is invalid HTML, and browsers
+	     recover by dropping one of the two. -->
 	{#if showClear}
 		<Button
 			type="button"
@@ -175,11 +159,8 @@
 	{/if}
 </div>
 
-<!--
-	`required` is the primitive's own prop and is deliberately not forwarded to it: bits-ui only
-	renders the input it would validate when it owns `name`, and Coral owns `name` here so that
-	what submits is the value rather than the internal index key. It is honoured below instead.
--->
+<!-- `required` is not forwarded to the primitive: it spends it on a field it only renders when it
+     owns `name`, and Coral owns `name` here so the value submits instead of the index key. -->
 {#if name}
 	<HiddenField {name} {form} {required} value={value === undefined ? '' : toText(value)} />
 {/if}

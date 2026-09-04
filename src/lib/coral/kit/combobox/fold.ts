@@ -4,15 +4,13 @@
  */
 
 /**
- * Folds a string into the form searches should compare against: lower case, no accents.
+ * Folds a string into the form searches compare against: lower case, no accents.
  *
- * Spanish is the reason this exists. `Bogotá`, `Medellín` and `Muñoz` are typed `bogota`,
- * `medellin` and `munoz` far more often than not, and a matcher that compares the raw strings
- * finds none of them — the list looks empty for a term the user can see on screen.
- *
- * Decomposing to NFD splits an accented character into its base letter plus a combining mark,
- * so dropping the marks leaves the base letter behind. `ñ` folds to `n` for the same reason:
- * it is what people type when searching, even though it is a distinct letter of the alphabet.
+ * Spanish is why this exists. `Bogotá` and `Muñoz` are typed `bogota` and `munoz` far more often
+ * than not, and comparing raw strings finds neither - the list looks empty for a term the user can
+ * see on screen. NFD splits an accented character into base letter plus combining mark, so
+ * dropping the marks leaves the letter. `ñ` folds to `n` for the same reason, distinct letter of
+ * the alphabet though it is.
  */
 export function fold(value: string): string {
 	return value

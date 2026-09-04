@@ -70,9 +70,8 @@
 	const all = $derived(flatten(options));
 
 	/**
-	 * Command identifies an item by a string, and `T` is not one - stringifying an id is lossy and
-	 * two options can collapse onto the same key. A running index across all groups is unique by
-	 * construction.
+	 * Command identifies an item by a string, and `T` is not one: stringifying an id is lossy, and
+	 * two options can collapse onto one key. An index across all groups cannot collide with itself.
 	 */
 	const indexed = $derived.by(() => {
 		let index = 0;
@@ -100,13 +99,10 @@
 	const visible = $derived(shouldFilter ? all.filter((option) => match(option, search)) : all);
 
 	/**
-	 * Filtering happens here and only here: what does not match is not rendered, and Command is
-	 * told not to filter at all.
-	 *
-	 * The alternative - letting Command score each item - cannot work without smuggling the verdict
-	 * through some field it does score, because a caller's `filter` needs the whole `Option` and
-	 * Command's scorer only sees strings. That indirection also ran the match twice per option per
-	 * keystroke. Command keeps what it is good at, which is keyboard navigation.
+	 * Filtering happens here and only here; Command is told not to filter at all. Letting it score
+	 * each item cannot work - a caller's `filter` needs the whole `Option` and Command's scorer
+	 * sees only strings - and ran the match twice per option per keystroke. Command keeps what it
+	 * is good at, which is keyboard navigation.
 	 */
 	const rendered = $derived.by(() => {
 		const keep = new Set(visible);
@@ -139,9 +135,8 @@
 	}
 
 	/**
-	 * `onchange` is called from here, from `clear` and from `selectAll`, and nowhere else. Deriving
-	 * the same signal from `value` with an `$effect` would also fire on mount and on every
-	 * programmatic assignment, announcing a selection nobody made.
+	 * `onchange` is called from here, `clear` and `selectAll`, nowhere else. An `$effect` on `value`
+	 * would also fire on mount and on every programmatic assignment.
 	 */
 	function select(option: Option<T>) {
 		if (option.disabled) return;
@@ -215,11 +210,8 @@
 						{disabled}
 						class={cn('w-full justify-between gap-2', className)}
 					>
-						<!--
-							The label reserves room for the clear control rather than the button padding
-							doing it: padding would push the chevron inwards too, leaving the clear
-							control stranded to the right of it.
-						-->
+						<!-- The label reserves the room, not the button padding: padding would push the
+						     chevron in too, stranding the clear control to the right of it. -->
 						<span
 							class={cn(
 								'flex min-w-0 flex-1 flex-wrap items-center gap-1 text-start',
@@ -245,11 +237,8 @@
 			{/snippet}
 		</Popover.Trigger>
 
-		<!--
-			The clear control sits beside the trigger rather than inside it. A button nested in a
-			button is invalid HTML, and browsers recover from it by dropping one of the two - which
-			is how a per-badge remove control ends up unreachable by keyboard.
-		-->
+		<!-- Beside the trigger, not inside: a button within a button is invalid HTML, and browsers
+		     recover by dropping one - which is how a per-badge remove control becomes unreachable. -->
 		{#if showClear}
 			<Button
 				type="button"

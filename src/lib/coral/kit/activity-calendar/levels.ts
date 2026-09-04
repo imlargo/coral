@@ -4,13 +4,12 @@
  */
 
 /**
- * Minimum count for each level, ascending, so `thresholds[i]` is where level `i + 1` begins.
+ * Minimum count per level, ascending, so `thresholds[i]` is where level `i + 1` begins.
  *
- * Quantiles of the **non-zero** days, which is the only split that survives real data: activity is
- * long-tailed, so cutting the `0..max` range into equal slices puts a whole year in the first
- * bucket and paints one square dark. Level 1 always starts at 1 - any activity at all has to read
- * as activity - and each cut is forced above the one before it, so a flat dataset degrades to
- * `1, 2, 3, 4` instead of collapsing several levels onto the same count.
+ * Quantiles of the **non-zero** days, the only split that survives real data: activity is
+ * long-tailed, so equal slices of `0..max` put a whole year in the first bucket and paint one
+ * square dark. Level 1 starts at 1 - any activity must read as activity - and each cut is forced
+ * above the last, so flat data degrades to `1, 2, 3, 4` rather than collapsing levels together.
  */
 export function thresholdsFor(counts: number[], levels: number): number[] {
 	if (levels < 1) return [];

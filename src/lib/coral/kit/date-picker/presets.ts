@@ -6,11 +6,9 @@
 /**
  * A shortcut in the popover: a label, and the value it selects.
  *
- * `value` may be a thunk, and for anything relative to now it has to be. A preset computed once
- * at module scope means a tab left open overnight still offers yesterday's "today" - the classic
- * bug in every hand-rolled preset row. The thunk is called when the list is rendered and again
- * when the preset is clicked, so both the highlight and the selection are computed from the clock
- * as it is now.
+ * `value` may be a thunk, and for anything relative to now it has to be - computed once at module
+ * scope, a tab left open overnight still offers yesterday's "today". It is called on render and
+ * again on click, so highlight and selection both read the clock as it is now.
  */
 export type Preset<Value> = {
 	label: string;
@@ -23,15 +21,10 @@ export function resolvePreset<Value>(preset: Preset<Value>): Value {
 }
 
 /**
- * The preset the current selection came from, if any.
- *
- * This is the whole reason presets live in Coral rather than in a `{#each}` beside the calendar:
- * the row has to know which of its entries is the current one, and answering that means comparing
- * days rather than object identity - a preset hands back a fresh `CalendarDate` every call, so
- * `===` is always false.
- *
- * The first match wins. Two presets that resolve to the same value are the caller's to
- * disambiguate; Coral picking the later one would be arbitrary.
+ * The preset the current selection came from, if any - the whole reason presets live in Coral
+ * rather than in a `{#each}` beside the calendar. The row has to know which entry is current, and
+ * that means comparing days, not identity: a preset hands back a fresh value every call, so `===`
+ * is always false. First match wins; two presets resolving alike are the caller's to disambiguate.
  */
 export function activePreset<Value>(
 	presets: Preset<Value>[],

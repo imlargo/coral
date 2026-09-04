@@ -38,11 +38,8 @@
 	const grid = $derived(buildGrid<T>(data, { start, end, weekStart, levels, thresholds }));
 
 	/**
-	 * How many steps the ramp has.
-	 *
-	 * Read back off the grid rather than from `levels`, because `thresholds` overrides it: passing
-	 * six cuts and leaving `levels` at its default would otherwise paint the top two levels the
-	 * same colour.
+	 * How many steps the ramp has. Read off the grid, not `levels`, because `thresholds` overrides
+	 * it: six cuts against a default `levels` would paint the top two levels the same colour.
 	 */
 	const steps = $derived(Math.max(grid.thresholds.length, 1));
 
@@ -66,12 +63,9 @@
 	);
 
 	/**
-	 * The fill for each level, level 0 first.
-	 *
-	 * Coral picks no colour: both ends of the ramp are theme tokens, and what it defines is the
-	 * distance between them - which is the data, not the appearance. `color-mix` keeps every step
-	 * an opaque colour, where the obvious `opacity` ramp would fade the focus ring along with the
-	 * square and let whatever sits behind the grid bleed through the quiet days.
+	 * The fill for each level, level 0 first. Coral picks no colour - both ends are theme tokens and
+	 * what it defines is the distance between them, which is data, not appearance. `color-mix`
+	 * keeps every step opaque; an `opacity` ramp would fade the focus ring with the square.
 	 */
 	const fills = $derived([
 		emptyColor,
@@ -90,10 +84,8 @@
 	const byKey = $derived(new Map(grid.cells.map((cell) => [cell.key, cell])));
 
 	/**
-	 * Which square Tab reaches. One tab stop for the whole grid, arrows to move inside it - the
-	 * alternative is 365 tab stops between the thing above the grid and the thing below it.
-	 *
-	 * Held as a key rather than an index so that it survives the data changing underneath it.
+	 * Which square Tab reaches: one tab stop for the whole grid, arrows to move inside it, against
+	 * an alternative of 365. A key rather than an index, so it survives the data changing.
 	 */
 	let focusKey = $state<string | null>(null);
 	const tabbable = $derived((focusKey && byKey.get(focusKey)) || grid.cells[0]);
@@ -101,23 +93,18 @@
 	type Live = { cell: ActivityCell<T>; box: string };
 
 	/**
-	 * Hover and focus are tracked apart, and hover wins where both are live.
-	 *
-	 * One `active` for the two of them reads simpler and is wrong: moving the mouse off the grid
-	 * would then close the tooltip belonging to a square the keyboard is still sitting on.
+	 * Hover and focus tracked apart, hover winning where both are live. One `active` for the two
+	 * reads simpler and is wrong: moving the mouse off would close the tooltip the keyboard is on.
 	 */
 	let hovered = $state<Live | null>(null);
 	let focused = $state<Live | null>(null);
 	const live = $derived(hovered ?? focused);
 
 	/**
-	 * Where a square sits inside the scroller, so the anchor can be parked on top of it.
-	 *
-	 * Measured rather than read off `offsetLeft`: `offsetParent` is defined to stop at the nearest
-	 * `td`, `th` or `table` as well as at the nearest positioned ancestor, so inside a table every
-	 * square reports an offset of roughly zero and the tooltip lands in the top-left corner. The
-	 * scroll offsets go back in because the anchor is absolutely positioned inside the scroller,
-	 * and so travels with its content.
+	 * Where a square sits inside the scroller, so the anchor can be parked on it. Measured, not read
+	 * off `offsetLeft`: `offsetParent` stops at the nearest `td`, `th` or `table`, so inside a table
+	 * every square reports roughly zero and the tooltip lands in the corner. Scroll offsets go back
+	 * in because the anchor is positioned inside the scroller and travels with its content.
 	 */
 	function locate(cell: ActivityCell<T>, element: HTMLElement): Live | null {
 		if (!frame) return null;

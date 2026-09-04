@@ -38,10 +38,8 @@
 	let hovered = $state<number | null>(null);
 
 	/**
-	 * The rating on screen right now.
-	 *
-	 * `readonly` draws `value` untouched, so an average lands where it really is. Everywhere else
-	 * draws the step that is actually selected, because a control has to show what it would submit.
+	 * The rating on screen. `readonly` draws `value` untouched, so an average lands where it really
+	 * is; everywhere else draws the selected step, because a control shows what it would submit.
 	 */
 	const shown = $derived(hovered ?? (readonly ? value : checked));
 
@@ -51,22 +49,18 @@
 	);
 
 	/**
-	 * Radios group by `name`, so one is needed whether or not a form is involved: without it every
-	 * star is its own group of one, arrow keys do nothing and several can be checked at once.
-	 *
-	 * A generated name would then be posted under a meaningless key, so a control the caller did
-	 * not name is pointed at a form that does not exist. A null form owner is not submitted, which
-	 * leaves `name` meaning exactly one thing: this rating goes in the request.
+	 * Radios group by `name`, needed with or without a form: without it every star is its own group
+	 * of one, arrow keys do nothing and several can be checked at once. A generated name would post
+	 * under a meaningless key, so it is pointed at a form that does not exist - which is never
+	 * submitted, leaving `name` meaning exactly one thing: this rating goes in the request.
 	 */
 	const uid = $props.id();
 	const group = $derived(name ?? `${uid}-group`);
 	const owner = $derived(name ? form : `${uid}-detached`);
 
 	/**
-	 * The ratings that live inside one star, and so the hit areas it is divided into.
-	 *
-	 * The steps of a one-star rating are exactly those offsets - `[1]`, or `[0.5, 1]` - which keeps
-	 * the halves from being a second, hand-written description of the same rule.
+	 * The hit areas one star is divided into. The steps of a one-star rating are exactly those
+	 * offsets - `[1]`, or `[0.5, 1]` - so the halves are not described a second time by hand.
 	 */
 	const offsets = $derived(stepsFor(1, allowHalf));
 
@@ -83,12 +77,9 @@
 	}
 
 	/**
-	 * `Home` and `End`, which a native radio group leaves out.
-	 *
-	 * Everything else the arrow keys do is the browser's, and this is the one gap worth closing:
-	 * with half steps a group is ten options wide, and walking to either end of it one arrow at a
-	 * time is the kind of thing the shortcut exists for. Handled on the radio rather than on the
-	 * group, so it hangs off something that was already interactive.
+	 * `Home` and `End`, the one thing a native radio group leaves out - with half steps a group is
+	 * ten options wide, and walking to either end an arrow at a time is what the shortcut is for.
+	 * On the radio rather than the group, so it hangs off something already interactive.
 	 */
 	function jump(event: KeyboardEvent) {
 		const to = event.key === 'Home' ? offsets[0] : event.key === 'End' ? stars : null;

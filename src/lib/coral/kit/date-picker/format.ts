@@ -28,12 +28,10 @@ export type DayRange = {
 const formatters = new Map<string, Intl.DateTimeFormat>();
 
 /**
- * An `Intl.DateTimeFormat` per locale and option set, built once.
- *
- * Constructing one costs about as much as formatting a hundred dates, and the trigger label is
- * recomputed on every keystroke in the calendar. Two option objects spelled in a different key
- * order land on two entries - harmless, since the key comes from a prop and a prop is written
- * once per call site.
+ * An `Intl.DateTimeFormat` per locale and option set, built once: constructing one costs about what
+ * formatting a hundred dates does, and the trigger label recomputes on every keystroke in the
+ * calendar. Two option objects keyed in a different order land on two entries, which is harmless -
+ * the key comes from a prop, and a prop is written once per call site.
  */
 function formatter(locale: string, options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
 	const key = `${locale}|${JSON.stringify(options)}`;
@@ -46,15 +44,13 @@ function formatter(locale: string, options: Intl.DateTimeFormatOptions): Intl.Da
 }
 
 /**
- * A calendar day as a `Date` at **local noon**.
+ * A calendar day as a `Date` at **local noon**. `Intl` formats a moment and a `DateValue` is not
+ * one - it is a day, which becomes a moment only once you say where. Midnight is the instant a DST
+ * jump can delete, and where it does the browser rolls back a day, so a picker in São Paulo shows
+ * the day before the one selected. Noon is skipped nowhere.
  *
- * `Intl` formats a moment, and a `DateValue` is not one - it is a day, which only becomes a moment
- * once you say where. Noon is the answer that cannot slip: midnight is the one instant a DST jump
- * can delete, and where it does the browser rolls the date back a day, so a picker in São Paulo
- * shows the day before the one that is selected. Noon exists everywhere, every day.
- *
- * Deliberately not `value.toDate(getLocalTimeZone())`: that is the same computation with an
- * `@internationalized/date` import in front of it, and it hands back midnight.
+ * Deliberately not `value.toDate(getLocalTimeZone())`: the same computation behind an
+ * `@internationalized/date` import, handing back midnight.
  */
 export function toLocalDate(day: Day): Date {
 	return new Date(day.year, day.month - 1, day.day, 12);

@@ -6,26 +6,20 @@
 import type { Option } from '../../lib/options.js';
 
 /**
- * The selection after a bulk "select all", given what the filter is currently showing.
+ * The selection after a bulk "select all", given what the filter is showing.
  *
- * Additive, not a replacement. The two only differ once a search term is active, which for a
- * combobox is the ordinary case rather than the exotic one: replacing the selection would drop
- * whatever was picked before the term was typed, and drop it invisibly - the options that just
- * lost their tick are the ones the filter is hiding.
+ * Additive, not a replacement - the two differ only under a search term, which for a combobox is
+ * the ordinary case. Replacing would drop what was picked before the term was typed, invisibly:
+ * the options losing their tick are the ones the filter is hiding. A disabled option is skipped
+ * unless already selected, since a bulk action is no place to quietly deselect something.
  *
- * Disabled options are skipped, since they cannot be picked one at a time either. One already in
- * the selection is kept: it got there somehow, and a bulk action is no place to quietly undo that.
- *
- * The result is ordered by `all` rather than by when each value arrived, so a bulk change reads
- * back the same as every other selection the component reports.
+ * Ordered by `all`, so a bulk change reads back like every other selection.
  */
 export function selectAllVisible<T>(all: Option<T>[], visible: Option<T>[], current: T[]): T[] {
-	// Membership by set rather than a scan per option: both of these are the whole list in the
-	// unfiltered case, and a nested scan would make selecting all of a long list quadratic.
-	// Options are matched by identity - `visible` is always a subset of `all`, never a rebuild.
+	// Sets, not a scan per option: unfiltered, both lists are the whole list, and nesting the scans
+	// would make selecting all of a long one quadratic. `visible` is a subset of `all`, never a
+	// rebuild, so identity holds; `Set` reproduces `===` for anything an option can sensibly carry.
 	const showing = new Set(visible);
-	// Values are matched the way the rest of the component matches them, `===`, which a `Set`
-	// reproduces for everything an option can sensibly carry.
 	const held = new Set(current);
 
 	return all

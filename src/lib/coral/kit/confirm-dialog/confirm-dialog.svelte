@@ -35,14 +35,10 @@
 	/**
 	 * Runs the confirmation and decides whether the dialog has earned the right to close.
 	 *
-	 * A confirm is almost always a write, and a write can fail. Closing on click - which is what
-	 * the primitive would do on its own, and what every hand-written version in the corpus does -
-	 * throws away the one place the failure could be reported, leaving the reader looking at a list
-	 * that did not change and no explanation. So the close waits for the promise, and a rejection
-	 * or an explicit `false` keeps the dialog where it is.
-	 *
-	 * `busy` also guards the entry: a second click while the first request is still open would
-	 * submit the same destructive action twice.
+	 * A write can fail. Closing on click - the primitive's own behaviour, and every hand-written
+	 * version in the corpus - throws away the one place that failure could be reported. So the
+	 * close waits for the promise, and a rejection or an explicit `false` keeps the dialog open.
+	 * `busy` guards the entry too: a second click would submit the same destructive action twice.
 	 */
 	async function confirm() {
 		if (busy) return;
@@ -62,10 +58,9 @@
 	}
 
 	/**
-	 * `oncancel` hangs off the primitive's own close, which is the one thing that means the reader
-	 * declined: the cancel button, or Escape. Confirming closes by assigning `open`, and the
-	 * primitive does not report a close it did not perform - so the two paths cannot be confused
-	 * and there is no "was it a confirm?" flag to get out of step.
+	 * `oncancel` hangs off the primitive's own close - the cancel button or Escape, the only things
+	 * that mean the reader declined. Confirming closes by assigning `open`, which the primitive does
+	 * not report, so the two paths need no "was it a confirm?" flag to stay apart.
 	 */
 	function handleOpenChange(next: boolean) {
 		if (!next) oncancel?.();

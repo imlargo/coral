@@ -48,13 +48,10 @@
 	}
 
 	/**
-	 * Reads the field on commit - blur, Enter, or a native arrow-key step - rather than on every
-	 * keystroke.
-	 *
-	 * Clamping per keystroke fights the person typing: with a max of 100, the `1` of `150` is fine
-	 * and the `15` is fine, so the value only becomes wrong once they have stopped. One project in
-	 * the corpus skips this clamp entirely and lets typed entry commit values above the cap that its
-	 * own steppers refuse to reach.
+	 * Reads the field on commit - blur, Enter, a native arrow step - not per keystroke. Clamping per
+	 * keystroke fights the typist: with a max of 100, the `1` and the `15` of `150` are both fine,
+	 * and only the finished number is wrong. One project in the corpus skips the clamp entirely and
+	 * lets typed entry commit values its own steppers refuse to reach.
 	 */
 	function handleChange(event: Event & { currentTarget: HTMLInputElement }) {
 		const field = event.currentTarget;
@@ -68,9 +65,8 @@
 	}
 
 	/**
-	 * A focused number input steps on scroll in Chromium, so a page scrolled with the pointer over
-	 * one edits it silently - the reader has no reason to look back at a field they were only
-	 * scrolling past. Nothing here needs the wheel, so it never gets it.
+	 * A focused number input steps on scroll in Chromium, so scrolling the page with the pointer
+	 * over one edits it silently. Nothing here needs the wheel, so it never gets it.
 	 */
 	function handleWheel(event: WheelEvent & { currentTarget: HTMLInputElement }) {
 		if (document.activeElement === event.currentTarget) event.preventDefault();

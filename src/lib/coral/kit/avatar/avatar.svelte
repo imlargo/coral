@@ -19,15 +19,10 @@
 	}: AvatarProps = $props();
 
 	/**
-	 * What the avatar is called, image or no image.
-	 *
-	 * Without this the accessible name depends on whether a request succeeded: with the photo it is
-	 * the person, and the moment the photo 404s it becomes "MG" - two letters read out as letters.
-	 * The fallback is `display: none` while the image is showing, so only one of the two is ever in
-	 * the accessibility tree and the name never doubles up.
-	 *
-	 * `alt=""` is the way out, and means what it means everywhere else: this avatar is decorative,
-	 * the name is already in the text beside it.
+	 * What the avatar is called, image or no image. Without it the accessible name depends on
+	 * whether a request succeeded - the person with the photo, "MG" the moment it 404s. Only one of
+	 * image and fallback is ever in the tree, so the name cannot double up. `alt=""` means what it
+	 * means everywhere: decorative, the name is already in the text beside it.
 	 */
 	const label = $derived(alt ?? name);
 </script>

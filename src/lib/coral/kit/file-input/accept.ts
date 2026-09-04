@@ -4,21 +4,16 @@
  */
 
 /**
- * Whether a file answers an `accept` attribute - `image/*,.pdf,video/mp4` and friends.
+ * Whether a file answers an `accept` attribute - `image/*,.pdf,video/mp4` and friends. An empty
+ * `accept` takes anything; extensions are matched against the name, wildcards against the type.
  *
- * An empty `accept` takes anything. Extension entries are compared against the file name, wildcard
- * and exact entries against its MIME type.
+ * The MIME type is the part that cannot be trusted: browsers report an empty `file.type` for
+ * plenty of ordinary files - `.mov`, `.avi`, `.mkv`, notably on Windows, PWAs and iOS - so reading
+ * only `file.type` turns away files the user can plainly see are videos. Two projects in the
+ * corpus shipped that bug, one patching it with a hardcoded extension table its sibling never got.
  *
- * The MIME type is the part that cannot be trusted. Browsers report an empty `file.type` for plenty
- * of ordinary files - `.mov`, `.avi`, `.m4v`, `.mkv`, notably on Windows, installed PWAs and iOS -
- * so a check that only reads `file.type` turns away files the user can plainly see are videos. Two
- * projects in the corpus shipped that bug; one later forked its copy to patch it, with a hardcoded
- * table of video and image extensions that its sibling never received.
- *
- * The rule here needs no table. A file the browser refuses to type can only be judged by its
- * extension: hold it to the extension entries when the caller listed any, and let it through when
- * they did not, because then there is no evidence to convict it with. The server is the real gate
- * either way.
+ * No table needed: a file the browser refuses to type is judged by its extension when the caller
+ * listed any, and let through when they did not, there being no evidence to convict it with.
  */
 export function matchesAccept(file: File, accept: string): boolean {
 	const entries = accept

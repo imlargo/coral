@@ -9,17 +9,15 @@ export type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 const CALENDAR_DAY = /^(\d{4})-(\d{2})-(\d{2})$/;
 
 /**
- * A day, normalized to **local noon**.
+ * A day, normalized to **local noon**. Both decisions here are bugs in every hand-written grid
+ * worth comparing against:
  *
- * Two decisions here, both of them bugs in every hand-written grid worth comparing against:
- *
- * - **`YYYY-MM-DD` is parsed by hand.** `new Date('2026-01-05')` is defined to mean UTC midnight,
- *   which in Bogotá is the 4th at 19:00 - so a naive grid draws every day one square early, all
- *   year, and only in negative-offset timezones. A bare calendar day means that day where the
- *   reader is; anything with a time in it is a moment, and its local day is read from the clock.
- * - **Noon, not midnight.** Midnight is the one instant a DST jump can delete, and where it does
- *   the browser rolls the date to the previous day. Noon is never skipped anywhere on earth, so
- *   day arithmetic built on it cannot slip.
+ * - **`YYYY-MM-DD` is parsed by hand**, because `new Date('2026-01-05')` means UTC midnight - the
+ *   4th at 19:00 in Bogotá, so a naive grid draws every day one square early, all year, and only
+ *   in negative-offset zones. A bare day means that day where the reader is; anything carrying a
+ *   time is a moment, and its local day is read off the clock.
+ * - **Noon, not midnight**, which is the one instant a DST jump can delete - and where it does,
+ *   the browser rolls the date back a day. Noon is skipped nowhere on earth.
  */
 export function toDate(value: string | Date): Date {
 	if (typeof value === 'string') {

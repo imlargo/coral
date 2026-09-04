@@ -22,19 +22,14 @@
 </script>
 
 <!--
-	The field that actually submits, for the components whose visible control is not an input:
-	select, combobox and date-picker. It lives in `lib/` because all three need it and the details
-	below are too easy to get subtly wrong twice.
+	The field that submits, for the components whose visible control is not an input: select,
+	combobox and date-picker.
 
 	**Not `type="hidden"`.** A hidden input is barred from constraint validation, so `required` on
-	one is inert - the form submits with nothing in the field and the browser reports no error.
-	Clipped to a pixel it is a real, validatable control, which is the same trick bits-ui's own
-	hidden input plays and the only way `required` means anything here.
-
-	`tabindex="-1"` keeps it out of the tab order and `aria-hidden` out of the accessibility tree,
-	so the pixel is unreachable by every route except the validation bubble, which is precisely
-	what it is there for. It is deliberately not `readonly` or `disabled`: both of those are also
-	barred from validation, which would put `required` right back where it started.
+	one is inert - the form submits empty and the browser reports nothing. Clipped to a pixel it is
+	a real, validatable control, which is the trick bits-ui's own hidden input plays. `readonly` and
+	`disabled` are barred too, so it is neither. `tabindex`/`aria-hidden` leave the pixel reachable
+	by nothing but the validation bubble, which is what it is there for.
 -->
 <input
 	class="sr-only"

@@ -24,9 +24,8 @@
 	} from './types.js';
 
 	let {
-		// Left undefined rather than defaulted: `Type` is inferred, and writing a concrete
-		// `'single'` into it would not be assignable to whatever the caller instantiated it as.
-		// Absent means single, which is what `isRange` below reads.
+		// Undefined, not defaulted: `Type` is inferred, so a concrete `'single'` would not be
+		// assignable to whatever the caller instantiated it as. Absent means single.
 		type,
 		value = $bindable(),
 		open = $bindable(false),
@@ -83,9 +82,8 @@
 	});
 
 	/**
-	 * What the trigger prints. A preset's label wins over the dates it stands for - "Últimos 7
-	 * días" is what the user chose, and re-reading it back to them as two dates makes them do the
-	 * arithmetic to recognise their own selection.
+	 * What the trigger prints. A preset's label wins over the dates it stands for: "Últimos 7 días"
+	 * is what the user chose, and two dates make them do arithmetic to recognise their own pick.
 	 */
 	const label = $derived.by(() => {
 		if (active) return active.label;
@@ -105,11 +103,9 @@
 	}
 
 	/**
-	 * `onchange` is called from here, from `pick` and from `clear`, and nowhere else. Deriving the
-	 * same signal from `value` with an `$effect` would also fire on mount and on every
-	 * programmatic assignment, announcing a selection nobody made.
-	 *
-	 * The calendar owns the write - `value` is bound to it - so these only report and close.
+	 * `onchange` is called from here, `pick` and `clear`, nowhere else. An `$effect` on `value`
+	 * would also fire on mount and on every programmatic assignment. The calendar owns the write -
+	 * `value` is bound to it - so these only report and close.
 	 */
 	function handleDayChange(next: DateValue | undefined) {
 		onchange?.(next as DatePickerValue<Type>);
@@ -117,14 +113,10 @@
 	}
 
 	/**
-	 * A range passes through a half-picked state - a `start` and no `end` - and two things follow
-	 * from that, both of them bugs in the hand-rolled version:
-	 *
-	 * - **It closes when the range is complete**, not on the first click.
-	 * - **`onchange` skips the half state.** A whole range and a cleared one are both selections;
-	 *   half of one is the user still mid-gesture, and a caller that fetches on change would fire a
-	 *   request for a range that has no end yet. Anyone who does want the intermediate state has it
-	 *   through `bind:value`, which the calendar writes on every click.
+	 * A range passes through a half-picked state, and both of these were bugs in the hand-rolled
+	 * version: it closes when the range is *complete*, not on the first click, and `onchange` skips
+	 * the half state - a caller that fetches on change would request a range with no end. Anyone
+	 * wanting the intermediate state has it through `bind:value`, written on every click.
 	 */
 	function handleRangeChange(next: DateRange) {
 		const whole = Boolean(next?.start) && Boolean(next?.end);
@@ -168,11 +160,8 @@
 						aria-required={required ? 'true' : undefined}
 						class={cn('w-full justify-between gap-2', className)}
 					>
-						<!--
-							The label reserves room for the clear control rather than the button padding
-							doing it: padding would push the icon inwards too, leaving the clear control
-							stranded to the right of it.
-						-->
+						<!-- The label reserves the room, not the button padding: padding would push the
+						     icon in too, stranding the clear control to the right of it. -->
 						<span
 							class={cn(
 								'min-w-0 flex-1 truncate text-start',
@@ -188,10 +177,8 @@
 			{/snippet}
 		</Popover.Trigger>
 
-		<!--
-			The clear control sits beside the trigger rather than inside it. A button nested in a
-			button is invalid HTML, and browsers recover from it by dropping one of the two.
-		-->
+		<!-- Beside the trigger, not inside: a button within a button is invalid HTML, and browsers
+		     recover by dropping one of the two. -->
 		{#if showClear}
 			<Button
 				type="button"

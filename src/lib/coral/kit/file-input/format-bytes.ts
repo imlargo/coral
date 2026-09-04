@@ -9,15 +9,12 @@ const STEP = 1024;
 /**
  * A file size as a person reads it - `740 KB`, `1,5 MB`.
  *
- * This is the most-copied function in the corpus: ten hand-written versions across five projects,
- * three of them inside the same repo. Every one of them formats with `toFixed`, which hardcodes the
- * decimal point and prints `1.5 MB` in a Spanish interface where it should read `1,5 MB`. `Intl`
- * gets the separator from the locale, the same way the rest of Coral does.
+ * The most-copied function in the corpus: ten versions across five projects, three in one repo,
+ * every one formatting with `toFixed` - which hardcodes the decimal point and prints `1.5 MB` in a
+ * Spanish interface. `Intl` takes the separator from the locale instead.
  *
- * Steps of 1024 with `KB`/`MB` labels: strictly those are `KiB`/`MiB`, but `1 KB = 1024 B` is what
- * every one of those ten versions means and what operating systems show alongside them.
- *
- * Bytes are whole things, so the base unit is never given decimals.
+ * Steps of 1024 under `KB`/`MB` labels: strictly `KiB`/`MiB`, but `1 KB = 1024 B` is what those
+ * ten meant and what operating systems show. Bytes are whole, so the base unit gets no decimals.
  */
 export function formatBytes(bytes: number): string {
 	if (!Number.isFinite(bytes) || bytes <= 0) return `0 ${UNITS[0]}`;

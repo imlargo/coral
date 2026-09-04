@@ -36,17 +36,15 @@
 
 	/**
 	 * One number instead of two contradictory ones. Every copy in the corpus carries both a
-	 * single/multiple switch and a `maxFiles`, and defaults them to `single` and `5` - so the props
-	 * disagree out of the box and the reader has to go and find out which one wins.
+	 * single/multiple switch and a `maxFiles`, defaulting to `single` and `5` - so the props
+	 * disagree out of the box and the reader has to find out which wins.
 	 */
 	const limit = $derived(multiple ? (maxFiles ?? Number.POSITIVE_INFINITY) : 1);
 
 	/**
-	 * How many drag events deep the pointer is.
-	 *
-	 * A plain boolean flag does not survive the zone having children: moving from the zone onto the
-	 * icon inside it fires `dragleave` on the zone, and the highlight flickers off while the file is
-	 * still over it. Counting enters against leaves is what stays correct.
+	 * How many drag events deep the pointer is. A boolean flag does not survive the zone having
+	 * children: moving onto the icon inside fires `dragleave` on the zone, and the highlight
+	 * flickers off while the file is still over it. Counting enters against leaves stays correct.
 	 */
 	let depth = $state(0);
 	const dragging = $derived(depth > 0);

@@ -54,11 +54,9 @@
 	}
 
 	/**
-	 * Writes the field, state and element together.
-	 *
-	 * The element is written even when the state is unchanged. Typing `,` into an empty field
-	 * leaves the draft empty on both sides of the change, so nothing re-renders and the field is
-	 * left showing the `,` that was already turned into a separator.
+	 * Writes state and element together, the element even when the state is unchanged: typing `,`
+	 * into an empty field leaves the draft empty on both sides, so nothing re-renders and the
+	 * field is left showing the `,` that was already spent as a separator.
 	 */
 	function setDraft(next: string) {
 		inputValue = next;
@@ -66,10 +64,9 @@
 	}
 
 	/**
-	 * The one way a tag comes into being, whether it arrived by delimiter, by paste or by the field
-	 * losing focus. Reports whether anything actually got through, which is what tells the field
-	 * to clear itself: text that was turned away stays where it is, so it can be fixed rather than
-	 * retyped.
+	 * The one way a tag comes into being - by delimiter, paste or blur. Reports whether anything got
+	 * through, which is what tells the field to clear: text turned away stays put, to be fixed
+	 * rather than retyped.
 	 */
 	function accept(incoming: string[]): boolean {
 		if (!mutable) return false;
@@ -92,22 +89,17 @@
 	}
 
 	/**
-	 * Moves focus onto a tag's remove control, which is what "the highlighted tag" is here.
-	 *
-	 * Focus *is* the highlight: no second notion of selection to keep in sync with it, and nothing
-	 * to announce to assistive tech that the browser does not announce already. The controls are
-	 * real buttons rather than a roving tabindex, so they are reachable by Tab too - the arrow keys
-	 * are a shortcut over the top, not the only way in.
+	 * Focus *is* the highlighted tag: no second notion of selection to keep in sync, and nothing to
+	 * announce that the browser does not announce already. Real buttons rather than a roving
+	 * tabindex, so Tab reaches them too - the arrow keys are a shortcut, not the only way in.
 	 */
 	function focusTag(index: number) {
 		box?.querySelectorAll<HTMLButtonElement>('[data-coral-tag]')[index]?.focus();
 	}
 
 	/**
-	 * Which way an arrow key points, in reading order.
-	 *
-	 * Read off the element rather than a `dir` prop: a control inside an RTL subtree gets it right
-	 * without being told twice, and told twice is told wrong sooner or later.
+	 * Which way an arrow key points, in reading order. Read off the element rather than a `dir`
+	 * prop: a control inside an RTL subtree gets it right without being told twice.
 	 */
 	function arrow(event: KeyboardEvent, element: HTMLElement): -1 | 0 | 1 {
 		if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return 0;
@@ -220,11 +212,9 @@
 		}
 
 		/**
-		 * A printable key while a tag is focused goes back into the field, so the keyboard is never
-		 * in a dead end: someone who walked onto a tag to check it can just carry on typing.
-		 *
-		 * Space is deliberately left out - it activates the button, which is what a button does
-		 * everywhere else, and taking that away breaks the one key every screen reader user expects.
+		 * A printable key while a tag is focused goes back into the field, so the keyboard is never in
+		 * a dead end. Space is left out: it activates the button, and taking that away breaks the one
+		 * key every screen reader user expects.
 		 */
 		if (event.key.length === 1 && event.key !== ' ' && !event.ctrlKey && !event.metaKey) {
 			event.preventDefault();
