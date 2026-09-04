@@ -12,7 +12,10 @@ This file is self-contained: every rule you need is here. (`context/coral.md` ho
 philosophy but is deliberately untracked - don't assume a reader has it.)
 
 Coral lives in **`src/lib/coral/`** - one self-contained folder, copied whole into the target
-project. Currently extracted: `kit/avatar`.
+project. Currently extracted: `kit/{activity-calendar, avatar, combobox, confirm-dialog,
+date-picker, file-input, number-input, rating-group, select, tags-input}`, over
+`lib/{options, hidden-field}`. `src/lib/coral/coral.json` is the list that counts - read it rather
+than this sentence, which is the kind that goes stale.
 
 ## Hard rules
 
@@ -43,19 +46,22 @@ src/lib/
 ├─ utils.ts         → cn (shadcn's)
 └─ coral/           → 📦 the folder that gets copied
    ├─ coral.json    → manifest: version + required shadcn primitives per component
+   ├─ lib/          → shared across components (options.ts, hidden-field.svelte)
    └─ kit/          → composed, generic components - the actual product
       └─ avatar/
 ```
 
-Outside its own folder, Coral may reach for exactly two things: `$lib/components/ui/*` and
-`$lib/utils` (`cn`). Both are guaranteed by any shadcn-svelte project's `components.json`, which is
-what keeps the folder portable. Reach for as few as the component actually needs - `kit/avatar`
-uses only the first.
+Outside its own folder, Coral may reach for exactly three things: `$lib/components/ui/*`,
+`$lib/utils` (`cn`), and `@lucide/svelte` for icons. All three are guaranteed by a shadcn-svelte
+project's `components.json` - the first two by its aliases, the third by `iconLibrary`, which is
+why an icon import must stay `@lucide/svelte` and must be declared under `npm` in `coral.json`.
+Reach for as few as the component actually needs - `kit/avatar` uses only the first.
 
 **Folders are created when something needs them, never in advance.** `blocks/` (app-level
-compositions, rule of 3), `lib/` (shared utils, formatters, types) and `hooks/` don't exist yet
-because nothing lives in them. A util with one consumer stays inside its component's folder -
-`kit/avatar/initials.ts` - and moves to `lib/` the day a second component needs it.
+compositions, rule of 3) and `hooks/` don't exist yet because nothing lives in them. A util with one
+consumer stays inside its component's folder - `kit/avatar/initials.ts` - and moves to `lib/` the
+day a second component needs it, which is how `lib/options.ts` and `lib/hidden-field.svelte` got
+there.
 
 **No barrels.** One component, one folder (`kit/avatar/{avatar.svelte,types.ts,initials.ts}`),
 imported by file path. Consequence to respect: filenames are public API - renaming one breaks

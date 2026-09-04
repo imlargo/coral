@@ -61,7 +61,7 @@ src/lib/
 ├─ docs/            → this repo's own documentation site - not part of what gets copied
 └─ coral/           → 📦 the folder that gets copied
    ├─ coral.json    → manifest: version + required shadcn primitives per component
-   ├─ lib/          → shared across components (e.g. options.ts - Option<T>, OptionGroup<T>)
+   ├─ lib/          → shared across components (options.ts, hidden-field.svelte)
    └─ kit/          → composed, generic components - the actual product
       ├─ activity-calendar/
       ├─ avatar/
@@ -78,11 +78,14 @@ src/lib/
 `blocks/` (app-level compositions, rule of 3) and `hooks/` appear the day a component actually
 needs them. A util with one consumer stays inside its component's folder until a second one needs
 it - that's exactly how `lib/options.ts` came to be, when `select` became the second component to
-speak `Option<T>`.
+speak `Option<T>`, and how `lib/hidden-field.svelte` did when a third component needed to submit a
+value from a control that is not an input.
 
 **Import contract (critical rule):** Coral only imports from `$lib/components/ui/*`, `$lib/utils`
-(`cn`), and other Coral files. Never directly from a headless library (`bits-ui`, etc.) or from
-project domain types.
+(`cn`), `@lucide/svelte` for icons, and other Coral files. All three externals are guaranteed by a
+shadcn-svelte project's `components.json` - the first two by its aliases, the third by its
+`iconLibrary` - and every icon import is declared under `npm` in `coral.json`. Never directly from a
+headless library (`bits-ui`, etc.) or from project domain types.
 
 ```ts
 // ✅ inside Coral
@@ -107,13 +110,13 @@ Need a type the headless library owns? Derive it from the shadcn component inste
 | ----------------------------------------------------------------- | ------- | ------------------------------------------------- |
 | [`kit/activity-calendar`](./src/lib/coral/kit/activity-calendar/) | 1.0.0   | `tooltip`                                         |
 | [`kit/avatar`](./src/lib/coral/kit/avatar/)                       | 1.1.0   | `avatar`                                          |
-| [`kit/combobox`](./src/lib/coral/kit/combobox/)                   | 4.0.0   | `popover`, `command`, `button`, `badge`           |
+| [`kit/combobox`](./src/lib/coral/kit/combobox/)                   | 4.1.0   | `popover`, `command`, `button`, `badge`           |
 | [`kit/confirm-dialog`](./src/lib/coral/kit/confirm-dialog/)       | 1.0.0   | `alert-dialog`, `button`, `spinner`               |
-| [`kit/date-picker`](./src/lib/coral/kit/date-picker/)             | 1.0.0   | `popover`, `calendar`, `range-calendar`, `button` |
+| [`kit/date-picker`](./src/lib/coral/kit/date-picker/)             | 1.1.0   | `popover`, `calendar`, `range-calendar`, `button` |
 | [`kit/file-input`](./src/lib/coral/kit/file-input/)               | 1.0.0   | `empty`, `item`, `button`                         |
 | [`kit/number-input`](./src/lib/coral/kit/number-input/)           | 1.0.0   | `input-group`, `input`, `button`                  |
 | [`kit/rating-group`](./src/lib/coral/kit/rating-group/)           | 1.0.0   | -                                                 |
-| [`kit/select`](./src/lib/coral/kit/select/)                       | 2.0.0   | `select`, `button`                                |
+| [`kit/select`](./src/lib/coral/kit/select/)                       | 2.1.0   | `select`, `button`                                |
 | [`kit/tags-input`](./src/lib/coral/kit/tags-input/)               | 1.0.0   | `input-group`, `input`, `badge`, `button`         |
 
 Each component's full API, props table, and live demos live on its docs page (`pnpm dev`, then
@@ -149,8 +152,9 @@ for and the one or two things Coral actually resolves, not a syntax-sugar summar
   both typed and pasted input, full keyboard handling (Backspace onto the last tag, arrow
   navigation), and reporting _why_ a tag was rejected.
 
-All of them share `lib/options.ts` (`kit/select`, `kit/combobox`) for the `Option<T>` /
-`OptionGroup<T>` vocabulary.
+`kit/select` and `kit/combobox` share `lib/options.ts` for the `Option<T>` / `OptionGroup<T>`
+vocabulary; those two and `kit/date-picker` share `lib/hidden-field.svelte`, the clipped field that
+makes `name`, `form` and `required` work on a control the browser cannot validate on its own.
 
 ---
 
@@ -242,11 +246,11 @@ Ordered by rewrite cost × frequency (not by what's fun to build), updated as th
 
 **Done:**
 
-- ~~Combobox with accent-insensitive search~~ ✅ `kit/combobox` 4.0.0
-- ~~Select with a self-deriving trigger label~~ ✅ `kit/select` 2.0.0
+- ~~Combobox with accent-insensitive search~~ ✅ `kit/combobox` 4.1.0
+- ~~Select with a self-deriving trigger label~~ ✅ `kit/select` 2.1.0
 - ~~Avatar with flat props~~ ✅ `kit/avatar` 1.1.0
 - ~~Confirm dialog (async-aware)~~ ✅ `kit/confirm-dialog` 1.0.0
-- ~~Date picker (single + range, with presets)~~ ✅ `kit/date-picker` 1.0.0
+- ~~Date picker (single + range, with presets)~~ ✅ `kit/date-picker` 1.1.0
 - ~~File input (click, drag-and-drop, validation)~~ ✅ `kit/file-input` 1.0.0
 - ~~Number input (bounds, exact decimal steps)~~ ✅ `kit/number-input` 1.0.0
 - ~~Rating group (native radios, half stars)~~ ✅ `kit/rating-group` 1.0.0
