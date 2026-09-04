@@ -123,45 +123,40 @@ That makes filenames public API: renaming one is a breaking change, and gets a m
 
 ## Components
 
-Full API, props tables and live demos for each one are on the
-[documentation site](https://coral.imlargo.dev/docs).
+Ten so far. Each links to its full API, props table and live demos - and to what it actually
+resolves for you, which is the point rather than the shorter markup.
 
-| Component                                                                   | Version | shadcn primitives                                 |
-| --------------------------------------------------------------------------- | ------- | ------------------------------------------------- |
-| [`activity-calendar`](https://coral.imlargo.dev/docs/kit/activity-calendar) | 1.0.0   | `tooltip`                                         |
-| [`avatar`](https://coral.imlargo.dev/docs/kit/avatar)                       | 1.1.0   | `avatar`                                          |
-| [`combobox`](https://coral.imlargo.dev/docs/kit/combobox)                   | 4.1.0   | `popover`, `command`, `button`, `badge`           |
-| [`confirm-dialog`](https://coral.imlargo.dev/docs/kit/confirm-dialog)       | 1.0.0   | `alert-dialog`, `button`, `spinner`               |
-| [`date-picker`](https://coral.imlargo.dev/docs/kit/date-picker)             | 1.1.0   | `popover`, `calendar`, `range-calendar`, `button` |
-| [`file-input`](https://coral.imlargo.dev/docs/kit/file-input)               | 1.0.0   | `empty`, `item`, `button`                         |
-| [`number-input`](https://coral.imlargo.dev/docs/kit/number-input)           | 1.0.0   | `input-group`                                     |
-| [`rating-group`](https://coral.imlargo.dev/docs/kit/rating-group)           | 1.0.0   | –                                                 |
-| [`select`](https://coral.imlargo.dev/docs/kit/select)                       | 2.1.0   | `select`, `button`                                |
-| [`tags-input`](https://coral.imlargo.dev/docs/kit/tags-input)               | 1.0.0   | `input-group`, `badge`                            |
+- **[activity-calendar](https://coral.imlargo.dev/docs/kit/activity-calendar)** - a year of daily
+  counts as a grid of squares. Timezone-correct day buckets, quantile scaling that survives
+  long-tailed data, one tab stop with arrow-key navigation, one shared tooltip instead of 365.
+- **[avatar](https://coral.imlargo.dev/docs/kit/avatar)** - image with an initials fallback. An
+  accessible name that does not change when the photo 404s, and never doubles up.
+- **[combobox](https://coral.imlargo.dev/docs/kit/combobox)** - a select with a search box.
+  Accent-insensitive search, focus returned to the trigger, single or multiple, server-side search
+  with debounce.
+- **[confirm-dialog](https://coral.imlargo.dev/docs/kit/confirm-dialog)** - "are you sure?", on
+  `alert-dialog` so an outside click cannot dismiss a destructive action. Waits on an async
+  `onconfirm`, stays open on failure, blocks double-submit.
+- **[date-picker](https://coral.imlargo.dev/docs/kit/date-picker)** - popover, calendar and
+  formatted trigger, single day or range. Closes on range completion rather than first click;
+  DST-safe day handling.
+- **[file-input](https://coral.imlargo.dev/docs/kit/file-input)** - click or drop, validate, show
+  what was picked. Keyboard-operable, drag-and-drop that survives child elements, de-duplicates a
+  file dropped twice.
+- **[number-input](https://coral.imlargo.dev/docs/kit/number-input)** - bounds that hold from the
+  steppers _and_ from typing, exact decimal arithmetic, no silent wheel-scroll edits.
+- **[rating-group](https://coral.imlargo.dev/docs/kit/rating-group)** - stars on native radios, so
+  keyboard and form semantics come from the platform. Half fills from one glyph; `readonly` reads as
+  an image, not a disabled control.
+- **[select](https://coral.imlargo.dev/docs/kit/select)** - a self-deriving trigger label, a `value`
+  that keeps its own type instead of bits-ui's string keys, and an `onchange` that only fires on
+  real user changes.
+- **[tags-input](https://coral.imlargo.dev/docs/kit/tags-input)** - one delimiter rule for typed and
+  pasted alike, full keyboard handling, and it reports _why_ a tag was rejected.
 
-What each one actually resolves for you - not a syntax-sugar summary:
-
-- **`activity-calendar`** - a year of daily counts as a grid of squares. Timezone-correct day
-  buckets, quantile scaling that survives long-tailed data, one tab stop with arrow-key navigation,
-  and a single shared tooltip instead of one per day.
-- **`avatar`** - image with an initials fallback. An accessible name that does not change when the
-  photo 404s, and never doubles up between image and fallback.
-- **`combobox`** - a select with a search box. Accent-insensitive search, focus returned to the
-  trigger, single or multiple, server-side search with debounce.
-- **`confirm-dialog`** - "are you sure?", on `alert-dialog` so an outside click cannot dismiss a
-  destructive action. Waits on an async `onconfirm`, stays open on failure, blocks double-submit.
-- **`date-picker`** - popover, calendar and formatted trigger, single day or range. Closes on range
-  completion rather than first click; DST-safe day handling.
-- **`file-input`** - click or drop, validate, show what was picked. Keyboard-operable, drag-and-drop
-  that survives child elements, de-duplicates a file dropped twice.
-- **`number-input`** - bounds that hold from the steppers _and_ from typing, exact decimal
-  arithmetic, no silent wheel-scroll edits.
-- **`rating-group`** - stars on native radios, so keyboard and form semantics come from the
-  platform. Half fills from one glyph; `readonly` reads as an image, not a disabled control.
-- **`select`** - a self-deriving trigger label, a `value` that keeps its own type instead of
-  bits-ui's string keys, and an `onchange` that only fires on real user changes.
-- **`tags-input`** - one delimiter rule for typed and pasted alike, full keyboard handling, and it
-  reports _why_ a tag was rejected.
+Each one's version and the shadcn primitives it needs are recorded in
+[`coral.json`](./src/lib/coral/coral.json) - the manifest the install step reads, and the only place
+they are written down.
 
 `kit/select`, `kit/combobox` and `kit/date-picker` share `lib/`, which holds the `Option<T>`
 vocabulary and the clipped field that makes `name`, `form` and `required` work on a control the
