@@ -12,7 +12,7 @@ export default defineConfig({
 		tailwindcss(),
 		// svmd goes before the Svelte plugin: it hands vite-plugin-svelte already-compiled Svelte,
 		// not markdown.
-		svmd({ include: ['src/routes/docs/**/content.md'], highlight: svmdHighlight }),
+		svmd({ include: ['src/routes/docs/**/index.md'], highlight: svmdHighlight }),
 		coralDocs(),
 		sveltekit()
 	],

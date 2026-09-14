@@ -32,6 +32,9 @@ importers:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.1.2
         version: 7.3.0(svelte@5.56.9(@typescript-eslint/types@8.67.0))(vite@8.2.1(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0))
+      '@svmd/content':
+        specifier: ^0.1.1
+        version: 0.1.1(svelte@5.56.9(@typescript-eslint/types@8.67.0))
       '@svmd/vite':
         specifier: ^0.1.1
         version: 0.1.1(@sveltejs/vite-plugin-svelte@7.3.0(svelte@5.56.9(@typescript-eslint/types@8.67.0))(vite@8.2.1(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)))(svelte@5.56.9(@typescript-eslint/types@8.67.0))(vite@8.2.1(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0))
@@ -874,6 +877,12 @@ packages:
     peerDependencies:
       svelte: ^5.46.4
       vite: ^8.0.0-beta.7 || ^8.0.0
+
+  '@svmd/content@0.1.1':
+    resolution: {integrity: sha512-dVHrKJ77yngJkNM6Vc1oid1pLiOZgFA0POksZ9TbIvM12Tt2Oi8WStkKjvXY4ZAHnobxlIX3dBRpDToLwNvd4A==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      svelte: ^5.0.0
 
   '@svmd/core@0.1.1':
     resolution: {integrity: sha512-1w/S286XPA82vI4lZer6/9TqSZegR3Z7vtvznQGpM9dAJbLku/TfMPIwcXsSV051hHmDF9RVRw77IR1LeCkiew==}
@@ -3421,6 +3430,10 @@ snapshots:
       svelte: 5.56.9(@typescript-eslint/types@8.67.0)
       vite: 8.2.1(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0)
       vitefu: 1.1.3(vite@8.2.1(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0))
+
+  '@svmd/content@0.1.1(svelte@5.56.9(@typescript-eslint/types@8.67.0))':
+    dependencies:
+      svelte: 5.56.9(@typescript-eslint/types@8.67.0)
 
   '@svmd/core@0.1.1':
     dependencies:
