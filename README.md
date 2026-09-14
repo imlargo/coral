@@ -205,9 +205,14 @@ which is exactly how `lib/options.ts` came to be, when `select` became the secon
 `Option<T>`, and how `lib/hidden-field.svelte` did when a third needed to submit a value from a
 control that is not an input.
 
-**Import contract (critical rule):** Coral only imports from `$lib/components/ui/*`, `$lib/utils`
-(`cn`), `@lucide/svelte`, and other Coral files. Never directly from a headless library (`bits-ui`),
-never from project domain types.
+Three rules keep that folder worth copying into anything:
+
+**No appearance.** No colors, typography, shadows or radii - only layout utilities (`flex`, `gap-*`,
+`w-full`). Everything visual comes from _your_ shadcn theme, which is why Coral drops into any
+project without bringing a look with it. A component that hardcodes a size or a color has failed.
+Enforced at the import level: Coral only ever imports from `$lib/components/ui/*`, `$lib/utils`
+(`cn`), `@lucide/svelte`, and other Coral files - never a headless library directly, never your
+project's own domain types.
 
 ```ts
 // ✅ inside Coral
@@ -224,14 +229,6 @@ import type { Invoice } from '$lib/types';
 Need a type the headless library owns? Derive it from the shadcn component instead:
 `ComponentProps<typeof Avatar>`.
 
----
-
-## The three boundaries
-
-**No appearance.** No colors, typography, shadows or radii - only layout utilities (`flex`, `gap-*`,
-`w-full`). Everything visual comes from _your_ shadcn theme, which is why Coral drops into any
-project without bringing a look with it. A component that hardcodes a size or a color has failed.
-
 **No domain.** No `Invoice`, no `Student`, no `Contract`. Domain lives in your `features/`.
 
 **One-way imports.** `blocks/` composes `kit/`, `kit/` composes shadcn primitives and other `kit/`.
@@ -247,6 +244,25 @@ keyboard navigation, shared state through context, accessibility, debounce, load
 
 Every composed component exposes its pieces. If a rare case forces you to drop Coral and rebuild
 from raw shadcn, the component failed.
+
+---
+
+## Development
+
+```sh
+pnpm install
+pnpm dev      # docs site + live demos at /docs
+pnpm test     # vitest, run once
+pnpm format   # prettier --write
+pnpm build    # production build - run `pnpm check` FIRST, build deletes its own output
+```
+
+This repo doubles as Coral's documentation site (`src/routes/docs/`): one Markdown page per
+component, with live sandboxed previews whose source is read from the demo file at build time - so a
+snippet shown can never drift from what is actually running. Search and a "Copy Page" button (raw
+Markdown, for pasting into an LLM) come with it.
+
+To add a shadcn primitive: `pnpm dlx shadcn-svelte@latest add <component>`.
 
 ---
 
@@ -271,25 +287,6 @@ pnpm lint     # prettier + eslint
 pnpm check    # expected: exactly 1 error, shadcn's untouchable ui/native-select
 pnpm test     # vitest
 ```
-
----
-
-## Development
-
-```sh
-pnpm install
-pnpm dev      # docs site + live demos at /docs
-pnpm test     # vitest, run once
-pnpm format   # prettier --write
-pnpm build    # production build - run `pnpm check` FIRST, build deletes its own output
-```
-
-This repo doubles as Coral's documentation site (`src/routes/docs/`): one Markdown page per
-component, with live sandboxed previews whose source is read from the demo file at build time - so a
-snippet shown can never drift from what is actually running. Search and a "Copy Page" button (raw
-Markdown, for pasting into an LLM) come with it.
-
-To add a shadcn primitive: `pnpm dlx shadcn-svelte@latest add <component>`.
 
 ---
 
