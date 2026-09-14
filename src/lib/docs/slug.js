@@ -1,8 +1,9 @@
 /**
- * Heading slugs, shared by the two things that must agree on them: `prose.svelte`, which assigns
- * ids to the rendered article, and the build-time docs index behind search, which links to them.
+ * Heading slugs, shared by the two things that must agree on them: `rehype-heading-anchors.js`,
+ * which assigns the ids headings actually render with, and the build-time docs index behind
+ * search, which links to them.
  *
- * Plain JS on purpose - the Vite plugin imports it from Node, outside the TypeScript build.
+ * Plain JS on purpose - both of those run from Node, outside the TypeScript build.
  */
 
 /**
