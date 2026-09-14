@@ -1,60 +1,44 @@
 # Coral 🪸
 
-**An ergonomics layer on top of [shadcn-svelte](https://www.shadcn-svelte.com/). No styles of its own. Copied into your project, not installed as a dependency.**
+> A component library for shadcn-svelte. Copied into your project, not installed as a dependency.
 
-> Coral turns forty lines of composition into a single tag - without taking away your ability to
-> recompose when you need to.
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![Svelte](https://img.shields.io/badge/svelte-5-FF3E00)](https://svelte.dev)
+[![Tailwind](https://img.shields.io/badge/tailwind-v4-38BDF8)](https://tailwindcss.com)
 
-[**Documentation & live demos →**](https://coral.imlargo.dev/docs) · MIT · Svelte 5 · Tailwind v4
+[**Documentation & live demos →**](https://coral.imlargo.dev/docs)
 
----
+- shadcn-svelte gives you primitives. Coral gives you the compositions you were going to write on
+  top of them anyway - a combobox whose search ignores accents, a date picker with ranges and
+  presets, a confirm dialog that waits on the request and stays open when it fails.
+- **Copied, not installed.** `npx degit` drops the folder into your project; from then it's your
+  code, versioned like the rest of your codebase, with no npm dependency to fall behind.
+- **Extraction only, never speculation.** A component enters only after the same pattern has been
+  written twice in real production work. Ten components exist, not eighty.
+- **No appearance of its own.** No colors, shadows, radii or typography - only layout utilities.
+  Everything visual comes from _your_ shadcn theme.
+- Every component's version and required shadcn primitives are recorded in
+  [`coral.json`](./src/lib/coral/coral.json), and follow semver independently.
 
-shadcn-svelte gives you primitives. Coral gives you the compositions you were going to write on top
-of them anyway - a combobox whose search ignores accents, a date picker with ranges and presets, a
-confirm dialog that waits on the request and stays open when it fails, a tags input with real
-keyboard handling.
+## Behavior
 
-It is **not** a design system, not a fork of shadcn, not a primitives library, and not an npm
-package. It is a folder you copy, and from that moment it is yours.
+The table below is what Coral actually resolves, case by case - which matters more for deciding
+whether you need it than a list of props would:
 
-```svelte
-<script lang="ts">
-	import Combobox from '$lib/coral/kit/combobox/combobox.svelte';
+| Case                                 | Hand-rolled with shadcn-svelte / bits-ui                | Coral                                                     |
+| ------------------------------------ | ------------------------------------------------------- | --------------------------------------------------------- |
+| Combobox search                      | exact substring, case- and accent-sensitive             | folds accents - `bogota` finds `Bogotá`                   |
+| Combobox, after selecting an option  | focus is lost to the body                               | returns to the trigger                                    |
+| Confirm dialog when the action fails | you wire the re-open and the pending state per instance | stays open, blocks double-submit, one prop                |
+| Date range picker                    | closes on the first click, mid-range                    | closes only once the range is complete                    |
+| Avatar with a broken image URL       | a blank box, or fallback logic written per instance     | initials fallback; the accessible name never doubles      |
+| A file dropped on the input twice    | added twice, unless you de-dupe yourself                | de-duplicated                                             |
+| Number input via the mouse wheel     | can silently push the value out of bounds               | bounds hold from steppers, typing and the wheel alike     |
+| A select's bound value               | bits-ui's own string keys                               | keeps the type you gave it - a number, a union, an object |
+| Tags typed vs. pasted                | two code paths, two rules to keep in sync               | one delimiter rule for both                               |
 
-	const cities = [
-		{ value: 11001, label: 'Bogotá' },
-		{ value: 5001, label: 'Medellín' }
-	];
-
-	let city = $state<number>();
-</script>
-
-<!-- Typing `bogota` finds `Bogotá`. Focus returns to the trigger on select. -->
-<Combobox options={cities} bind:value={city} placeholder="Select a city..." clearable />
-```
-
-The equivalent in raw shadcn-svelte is a popover, a command menu, a `triggerRef`, a
-`closeAndFocusTrigger`, and roughly fifty lines of markup - which shadcn's own docs are explicit
-about, describing it as a recipe rather than a component.
-
----
-
-## Built in public
-
-Coral started as one studio's internal library and is now open source. The rule that shaped it has
-not changed and will not: **a component is extracted, never speculated.** Nothing enters Coral until
-the same pattern has already been written at least twice in real production work. It grows the way a
-reef does - by sedimentation - which is why there are ten components and not eighty.
-
-You are welcome to use it, copy it, fork it, and open issues. What that rule means in practice for
-contributions is in [Contributing](#contributing).
-
-**Status: growing, and honest about it.** The ten components below are used in production and their
-APIs are settled enough to version. Everything is `0.x` at the repo level; individual components
-carry their own version in [`coral.json`](./src/lib/coral/coral.json) and follow semver, so a
-breaking change to one is visible without reading a diff.
-
----
+Every row is one line of a fuller story - the full reasoning, the edge cases and a live demo are
+on each component's own page, linked under [Components](#components).
 
 ## Install
 
@@ -107,8 +91,19 @@ in any project whose `components.json` sets `"iconLibrary": "lucide"`, which is 
 
 There are no barrels. One component, one folder, imported directly:
 
-```ts
-import Combobox from '$lib/coral/kit/combobox/combobox.svelte';
+```svelte
+<script lang="ts">
+	import Combobox from '$lib/coral/kit/combobox/combobox.svelte';
+
+	const cities = [
+		{ value: 11001, label: 'Bogotá' },
+		{ value: 5001, label: 'Medellín' }
+	];
+
+	let city = $state<number>();
+</script>
+
+<Combobox options={cities} bind:value={city} placeholder="Select a city..." clearable />
 ```
 
 That makes filenames public API: renaming one is a breaking change, and gets a major bump.
@@ -117,14 +112,11 @@ That makes filenames public API: renaming one is a breaking change, and gets a m
 > which is exactly the right shape for Coral - still copied into your project, still yours, but with
 > the primitives resolved for you. Publishing `https://coral.imlargo.dev/r/*` so that
 > `pnpm dlx shadcn-svelte@latest add https://coral.imlargo.dev/r/combobox.json` just works is the
-> next milestone. Until then, the two steps above are the install.
-
----
+> next milestone. Until then, the three steps above are the install.
 
 ## Components
 
-Ten so far. Each links to its full API, props table and live demos - and to what it actually
-resolves for you, which is the point rather than the shorter markup.
+Ten so far. Each links to its full API, props table and live demos:
 
 - **[activity-calendar](https://coral.imlargo.dev/docs/kit/activity-calendar)** - a year of daily
   counts as a grid of squares. Timezone-correct day buckets, quantile scaling that survives
@@ -162,8 +154,6 @@ they are written down.
 vocabulary and the clipped field that makes `name`, `form` and `required` work on a control the
 browser cannot validate on its own.
 
----
-
 ## Localization
 
 Coral was extracted from Spanish-language products, and that shows in two different ways:
@@ -177,8 +167,6 @@ initials casing in the avatar (`kit/avatar/initials.ts`). They are correct for m
 locales and wrong for none that Coral has been used in - but they are not yours to configure yet.
 Making locale configurable throughout is on the roadmap below. Since you own the copied folder,
 changing the three string literals is also a perfectly good answer today.
-
----
 
 ## Architecture
 
@@ -235,17 +223,46 @@ Need a type the headless library owns? Derive it from the shadcn component inste
 Never the reverse. And nothing is duplicated: two components needing the same logic means extracting
 a third, or `lib/`.
 
-### What earns a place
+## Scope
 
-Composition has to earn its keep. What Coral contributes is **resolved behavior** - filtering,
-keyboard navigation, shared state through context, accessibility, debounce, loading and empty states
+Coral leaves out a layout system, appearance of any kind, and anything that only saves typing.
+Each cut is deliberate:
 
-- not syntactic sugar. A composed component that only saves typing does not belong here.
+- **No `Components`/layout-substitution map.** Nothing implicitly remaps `h1` or `blockquote` to a
+  custom component. Write the component tag where you want it used.
+- **No appearance.** Colors, radii, shadows and typography are your shadcn theme's job, not
+  Coral's - see [Architecture](#architecture).
+- **No domain knowledge.** No `Invoice`, no `Student`. That lives in your project's `features/`.
+- **No syntactic sugar.** A composed component that only saves typing does not belong here. What
+  Coral contributes is **resolved behavior** - filtering, keyboard navigation, shared state through
+  context, accessibility, debounce, loading and empty states.
+- **No DataTable, no form-field/validation layer, yet.** Prototyped and pulled back out until the
+  pattern has been written twice for real - see [Roadmap](#roadmap).
 
-Every composed component exposes its pieces. If a rare case forces you to drop Coral and rebuild
-from raw shadcn, the component failed.
+The test a feature or component has to pass before it is added, applied the same way to a
+contributor's PR as to the maintainer's own idea:
 
----
+1. Has the same pattern been written twice already, in real production work?
+2. Does it define appearance? If so, it does not belong in Coral.
+3. Does it know the client's domain? If so, it belongs in the project's `features/`.
+4. Does the API match the component's nature - flat props only where there is a defensible
+   canonical case, composition otherwise?
+5. Does the rare case force abandoning Coral and rebuilding from raw shadcn? If so, the component
+   failed - every composed component has to expose its pieces.
+
+## Maintenance
+
+One person maintains this. What bounds the risk if that changes:
+
+- **You already own a working copy.** Coral is copied into your project, not installed as a live
+  dependency - nothing you shipped breaks if this repository disappears tomorrow. Forking it is
+  copying the one folder you already have.
+- **No hidden runtime.** Ten components, no framework of their own underneath - shadcn-svelte and
+  bits-ui, which this repository doesn't maintain, do the actual work.
+- **Versioned per component.** Each entry in [`coral.json`](./src/lib/coral/coral.json) carries its
+  own semver, so a breaking change to one is visible without reading a diff, and doesn't force a
+  repo-wide version bump.
+- **MIT.** No license ambiguity for a folder you're about to make part of your own codebase.
 
 ## Development
 
@@ -264,17 +281,15 @@ Markdown, for pasting into an LLM) come with it.
 
 To add a shadcn primitive: `pnpm dlx shadcn-svelte@latest add <component>`.
 
----
-
 ## Contributing
 
 Issues, bug reports and questions are welcome from anyone.
 
-New components are held to the extraction rule, and it applies to contributors exactly as it applies
-to the maintainer: **show where you already wrote it twice.** A PR adding a component is a PR that
-names two real projects where the same pattern was written by hand, and says what was painful about
-it. That is not gatekeeping for its own sake - it is the only thing keeping Coral from becoming the
-eighty-component library nobody trusts.
+New components are held to the extraction rule from [Scope](#scope), and it applies to
+contributors exactly as it applies to the maintainer: **show where you already wrote it twice.** A
+PR adding a component is a PR that names two real projects where the same pattern was written by
+hand, and says what was painful about it. That is not gatekeeping for its own sake - it is the
+only thing keeping Coral from becoming the eighty-component library nobody trusts.
 
 Good contributions that need no such justification: bug fixes, accessibility fixes, tests,
 documentation, and making something configurable that is currently hardcoded.
@@ -287,8 +302,6 @@ pnpm lint     # prettier + eslint
 pnpm check    # expected: exactly 1 error, shadcn's untouchable ui/native-select
 pnpm test     # vitest
 ```
-
----
 
 ## Roadmap
 
@@ -303,8 +316,6 @@ Ordered by rewrite cost × frequency, not by what is fun to build:
 5. **Form field + validation**
 6. **Empty states and skeletons** - shadcn ships the primitives; nothing in `kit/` composes them yet
 7. **App shell** and **generic CRUD page** - `blocks/`, waiting on the rule of 3
-
----
 
 ## License
 
