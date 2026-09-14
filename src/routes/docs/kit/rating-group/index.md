@@ -5,10 +5,7 @@ description: Stars you can pick and stars you can only read. Native radios under
 
 <script lang="ts">
 	import Preview from '$lib/docs/preview.svelte';
-	import Prose from '$lib/docs/prose.svelte';
 </script>
-
-<Prose {title} {description}>
 
 <Preview name="kit/rating-group/basic" />
 
@@ -166,5 +163,3 @@ Everything else lands on the root element.
 - **No `dir` prop.** Direction belongs to the document; the component reads it from CSS.
 - **No label of its own.** `Field.Set` and `Field.Legend` already do that, and a second way to do it
   would be the syntactic sugar Coral is supposed to leave out.
-
-</Prose>

@@ -1,8 +1,8 @@
 <script lang="ts">
 	/**
-	 * Wraps every docs page's Markdown body. Each `+page.md` renders `<Prose {title} {description}>`
-	 * around its own content, passing its own frontmatter through as props - svmd compiles Markdown
-	 * to a component, not to markup mdsvex-style, so there is no layout hook to do this implicitly.
+	 * Wraps every docs page's Markdown body. Rendered once, from `docs/[...slug]/+page.svelte`,
+	 * around whichever page's `<Content />` the route loaded - title and description come from
+	 * `+page.ts`, which already read them off `entry.data` to resolve the page in the first place.
 	 *
 	 * Renders the title block, and post-processes the rendered Markdown: heading anchors (linkable,
 	 * and the source of the table of contents) and copy buttons on fenced code blocks. Those run

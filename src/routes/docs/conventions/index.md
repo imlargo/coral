@@ -3,12 +3,6 @@ title: Conventions
 description: The rules every Coral component follows, and the reason each one exists.
 ---
 
-<script lang="ts">
-	import Prose from '$lib/docs/prose.svelte';
-</script>
-
-<Prose {title} {description}>
-
 ## Folder layout
 
 ```
@@ -136,5 +130,3 @@ Render a demo with its name - the path minus `demos/` and the extension:
 The Code tab shows that file's actual source, read at build time. There is no second copy of the
 snippet to keep in sync, and a demo that does not exist fails the build instead of rendering an
 empty box. Add the page to the sidebar in `src/lib/docs/nav.ts`.
-
-</Prose>

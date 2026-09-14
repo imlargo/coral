@@ -5,10 +5,7 @@ description: A person's image with an initials fallback, wired in one line.
 
 <script lang="ts">
 	import Preview from '$lib/docs/preview.svelte';
-	import Prose from '$lib/docs/prose.svelte';
 </script>
-
-<Prose {title} {description}>
 
 Raw shadcn asks for three components and a hand-written fallback every single time:
 
@@ -131,5 +128,3 @@ initials(undefined); // ''
 
 It stays inside the component's folder rather than in `lib/` because it has exactly one consumer
 in Coral today. It moves the day a second component needs it.
-
-</Prose>

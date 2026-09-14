@@ -5,10 +5,7 @@ description: Are you sure? - with the request it guards, and what happens when t
 
 <script lang="ts">
 	import Preview from '$lib/docs/preview.svelte';
-	import Prose from '$lib/docs/prose.svelte';
 </script>
-
-<Prose {title} {description}>
 
 One project in the corpus writes this inline **ten times**, with `AlertDialog`, a `Spinner`, an
 `isSaving` flag and a `try/catch` each time. Two others extracted a component - built on `Dialog`,
@@ -139,5 +136,3 @@ two buttons. What varies - the trigger, extra body detail - is a snippet, so the
 The one thing deliberately not here is a promise-returning `confirm()` helper you could `await` in
 an event handler. It reads well in a single call site and badly everywhere else: the dialog has to be
 mounted, and the corpus keeps it mounted per row.
-
-</Prose>

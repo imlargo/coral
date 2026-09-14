@@ -5,10 +5,7 @@ description: A select with a search box, filtering the way Spanish is actually t
 
 <script lang="ts">
 	import Preview from '$lib/docs/preview.svelte';
-	import Prose from '$lib/docs/prose.svelte';
 </script>
-
-<Prose {title} {description}>
 
 shadcn builds the combobox out of a popover and a command menu, and its docs are explicit that this
 is a recipe rather than a component: around fifty lines of markup, a `triggerRef`, and a
@@ -266,5 +263,3 @@ fold('Medellín'); // 'medellin'
 It stays inside the component's folder because it has exactly one consumer in Coral today. It moves
 to `lib/` the day a second component needs it - which, on current evidence, is when the select
 lands.
-
-</Prose>

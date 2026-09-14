@@ -5,10 +5,7 @@ description: A field that turns typed and pasted text into tags, with one rule f
 
 <script lang="ts">
 	import Preview from '$lib/docs/preview.svelte';
-	import Prose from '$lib/docs/prose.svelte';
 </script>
-
-<Prose {title} {description}>
 
 A tags field is an input, a row of badges and about eighty lines of keyboard handling nobody enjoys
 writing twice. The eighty lines are the component: what separates one tag from the next, what
@@ -193,5 +190,3 @@ split('a;b', /[;,]/); // ['a', 'b']
 add([' A ', 'a'], { current: [], sanitize: (raw) => raw.trim().toLowerCase() });
 // { tags: ['a'], rejected: [{ value: 'a', reason: 'duplicate' }] }
 ```
-
-</Prose>

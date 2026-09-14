@@ -9,6 +9,16 @@
 
 import { createContent } from '@svmd/content';
 
+/**
+ * Every docs page's frontmatter. Not validated by a schema - this is our own content, not user
+ * input - so the route that reads it casts to this instead of adding a validator dependency for
+ * two strings.
+ */
+export interface DocsFrontmatter {
+	title: string;
+	description: string;
+}
+
 const { getEntry, getCollection } = createContent({
 	docs: {
 		meta: import.meta.glob('/src/routes/docs/**/index.md', { eager: true, import: 'metadata' }),

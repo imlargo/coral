@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { getCollection, getEntry } from '$lib/docs/content.js';
+import { getCollection, getEntry, type DocsFrontmatter } from '$lib/docs/content.js';
 
 // Every docs page is prerendered (see the root `+layout.ts`); the sidebar links to all of them,
 // so the crawler would find them all anyway, but this keeps the build from depending on that.
@@ -9,6 +9,7 @@ export const load = async ({ params }) => {
 	const entry = getEntry('docs', params.slug);
 	if (!entry) error(404, 'Not found');
 
+	const { title, description } = entry.data as unknown as DocsFrontmatter;
 	const { default: Content } = await entry.load();
-	return { Content };
+	return { Content, title, description };
 };
