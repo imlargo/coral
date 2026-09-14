@@ -39,7 +39,7 @@ function isDemo(file) {
 
 /** @param {string} file @returns {boolean} */
 function isPage(file) {
-	return posix(file).includes(`/${DOCS_ROOT}/`) && path.basename(file) === '+page.md';
+	return posix(file).includes(`/${DOCS_ROOT}/`) && path.basename(file) === 'index.md';
 }
 
 /**

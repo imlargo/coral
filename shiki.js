@@ -1,8 +1,8 @@
 /**
  * Build-time syntax highlighting.
  *
- * Shared by two consumers so the site only ever has one code theme: mdsvex fenced blocks
- * (wired in `svelte.config.js`) and demo sources (wired in `vite-plugin-coral-demos.js`).
+ * Shared by two consumers so the site only ever has one code theme: svmd fenced blocks (wired
+ * through `svmd-highlight.js` in `vite.config.ts`) and demo sources (wired in `vite-plugin-coral-docs.js`).
  * Runs in Node at build time - shiki is never shipped to the browser.
  *
  * The highlighter is created lazily on first use rather than with a top-level `await`: this

@@ -2,11 +2,25 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
 import { sveltekit } from '@sveltejs/kit/vite';
+import { svmd } from '@svmd/vite';
 import { coralDocs } from './vite-plugin-coral-docs.js';
+import { rehypeHeadingAnchors } from './src/lib/docs/rehype-heading-anchors.js';
+import { svmdHighlight } from './svmd-highlight.js';
 
 // Svelte options live in `svelte.config.js` - see the note there before moving any back here.
 export default defineConfig({
-	plugins: [tailwindcss(), coralDocs(), sveltekit()],
+	plugins: [
+		tailwindcss(),
+		// svmd goes before the Svelte plugin: it hands vite-plugin-svelte already-compiled Svelte,
+		// not markdown.
+		svmd({
+			include: ['src/routes/docs/**/index.md'],
+			highlight: svmdHighlight,
+			rehypePlugins: [rehypeHeadingAnchors]
+		}),
+		coralDocs(),
+		sveltekit()
+	],
 	test: {
 		expect: { requireAssertions: true },
 		projects: [
