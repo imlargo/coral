@@ -3,6 +3,12 @@ title: Introduction
 description: An ergonomics layer on top of shadcn-svelte, copied into the project as one folder.
 ---
 
+<script lang="ts">
+	import Prose from '$lib/docs/prose.svelte';
+</script>
+
+<Prose {title} {description}>
+
 Coral is an open-source ergonomics layer on top of shadcn-svelte. It does one thing: remove the
 code that gets rewritten in every project - the combobox with search, the date picker with ranges,
 the confirm dialog that waits on a request - and hand it over already resolved, without closing the
@@ -52,3 +58,5 @@ breaks nothing.
 
 The acid test: if a special case means abandoning Coral and rebuilding from raw shadcn, Coral
 failed. Every component exposes its pieces.
+
+</Prose>

@@ -1,11 +1,13 @@
 <script lang="ts">
 	/**
-	 * mdsvex layout for every docs page. Receives the page's frontmatter as props, renders the
-	 * title block, and post-processes the rendered Markdown: heading anchors (linkable, and the
-	 * source of the table of contents) and copy buttons on fenced code blocks.
+	 * Wraps every docs page's Markdown body. Each `+page.md` renders `<Prose {title} {description}>`
+	 * around its own content, passing its own frontmatter through as props - svmd compiles Markdown
+	 * to a component, not to markup mdsvex-style, so there is no layout hook to do this implicitly.
 	 *
-	 * Those run against the DOM because mdsvex hands us its output as markup, not components.
-	 * This is the only place in the site that does it.
+	 * Renders the title block, and post-processes the rendered Markdown: heading anchors (linkable,
+	 * and the source of the table of contents) and copy buttons on fenced code blocks. Those run
+	 * against the DOM because that output is markup, not components - the only place in the site
+	 * that does it.
 	 */
 	import type { Snippet } from 'svelte';
 	import { slugifyAll } from './slug.js';

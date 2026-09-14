@@ -5,7 +5,10 @@ description: A number field with steppers, bounds that hold, and arithmetic that
 
 <script lang="ts">
 	import Preview from '$lib/docs/preview.svelte';
+	import Prose from '$lib/docs/prose.svelte';
 </script>
+
+<Prose {title} {description}>
 
 Three projects in the corpus wrote this. Two are copies of each other that have since diverged: one
 of them clamps a typed value to `[min, max]`, the other does not - so its steppers refuse to pass the
@@ -113,3 +116,5 @@ round(0.1 + 0.2, 1); // 0.3
 clamp(150, 0, 25); // 25
 stepValue({ value: undefined, delta: 1, min: 5, decimals: 0 }); // 5
 ```
+
+</Prose>

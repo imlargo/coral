@@ -1,41 +1,20 @@
-import { fileURLToPath } from 'node:url';
 import adapter from '@sveltejs/adapter-cloudflare';
-import { escapeSvelte, mdsvex } from 'mdsvex';
-import { highlight } from './shiki.js';
-
-// mdsvex reads the layout straight off disk with `fs.readFileSync`, so this has to be a real
-// filesystem path - `$lib/...` and other Vite aliases fail with ENOENT, which the build swallows
-// into a hang instead of an error.
-const PROSE_LAYOUT = fileURLToPath(new URL('./src/lib/docs/prose.svelte', import.meta.url));
 
 /**
  * Single source of truth for Svelte options. `vite.config.ts` deliberately calls `sveltekit()`
- * with no arguments: passing options there makes Vite ignore this file, and `svelte-check`,
- * ESLint and Prettier all read *this* one - so the two would silently disagree about `.md`.
+ * with no arguments: passing options there makes Vite ignore this file, and `svelte-check` and
+ * ESLint both read *this* one.
+ *
+ * Docs pages are svmd Markdown (`content.md`, wired in `vite.config.ts`), imported by an ordinary
+ * `+page.svelte` rather than routed directly as `+page.md`: SvelteKit's build resolves each route
+ * to its source file through Vite's manifest by exact path, and svmd's `.md` -> `.md.svmd.svelte`
+ * module id means that lookup misses for a `.md` route file, which only ever surfaces in a full
+ * adapter build, not in dev. Importing `content.md` from a normal `.svelte` route sidesteps it -
+ * only `+page.svelte` is ever a route file, so no extra `extensions` entry is needed here.
  *
  * @type {import('@sveltejs/kit').Config}
  */
 const config = {
-	// Docs pages are mdsvex Markdown; `.svelte` still works everywhere else.
-	extensions: ['.svelte', '.md'],
-
-	preprocess: [
-		mdsvex({
-			extensions: ['.md'],
-			// Every docs page is wrapped in the prose layout, which also receives its frontmatter.
-			layout: { _: PROSE_LAYOUT },
-			// Forward props to the layout with `$props()` instead of the legacy `$$props`, which
-			// runes mode rejects. Added in mdsvex 0.12.8; the default is still `'legacy'`.
-			layoutPropForwarding: 'runes',
-			highlight: {
-				// The wrapper is what `prose.svelte` hangs a copy button off - and what tells it
-				// apart from a `<Preview>` code tab, which brings its own.
-				highlighter: async (code, lang) =>
-					escapeSvelte(`<div class="docs-md-code group">${await highlight(code, lang)}</div>`)
-			}
-		})
-	],
-
 	compilerOptions: {
 		// Force runes mode for the project, except for libraries. Can be removed in svelte 6.
 		runes: ({ filename }) => (filename.split(/[/\\]/).includes('node_modules') ? undefined : true)

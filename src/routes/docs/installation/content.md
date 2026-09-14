@@ -3,6 +3,12 @@ title: Installation
 description: Copy the folder, install the primitives it declares. There is nothing to add to package.json.
 ---
 
+<script lang="ts">
+	import Prose from '$lib/docs/prose.svelte';
+</script>
+
+<Prose {title} {description}>
+
 Coral is not an npm package. You copy it, and from that moment it is yours.
 
 ## Requirements
@@ -83,3 +89,5 @@ treat a rename as a breaking change and bump the version in `coral.json`.
 Each component carries its own version in `coral.json` and follows semver, so a breaking change to
 one is visible without reading a diff. There is no single Coral version to track - you copied a
 folder, and what matters is which components in it are behind.
+
+</Prose>

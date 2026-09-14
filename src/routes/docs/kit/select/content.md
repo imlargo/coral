@@ -5,7 +5,10 @@ description: A short list of known options, with the trigger label, the value ma
 
 <script lang="ts">
 	import Preview from '$lib/docs/preview.svelte';
+	import Prose from '$lib/docs/prose.svelte';
 </script>
+
+<Prose {title} {description}>
 
 Six of the nine projects in the corpus use a select - 159 files. Four of them wrote a generic
 wrapper for it, and two of those four are the same file: `suntalk` and `butter` are byte-identical
@@ -151,3 +154,5 @@ is reachable by keyboard.
 The `trigger` snippet replaces the label, not the button - the chevron and the trigger element
 belong to the primitive. For a trigger that is not a button-with-a-label at all, use the combobox's
 `trigger` snippet, which replaces the whole element.
+
+</Prose>

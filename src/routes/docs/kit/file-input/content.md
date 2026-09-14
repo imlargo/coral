@@ -5,7 +5,10 @@ description: Pick files by click or drop, validate them, show what was picked. A
 
 <script lang="ts">
 	import Preview from '$lib/docs/preview.svelte';
+	import Prose from '$lib/docs/prose.svelte';
 </script>
+
+<Prose {title} {description}>
 
 Eight of the nine projects in the corpus have one. Four wrote a generic wrapper, and two of those
 four are forks of the same file - which is the interesting part, because one fork diverged to patch a
@@ -175,3 +178,5 @@ for (const file of files) body.append('attachments', file);
 Native file submission would need the hidden input's own `FileList` kept in step with `value` on
 every removal, and no project in the corpus posts a form that way - all nine build the request
 themselves. It stays out until one does.
+
+</Prose>

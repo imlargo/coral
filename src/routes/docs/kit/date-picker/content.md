@@ -5,7 +5,10 @@ description: A popover, a calendar and a formatted trigger. One day or two, with
 
 <script lang="ts">
 	import Preview from '$lib/docs/preview.svelte';
+	import Prose from '$lib/docs/prose.svelte';
 </script>
+
+<Prose {title} {description}>
 
 The shadcn docs are honest about this one: there is no date picker component, there is a recipe.
 Every project writes the same forty lines - a popover, a trigger button, a `DateFormatter`, a
@@ -196,3 +199,5 @@ Everything the wrapped calendar accepts stays available. On top of that:
   written twice.
 - **No `format` string.** `Intl.DateTimeFormatOptions` is the vocabulary the platform already has,
   and a bespoke `'dd/MM/yyyy'` mini-language is a formatter Coral would then have to own.
+
+</Prose>

@@ -5,7 +5,10 @@ description: A year of daily counts as a grid of squares - the GitHub contributi
 
 <script lang="ts">
 	import Preview from '$lib/docs/preview.svelte';
+	import Prose from '$lib/docs/prose.svelte';
 </script>
+
+<Prose {title} {description}>
 
 Counts per day, one square each, weeks as columns. Coral draws the calendar, buckets the counts and
 handles the keyboard; what the numbers mean stays with the project.
@@ -203,3 +206,5 @@ Everything else lands on the root element.
   in three different projects; `start` and `end` are the seam they all sit on.
 - **No fetching.** The grid takes an array.
 - **No `count` formatting.** A count is a number until `label` says otherwise.
+
+</Prose>
