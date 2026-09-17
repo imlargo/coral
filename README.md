@@ -14,7 +14,7 @@
 - **Copied, not installed.** `npx degit` drops the folder into your project; from then it's your
   code, versioned like the rest of your codebase, with no npm dependency to fall behind.
 - **Extraction only, never speculation.** A component enters only after the same pattern has been
-  written twice in real production work. Ten components exist, not eighty.
+  written twice in real production work. Twenty-three components exist, not eighty.
 - **No appearance of its own.** No colors, shadows, radii or typography - only layout utilities.
   Everything visual comes from _your_ shadcn theme.
 - Every component's version and required shadcn primitives are recorded in
@@ -36,6 +36,11 @@ whether you need it than a list of props would:
 | Number input via the mouse wheel     | can silently push the value out of bounds               | bounds hold from steppers, typing and the wheel alike     |
 | A select's bound value               | bits-ui's own string keys                               | keeps the type you gave it - a number, a union, an object |
 | Tags typed vs. pasted                | two code paths, two rules to keep in sync               | one delimiter rule for both                               |
+| Escape in a search inside a dialog   | closes the dialog along with the term                   | first Escape clears the term, the second is the dialog's  |
+| Password shown when the form submits | the password manager never offers to save it            | back to `type="password"` before the form is read         |
+| Copy button on plain `http`          | throws, or shows a check mark for nothing               | falls back, and reports a failure as a failure            |
+| Reordering a list on a phone         | HTML5 drag-and-drop fires nothing on touch              | pointer events for touch, plus a full keyboard path       |
+| "5 minutes ago" on a page left open  | stale, or an interval per timestamp every second        | each label wakes only when its own text changes           |
 
 Every row is one line of a fuller story - the full reasoning, the edge cases and a live demo are
 on each component's own page, linked under [Components](#components).
@@ -72,7 +77,7 @@ Every component lists the shadcn primitives it imports in
 ```json
 {
 	"kit/combobox": {
-		"version": "4.1.0",
+		"version": "4.2.0",
 		"shadcn": ["popover", "command", "button", "badge"],
 		"npm": ["@lucide/svelte"]
 	}
@@ -116,35 +121,66 @@ That makes filenames public API: renaming one is a breaking change, and gets a m
 
 ## Components
 
-Ten so far. Each links to its full API, props table and live demos:
+Twenty-three so far. Each links to its full API, props table and live demos:
 
+- **[action-button](https://coral.imlargo.dev/docs/kit/action-button)** - a button that waits on
+  its own async `onclick`. One click, one request; busy without dropping keyboard focus; the same
+  `false`-or-throw failure convention as confirm-dialog.
 - **[activity-calendar](https://coral.imlargo.dev/docs/kit/activity-calendar)** - a year of daily
   counts as a grid of squares. Timezone-correct day buckets, quantile scaling that survives
   long-tailed data, one tab stop with arrow-key navigation, one shared tooltip instead of 365.
 - **[avatar](https://coral.imlargo.dev/docs/kit/avatar)** - image with an initials fallback. An
   accessible name that does not change when the photo 404s, and never doubles up.
+- **[avatar-stack](https://coral.imlargo.dev/docs/kit/avatar-stack)** - overlapping avatars with a
+  count for the rest. `max` counts circles including the count, never renders `+1`, and reads as a
+  list.
 - **[combobox](https://coral.imlargo.dev/docs/kit/combobox)** - a select with a search box.
   Accent-insensitive search, focus returned to the trigger, single or multiple, server-side search
   with debounce.
 - **[confirm-dialog](https://coral.imlargo.dev/docs/kit/confirm-dialog)** - "are you sure?", on
   `alert-dialog` so an outside click cannot dismiss a destructive action. Waits on an async
   `onconfirm`, stays open on failure, blocks double-submit.
+- **[copy-button](https://coral.imlargo.dev/docs/kit/copy-button)** - copies text, announces it to
+  screen readers, falls back where the Clipboard API is missing, and treats failure as a state.
 - **[date-picker](https://coral.imlargo.dev/docs/kit/date-picker)** - popover, calendar and
   formatted trigger, single day or range. Closes on range completion rather than first click;
   DST-safe day handling.
 - **[file-input](https://coral.imlargo.dev/docs/kit/file-input)** - click or drop, validate, show
   what was picked. Keyboard-operable, drag-and-drop that survives child elements, de-duplicates a
   file dropped twice.
+- **[inline-edit](https://coral.imlargo.dev/docs/kit/inline-edit)** - rename in place. Keyboard
+  reachable, Enter saves, Escape cancels without closing the dialog, an async save that fails keeps
+  what was typed.
 - **[number-input](https://coral.imlargo.dev/docs/kit/number-input)** - bounds that hold from the
   steppers _and_ from typing, exact decimal arithmetic, no silent wheel-scroll edits.
+- **[password-input](https://coral.imlargo.dev/docs/kit/password-input)** - a visibility toggle
+  that keeps the caret, hides the password again on submit so password managers still work, and
+  warns about Caps Lock.
 - **[rating-group](https://coral.imlargo.dev/docs/kit/rating-group)** - stars on native radios, so
   keyboard and form semantics come from the platform. Half fills from one glyph; `readonly` reads as
   an image, not a disabled control.
+- **[relative-time](https://coral.imlargo.dev/docs/kit/relative-time)** - "hace 5 minutos" in a
+  `<time>`, worded by `Intl`, kept current by one timeout set for the moment its text changes.
+- **[reorder-list](https://coral.imlargo.dev/docs/kit/reorder-list)** - drag to reorder with mouse,
+  touch or keyboard, announced, and written once per drop rather than once per row crossed.
+- **[responsive-dialog](https://coral.imlargo.dev/docs/kit/responsive-dialog)** - a dialog on wide
+  screens and a drawer on narrow ones, composed once, and still open after crossing the breakpoint.
+- **[search-input](https://coral.imlargo.dev/docs/kit/search-input)** - debounced, deduplicated
+  `onsearch`, a minimum length that clears instead of freezing results, and an Escape that does not
+  close the dialog around it.
 - **[select](https://coral.imlargo.dev/docs/kit/select)** - a self-deriving trigger label, a `value`
   that keeps its own type instead of bits-ui's string keys, and an `onchange` that only fires on
   real user changes.
+- **[shortcut](https://coral.imlargo.dev/docs/kit/shortcut)** - draws `mod+k` as `⌘K` or `Ctrl K`
+  by platform and binds it: exact, layout-aware matching that stays out of text fields.
+- **[show-more](https://coral.imlargo.dev/docs/kit/show-more)** - clamps content to a few lines
+  and only offers to expand when it actually overflows; focus never lands in the clipped part.
+- **[stepper](https://coral.imlargo.dev/docs/kit/stepper)** - multi-step flows. Async validation
+  on Next, linear by completion rather than position, focus moved to the new step.
 - **[tags-input](https://coral.imlargo.dev/docs/kit/tags-input)** - one delimiter rule for typed and
   pasted alike, full keyboard handling, and it reports _why_ a tag was rejected.
+- **[tree-view](https://coral.imlargo.dev/docs/kit/tree-view)** - the WAI-ARIA tree pattern from a
+  plain array: one tab stop, the full arrow-key model, typeahead, children loaded on demand.
 
 Each one's version and the shadcn primitives it needs are recorded in
 [`coral.json`](./src/lib/coral/coral.json) - the manifest the install step reads, and the only place
@@ -153,6 +189,11 @@ they are written down.
 `kit/select`, `kit/combobox` and `kit/date-picker` share `lib/`, which holds the `Option<T>`
 vocabulary and the clipped field that makes `name`, `form` and `required` work on a control the
 browser cannot validate on its own.
+
+`lib/` also holds `debounce`, shared by combobox and search-input, and `action` - the pending flag,
+the double-submit guard and the `false`-or-throw convention - read by every component that waits on
+a request: confirm-dialog, action-button, inline-edit and stepper. `kit/avatar-stack` composes
+`kit/avatar`, so copy both.
 
 ## Localization
 
@@ -257,7 +298,7 @@ One person maintains this. What bounds the risk if that changes:
 - **You already own a working copy.** Coral is copied into your project, not installed as a live
   dependency - nothing you shipped breaks if this repository disappears tomorrow. Forking it is
   copying the one folder you already have.
-- **No hidden runtime.** Ten components, no framework of their own underneath - shadcn-svelte and
+- **No hidden runtime.** Twenty-three components, no framework of their own underneath - shadcn-svelte and
   bits-ui, which this repository doesn't maintain, do the actual work.
 - **Versioned per component.** Each entry in [`coral.json`](./src/lib/coral/coral.json) carries its
   own semver, so a breaking change to one is visible without reading a diff, and doesn't force a

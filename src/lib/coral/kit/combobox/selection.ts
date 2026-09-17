@@ -1,6 +1,6 @@
 /**
  * @coral/kit/combobox
- * @version 4.1.0
+ * @version 4.2.0
  */
 
 import type { Option } from '../../lib/options.js';

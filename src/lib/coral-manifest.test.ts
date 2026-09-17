@@ -38,11 +38,18 @@ async function files(): Promise<string[]> {
  */
 function owned(name: string, all: string[]): string[] {
 	return all.filter(
-		(file) => file.startsWith(`${name}/`) || file.replace(/\.[^./]+$/, '') === name
+		(file) => file.startsWith(`${name}/`) || file.replace(MODULE_EXTENSION, '') === name
 	);
 }
 
 const SOURCE = /\.(ts|svelte)$/;
+
+/**
+ * The extension a `lib/*` file drops to become its manifest name. `.svelte.ts` counts as one: a
+ * module that needs runes has to be called that, and `lib/action.svelte` would be a name that
+ * describes the compiler rather than the thing.
+ */
+const MODULE_EXTENSION = /(\.svelte)?\.[^./]+$/;
 const isTest = (file: string) => /\.(test|spec)\.[^./]+$/.test(file);
 
 describe('coral.json', () => {
@@ -56,7 +63,7 @@ describe('coral.json', () => {
 		const singles = new Set(
 			all
 				.filter((file) => file.startsWith('lib/') && !isTest(file))
-				.map((file) => `lib/${file.split('/')[1].replace(/\.[^./]+$/, '')}`)
+				.map((file) => `lib/${file.split('/')[1].replace(MODULE_EXTENSION, '')}`)
 		);
 
 		expect([...folders, ...singles].sort()).toEqual(entries.map(([name]) => name).sort());

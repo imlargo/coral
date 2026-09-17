@@ -1,7 +1,7 @@
 <script lang="ts" generics="T, Type extends ComboboxType = 'single'">
 	/**
 	 * @coral/kit/combobox
-	 * @version 4.1.0
+	 * @version 4.2.0
 	 */
 	import { tick } from 'svelte';
 	import ChevronsUpDownIcon from '@lucide/svelte/icons/chevrons-up-down';
@@ -13,6 +13,7 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { cn } from '$lib/utils.js';
 	import HiddenField from '../../lib/hidden-field.svelte';
+	import { debounce } from '../../lib/debounce.js';
 	import { flatten, toGroups } from '../../lib/options.js';
 	import { includesValue, matches } from './matching.js';
 	import { selectAllVisible } from './selection.js';
@@ -59,10 +60,15 @@
 
 	let triggerRef = $state<HTMLButtonElement>(null!);
 	let searchRef = $state<HTMLInputElement>(null!);
-	let searchTimer: ReturnType<typeof setTimeout> | undefined;
+
+	/** Reads `searchDebounce` per call, so changing the prop takes effect without a remount. */
+	const searchLater = debounce(
+		(term: string) => onsearch?.(term),
+		() => searchDebounce
+	);
 
 	// A pending debounce outliving the component would call `onsearch` for a screen that is gone.
-	$effect(() => () => clearTimeout(searchTimer));
+	$effect(() => () => searchLater.cancel());
 
 	const multiple = $derived(type === 'multiple');
 	const toText = $derived(serialize ?? ((entry: T) => String(entry)));
@@ -171,19 +177,13 @@
 
 	function handleSearch(event: Event & { currentTarget: HTMLInputElement }) {
 		if (!onsearch) return;
-		const next = event.currentTarget.value;
-		clearTimeout(searchTimer);
-		if (!searchDebounce) {
-			onsearch(next);
-			return;
-		}
-		searchTimer = setTimeout(() => onsearch(next), searchDebounce);
+		searchLater(event.currentTarget.value);
 	}
 
 	/** A term left behind would filter the list before the user has typed anything next time. */
 	function handleOpenChange(next: boolean) {
 		if (!next) {
-			clearTimeout(searchTimer);
+			searchLater.cancel();
 			// The caller hears about it too, undebounced. When the server owns the search, clearing
 			// only this side leaves an empty search box sitting above a list still filtered by a
 			// term nobody can see any more.
