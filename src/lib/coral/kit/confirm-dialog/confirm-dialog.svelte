@@ -1,11 +1,12 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/confirm-dialog
-	 * @version 1.0.0
+	 * @version 1.1.0
 	 */
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import { Spinner } from '$lib/components/ui/spinner/index.js';
 	import { cn } from '$lib/utils.js';
+	import { Action } from '../../lib/action.svelte.js';
 	import type { ConfirmDialogProps } from './types.js';
 
 	let {
@@ -27,18 +28,19 @@
 		...restProps
 	}: ConfirmDialogProps = $props();
 
-	let running = $state(false);
+	const action = new Action();
 
 	/** The caller's flag wins when it passes one, so two sources never fight over the same button. */
-	const busy = $derived(pending ?? running);
+	const busy = $derived(pending ?? action.running);
 
 	/**
 	 * Runs the confirmation and decides whether the dialog has earned the right to close.
 	 *
 	 * A write can fail. Closing on click - the primitive's own behaviour, and every hand-written
 	 * version in the corpus - throws away the one place that failure could be reported. So the
-	 * close waits for the promise, and a rejection or an explicit `false` keeps the dialog open.
-	 * `busy` guards the entry too: a second click would submit the same destructive action twice.
+	 * close waits for the promise, and a rejection or an explicit `false` keeps the dialog open -
+	 * the convention `lib/action` holds for every component that waits on a request. `busy` guards
+	 * the entry too: a second click would submit the same destructive action twice.
 	 */
 	async function confirm() {
 		if (busy) return;
@@ -48,13 +50,7 @@
 			return;
 		}
 
-		running = true;
-		try {
-			if ((await onconfirm()) === false) return;
-			open = false;
-		} finally {
-			running = false;
-		}
+		if (await action.run(onconfirm)) open = false;
 	}
 
 	/**

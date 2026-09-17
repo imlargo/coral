@@ -29,16 +29,29 @@ export const nav: DocSection[] = [
 	{
 		title: 'Kit',
 		items: [
+			{ title: 'Action button', href: resolve('/docs/kit/action-button') },
 			{ title: 'Activity calendar', href: resolve('/docs/kit/activity-calendar') },
 			{ title: 'Avatar', href: resolve('/docs/kit/avatar') },
+			{ title: 'Avatar stack', href: resolve('/docs/kit/avatar-stack') },
 			{ title: 'Combobox', href: resolve('/docs/kit/combobox') },
 			{ title: 'Confirm dialog', href: resolve('/docs/kit/confirm-dialog') },
+			{ title: 'Copy button', href: resolve('/docs/kit/copy-button') },
 			{ title: 'Date picker', href: resolve('/docs/kit/date-picker') },
 			{ title: 'File input', href: resolve('/docs/kit/file-input') },
+			{ title: 'Inline edit', href: resolve('/docs/kit/inline-edit') },
 			{ title: 'Number input', href: resolve('/docs/kit/number-input') },
+			{ title: 'Password input', href: resolve('/docs/kit/password-input') },
 			{ title: 'Rating group', href: resolve('/docs/kit/rating-group') },
+			{ title: 'Relative time', href: resolve('/docs/kit/relative-time') },
+			{ title: 'Reorder list', href: resolve('/docs/kit/reorder-list') },
+			{ title: 'Responsive dialog', href: resolve('/docs/kit/responsive-dialog') },
+			{ title: 'Search input', href: resolve('/docs/kit/search-input') },
 			{ title: 'Select', href: resolve('/docs/kit/select') },
-			{ title: 'Tags input', href: resolve('/docs/kit/tags-input') }
+			{ title: 'Shortcut', href: resolve('/docs/kit/shortcut') },
+			{ title: 'Show more', href: resolve('/docs/kit/show-more') },
+			{ title: 'Stepper', href: resolve('/docs/kit/stepper') },
+			{ title: 'Tags input', href: resolve('/docs/kit/tags-input') },
+			{ title: 'Tree view', href: resolve('/docs/kit/tree-view') }
 		]
 	},
 	{

@@ -13,10 +13,12 @@ This file is self-contained: every rule you need is here. (`context/coral.md` ho
 philosophy but is deliberately untracked - don't assume a reader has it.)
 
 Coral lives in **`src/lib/coral/`** - one self-contained folder, copied whole into the target
-project. Currently extracted: `kit/{activity-calendar, avatar, combobox, confirm-dialog,
-date-picker, file-input, number-input, rating-group, select, tags-input}`, over
-`lib/{options, hidden-field}`. `src/lib/coral/coral.json` is the list that counts - read it rather
-than this sentence, which is the kind that goes stale.
+project. Currently: `kit/{action-button, activity-calendar, avatar, avatar-stack, combobox,
+confirm-dialog, copy-button, date-picker, file-input, inline-edit, number-input, password-input,
+rating-group, relative-time, reorder-list, responsive-dialog, search-input, select, shortcut,
+show-more, stepper, tags-input, tree-view}`, over `lib/{action, debounce, hidden-field, options}`.
+`src/lib/coral/coral.json` is the list that counts - read it rather than this sentence, which is the
+kind that goes stale.
 
 ## Hard rules
 

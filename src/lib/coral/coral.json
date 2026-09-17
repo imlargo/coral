@@ -1,5 +1,13 @@
 {
 	"components": {
+		"lib/action": {
+			"version": "1.0.0",
+			"shadcn": []
+		},
+		"lib/debounce": {
+			"version": "1.0.0",
+			"shadcn": []
+		},
 		"lib/hidden-field": {
 			"version": "1.0.0",
 			"shadcn": []
@@ -7,6 +15,10 @@
 		"lib/options": {
 			"version": "1.0.0",
 			"shadcn": []
+		},
+		"kit/action-button": {
+			"version": "1.0.0",
+			"shadcn": ["button", "spinner"]
 		},
 		"kit/activity-calendar": {
 			"version": "1.0.0",
@@ -16,14 +28,23 @@
 			"version": "1.1.0",
 			"shadcn": ["avatar"]
 		},
+		"kit/avatar-stack": {
+			"version": "1.0.0",
+			"shadcn": ["avatar"]
+		},
 		"kit/combobox": {
-			"version": "4.1.0",
+			"version": "4.2.0",
 			"shadcn": ["popover", "command", "button", "badge"],
 			"npm": ["@lucide/svelte"]
 		},
 		"kit/confirm-dialog": {
-			"version": "1.0.0",
+			"version": "1.1.0",
 			"shadcn": ["alert-dialog", "button", "spinner"]
+		},
+		"kit/copy-button": {
+			"version": "1.0.0",
+			"shadcn": ["button"],
+			"npm": ["@lucide/svelte"]
 		},
 		"kit/date-picker": {
 			"version": "1.1.0",
@@ -35,7 +56,16 @@
 			"shadcn": ["empty", "item", "button"],
 			"npm": ["@lucide/svelte"]
 		},
+		"kit/inline-edit": {
+			"version": "1.0.0",
+			"shadcn": ["input-group", "spinner"]
+		},
 		"kit/number-input": {
+			"version": "1.0.0",
+			"shadcn": ["input-group"],
+			"npm": ["@lucide/svelte"]
+		},
+		"kit/password-input": {
 			"version": "1.0.0",
 			"shadcn": ["input-group"],
 			"npm": ["@lucide/svelte"]
@@ -45,14 +75,49 @@
 			"shadcn": [],
 			"npm": ["@lucide/svelte"]
 		},
+		"kit/relative-time": {
+			"version": "1.0.0",
+			"shadcn": []
+		},
+		"kit/reorder-list": {
+			"version": "1.0.0",
+			"shadcn": [],
+			"npm": ["@lucide/svelte"]
+		},
+		"kit/responsive-dialog": {
+			"version": "1.0.0",
+			"shadcn": ["dialog", "drawer"]
+		},
+		"kit/search-input": {
+			"version": "1.0.0",
+			"shadcn": ["input-group", "spinner"],
+			"npm": ["@lucide/svelte"]
+		},
 		"kit/select": {
 			"version": "2.1.0",
 			"shadcn": ["select", "button"],
 			"npm": ["@lucide/svelte"]
 		},
+		"kit/shortcut": {
+			"version": "1.0.0",
+			"shadcn": ["kbd"]
+		},
+		"kit/show-more": {
+			"version": "1.0.0",
+			"shadcn": ["button"]
+		},
+		"kit/stepper": {
+			"version": "1.0.0",
+			"shadcn": ["button", "spinner"]
+		},
 		"kit/tags-input": {
 			"version": "1.0.0",
 			"shadcn": ["input-group", "badge"],
+			"npm": ["@lucide/svelte"]
+		},
+		"kit/tree-view": {
+			"version": "1.0.0",
+			"shadcn": [],
 			"npm": ["@lucide/svelte"]
 		}
 	}
