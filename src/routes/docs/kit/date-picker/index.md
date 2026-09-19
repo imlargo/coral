@@ -20,7 +20,7 @@ slightly differently.
   hand-written `onValueChange`, which is where it gets forgotten.
 - **A range closes when it is _complete_**, not on the first click - the single most common bug in a
   hand-rolled range picker.
-- **The trigger label is formatted, and a range is formatted _as a range_**: `5 – 9 de ene de 2026`,
+- **The trigger label is formatted, and a range is formatted _as a range_**: `Jan 5 – 9, 2026`,
   one month and one year, in whatever separator the locale uses.
 - **Presets know which of them is active**, which is the only reason a preset row is worth composing
   rather than writing inline.
@@ -41,7 +41,7 @@ popover stays open through the middle of a selection and shuts when the second e
 
 A range is **half picked** for as long as it takes to click the second day: `value` carries a
 `start` and no `end`, and the trigger prints that one day rather than falling back to the
-placeholder - a picker that says "Selecciona un rango" while a start day sits highlighted is lying
+placeholder - a picker that says "Pick a range" while a start day sits highlighted is lying
 about its own state. It is also why the `trigger` snippet gets `empty` as a signal of its own
 instead of testing `value === undefined`.
 
@@ -60,8 +60,8 @@ now**:
 
 ```ts
 const presets: Preset<DateRange>[] = [
-	{ label: 'Hoy', value: () => ({ start: today(zone), end: today(zone) }) },
-	{ label: 'Últimos 7 días', value: lastDays(7) }
+	{ label: 'Today', value: () => ({ start: today(zone), end: today(zone) }) },
+	{ label: 'Last 7 days', value: lastDays(7) }
 ];
 ```
 
@@ -70,8 +70,8 @@ everyone who left the tab open. The thunk is called when the row renders and aga
 clicked, so both the highlight and the selection come from the clock as it is now.
 
 Which brings up the part worth having: **the row knows which preset is active**, and the trigger
-prints its label rather than the dates behind it. `Últimos 7 días` is what the user chose; making
-them recognise it as `24 – 31 de ago` is asking them to do arithmetic to read their own selection.
+prints its label rather than the dates behind it. `Last 7 days` is what the user chose; making
+them recognise it as `Aug 24 – 31` is asking them to do arithmetic to read their own selection.
 
 Identity cannot answer that question - a thunk hands back a fresh `CalendarDate` on every call, so
 `===` is always false. `activePreset` in
@@ -154,7 +154,7 @@ Everything the wrapped calendar accepts stays available. On top of that:
 | `month`        | `DateValue`                        | today                     | The month on screen. Bindable. Follows the selection.   |
 | `presets`      | `Preset<Value>[]`                  | -                         | Shortcuts beside the calendar.                          |
 | `placeholder`  | `string`                           | `Select a date...`        | Trigger text while nothing is selected.                 |
-| `locale`       | `string`                           | `es-CO`                   | Drives the calendar's strings and the trigger label.    |
+| `locale`       | `string`                           | `en-US`                   | Drives the calendar's strings and the trigger label.    |
 | `format`       | `Intl.DateTimeFormatOptions`       | `{ dateStyle: 'medium' }` | How the trigger prints the selection.                   |
 | `clearable`    | `boolean`                          | `false`                   | Adds a clear control to the trigger.                    |
 | `clearLabel`   | `string`                           | `Clear date`              | Accessible label for that control.                      |

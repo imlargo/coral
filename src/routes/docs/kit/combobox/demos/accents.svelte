@@ -1,26 +1,26 @@
 <script lang="ts">
 	import Combobox from '$lib/coral/kit/combobox/combobox.svelte';
 
-	const departments = [
-		{ value: 'antioquia', label: 'Antioquia' },
-		{ value: 'bolivar', label: 'Bolívar' },
-		{ value: 'boyaca', label: 'Boyacá' },
-		{ value: 'caqueta', label: 'Caquetá' },
-		{ value: 'choco', label: 'Chocó' },
-		{ value: 'narino', label: 'Nariño' },
-		{ value: 'quindio', label: 'Quindío' }
+	const fruits = [
+		{ value: 'acai', label: 'Açaí' },
+		{ value: 'pina', label: 'Piña' },
+		{ value: 'guarana', label: 'Guaraná' },
+		{ value: 'maracuja', label: 'Maracujá' },
+		{ value: 'lychee', label: 'Lychee' },
+		{ value: 'kiwi', label: 'Kiwi' },
+		{ value: 'papaya', label: 'Papaya' }
 	];
 
-	let department = $state<string>();
+	let fruit = $state<string>();
 </script>
 
 <div class="w-64">
-	<!-- Type `narino`, `boyaca` or `choco` - unaccented, as anyone actually types it. -->
+	<!-- Type `acai`, `pina` or `guarana` - unaccented, as anyone actually types it. -->
 	<Combobox
-		options={departments}
-		bind:value={department}
-		placeholder="Select a department..."
-		searchPlaceholder="Try typing narino..."
-		emptyMessage="No department found."
+		options={fruits}
+		bind:value={fruit}
+		placeholder="Select a fruit..."
+		searchPlaceholder="Try typing acai..."
+		emptyMessage="No fruit found."
 	/>
 </div>

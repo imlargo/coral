@@ -6,11 +6,5 @@
 </script>
 
 <div class="w-72">
-	<DatePicker
-		type="range"
-		bind:value
-		numberOfMonths={2}
-		placeholder="Selecciona un rango"
-		clearable
-	/>
+	<DatePicker type="range" bind:value numberOfMonths={2} placeholder="Pick a range" clearable />
 </div>

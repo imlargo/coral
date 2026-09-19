@@ -5,7 +5,7 @@
 
 	let picked = $state<ActivityCell | null>(null);
 
-	const format = new Intl.DateTimeFormat('es-CO', { dateStyle: 'long' });
+	const format = new Intl.DateTimeFormat('en-US', { dateStyle: 'long' });
 </script>
 
 <div class="flex w-full flex-col gap-4">

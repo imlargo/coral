@@ -55,7 +55,7 @@ depending on how it got into the field.
 they turned away through `onreject` - one call per batch, so a paste of thirty over the cap is one
 message, not thirty.
 
-Coral says nothing on screen about it. What "no caben más de 4" reads like is the project's, and a
+Coral says nothing on screen about it. What "only 4 fit" reads like is the project's, and a
 component that ships that sentence ships a language with it.
 
 ## Rules
@@ -163,7 +163,7 @@ a project bolts on a key of its own without forking the file.
 
 The field stays a native text input, so it keeps its label, its description, its placeholder and
 its own validation. Each tag carries a real `<button>` labelled with the tag it removes - `Remove
-vainilla`, not `Remove` - so the controls are reachable by Tab and named when they are reached. The
+vanilla`, not `Remove` - so the controls are reachable by Tab and named when they are reached. The
 arrow keys are a shortcut over the top of that, not the only way in.
 
 Focus is the highlight. There is no second notion of "the selected tag" to keep in sync with it,

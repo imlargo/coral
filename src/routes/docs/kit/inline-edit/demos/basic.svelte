@@ -1,16 +1,16 @@
 <script lang="ts">
 	import InlineEdit from '$lib/coral/kit/inline-edit/inline-edit.svelte';
 
-	let name = $state('Presupuesto Q3');
+	let name = $state('Q3 Budget');
 </script>
 
 <div class="flex w-72 flex-col gap-2">
 	<InlineEdit
 		bind:value={name}
 		class="w-full text-lg font-medium"
-		placeholder="Sin nombre"
-		editLabel={(value) => `Renombrar ${value}`}
+		placeholder="No name"
+		editLabel={(value) => `Rename ${value}`}
 		required
 	/>
-	<p class="text-sm text-muted-foreground">Haz clic, o enfoca y pulsa F2.</p>
+	<p class="text-sm text-muted-foreground">Click, or focus and press F2.</p>
 </div>

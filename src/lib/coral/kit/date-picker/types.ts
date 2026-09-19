@@ -1,6 +1,6 @@
 /**
  * @coral/kit/date-picker
- * @version 1.1.0
+ * @version 1.1.1
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -63,7 +63,7 @@ type BaseProps<Type extends DatePickerType> = {
 	 * is the kind of coin-flip every caller loses once.
 	 */
 	month?: DateValue;
-	/** Shortcuts rendered beside the calendar - "Hoy", "Últimos 7 días". */
+	/** Shortcuts rendered beside the calendar - "Today", "Last 7 days". */
 	presets?: Preset<NonNullable<DatePickerValue<Type>>>[];
 	/** Printed on the trigger while nothing is selected. */
 	placeholder?: string;

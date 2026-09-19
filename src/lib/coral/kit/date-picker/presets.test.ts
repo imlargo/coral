@@ -1,6 +1,6 @@
 /**
  * @coral/kit/date-picker
- * @version 1.1.0
+ * @version 1.1.1
  */
 
 import { describe, expect, it } from 'vitest';
@@ -14,13 +14,13 @@ const jan9: Day = { year: 2026, month: 1, day: 9 };
 
 describe('resolvePreset', () => {
 	it('hands back a plain value as it is', () => {
-		expect(resolvePreset({ label: 'Año nuevo', value: jan5 })).toBe(jan5);
+		expect(resolvePreset({ label: 'New Year', value: jan5 })).toBe(jan5);
 	});
 
 	it('calls a thunk, so a relative preset is computed now and not at import', () => {
 		let calls = 0;
 		const preset: Preset<Day> = {
-			label: 'Hoy',
+			label: 'Today',
 			value: () => {
 				calls += 1;
 				return jan9;
@@ -35,12 +35,12 @@ describe('resolvePreset', () => {
 
 describe('activePreset', () => {
 	const presets: Preset<Day>[] = [
-		{ label: 'Cinco', value: () => ({ ...jan5 }) },
-		{ label: 'Nueve', value: () => ({ ...jan9 }) }
+		{ label: 'Five', value: () => ({ ...jan5 }) },
+		{ label: 'Nine', value: () => ({ ...jan9 }) }
 	];
 
 	it('finds the preset the selection came from, though the objects differ', () => {
-		expect(activePreset(presets, { ...jan9 }, isSameDay)?.label).toBe('Nueve');
+		expect(activePreset(presets, { ...jan9 }, isSameDay)?.label).toBe('Nine');
 	});
 
 	it('returns nothing when the selection matches no preset', () => {
@@ -53,16 +53,16 @@ describe('activePreset', () => {
 
 	it('keeps the first of two presets that resolve alike', () => {
 		const twins: Preset<Day>[] = [
-			{ label: 'Primero', value: jan5 },
-			{ label: 'Segundo', value: { ...jan5 } }
+			{ label: 'First', value: jan5 },
+			{ label: 'Second', value: { ...jan5 } }
 		];
-		expect(activePreset(twins, { ...jan5 }, isSameDay)?.label).toBe('Primero');
+		expect(activePreset(twins, { ...jan5 }, isSameDay)?.label).toBe('First');
 	});
 
 	it('works on ranges through the equality it is handed', () => {
 		const ranges: Preset<DayRange>[] = [
-			{ label: 'Enero', value: () => ({ start: { ...jan5 }, end: { ...jan9 } }) }
+			{ label: 'January', value: () => ({ start: { ...jan5 }, end: { ...jan9 } }) }
 		];
-		expect(activePreset(ranges, { start: jan5, end: jan9 }, isSameRange)?.label).toBe('Enero');
+		expect(activePreset(ranges, { start: jan5, end: jan9 }, isSameRange)?.label).toBe('January');
 	});
 });

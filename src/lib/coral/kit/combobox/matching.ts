@@ -14,8 +14,8 @@ export function terms<T>(option: Option<T>): string[] {
 }
 
 /**
- * The default matcher: does this option answer this search? Folded on both sides, so `bogota` finds
- * `Bogotá`. An empty search matches everything, which is what shows the list in full before anyone
+ * The default matcher: does this option answer this search? Folded on both sides, so `acai` finds
+ * `Açaí`. An empty search matches everything, which is what shows the list in full before anyone
  * has typed.
  */
 export function matches<T>(option: Option<T>, search: string): boolean {

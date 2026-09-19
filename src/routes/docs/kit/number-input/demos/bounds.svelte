@@ -8,7 +8,7 @@
 	<!-- Try typing 999, or -5, then click away. -->
 	<NumberInput bind:value={goal} min={0} max={25} />
 	<p class="text-sm text-muted-foreground">
-		Entre 0 y 25 · valor: {goal ?? 'vacío'}
+		Between 0 and 25 · value: {goal ?? 'empty'}
 	</p>
-	<p class="text-sm text-muted-foreground">Escribe 999 y sal del campo.</p>
+	<p class="text-sm text-muted-foreground">Type 999 and blur the field.</p>
 </div>

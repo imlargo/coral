@@ -6,7 +6,7 @@
 /**
  * The term a search is actually run for, from what is in the field.
  *
- * Trimmed, so `bogotá ` and `bogotá` are one search rather than two requests for the same results.
+ * Trimmed, so `açaí ` and `açaí` are one search rather than two requests for the same results.
  * Below `minLength` it reads as empty rather than as "no search": a reader who had `ab` searched and
  * backspaces to `a` expects the list to stop being filtered by `ab`, and ignoring the short term
  * would leave exactly that filter behind with nothing on screen to explain it. Length is counted in

@@ -17,26 +17,26 @@ function field(): HTMLInputElement {
 describe('reporting', () => {
 	it('reports the finished term once, not every keystroke', async () => {
 		const onsearch = vi.fn();
-		await render(SearchInput, { onsearch, debounce: 50, 'aria-label': 'Buscar' });
+		await render(SearchInput, { onsearch, debounce: 50, 'aria-label': 'Search' });
 
-		await userEvent.type(field(), 'cali');
-		await expect.poll(() => onsearch.mock.calls).toEqual([['cali']]);
+		await userEvent.type(field(), 'kiwi');
+		await expect.poll(() => onsearch.mock.calls).toEqual([['kiwi']]);
 	});
 
 	it('reports straight away on Enter', async () => {
 		const onsearch = vi.fn();
-		await render(SearchInput, { onsearch, debounce: 10_000, 'aria-label': 'Buscar' });
+		await render(SearchInput, { onsearch, debounce: 10_000, 'aria-label': 'Search' });
 
-		await userEvent.type(field(), 'bogotá{Enter}');
-		expect(onsearch).toHaveBeenCalledWith('bogotá');
+		await userEvent.type(field(), 'açaí{Enter}');
+		expect(onsearch).toHaveBeenCalledWith('açaí');
 	});
 
 	it('does not repeat a term that only gained a trailing space', async () => {
 		const onsearch = vi.fn();
-		await render(SearchInput, { onsearch, debounce: 0, 'aria-label': 'Buscar' });
+		await render(SearchInput, { onsearch, debounce: 0, 'aria-label': 'Search' });
 
-		await userEvent.type(field(), 'cali ');
-		expect(onsearch.mock.calls.map(([term]) => term)).toEqual(['c', 'ca', 'cal', 'cali']);
+		await userEvent.type(field(), 'kiwi ');
+		expect(onsearch.mock.calls.map(([term]) => term)).toEqual(['k', 'ki', 'kiw', 'kiwi']);
 	});
 });
 
@@ -44,10 +44,10 @@ describe('Escape', () => {
 	it('clears the field, reports the empty search, and stops there', async () => {
 		const onsearch = vi.fn();
 		const outside = vi.fn();
-		await render(SearchInput, { onsearch, debounce: 0, 'aria-label': 'Buscar' });
+		await render(SearchInput, { onsearch, debounce: 0, 'aria-label': 'Search' });
 		document.addEventListener('keydown', outside);
 
-		await userEvent.type(field(), 'pasto');
+		await userEvent.type(field(), 'mango');
 		await userEvent.keyboard('{Escape}');
 
 		expect(field().value).toBe('');

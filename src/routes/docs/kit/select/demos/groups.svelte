@@ -3,17 +3,17 @@
 
 	const specialties = [
 		{
-			label: 'Clínicas',
+			label: 'Clinical',
 			options: [
-				{ value: 'general', label: 'Medicina general' },
-				{ value: 'pediatria', label: 'Pediatría' }
+				{ value: 'general', label: 'General medicine' },
+				{ value: 'pediatrics', label: 'Pediatrics' }
 			]
 		},
 		{
-			label: 'Quirúrgicas',
+			label: 'Surgical',
 			options: [
-				{ value: 'ortopedia', label: 'Ortopedia' },
-				{ value: 'cirugia', label: 'Cirugía general' }
+				{ value: 'orthopedics', label: 'Orthopedics' },
+				{ value: 'surgery', label: 'General surgery' }
 			]
 		}
 	];
@@ -22,9 +22,5 @@
 </script>
 
 <div class="w-64">
-	<Select
-		options={specialties}
-		bind:value={specialty}
-		placeholder="Selecciona una especialidad..."
-	/>
+	<Select options={specialties} bind:value={specialty} placeholder="Select a specialty..." />
 </div>

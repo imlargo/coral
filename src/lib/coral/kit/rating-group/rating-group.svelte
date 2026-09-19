@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/rating-group
-	 * @version 1.0.0
+	 * @version 1.0.1
 	 */
 	import StarIcon from '@lucide/svelte/icons/star';
 	import { cn } from '$lib/utils.js';
@@ -17,7 +17,7 @@
 		required = false,
 		name,
 		form,
-		locale = 'es-CO',
+		locale = 'en-US',
 		color = 'var(--primary)',
 		emptyColor = 'var(--muted-foreground)',
 		label,

@@ -57,7 +57,7 @@ Everything a `<time>` accepts stays available - `class`, `aria-*`, `id`. On top 
 | Prop          | Type                                  | Default                                     | Description                                  |
 | ------------- | ------------------------------------- | ------------------------------------------- | -------------------------------------------- |
 | `date`        | `Date \| string \| number`            | -                                           | The moment to describe. Required.            |
-| `locale`      | `string`                              | `es-CO`                                     | Wording and absolute date.                   |
+| `locale`      | `string`                              | `en-US`                                     | Wording and absolute date.                   |
 | `numeric`     | `'auto' \| 'always'`                  | `auto`                                      | "yesterday" versus "1 day ago".              |
 | `format`      | `'long' \| 'short' \| 'narrow'`       | `long`                                      | Length of the wording.                       |
 | `precision`   | `'second' \| 'minute'`                | `minute`                                    | Smallest unit shown.                         |

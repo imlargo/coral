@@ -1,7 +1,7 @@
 <script lang="ts" generics="Type extends DatePickerType = 'single'">
 	/**
 	 * @coral/kit/date-picker
-	 * @version 1.1.0
+	 * @version 1.1.1
 	 */
 	import { tick } from 'svelte';
 	import CalendarIcon from '@lucide/svelte/icons/calendar';
@@ -32,7 +32,7 @@
 		month = $bindable(),
 		presets,
 		placeholder = 'Select a date...',
-		locale = 'es-CO',
+		locale = 'en-US',
 		format = { dateStyle: 'medium' },
 		disabled = false,
 		clearable = false,
@@ -82,7 +82,7 @@
 	});
 
 	/**
-	 * What the trigger prints. A preset's label wins over the dates it stands for: "Últimos 7 días"
+	 * What the trigger prints. A preset's label wins over the dates it stands for: "Last 7 days"
 	 * is what the user chose, and two dates make them do arithmetic to recognise their own pick.
 	 */
 	const label = $derived.by(() => {

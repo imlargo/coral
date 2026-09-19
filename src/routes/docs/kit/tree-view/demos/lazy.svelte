@@ -5,14 +5,14 @@
 	import type { TreeNode } from '$lib/coral/kit/tree-view/types.js';
 
 	let nodes = $state<TreeNode[]>([
-		{ id: 'antioquia', label: 'Antioquia', children: [] },
-		{ id: 'cundinamarca', label: 'Cundinamarca', children: [] },
-		{ id: 'valle', label: 'Valle del Cauca', children: [] }
+		{ id: 'tropical', label: 'Tropical', children: [] },
+		{ id: 'citrus', label: 'Citrus', children: [] },
+		{ id: 'berries', label: 'Berries', children: [] }
 	]);
 	const loaded = new SvelteSet<string>();
 	let loading = $state<string[]>([]);
 
-	// Fetches a department's municipalities the first time it is opened.
+	// Fetches a category's varieties the first time it is opened.
 	async function load(expanded: string[]) {
 		for (const id of expanded) {
 			if (loaded.has(id)) continue;
@@ -23,7 +23,7 @@
 				node.id === id
 					? {
 							...node,
-							children: ['Municipio A', 'Municipio B', 'Municipio C'].map((name) => ({
+							children: ['Variety A', 'Variety B', 'Variety C'].map((name) => ({
 								id: `${id}-${name}`,
 								label: name
 							}))
@@ -35,11 +35,11 @@
 	}
 </script>
 
-<TreeView {nodes} label="Departamentos" class="w-72" onexpandedchange={load}>
+<TreeView {nodes} label="Categories" class="w-72" onexpandedchange={load}>
 	{#snippet node({ node })}
 		<span class="text-sm">{node.label}</span>
 		{#if loading.includes(node.id)}
-			<LoaderCircleIcon class="size-3.5 animate-spin" aria-label="Cargando" />
+			<LoaderCircleIcon class="size-3.5 animate-spin" aria-label="Loading" />
 		{/if}
 	{/snippet}
 </TreeView>

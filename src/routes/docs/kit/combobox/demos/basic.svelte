@@ -1,23 +1,23 @@
 <script lang="ts">
 	import Combobox from '$lib/coral/kit/combobox/combobox.svelte';
 
-	const cities = [
-		{ value: 'bogota', label: 'Bogotá' },
-		{ value: 'medellin', label: 'Medellín' },
-		{ value: 'cali', label: 'Cali' },
-		{ value: 'barranquilla', label: 'Barranquilla' },
-		{ value: 'cartagena', label: 'Cartagena' }
+	const fruits = [
+		{ value: 'apple', label: 'Apple' },
+		{ value: 'mango', label: 'Mango' },
+		{ value: 'kiwi', label: 'Kiwi' },
+		{ value: 'guava', label: 'Guava' },
+		{ value: 'lychee', label: 'Lychee' }
 	];
 
-	let city = $state<string>();
+	let fruit = $state<string>();
 </script>
 
 <div class="w-64">
 	<Combobox
-		options={cities}
-		bind:value={city}
-		placeholder="Select a city..."
-		searchPlaceholder="Search cities..."
-		emptyMessage="No city found."
+		options={fruits}
+		bind:value={fruit}
+		placeholder="Select a fruit..."
+		searchPlaceholder="Search fruits..."
+		emptyMessage="No fruit found."
 	/>
 </div>

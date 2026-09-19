@@ -3,13 +3,13 @@
 </script>
 
 <!-- No image at all -->
-<Avatar name="Ana Restrepo" />
+<Avatar name="Amara Diallo" />
 
 <!-- Image that will fail to load -->
-<Avatar src="https://example.invalid/missing.png" name="Ana Restrepo" />
+<Avatar src="https://example.invalid/missing.png" name="Amara Diallo" />
 
 <!-- Explicit fallback wins over the derived initials -->
-<Avatar name="Ana Restrepo" fallback="AR" />
+<Avatar name="Amara Diallo" fallback="AR" />
 
 <!-- No name and no fallback: an empty circle, not a placeholder nobody asked for -->
 <Avatar />

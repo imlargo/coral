@@ -15,8 +15,15 @@
 
 <form onsubmit={handleSubmit} class="flex w-72 flex-col gap-3">
 	<!-- `required` holds for a half-picked range too - that is the user mid-gesture. -->
-	<DatePicker type="range" name="periodo" bind:value placeholder="Periodo" clearable required />
-	<Button type="submit" variant="outline">Enviar</Button>
+	<DatePicker
+		type="range"
+		name="dateRange"
+		bind:value
+		placeholder="Date range"
+		clearable
+		required
+	/>
+	<Button type="submit" variant="outline">Submit</Button>
 
 	{#if submitted.length > 0}
 		<ul class="text-sm text-muted-foreground">

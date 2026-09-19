@@ -2,13 +2,13 @@
 	import AvatarStack from '$lib/coral/kit/avatar-stack/avatar-stack.svelte';
 
 	const team = [
-		{ name: 'Ana Restrepo', src: 'https://github.com/shadcn.png' },
-		{ name: 'Juan Herrera' },
-		{ name: 'Camila Ospina' },
-		{ name: 'Diego Marín' },
-		{ name: 'Laura Gómez' },
-		{ name: 'Andrés Torres' },
-		{ name: 'Valentina Ruiz' }
+		{ name: 'Amara Diallo', src: 'https://github.com/shadcn.png' },
+		{ name: 'Wei Zhang' },
+		{ name: 'Sofia Rossi' },
+		{ name: "Liam O'Connor" },
+		{ name: 'Priya Sharma' },
+		{ name: 'Kenji Tanaka' },
+		{ name: 'Lucas Andersen' }
 	];
 </script>
 
@@ -16,9 +16,9 @@
 	<AvatarStack
 		items={team}
 		max={4}
-		label="Equipo asignado"
-		overflowLabel={(count) => `${count} personas más`}
+		label="Assigned team"
+		overflowLabel={(count) => `${count} more people`}
 	/>
-	<AvatarStack items={team.slice(0, 5)} max={5} size="sm" label="Cinco caben" />
-	<AvatarStack items={team.slice(0, 6)} max={5} size="lg" label="Seis en cinco espacios" />
+	<AvatarStack items={team.slice(0, 5)} max={5} size="sm" label="Five fit" />
+	<AvatarStack items={team.slice(0, 6)} max={5} size="lg" label="Six in five slots" />
 </div>

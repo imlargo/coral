@@ -15,11 +15,11 @@
 <form class="flex w-full max-w-sm flex-col gap-4" onsubmit={submit}>
 	<!-- The legend names the group; the rating points at it instead of carrying its own copy. -->
 	<Field.Set>
-		<Field.Legend variant="label" id="score-legend">¿Cómo estuvo el servicio?</Field.Legend>
+		<Field.Legend variant="label" id="score-legend">How was the service?</Field.Legend>
 		<RatingGroup name="score" required aria-labelledby="score-legend" />
 	</Field.Set>
 
-	<Button type="submit" size="sm" class="self-start">Enviar</Button>
+	<Button type="submit" size="sm" class="self-start">Submit</Button>
 
 	{#if submitted}
 		<p class="font-mono text-xs text-muted-foreground">{submitted}</p>

@@ -17,28 +17,27 @@
 
 <ResponsiveDialog bind:open>
 	<ResponsiveDialogTrigger class={buttonVariants({ variant: 'outline' })}>
-		Invitar a alguien
+		Invite someone
 	</ResponsiveDialogTrigger>
 
 	<ResponsiveDialogContent>
 		<ResponsiveDialogHeader>
-			<ResponsiveDialogTitle>Invitar al proyecto</ResponsiveDialogTitle>
+			<ResponsiveDialogTitle>Invite to project</ResponsiveDialogTitle>
 			<ResponsiveDialogDescription>
-				Cambia el ancho de la ventana con esto abierto: el diálogo se vuelve un drawer y lo que
-				escribiste se queda.
+				Resize the window while this is open: the dialog becomes a drawer, and what you typed stays.
 			</ResponsiveDialogDescription>
 		</ResponsiveDialogHeader>
 
 		<div class="flex flex-col gap-2 px-4 md:px-0">
-			<Label for="invite-email">Correo</Label>
-			<Input id="invite-email" type="email" bind:value={email} placeholder="nombre@empresa.co" />
+			<Label for="invite-email">Email</Label>
+			<Input id="invite-email" type="email" bind:value={email} placeholder="name@company.com" />
 		</div>
 
 		<ResponsiveDialogFooter>
 			<ResponsiveDialogClose class={buttonVariants({ variant: 'outline' })}>
-				Cancelar
+				Cancel
 			</ResponsiveDialogClose>
-			<Button onclick={() => (open = false)} disabled={!email}>Enviar invitación</Button>
+			<Button onclick={() => (open = false)} disabled={!email}>Send invitation</Button>
 		</ResponsiveDialogFooter>
 	</ResponsiveDialogContent>
 </ResponsiveDialog>

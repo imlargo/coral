@@ -15,7 +15,7 @@
 
 <form class="flex w-72 flex-col gap-3" onsubmit={handleSubmit}>
 	<Field.Field>
-		<Field.Label for="new-password">Nueva contraseña</Field.Label>
+		<Field.Label for="new-password">New password</Field.Label>
 		<PasswordInput
 			id="new-password"
 			name="new-password"
@@ -25,9 +25,9 @@
 			bind:visible
 		/>
 	</Field.Field>
-	<Button type="submit">Guardar</Button>
+	<Button type="submit">Save</Button>
 	<p class="text-sm text-muted-foreground">
-		Visible: {visible ? 'sí' : 'no'}
-		{#if submittedAs}· enviado como <code>type="{submittedAs}"</code>{/if}
+		Visible: {visible ? 'yes' : 'no'}
+		{#if submittedAs}· submitted as <code>type="{submittedAs}"</code>{/if}
 	</p>
 </form>

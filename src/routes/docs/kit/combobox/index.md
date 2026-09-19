@@ -1,6 +1,6 @@
 ---
 title: Combobox
-description: A select with a search box, filtering the way Spanish is actually typed.
+description: A select with a search box, filtering the way accented text is actually typed.
 ---
 
 <script lang="ts">
@@ -20,7 +20,7 @@ lost the accent handling on the way. That is the pattern this component ends.
 
 Only two things, both behavior:
 
-- **Accent-insensitive search.** Typing `bogota` finds `Bogotá`. Command's own matcher compares raw
+- **Accent-insensitive search.** Typing `acai` finds `Açaí`. Command's own matcher compares raw
   strings, so it finds nothing.
 - **Focus returns to the trigger** after a selection, so the next Tab continues through the form
   instead of restarting at the top of the document.
@@ -35,7 +35,7 @@ Both the search term and the label are folded before comparison: lower case, acc
 to `n`. It matches how people type, not how the word is spelled.
 
 This is the difference between the existing implementations. `butter` and `suntalk` fold; the third
-project does not, so its city picker is empty for anyone who types `bogota`.
+project does not, so its fruit picker is empty for anyone who types `acai`.
 
 ## Installation
 
@@ -164,8 +164,8 @@ filter, which is enough to build bulk actions without Coral guessing what they s
 <Preview name="kit/combobox/groups" />
 
 Pass groups instead of options and each gets a heading. `description` renders as a second line and
-is searched. `keywords` are searched but never shown - synonyms, codes, an old name. Try `dc`,
-`boyaca` or `atlantico` in that demo.
+is searched. `keywords` are searched but never shown - synonyms, codes, an old name. Try `berry`,
+`mango` or `citrus` in that demo.
 
 Filtering removes rows rather than hiding them, so a group whose options all fail the search
 disappears along with its heading - no empty section left behind.
@@ -255,9 +255,9 @@ needs the same comparison elsewhere - a client-side table filter, a sort - does 
 ```ts
 import { fold } from '$lib/coral/kit/combobox/fold.js';
 
-fold('Bogotá'); // 'bogota'
-fold('Muñoz'); // 'munoz'
-fold('Medellín'); // 'medellin'
+fold('Açaí'); // 'acai'
+fold('Piña'); // 'pina'
+fold('Café'); // 'cafe'
 ```
 
 It stays inside the component's folder because it has exactly one consumer in Coral today. It moves

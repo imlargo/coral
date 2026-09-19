@@ -3,11 +3,11 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 
 	const roles = [
-		{ value: 'admin', label: 'Administrador' },
+		{ value: 'admin', label: 'Administrator' },
 		{ value: 'editor', label: 'Editor' },
-		{ value: 'viewer', label: 'Lector' },
+		{ value: 'viewer', label: 'Viewer' },
 		{ value: 'auditor', label: 'Auditor' },
-		{ value: 'billing', label: 'Facturación' }
+		{ value: 'billing', label: 'Billing' }
 	];
 
 	let selected = $state<string[]>(['editor']);

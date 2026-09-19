@@ -3,9 +3,9 @@
 
 	// `value` is whatever the project already has - here a numeric id, not a string.
 	const owners = [
-		{ value: 1, label: 'Ana Restrepo' },
-		{ value: 2, label: 'Camilo Ortiz' },
-		{ value: 3, label: 'Daniela Ruiz' }
+		{ value: 1, label: 'Amara Diallo' },
+		{ value: 2, label: 'Kenji Tanaka' },
+		{ value: 3, label: 'Priya Sharma' }
 	];
 
 	let ownerId = $state<number>();

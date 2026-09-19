@@ -19,7 +19,7 @@ describe('formatBytes', () => {
 		expect(formatBytes(1024 ** 4)).toBe('1 TB');
 	});
 
-	it('uses the es-CO decimal separator, which every hand-written copy gets wrong', () => {
+	it("uses the locale's decimal separator, which every hand-written copy gets wrong", () => {
 		expect(formatBytes(1024 * 1024 * 1.5)).toBe('1,5 MB');
 	});
 

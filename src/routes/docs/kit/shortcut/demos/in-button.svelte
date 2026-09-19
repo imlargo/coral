@@ -7,8 +7,8 @@
 
 <!-- A plain key: it does not fire while typing in a field, so `s` still types an s there. -->
 <div class="flex w-80 flex-col gap-2">
-	<SearchInput bind:ref={field} placeholder="Buscar…" aria-label="Buscar" aria-keyshortcuts="S" />
+	<SearchInput bind:ref={field} placeholder="Search…" aria-label="Search" aria-keyshortcuts="S" />
 	<p class="flex items-center gap-2 text-sm text-muted-foreground">
-		<Shortcut keys="s" onpress={() => field?.focus()} /> enfoca la búsqueda desde cualquier parte
+		<Shortcut keys="s" onpress={() => field?.focus()} /> focuses search from anywhere
 	</p>
 </div>

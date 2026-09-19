@@ -101,7 +101,7 @@ export function expandableSiblings<T>(rows: readonly TreeRow<T>[], row: TreeRow<
  * the same letter again moves to the next match rather than staying put.
  *
  * Compared with a base-sensitivity collator, which treats `e`, `E` and `é` alike: a reader typing
- * `a` for "Árbol" should land on it. A query of one repeated letter cycles through that letter's
+ * `a` for "Ánanas" should land on it. A query of one repeated letter cycles through that letter's
  * matches, the way a native `<select>` and every file manager do.
  */
 export function typeahead<T>(

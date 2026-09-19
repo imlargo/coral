@@ -1,7 +1,7 @@
 <script lang="ts">
 	import TagsInput from '$lib/coral/kit/tags-input/tags-input.svelte';
 
-	let tags = $state(['vainilla', 'chocolate']);
+	let tags = $state(['vanilla', 'chocolate']);
 </script>
 
 <div class="flex w-full max-w-md flex-col gap-3">

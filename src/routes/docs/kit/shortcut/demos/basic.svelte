@@ -6,7 +6,7 @@
 
 <div class="flex flex-col items-center gap-3">
 	<p class="flex items-center gap-2 text-sm">
-		Pulsa <Shortcut keys="alt+n" onpress={() => presses++} />
+		Press <Shortcut keys="alt+n" onpress={() => presses++} />
 	</p>
-	<p class="text-sm text-muted-foreground">Veces: {presses}</p>
+	<p class="text-sm text-muted-foreground">Presses: {presses}</p>
 </div>

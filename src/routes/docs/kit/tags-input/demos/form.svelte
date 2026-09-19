@@ -13,12 +13,12 @@
 
 <form class="flex w-full max-w-md flex-col gap-4" onsubmit={submit}>
 	<Field.Field>
-		<Field.Label for="skills">Habilidades</Field.Label>
+		<Field.Label for="skills">Skills</Field.Label>
 		<TagsInput id="skills" name="skills" required placeholder="Add a skill..." />
-		<Field.Description>Enter, coma o pegado desde una hoja de cálculo.</Field.Description>
+		<Field.Description>Enter, comma, or paste from a spreadsheet.</Field.Description>
 	</Field.Field>
 
-	<Button type="submit" size="sm" class="self-start">Enviar</Button>
+	<Button type="submit" size="sm" class="self-start">Submit</Button>
 
 	{#if submitted}
 		<p class="font-mono text-xs text-muted-foreground">skills = {submitted}</p>

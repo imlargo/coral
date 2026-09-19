@@ -143,7 +143,7 @@ Nothing to add - the component uses no shadcn primitives.
 | `required`   | `boolean`                         | `false`                   | Needs `name`.                                       |
 | `name`       | `string`                          | -                         | Posts the rating. Without it, nothing is.           |
 | `form`       | `string`                          | -                         | `id` of the form to post with.                      |
-| `locale`     | `string`                          | `es-CO`                   | The number in the default label.                    |
+| `locale`     | `string`                          | `en-US`                   | The number in the default label.                    |
 | `color`      | `string`                          | `var(--primary)`          | The filled part.                                    |
 | `emptyColor` | `string`                          | `var(--muted-foreground)` | The rest.                                           |
 | `label`      | `(value, count) => string`        | `4,3 / 5`                 | Names one option, and the whole `readonly` control. |

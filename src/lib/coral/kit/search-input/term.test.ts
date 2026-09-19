@@ -8,7 +8,7 @@ import { effectiveTerm, hasChanged } from './term.js';
 
 describe('effectiveTerm', () => {
 	it('trims', () => {
-		expect(effectiveTerm('  bogotá ')).toBe('bogotá');
+		expect(effectiveTerm('  açaí ')).toBe('açaí');
 	});
 
 	it('reads a blank field as empty', () => {
@@ -33,11 +33,11 @@ describe('effectiveTerm', () => {
 
 describe('hasChanged', () => {
 	it('is false for the term that was already searched', () => {
-		expect(hasChanged('cali', 'cali')).toBe(false);
+		expect(hasChanged('kiwi', 'kiwi')).toBe(false);
 	});
 
 	it('is true for anything else, including clearing', () => {
-		expect(hasChanged('cal', 'cali')).toBe(true);
-		expect(hasChanged('', 'cali')).toBe(true);
+		expect(hasChanged('kiw', 'kiwi')).toBe(true);
+		expect(hasChanged('', 'kiwi')).toBe(true);
 	});
 });

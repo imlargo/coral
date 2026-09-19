@@ -9,7 +9,7 @@
 <div class="flex flex-col items-center gap-4">
 	<div class="flex flex-col items-center gap-2">
 		<NumberInput bind:value={empty} min={5} max={9} placeholder="—" />
-		<p class="text-sm text-muted-foreground">vacío, min 5 · {empty ?? 'undefined'}</p>
+		<p class="text-sm text-muted-foreground">empty, min 5 · {empty ?? 'undefined'}</p>
 	</div>
 
 	<div class="flex flex-col items-center gap-2">

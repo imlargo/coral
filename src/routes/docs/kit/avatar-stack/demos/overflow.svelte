@@ -6,19 +6,19 @@
 	type Member = { id: number; fullName: string; photo?: string };
 
 	const members: Member[] = [
-		{ id: 1, fullName: 'Ana Restrepo', photo: 'https://github.com/shadcn.png' },
-		{ id: 2, fullName: 'Juan Herrera' },
-		{ id: 3, fullName: 'Camila Ospina' },
-		{ id: 4, fullName: 'Diego Marín' },
-		{ id: 5, fullName: 'Laura Gómez' },
-		{ id: 6, fullName: 'Andrés Torres' }
+		{ id: 1, fullName: 'Amara Diallo', photo: 'https://github.com/shadcn.png' },
+		{ id: 2, fullName: 'Wei Zhang' },
+		{ id: 3, fullName: 'Sofia Rossi' },
+		{ id: 4, fullName: "Liam O'Connor" },
+		{ id: 5, fullName: 'Priya Sharma' },
+		{ id: 6, fullName: 'Kenji Tanaka' }
 	];
 </script>
 
 <AvatarStack
 	items={members}
 	max={3}
-	label="Participantes"
+	label="Participants"
 	getKey={(member) => member.id}
 	getPerson={(member) => ({ name: member.fullName, src: member.photo })}
 >

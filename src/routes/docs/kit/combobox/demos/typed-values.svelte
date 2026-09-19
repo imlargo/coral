@@ -3,10 +3,10 @@
 
 	// `value` is whatever the project already has - here a numeric id, not a string.
 	const clients = [
-		{ value: 1, label: 'Aurora Energía' },
-		{ value: 2, label: 'Constructora Andes' },
-		{ value: 3, label: 'Grupo Sabana', disabled: true },
-		{ value: 4, label: 'Textiles Ríonegro' }
+		{ value: 1, label: 'Aurora Energy' },
+		{ value: 2, label: 'Andes Construction' },
+		{ value: 3, label: 'Savanna Group', disabled: true },
+		{ value: 4, label: 'Northfield Textiles' }
 	];
 
 	let clientId = $state<number>();

@@ -4,12 +4,12 @@
 	import CopyButton from '$lib/coral/kit/copy-button/copy-button.svelte';
 </script>
 
-<CopyButton text="COP-2026-00481" variant="outline" copiedLabel="Referencia copiada">
+<CopyButton text="REF-2026-00481" variant="outline" copiedLabel="Reference copied">
 	{#snippet children({ status })}
 		{#if status === 'copied'}
-			<CheckIcon data-icon="inline-start" /> Copiado
+			<CheckIcon data-icon="inline-start" /> Copied
 		{:else}
-			<CopyIcon data-icon="inline-start" /> Copiar referencia
+			<CopyIcon data-icon="inline-start" /> Copy reference
 		{/if}
 	{/snippet}
 </CopyButton>

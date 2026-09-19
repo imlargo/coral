@@ -10,10 +10,10 @@
 </script>
 
 <div class="flex flex-col items-center gap-3">
-	<ActionButton onclick={save} pendingLabel="Guardando">
+	<ActionButton onclick={save} pendingLabel="Saving">
 		{#snippet children({ pending })}
-			{pending ? 'Guardando…' : 'Guardar cambios'}
+			{pending ? 'Saving…' : 'Save changes'}
 		{/snippet}
 	</ActionButton>
-	<p class="text-sm text-muted-foreground">Guardados: {saved} · haz clic varias veces seguidas</p>
+	<p class="text-sm text-muted-foreground">Saved: {saved} · click multiple times in a row</p>
 </div>

@@ -5,8 +5,8 @@
 	// Stands in for a paginated endpoint: too many rows to ship to the client.
 	const CATALOG = Array.from({ length: 400 }, (_, i) => ({
 		value: i + 1,
-		label: `Proyecto ${String(i + 1).padStart(3, '0')}`,
-		description: i % 3 === 0 ? 'Antioquia' : i % 3 === 1 ? 'Boyacá' : 'Atlántico'
+		label: `Project ${String(i + 1).padStart(3, '0')}`,
+		description: i % 3 === 0 ? 'Tropical' : i % 3 === 1 ? 'Açaí' : 'Citrus'
 	}));
 
 	let options = $state<typeof CATALOG>([]);
@@ -18,8 +18,8 @@
 		loading = true;
 		requests += 1;
 		await new Promise((r) => setTimeout(r, 220));
-		// Folding is the server's job once the server owns the search: `boyaca` still has to find
-		// `Boyacá` there. Same `fold` the component uses when it filters on the client.
+		// Folding is the server's job once the server owns the search: `acai` still has to find
+		// `Açaí` there. Same `fold` the component uses when it filters on the client.
 		const needle = fold(search.trim());
 		options = CATALOG.filter(
 			(o) => !needle || fold(o.label).includes(needle) || fold(o.description).includes(needle)

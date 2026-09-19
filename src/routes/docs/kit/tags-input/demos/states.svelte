@@ -1,7 +1,7 @@
 <script lang="ts">
 	import TagsInput from '$lib/coral/kit/tags-input/tags-input.svelte';
 
-	let clearable = $state(['uno', 'dos', 'tres']);
+	let clearable = $state(['one', 'two', 'three']);
 </script>
 
 <div class="flex w-full max-w-md flex-col gap-4">
@@ -11,12 +11,12 @@
 	</div>
 
 	<div class="flex flex-col gap-2">
-		<TagsInput value={['solo', 'lectura']} readonly />
+		<TagsInput value={['read', 'only']} readonly />
 		<p class="text-sm text-muted-foreground">readonly</p>
 	</div>
 
 	<div class="flex flex-col gap-2">
-		<TagsInput value={['sin', 'permiso']} disabled />
+		<TagsInput value={['no', 'permission']} disabled />
 		<p class="text-sm text-muted-foreground">disabled</p>
 	</div>
 </div>

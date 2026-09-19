@@ -8,11 +8,11 @@
 	import StepperPrevious from '$lib/coral/kit/stepper/stepper-previous.svelte';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 
-	const steps = ['datos', 'direccion', 'confirmar'];
+	const steps = ['details', 'address', 'confirm'];
 	const titles: Record<string, string> = {
-		datos: 'Datos',
-		direccion: 'Dirección',
-		confirmar: 'Confirmar'
+		details: 'Details',
+		address: 'Address',
+		confirm: 'Confirm'
 	};
 
 	let current = $state<string>();
@@ -21,7 +21,7 @@
 
 <div class="flex w-full max-w-md flex-col gap-4">
 	<Stepper {steps} bind:value={current} onfinish={() => (finished = true)}>
-		<StepperList aria-label="Pasos del registro">
+		<StepperList aria-label="Registration steps">
 			{#each steps as step, index (step)}
 				<StepperItem {step}>
 					{#snippet children({ state })}
@@ -36,17 +36,19 @@
 
 		{#each steps as step (step)}
 			<StepperContent {step} class="rounded-lg border p-4 text-sm">
-				Contenido del paso «{titles[step]}».
+				Content for the "{titles[step]}" step.
 			</StepperContent>
 		{/each}
 
 		<div class="flex justify-between">
-			<StepperPrevious>Atrás</StepperPrevious>
+			<StepperPrevious>Back</StepperPrevious>
 			<StepperNext>
-				{#snippet children({ isLast })}{isLast ? 'Terminar' : 'Siguiente'}{/snippet}
+				{#snippet children({ isLast })}{isLast ? 'Finish' : 'Next'}{/snippet}
 			</StepperNext>
 		</div>
 	</Stepper>
 
-	{#if finished}<p class="text-sm text-muted-foreground" role="status">Registro completo.</p>{/if}
+	{#if finished}<p class="text-sm text-muted-foreground" role="status">
+			Registration complete.
+		</p>{/if}
 </div>

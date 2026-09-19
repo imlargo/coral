@@ -2,18 +2,18 @@
 	import ConfirmDialog from '$lib/coral/kit/confirm-dialog/confirm-dialog.svelte';
 	import { Button } from '$lib/components/ui/button/index.js';
 
-	const affected = ['Contrato 2024-118', 'Contrato 2024-204', 'Contrato 2025-011'];
+	const affected = ['Contract 2024-118', 'Contract 2024-204', 'Contract 2025-011'];
 </script>
 
 <ConfirmDialog
-	title="¿Cerrar 3 contratos?"
-	description="Esta acción no se puede deshacer."
-	confirmLabel="Cerrar contratos"
-	cancelLabel="Cancelar"
+	title="Close 3 contracts?"
+	description="This action cannot be undone."
+	confirmLabel="Close contracts"
+	cancelLabel="Cancel"
 	variant="destructive"
 >
 	{#snippet trigger({ props })}
-		<Button {...props} variant="outline">Cerrar seleccionados</Button>
+		<Button {...props} variant="outline">Close selected</Button>
 	{/snippet}
 
 	<!-- Anything between the description and the buttons: what exactly is affected. -->

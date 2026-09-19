@@ -11,22 +11,22 @@
 		attempts++;
 		await new Promise((r) => setTimeout(r, 900));
 		if (attempts === 1) {
-			log = [...log, 'error: la unidad está en uso'];
+			log = [...log, 'error: workspace is in use'];
 			throw new Error('in use');
 		}
-		log = [...log, 'desactivada'];
+		log = [...log, 'disabled'];
 	}
 </script>
 
 <div class="flex flex-col items-center gap-3">
-	<Button variant="outline" onclick={() => (open = true)}>Intentar (falla la 1ª vez)</Button>
+	<Button variant="outline" onclick={() => (open = true)}>Try it (fails the first time)</Button>
 
 	<ConfirmDialog
 		bind:open
-		title="¿Desactivar Metro cuadrado?"
-		description="Si está en uso por un insumo activo, no podrá desactivarse."
-		confirmLabel="Desactivar"
-		cancelLabel="Cancelar"
+		title="Disable this workspace?"
+		description="It can't be disabled while an active resource is using it."
+		confirmLabel="Disable"
+		cancelLabel="Cancel"
 		variant="destructive"
 		onconfirm={save}
 	/>

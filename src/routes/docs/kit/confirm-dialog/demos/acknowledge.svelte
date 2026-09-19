@@ -4,12 +4,12 @@
 </script>
 
 <ConfirmDialog
-	title="Sesión actualizada"
-	description="Tus permisos cambiaron. Algunas secciones pueden verse distintas."
-	confirmLabel="Entendido"
+	title="Session updated"
+	description="Your permissions changed. Some sections may look different."
+	confirmLabel="Got it"
 	showCancel={false}
 >
 	{#snippet trigger({ props })}
-		<Button {...props} variant="outline">Ver aviso</Button>
+		<Button {...props} variant="outline">View notice</Button>
 	{/snippet}
 </ConfirmDialog>

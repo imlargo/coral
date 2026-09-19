@@ -8,24 +8,24 @@ import { fold } from './fold.js';
 
 describe('fold', () => {
 	it('lowercases', () => {
-		expect(fold('Bogotá')).toBe('bogota');
+		expect(fold('Açaí')).toBe('acai');
 	});
 
 	it('strips accents, so the unaccented spelling matches', () => {
-		expect(fold('Medellín')).toBe('medellin');
-		expect(fold('Chocó')).toBe('choco');
+		expect(fold('Café')).toBe('cafe');
+		expect(fold('Crème')).toBe('creme');
 	});
 
 	it('folds ñ to n, which is what people type when searching', () => {
-		expect(fold('Muñoz')).toBe('munoz');
+		expect(fold('Piña')).toBe('pina');
 	});
 
 	it('folds diaeresis', () => {
-		expect(fold('Camargüey')).toBe('camarguey');
+		expect(fold('Naïve')).toBe('naive');
 	});
 
 	it('leaves unaccented text alone apart from case', () => {
-		expect(fold('Cali')).toBe('cali');
+		expect(fold('Kiwi')).toBe('kiwi');
 	});
 
 	it('handles the empty string', () => {
@@ -33,6 +33,6 @@ describe('fold', () => {
 	});
 
 	it('makes a folded search a substring of a folded label', () => {
-		expect(fold('Bogotá, Cundinamarca').includes(fold('bogota'))).toBe(true);
+		expect(fold('Açaí, Tropical').includes(fold('acai'))).toBe(true);
 	});
 });

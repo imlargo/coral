@@ -11,14 +11,14 @@
 	{#snippet trigger({ props, label, empty })}
 		<Button {...props} variant="ghost" size="sm">
 			<CalendarIcon />
-			{empty ? 'Programar' : label}
+			{empty ? 'Schedule' : label}
 		</Button>
 	{/snippet}
 
 	{#snippet footer({ clear, close })}
 		<div class="flex items-center justify-between gap-2">
-			<Button variant="ghost" size="sm" onclick={clear}>Limpiar</Button>
-			<Button variant="ghost" size="sm" onclick={close}>Listo</Button>
+			<Button variant="ghost" size="sm" onclick={clear}>Clear</Button>
+			<Button variant="ghost" size="sm" onclick={close}>Done</Button>
 		</div>
 	{/snippet}
 </DatePicker>

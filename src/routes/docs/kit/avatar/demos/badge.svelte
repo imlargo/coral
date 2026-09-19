@@ -9,7 +9,7 @@
 	<AvatarBadge />
 </Avatar>
 
-<Avatar name="Ana Restrepo" size="lg">
+<Avatar name="Amara Diallo" size="lg">
 	<AvatarBadge>
 		<CheckIcon />
 	</AvatarBadge>

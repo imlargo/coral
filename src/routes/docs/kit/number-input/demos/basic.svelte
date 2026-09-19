@@ -6,5 +6,5 @@
 
 <div class="flex flex-col items-center gap-3">
 	<NumberInput bind:value={quantity} min={1} max={99} />
-	<p class="text-sm text-muted-foreground">Cantidad: {quantity ?? '—'}</p>
+	<p class="text-sm text-muted-foreground">Quantity: {quantity ?? '—'}</p>
 </div>

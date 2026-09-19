@@ -7,7 +7,7 @@
 <table class="text-sm">
 	<thead>
 		<tr class="text-muted-foreground">
-			<th class="pe-6 text-start font-normal">Atajo</th>
+			<th class="pe-6 text-start font-normal">Shortcut</th>
 			<th class="pe-6 text-start font-normal">macOS</th>
 			<th class="text-start font-normal">Windows / Linux</th>
 		</tr>

@@ -35,14 +35,14 @@ The rule is one line - **return `false`, or throw, to keep it open**:
 
 ```svelte
 <ConfirmDialog
-	title="¿Desactivar {unit.name}?"
-	description="Si está en uso por un insumo activo, no podrá desactivarse."
+	title="Disable {unit.name}?"
+	description="It can't be disabled while an active resource is using it."
 	variant="destructive"
-	confirmLabel="Desactivar"
+	confirmLabel="Disable"
 	onconfirm={async () => {
 		try {
 			await units.setStatus(unit.id, RecordStatus.INACTIVE);
-			toast.success(`${unit.name} fue desactivada.`);
+			toast.success(`${unit.name} was disabled.`);
 		} catch (err) {
 			toast.error(normalizeError(err).message);
 			return false; // stays open, so they can retry

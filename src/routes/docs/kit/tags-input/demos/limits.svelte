@@ -2,19 +2,19 @@
 	import TagsInput from '$lib/coral/kit/tags-input/tags-input.svelte';
 	import type { TagRejection } from '$lib/coral/kit/tags-input/tags.js';
 
-	let tags = $state(['bogotá', 'medellín']);
+	let tags = $state(['mango', 'papaya']);
 	let notice = $state('');
 
 	// The copy is the project's - Coral reports the reason and says nothing on screen.
 	const reasons: Record<TagRejection['reason'], string> = {
-		duplicate: 'ya está en la lista',
-		max: 'no caben más de 4',
-		invalid: 'no es válido'
+		duplicate: 'is already in the list',
+		max: 'only 4 fit',
+		invalid: "isn't valid"
 	};
 
 	function explain(rejected: TagRejection[]) {
 		const [first] = rejected;
-		notice = `«${first.value}» ${reasons[first.reason]}`;
+		notice = `"${first.value}" ${reasons[first.reason]}`;
 	}
 </script>
 
@@ -22,9 +22,9 @@
 	<TagsInput
 		bind:value={tags}
 		max={4}
-		placeholder="Add a city..."
+		placeholder="Add a fruit..."
 		onreject={explain}
 		onchange={() => (notice = '')}
 	/>
-	<p class="text-sm text-muted-foreground">{notice || `${tags.length} de 4`}</p>
+	<p class="text-sm text-muted-foreground">{notice || `${tags.length} of 4`}</p>
 </div>

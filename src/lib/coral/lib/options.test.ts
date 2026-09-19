@@ -8,14 +8,14 @@ import { flatten, isGroup, toGroups } from './options.js';
 import type { Option } from './options.js';
 
 const option = (over: Partial<Option<string>> = {}): Option<string> => ({
-	value: 'bogota',
-	label: 'Bogotá',
+	value: 'acai',
+	label: 'Açaí',
 	...over
 });
 
 describe('isGroup', () => {
 	it('recognises a group by its options array', () => {
-		expect(isGroup({ label: 'Andina', options: [] })).toBe(true);
+		expect(isGroup({ label: 'Tropical', options: [] })).toBe(true);
 	});
 
 	it('treats a plain option as an option', () => {
@@ -32,7 +32,7 @@ describe('toGroups', () => {
 	});
 
 	it('passes a grouped list through untouched', () => {
-		const input = [{ label: 'Andina', options: [option()] }];
+		const input = [{ label: 'Tropical', options: [option()] }];
 		expect(toGroups(input)).toBe(input);
 	});
 

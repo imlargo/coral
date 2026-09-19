@@ -21,7 +21,7 @@
 			"shadcn": ["button", "spinner"]
 		},
 		"kit/activity-calendar": {
-			"version": "1.0.0",
+			"version": "1.0.1",
 			"shadcn": ["tooltip"]
 		},
 		"kit/avatar": {
@@ -47,7 +47,7 @@
 			"npm": ["@lucide/svelte"]
 		},
 		"kit/date-picker": {
-			"version": "1.1.0",
+			"version": "1.1.1",
 			"shadcn": ["popover", "calendar", "range-calendar", "button"],
 			"npm": ["@lucide/svelte"]
 		},
@@ -71,12 +71,12 @@
 			"npm": ["@lucide/svelte"]
 		},
 		"kit/rating-group": {
-			"version": "1.0.0",
+			"version": "1.0.1",
 			"shadcn": [],
 			"npm": ["@lucide/svelte"]
 		},
 		"kit/relative-time": {
-			"version": "1.0.0",
+			"version": "1.0.1",
 			"shadcn": []
 		},
 		"kit/reorder-list": {

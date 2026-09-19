@@ -7,17 +7,17 @@
 
 <div class="flex flex-col items-center gap-3">
 	<ConfirmDialog
-		title="¿Desactivar Metro cuadrado?"
-		description="Su historial se conserva y puedes reactivarla cuando quieras."
-		confirmLabel="Desactivar"
-		cancelLabel="Cancelar"
+		title="Disable this workspace?"
+		description="Its history is kept, and you can reactivate it anytime."
+		confirmLabel="Disable"
+		cancelLabel="Cancel"
 		variant="destructive"
 		onconfirm={() => removed++}
 	>
 		{#snippet trigger({ props })}
-			<Button {...props} variant="outline">Desactivar unidad</Button>
+			<Button {...props} variant="outline">Disable workspace</Button>
 		{/snippet}
 	</ConfirmDialog>
 
-	<p class="text-sm text-muted-foreground">Desactivadas: {removed}</p>
+	<p class="text-sm text-muted-foreground">Disabled: {removed}</p>
 </div>

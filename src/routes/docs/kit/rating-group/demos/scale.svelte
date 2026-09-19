@@ -10,5 +10,5 @@
 	count={10}
 	color="var(--chart-2)"
 	class="gap-1.5 [--coral-star:1.75rem]"
-	aria-label="Nivel"
+	aria-label="Level"
 />

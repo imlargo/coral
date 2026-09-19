@@ -7,11 +7,11 @@
 
 <ul class="flex w-80 flex-col gap-2 text-sm">
 	<li class="flex justify-between">
-		<span>Hace 2 días</span>
+		<span>2 days ago</span>
 		<RelativeTime date={Date.now() - 2 * day} cutoff={week} />
 	</li>
 	<li class="flex justify-between">
-		<span>Hace 40 días</span>
+		<span>40 days ago</span>
 		<RelativeTime
 			date={Date.now() - 40 * day}
 			cutoff={week}

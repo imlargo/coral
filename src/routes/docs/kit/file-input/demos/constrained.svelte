@@ -7,9 +7,9 @@
 
 	// The message is the project's, in the project's language. Coral only says what happened.
 	const reasons: Record<FileRejection['reason'], string> = {
-		type: 'no es un tipo permitido',
-		size: 'pesa más de 1 MB',
-		count: 'sobra: ya hay 3'
+		type: 'is not an allowed type',
+		size: 'is over 1 MB',
+		count: 'is extra: already have 3'
 	};
 
 	function onreject(rejections: FileRejection[]) {

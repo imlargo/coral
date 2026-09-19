@@ -8,41 +8,41 @@ import { includesValue, matches, terms } from './matching.js';
 import type { Option } from '../../lib/options.js';
 
 const option = (over: Partial<Option<string>> = {}): Option<string> => ({
-	value: 'bogota',
-	label: 'Bogotá',
+	value: 'acai',
+	label: 'Açaí',
 	...over
 });
 
 describe('terms', () => {
 	it('collects label, description and keywords', () => {
-		expect(terms(option({ description: 'Cundinamarca', keywords: ['dc', 'capital'] }))).toEqual([
-			'Bogotá',
-			'Cundinamarca',
-			'dc',
-			'capital'
+		expect(terms(option({ description: 'Tropical', keywords: ['berry', 'antioxidant'] }))).toEqual([
+			'Açaí',
+			'Tropical',
+			'berry',
+			'antioxidant'
 		]);
 	});
 
 	it('drops absent and empty entries', () => {
-		expect(terms(option({ description: '', keywords: [] }))).toEqual(['Bogotá']);
+		expect(terms(option({ description: '', keywords: [] }))).toEqual(['Açaí']);
 	});
 });
 
 describe('matches', () => {
 	it('matches an unaccented search against an accented label', () => {
-		expect(matches(option(), 'bogota')).toBe(true);
+		expect(matches(option(), 'acai')).toBe(true);
 	});
 
 	it('matches on the description', () => {
-		expect(matches(option({ description: 'Cundinamarca' }), 'cundi')).toBe(true);
+		expect(matches(option({ description: 'Tropical' }), 'trop')).toBe(true);
 	});
 
 	it('matches on a keyword that is never displayed', () => {
-		expect(matches(option({ keywords: ['DC'] }), 'dc')).toBe(true);
+		expect(matches(option({ keywords: ['antioxidant'] }), 'antioxidant')).toBe(true);
 	});
 
 	it('rejects a term that appears nowhere', () => {
-		expect(matches(option(), 'cali')).toBe(false);
+		expect(matches(option(), 'kiwi')).toBe(false);
 	});
 
 	it('keeps everything for an empty or whitespace-only search', () => {
@@ -51,7 +51,7 @@ describe('matches', () => {
 	});
 
 	it('ignores surrounding whitespace in the search', () => {
-		expect(matches(option(), '  bogota  ')).toBe(true);
+		expect(matches(option(), '  acai  ')).toBe(true);
 	});
 });
 

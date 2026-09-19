@@ -1,35 +1,35 @@
 <script lang="ts">
 	import Combobox from '$lib/coral/kit/combobox/combobox.svelte';
 
-	// Grouped, with descriptions and hidden keywords. `dc` finds Bogotá; `4` finds Cali.
-	const cities = [
+	// Grouped, with descriptions and hidden keywords. `berry` finds Açaí; `4` finds Mango.
+	const fruits = [
 		{
-			label: 'Andina',
+			label: 'Tropical',
 			options: [
-				{ value: 'bogota', label: 'Bogotá', description: 'Cundinamarca', keywords: ['dc', '1'] },
-				{ value: 'medellin', label: 'Medellín', description: 'Antioquia', keywords: ['4'] },
-				{ value: 'tunja', label: 'Tunja', description: 'Boyacá' }
+				{ value: 'acai', label: 'Açaí', description: 'Berry', keywords: ['berry', '1'] },
+				{ value: 'mango', label: 'Mango', description: 'Stone fruit', keywords: ['4'] },
+				{ value: 'papaya', label: 'Papaya', description: 'Tropical' }
 			]
 		},
 		{
-			label: 'Caribe',
+			label: 'Citrus',
 			options: [
-				{ value: 'barranquilla', label: 'Barranquilla', description: 'Atlántico' },
-				{ value: 'cartagena', label: 'Cartagena', description: 'Bolívar' },
-				{ value: 'santa-marta', label: 'Santa Marta', description: 'Magdalena', disabled: true }
+				{ value: 'orange', label: 'Orange', description: 'Citrus' },
+				{ value: 'lemon', label: 'Lemon', description: 'Citrus' },
+				{ value: 'kumquat', label: 'Kumquat', description: 'Citrus', disabled: true }
 			]
 		}
 	];
 
-	let city = $state<string>();
+	let fruit = $state<string>();
 </script>
 
 <div class="w-72">
 	<Combobox
-		options={cities}
-		bind:value={city}
+		options={fruits}
+		bind:value={fruit}
 		clearable
-		placeholder="Select a city..."
-		searchPlaceholder="Try dc, boyaca, atlantico..."
+		placeholder="Select a fruit..."
+		searchPlaceholder="Try berry, mango, citrus..."
 	/>
 </div>

@@ -6,17 +6,17 @@
 	type Task = { id: number; title: string; owner: string };
 
 	let tasks = $state<Task[]>([
-		{ id: 1, title: 'Revisar planos', owner: 'Ana' },
-		{ id: 2, title: 'Pedir cotizaciones', owner: 'Juan' },
-		{ id: 3, title: 'Aprobar presupuesto', owner: 'Camila' },
-		{ id: 4, title: 'Firmar contrato', owner: 'Diego' }
+		{ id: 1, title: 'Review the plans', owner: 'Ava' },
+		{ id: 2, title: 'Request quotes', owner: 'Liam' },
+		{ id: 3, title: 'Approve budget', owner: 'Noah' },
+		{ id: 4, title: 'Sign contract', owner: 'Mia' }
 	]);
 </script>
 
 <ReorderList
 	bind:items={tasks}
 	class="w-80"
-	aria-label="Prioridades"
+	aria-label="Priorities"
 	getKey={(task) => task.id}
 	getLabel={(task) => task.title}
 >

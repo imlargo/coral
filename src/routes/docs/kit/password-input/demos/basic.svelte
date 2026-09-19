@@ -7,15 +7,15 @@
 </script>
 
 <Field.Field class="w-72">
-	<Field.Label for="login-password">Contraseña</Field.Label>
+	<Field.Label for="login-password">Password</Field.Label>
 	<PasswordInput
 		id="login-password"
 		bind:value={password}
 		bind:capsLock
-		toggleLabel="Mostrar contraseña"
-		capsLockLabel="Bloq Mayús está activado"
+		toggleLabel="Show password"
+		capsLockLabel="Caps Lock is on"
 	/>
 	<Field.Description>
-		{capsLock ? 'Bloq Mayús está activado.' : 'Prueba con Bloq Mayús activado.'}
+		{capsLock ? 'Caps Lock is on.' : 'Try it with Caps Lock on.'}
 	</Field.Description>
 </Field.Field>

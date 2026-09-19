@@ -6,5 +6,5 @@
 </script>
 
 <div class="w-64">
-	<DatePicker bind:value placeholder="Selecciona una fecha" clearable />
+	<DatePicker bind:value placeholder="Pick a date" clearable />
 </div>

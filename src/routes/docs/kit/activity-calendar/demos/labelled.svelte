@@ -2,7 +2,7 @@
 	import ActivityCalendar from '$lib/coral/kit/activity-calendar/activity-calendar.svelte';
 	import { END, START, sample } from '../sample.js';
 
-	const format = new Intl.DateTimeFormat('es-CO', {
+	const format = new Intl.DateTimeFormat('en-US', {
 		day: 'numeric',
 		month: 'long',
 		year: 'numeric'
@@ -16,6 +16,6 @@
 	end={END}
 	label={(day) =>
 		day.count === 0
-			? `Sin despachos el ${format.format(day.date)}`
-			: `${day.count} despachos el ${format.format(day.date)}`}
+			? `No commits on ${format.format(day.date)}`
+			: `${day.count} commits on ${format.format(day.date)}`}
 />

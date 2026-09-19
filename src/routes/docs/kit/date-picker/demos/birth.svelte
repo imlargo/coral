@@ -9,13 +9,13 @@
 </script>
 
 <div class="flex w-64 flex-col gap-3">
-	<Label for={id}>Fecha de nacimiento</Label>
+	<Label for={id}>Date of birth</Label>
 	<DatePicker
 		{id}
 		bind:value
 		captionLayout="dropdown"
 		maxValue={today(getLocalTimeZone())}
 		format={{ dateStyle: 'long' }}
-		placeholder="Selecciona tu fecha"
+		placeholder="Pick your date"
 	/>
 </div>

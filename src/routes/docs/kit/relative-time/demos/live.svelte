@@ -5,8 +5,8 @@
 </script>
 
 <div class="flex flex-col items-center gap-1 text-sm">
-	<p>Abriste esta página <RelativeTime date={openedAt} precision="second" />.</p>
+	<p>You opened this page <RelativeTime date={openedAt} precision="second" />.</p>
 	<p class="text-muted-foreground">
-		En inglés, corto: <RelativeTime date={openedAt} locale="en" format="short" precision="second" />
+		Short form: <RelativeTime date={openedAt} format="short" precision="second" />
 	</p>
 </div>

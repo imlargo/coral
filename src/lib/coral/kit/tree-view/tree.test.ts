@@ -22,23 +22,23 @@ const tree: TreeNode[] = [
 		]
 	},
 	{ id: 'readme', label: 'README.md' },
-	{ id: 'arbol', label: 'Árbol.md' }
+	{ id: 'ananas', label: 'Ánanas.md' }
 ];
 
 const ids = (rows: { node: TreeNode }[]) => rows.map((row) => row.node.id);
 
 describe('visibleRows', () => {
 	it('shows only the top level when nothing is expanded', () => {
-		expect(ids(visibleRows(tree, new Set()))).toEqual(['src', 'readme', 'arbol']);
+		expect(ids(visibleRows(tree, new Set()))).toEqual(['src', 'readme', 'ananas']);
 	});
 
 	it('shows the children of expanded nodes, in reading order', () => {
 		const rows = visibleRows(tree, new Set(['src', 'lib']));
-		expect(ids(rows)).toEqual(['src', 'lib', 'utils', 'app', 'routes', 'readme', 'arbol']);
+		expect(ids(rows)).toEqual(['src', 'lib', 'utils', 'app', 'routes', 'readme', 'ananas']);
 	});
 
 	it('hides a child whose parent is collapsed, even if the child is expanded', () => {
-		expect(ids(visibleRows(tree, new Set(['lib'])))).toEqual(['src', 'readme', 'arbol']);
+		expect(ids(visibleRows(tree, new Set(['lib'])))).toEqual(['src', 'readme', 'ananas']);
 	});
 
 	it('records level, position and set size', () => {
@@ -79,7 +79,7 @@ describe('expandableSiblings', () => {
 
 describe('typeahead', () => {
 	const rows = visibleRows(tree, new Set(['src']));
-	// src, lib, app, routes, readme, arbol
+	// src, lib, app, routes, readme, ananas
 
 	it('finds the next label starting with a letter', () => {
 		expect(ids([rows[typeahead(rows, 0, 'r')]])).toEqual(['routes']);
@@ -96,7 +96,7 @@ describe('typeahead', () => {
 	});
 
 	it('ignores case and accents', () => {
-		expect(rows[typeahead(rows, 0, 'ar')].node.id).toBe('arbol');
+		expect(rows[typeahead(rows, 0, 'an')].node.id).toBe('ananas');
 		expect(rows[typeahead(rows, 0, 'READ')].node.id).toBe('readme');
 	});
 

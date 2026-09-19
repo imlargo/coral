@@ -1,7 +1,7 @@
 <script lang="ts" generics="T = unknown">
 	/**
 	 * @coral/kit/activity-calendar
-	 * @version 1.0.0
+	 * @version 1.0.1
 	 */
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import { cn } from '$lib/utils.js';
@@ -17,7 +17,7 @@
 		weekStart = 1,
 		levels = 4,
 		thresholds,
-		locale = 'es-CO',
+		locale = 'en-US',
 		color = 'var(--primary)',
 		emptyColor = 'var(--muted)',
 		showWeekdays = true,

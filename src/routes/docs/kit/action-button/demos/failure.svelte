@@ -7,7 +7,7 @@
 	async function sync() {
 		attempts++;
 		await new Promise((resolve) => setTimeout(resolve, 800));
-		if (attempts % 2 === 1) throw new Error('El servidor no respondió');
+		if (attempts % 2 === 1) throw new Error('The server did not respond');
 	}
 </script>
 
@@ -15,10 +15,10 @@
 	<ActionButton
 		variant="outline"
 		onclick={sync}
-		onsuccess={() => (message = 'Sincronizado.')}
-		onerror={(error) => (message = `Error: ${(error as Error).message}. Intenta de nuevo.`)}
+		onsuccess={() => (message = 'Synced.')}
+		onerror={(error) => (message = `Error: ${(error as Error).message}. Try again.`)}
 	>
-		Sincronizar
+		Sync
 	</ActionButton>
 	<p class="text-sm text-muted-foreground" role="status">{message}</p>
 </div>

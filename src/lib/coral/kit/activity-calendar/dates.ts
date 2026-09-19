@@ -1,6 +1,6 @@
 /**
  * @coral/kit/activity-calendar
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 /** Which weekday a week starts on. `0` is Sunday, the way `Date#getDay` numbers them. */
@@ -13,9 +13,9 @@ const CALENDAR_DAY = /^(\d{4})-(\d{2})-(\d{2})$/;
  * worth comparing against:
  *
  * - **`YYYY-MM-DD` is parsed by hand**, because `new Date('2026-01-05')` means UTC midnight - the
- *   4th at 19:00 in Bogotá, so a naive grid draws every day one square early, all year, and only
- *   in negative-offset zones. A bare day means that day where the reader is; anything carrying a
- *   time is a moment, and its local day is read off the clock.
+ *   4th at 19:00 in any UTC-5 zone, so a naive grid draws every day one square early, all year, and
+ *   only in negative-offset zones. A bare day means that day where the reader is; anything carrying
+ *   a time is a moment, and its local day is read off the clock.
  * - **Noon, not midnight**, which is the one instant a DST jump can delete - and where it does,
  *   the browser rolls the date back a day. Noon is skipped nowhere on earth.
  */

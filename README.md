@@ -27,7 +27,7 @@ whether you need it than a list of props would:
 
 | Case                                 | Hand-rolled with shadcn-svelte / bits-ui                | Coral                                                     |
 | ------------------------------------ | ------------------------------------------------------- | --------------------------------------------------------- |
-| Combobox search                      | exact substring, case- and accent-sensitive             | folds accents - `bogota` finds `Bogotá`                   |
+| Combobox search                      | exact substring, case- and accent-sensitive             | folds accents - `acai` finds `Açaí`                       |
 | Combobox, after selecting an option  | focus is lost to the body                               | returns to the trigger                                    |
 | Confirm dialog when the action fails | you wire the re-open and the pending state per instance | stays open, blocks double-submit, one prop                |
 | Date range picker                    | closes on the first click, mid-range                    | closes only once the range is complete                    |
@@ -100,15 +100,15 @@ There are no barrels. One component, one folder, imported directly:
 <script lang="ts">
 	import Combobox from '$lib/coral/kit/combobox/combobox.svelte';
 
-	const cities = [
-		{ value: 11001, label: 'Bogotá' },
-		{ value: 5001, label: 'Medellín' }
+	const fruits = [
+		{ value: 1, label: 'Açaí' },
+		{ value: 2, label: 'Guava' }
 	];
 
-	let city = $state<number>();
+	let fruit = $state<number>();
 </script>
 
-<Combobox options={cities} bind:value={city} placeholder="Select a city..." clearable />
+<Combobox options={fruits} bind:value={fruit} placeholder="Select a fruit..." clearable />
 ```
 
 That makes filenames public API: renaming one is a breaking change, and gets a major bump.

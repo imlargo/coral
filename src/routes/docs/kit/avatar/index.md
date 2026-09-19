@@ -17,7 +17,7 @@ Raw shadcn asks for three components and a hand-written fallback every single ti
 ```
 
 That last line is the problem. It is rewritten in every project, and it is wrong in most of them -
-`slice(0, 2)` on `María del Carmen García` gives `MA`, not `MG`.
+`slice(0, 2)` on `Elena van der Meer` gives `EL`, not `EM`.
 
 <Preview name="kit/avatar/basic" />
 
@@ -68,7 +68,7 @@ what an unknown person looks like, and gets an empty circle until it says so.
 
 An avatar is called the same thing whether or not the photo loads. `name` becomes the image's
 `alt`, and - when the fallback is showing instead - a visually hidden label, so a screen reader
-reads _María del Carmen García_ rather than the letters _M G_.
+reads _Elena van der Meer_ rather than the letters _E M_.
 
 Only one of the two is ever in the accessibility tree: the fallback is `display: none` while the
 image is showing, so the name is never announced twice.
@@ -120,7 +120,7 @@ it.
 ```ts
 import { initials } from '$lib/coral/kit/avatar/initials.js';
 
-initials('María del Carmen García'); // 'MG'
+initials('Elena van der Meer'); // 'EM'
 initials('Juan'); // 'J'
 initials('   '); // ''
 initials(undefined); // ''

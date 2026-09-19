@@ -7,36 +7,36 @@
 
 	const nodes: TreeNode[] = [
 		{
-			id: 'contratos',
-			label: 'Contratos',
+			id: 'contracts',
+			label: 'Contracts',
 			children: [
 				{
-					id: 'contratos-2026',
+					id: 'contracts-2026',
 					label: '2026',
 					children: [
-						{ id: 'c-001', label: 'Obra Norte.pdf' },
-						{ id: 'c-002', label: 'Interventoría.pdf' }
+						{ id: 'c-001', label: 'North Site.pdf' },
+						{ id: 'c-002', label: 'Inspection Report.pdf' }
 					]
 				},
 				{
-					id: 'contratos-2025',
+					id: 'contracts-2025',
 					label: '2025',
-					children: [{ id: 'c-003', label: 'Suministros.pdf' }]
+					children: [{ id: 'c-003', label: 'Supplies.pdf' }]
 				}
 			]
 		},
 		{
-			id: 'actas',
-			label: 'Actas',
+			id: 'minutes',
+			label: 'Minutes',
 			children: [
-				{ id: 'a-001', label: 'Acta de inicio.docx' },
-				{ id: 'a-002', label: 'Acta de avance.docx', disabled: true }
+				{ id: 'm-001', label: 'Kickoff minutes.docx' },
+				{ id: 'm-002', label: 'Progress minutes.docx', disabled: true }
 			]
 		},
-		{ id: 'readme', label: 'Léeme.txt' }
+		{ id: 'readme', label: 'ReadMe.txt' }
 	];
 
-	let expanded = $state(['contratos']);
+	let expanded = $state(['contracts']);
 	let selected = $state<string>();
 </script>
 
@@ -45,7 +45,7 @@
 		{nodes}
 		bind:expanded
 		bind:selected
-		label="Documentos"
+		label="Documents"
 		rowClass="rounded-md px-1 py-0.5 data-selected:bg-muted"
 	>
 		{#snippet node({ node, expandable, expanded })}
@@ -59,5 +59,5 @@
 			<span class="min-w-0 truncate text-sm">{node.label}</span>
 		{/snippet}
 	</TreeView>
-	<p class="text-sm text-muted-foreground">Seleccionado: {selected ?? '—'}</p>
+	<p class="text-sm text-muted-foreground">Selected: {selected ?? '—'}</p>
 </div>

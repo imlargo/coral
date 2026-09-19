@@ -9,7 +9,7 @@
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Button, buttonVariants } from '$lib/components/ui/button/index.js';
 
-	const team = ['Ana Restrepo', 'Juan Herrera', 'María del Carmen García', 'Diego Marín'];
+	const team = ['Amara Diallo', 'Wei Zhang', 'Elena van der Meer', "Liam O'Connor"];
 
 	const isNot = [
 		[
@@ -110,9 +110,9 @@
 			</div>
 			<p class="max-w-xs text-sm leading-relaxed text-muted-foreground">
 				One line each, with initials derived from the full name - <code
-					class="rounded bg-muted px-1 font-mono text-[0.85em] text-foreground">MG</code
+					class="rounded bg-muted px-1 font-mono text-[0.85em] text-foreground">EM</code
 				>, not
-				<code class="rounded bg-muted px-1 font-mono text-[0.85em] text-foreground">MA</code>.
+				<code class="rounded bg-muted px-1 font-mono text-[0.85em] text-foreground">EL</code>.
 				<a
 					href={resolve('/docs/kit/avatar')}
 					class="font-medium text-foreground underline decoration-muted-foreground/40 underline-offset-4 transition-colors hover:decoration-foreground"
@@ -163,7 +163,7 @@
 	<div
 		class="mx-auto flex max-w-4xl flex-wrap items-center gap-x-6 gap-y-2 px-6 py-8 text-sm text-muted-foreground"
 	>
-		<span>Built by Kora, Medellín.</span>
+		<span>Built by Kora.</span>
 		<a href={resolve('/docs')} class="transition-colors hover:text-foreground">Docs</a>
 		<a href={resolve('/docs/conventions')} class="transition-colors hover:text-foreground">
 			Conventions

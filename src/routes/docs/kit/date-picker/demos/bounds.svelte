@@ -20,6 +20,6 @@
 		minValue={from}
 		maxValue={from.add({ months: 2 })}
 		isDateDisabled={isWeekend}
-		placeholder="Día hábil"
+		placeholder="Business day"
 	/>
 </div>

@@ -8,13 +8,13 @@ import { describe, expect, it } from 'vitest';
 import Select from './select.svelte';
 import type { Option } from '../../lib/options.js';
 
-const cities: Option<number>[] = [
-	{ value: 11001, label: 'Bogotá' },
-	{ value: 5001, label: 'Medellín' }
+const fruits: Option<number>[] = [
+	{ value: 1, label: 'Açaí' },
+	{ value: 2, label: 'Guava' }
 ];
 
 /** The field Coral submits with, as the DOM sees it. */
-function field(name = 'city'): HTMLInputElement {
+function field(name = 'fruit'): HTMLInputElement {
 	const found = document.querySelector<HTMLInputElement>(`input[name="${name}"]`);
 	if (!found) throw new Error(`no field named ${name}`);
 	return found;
@@ -22,18 +22,18 @@ function field(name = 'city'): HTMLInputElement {
 
 describe('form participation', () => {
 	it('submits nothing at all without a name', () => {
-		render(Select, { options: cities });
+		render(Select, { options: fruits });
 		expect(document.querySelector('input[name]')).toBeNull();
 	});
 
 	it('writes the value, not the internal item key', () => {
-		render(Select, { options: cities, name: 'city', value: 5001 });
-		// 5001 is the option's own value; `1` would be its index in the list.
-		expect(field().value).toBe('5001');
+		render(Select, { options: fruits, name: 'fruit', value: 2 });
+		// 2 is the option's own value; `1` would be its index in the list.
+		expect(field().value).toBe('2');
 	});
 
 	it('writes an empty field while nothing is selected', () => {
-		render(Select, { options: cities, name: 'city' });
+		render(Select, { options: fruits, name: 'fruit' });
 		expect(field().value).toBe('');
 	});
 
@@ -53,7 +53,7 @@ describe('form participation', () => {
 	});
 
 	it('associates with a form by id, for a select rendered outside it', () => {
-		render(Select, { options: cities, name: 'city', form: 'filters' });
+		render(Select, { options: fruits, name: 'fruit', form: 'filters' });
 		expect(field().getAttribute('form')).toBe('filters');
 	});
 
@@ -65,27 +65,27 @@ describe('form participation', () => {
 	 * select did nothing whatsoever. Nothing else in the DOM distinguishes the two cases.
 	 */
 	it('is a control the browser will actually validate', () => {
-		render(Select, { options: cities, name: 'city', required: true });
+		render(Select, { options: fruits, name: 'fruit', required: true });
 		expect(field().willValidate).toBe(true);
 	});
 
 	it('reports an empty required select as missing', () => {
-		render(Select, { options: cities, name: 'city', required: true });
+		render(Select, { options: fruits, name: 'fruit', required: true });
 		expect(field().validity.valueMissing).toBe(true);
 	});
 
 	it('is satisfied once something is selected', () => {
-		render(Select, { options: cities, name: 'city', required: true, value: 11001 });
+		render(Select, { options: fruits, name: 'fruit', required: true, value: 1 });
 		expect(field().checkValidity()).toBe(true);
 	});
 
 	it('stays out of the tab order and the accessibility tree', () => {
-		render(Select, { options: cities, name: 'city' });
+		render(Select, { options: fruits, name: 'fruit' });
 		expect([field().tabIndex, field().getAttribute('aria-hidden')]).toEqual([-1, 'true']);
 	});
 
 	it('announces the requirement on the trigger, which is what gets focus', () => {
-		render(Select, { options: cities, name: 'city', required: true });
+		render(Select, { options: fruits, name: 'fruit', required: true });
 		const trigger = document.querySelector('[data-slot="select-trigger"]');
 		expect(trigger?.getAttribute('aria-required')).toBe('true');
 	});

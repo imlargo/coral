@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/relative-time
-	 * @version 1.0.0
+	 * @version 1.0.1
 	 */
 	import { onMount } from 'svelte';
 	import { describe, nextChange, toDate } from './relative.js';
@@ -9,7 +9,7 @@
 
 	let {
 		date,
-		locale = 'es-CO',
+		locale = 'en-US',
 		numeric = 'auto',
 		format = 'long',
 		precision = 'minute',

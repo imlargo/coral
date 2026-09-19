@@ -14,7 +14,7 @@ handles the keyboard; what the numbers mean stays with the project.
 
 ## What Coral adds
 
-- **The squares land on the right day.** `new Date('2026-01-05')` is UTC midnight, which in Bogotá is
+- **The squares land on the right day.** `new Date('2026-01-05')` is UTC midnight, which in a UTC-5 zone is
   the 4th - so the naive grid is a day off, all year, only for readers west of Greenwich.
 - **A scale that survives real data.** Levels come from quantiles of the non-empty days, not from
   slicing `0..max`.
@@ -110,7 +110,7 @@ properties rather than props because a grid is sized, not styled.
 
 ## Copy
 
-The default square label is `3 · 5 ene 2026`. It is deliberately wordless: `3 contributions` is copy,
+The default square label is `3 · Jan 5, 2026`. It is deliberately wordless: `3 contributions` is copy,
 copy is the project's, and Coral does not know what is being counted.
 
 `label` is where it goes. It feeds both the tooltip and the square's accessible name, so writing it
@@ -171,29 +171,29 @@ pnpm dlx shadcn-svelte@latest add tooltip
 
 ## Props
 
-| Prop           | Type                         | Default          | Description                                   |
-| -------------- | ---------------------------- | ---------------- | --------------------------------------------- |
-| `data`         | `ActivityDay<T>[]`           | -                | Unordered. Gaps drawn, repeats summed.        |
-| `start`        | `string \| Date`             | earliest day     | First day drawn.                              |
-| `end`          | `string \| Date`             | latest day       | Last day drawn.                               |
-| `weekStart`    | `0 \| 1 \| ... \| 6`         | `1`              | Row zero. `0` is Sunday.                      |
-| `levels`       | `number`                     | `4`              | Steps above zero. Ignored with `thresholds`.  |
-| `thresholds`   | `number[]`                   | from the range   | Minimum count per level, ascending.           |
-| `locale`       | `string`                     | `es-CO`          | Month, weekday and date labels.               |
-| `color`        | `string`                     | `var(--primary)` | The busiest fill.                             |
-| `emptyColor`   | `string`                     | `var(--muted)`   | The level-zero fill.                          |
-| `showWeekdays` | `boolean`                    | `true`           | The row headers.                              |
-| `showMonths`   | `boolean`                    | `true`           | The column headers.                           |
-| `showLegend`   | `boolean`                    | `true`           | The swatch row.                               |
-| `caption`      | `string`                     | -                | Names the grid for a screen reader.           |
-| `label`        | `(cell) => string`           | `3 · 5 ene 2026` | Tooltip text and accessible name.             |
-| `onselect`     | `(cell) => void`             | -                | Click, Enter or Space on a square.            |
-| `ref`          | `HTMLDivElement \| null`     | `null`           | Bindable. The root element.                   |
-| `class`        | `string`                     | -                | Merged onto the root. Carries the size knobs. |
-| `cellClass`    | `string`                     | -                | Merged onto every square.                     |
-| `cell`         | `Snippet<[ActivityCell<T>]>` | -                | Renders inside a square, over the fill.       |
-| `tooltip`      | `Snippet<[ActivityCell<T>]>` | -                | Replaces the tooltip body.                    |
-| `legend`       | `Snippet<[LegendContext]>`   | -                | Replaces the legend row.                      |
+| Prop           | Type                         | Default           | Description                                   |
+| -------------- | ---------------------------- | ----------------- | --------------------------------------------- |
+| `data`         | `ActivityDay<T>[]`           | -                 | Unordered. Gaps drawn, repeats summed.        |
+| `start`        | `string \| Date`             | earliest day      | First day drawn.                              |
+| `end`          | `string \| Date`             | latest day        | Last day drawn.                               |
+| `weekStart`    | `0 \| 1 \| ... \| 6`         | `1`               | Row zero. `0` is Sunday.                      |
+| `levels`       | `number`                     | `4`               | Steps above zero. Ignored with `thresholds`.  |
+| `thresholds`   | `number[]`                   | from the range    | Minimum count per level, ascending.           |
+| `locale`       | `string`                     | `en-US`           | Month, weekday and date labels.               |
+| `color`        | `string`                     | `var(--primary)`  | The busiest fill.                             |
+| `emptyColor`   | `string`                     | `var(--muted)`    | The level-zero fill.                          |
+| `showWeekdays` | `boolean`                    | `true`            | The row headers.                              |
+| `showMonths`   | `boolean`                    | `true`            | The column headers.                           |
+| `showLegend`   | `boolean`                    | `true`            | The swatch row.                               |
+| `caption`      | `string`                     | -                 | Names the grid for a screen reader.           |
+| `label`        | `(cell) => string`           | `3 · Jan 5, 2026` | Tooltip text and accessible name.             |
+| `onselect`     | `(cell) => void`             | -                 | Click, Enter or Space on a square.            |
+| `ref`          | `HTMLDivElement \| null`     | `null`            | Bindable. The root element.                   |
+| `class`        | `string`                     | -                 | Merged onto the root. Carries the size knobs. |
+| `cellClass`    | `string`                     | -                 | Merged onto every square.                     |
+| `cell`         | `Snippet<[ActivityCell<T>]>` | -                 | Renders inside a square, over the fill.       |
+| `tooltip`      | `Snippet<[ActivityCell<T>]>` | -                 | Replaces the tooltip body.                    |
+| `legend`       | `Snippet<[LegendContext]>`   | -                 | Replaces the legend row.                      |
 
 Everything else lands on the root element.
 

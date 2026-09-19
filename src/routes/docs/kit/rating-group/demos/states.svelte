@@ -5,7 +5,7 @@
 <div class="flex flex-col gap-4">
 	<div class="flex items-center gap-3">
 		<span class="w-20 text-sm text-muted-foreground">disabled</span>
-		<RatingGroup value={3} disabled aria-label="Calificación deshabilitada" />
+		<RatingGroup value={3} disabled aria-label="Disabled rating" />
 	</div>
 	<div class="flex items-center gap-3">
 		<span class="w-20 text-sm text-muted-foreground">readonly</span>

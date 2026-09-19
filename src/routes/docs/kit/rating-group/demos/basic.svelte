@@ -5,6 +5,6 @@
 </script>
 
 <div class="flex flex-col items-center gap-3">
-	<RatingGroup bind:value aria-label="Calificación" />
-	<p class="text-sm text-muted-foreground">{value || 'sin calificar'}</p>
+	<RatingGroup bind:value aria-label="Rating" />
+	<p class="text-sm text-muted-foreground">{value || 'not rated'}</p>
 </div>

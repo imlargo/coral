@@ -7,7 +7,7 @@
 	// Stands in for a request that signs a short-lived download link.
 	async function signLink() {
 		await new Promise((resolve) => setTimeout(resolve, 800));
-		return `https://files.ejemplo.co/d/${crypto.randomUUID()}?expires=600`;
+		return `https://files.example.com/d/${crypto.randomUUID()}?expires=600`;
 	}
 </script>
 
@@ -15,11 +15,11 @@
 	<CopyButton text={signLink} bind:status variant="outline" size="default">
 		{#snippet children({ status })}
 			{status === 'copying'
-				? 'Generando…'
+				? 'Generating…'
 				: status === 'copied'
-					? 'Enlace copiado'
-					: 'Copiar enlace temporal'}
+					? 'Link copied'
+					: 'Copy temporary link'}
 		{/snippet}
 	</CopyButton>
-	<p class="text-sm text-muted-foreground">Estado: {status}</p>
+	<p class="text-sm text-muted-foreground">Status: {status}</p>
 </div>
