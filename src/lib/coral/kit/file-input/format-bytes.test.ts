@@ -1,6 +1,6 @@
 /**
  * @coral/kit/file-input
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import { describe, expect, it } from 'vitest';
@@ -19,8 +19,16 @@ describe('formatBytes', () => {
 		expect(formatBytes(1024 ** 4)).toBe('1 TB');
 	});
 
-	it("uses the locale's decimal separator, which every hand-written copy gets wrong", () => {
-		expect(formatBytes(1024 * 1024 * 1.5)).toBe('1,5 MB');
+	it('takes the decimal separator from the locale, which `toFixed` cannot', () => {
+		expect(formatBytes(1024 * 1024 * 1.5, 'en-US')).toBe('1.5 MB');
+		expect(formatBytes(1024 * 1024 * 1.5, 'de-DE')).toBe('1,5 MB');
+	});
+
+	it('follows the reader’s own locale when none is given', () => {
+		// Not pinned to a locale chosen when this was written: whatever `Intl` does here is what the
+		// reader sees, and that is the whole point of not reaching for `toFixed`.
+		const expected = (1.5).toLocaleString(undefined, { maximumFractionDigits: 1 });
+		expect(formatBytes(1024 * 1024 * 1.5)).toBe(`${expected} MB`);
 	});
 
 	it('keeps one decimal at most', () => {

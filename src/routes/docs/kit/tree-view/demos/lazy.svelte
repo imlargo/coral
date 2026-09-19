@@ -5,14 +5,14 @@
 	import type { TreeNode } from '$lib/coral/kit/tree-view/types.js';
 
 	let nodes = $state<TreeNode[]>([
-		{ id: 'tropical', label: 'Tropical', children: [] },
-		{ id: 'citrus', label: 'Citrus', children: [] },
-		{ id: 'berries', label: 'Berries', children: [] }
+		{ id: 'web-app', label: 'web-app', children: [] },
+		{ id: 'api-gateway', label: 'api-gateway', children: [] },
+		{ id: 'design-tokens', label: 'design-tokens', children: [] }
 	]);
 	const loaded = new SvelteSet<string>();
 	let loading = $state<string[]>([]);
 
-	// Fetches a category's varieties the first time it is opened.
+	// Fetches a repository's branches the first time it is opened.
 	async function load(expanded: string[]) {
 		for (const id of expanded) {
 			if (loaded.has(id)) continue;
@@ -23,7 +23,7 @@
 				node.id === id
 					? {
 							...node,
-							children: ['Variety A', 'Variety B', 'Variety C'].map((name) => ({
+							children: ['main', 'develop', 'release/2.1'].map((name) => ({
 								id: `${id}-${name}`,
 								label: name
 							}))
@@ -35,7 +35,7 @@
 	}
 </script>
 
-<TreeView {nodes} label="Categories" class="w-72" onexpandedchange={load}>
+<TreeView {nodes} label="Repositories" class="w-72" onexpandedchange={load}>
 	{#snippet node({ node })}
 		<span class="text-sm">{node.label}</span>
 		{#if loading.includes(node.id)}

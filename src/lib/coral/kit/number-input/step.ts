@@ -30,7 +30,7 @@ export function round(value: number, decimals: number): number {
 /**
  * Holds a value inside its bounds. `max` is applied before `min`, so bounds passed the wrong way
  * round give `min` rather than something below both. Either may be left out, meaning unbounded
- * that way: defaulting `min` to `0`, as one project in the corpus does, hides every negative.
+ * that way: defaulting `min` to `0` would quietly hide every negative a caller meant to allow.
  */
 export function clamp(value: number, min?: number, max?: number): number {
 	let next = value;

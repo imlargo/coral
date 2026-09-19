@@ -2,22 +2,22 @@
 	import ConfirmDialog from '$lib/coral/kit/confirm-dialog/confirm-dialog.svelte';
 	import { Button } from '$lib/components/ui/button/index.js';
 
-	let removed = $state(0);
+	let revoked = $state(0);
 </script>
 
 <div class="flex flex-col items-center gap-3">
 	<ConfirmDialog
-		title="Disable this workspace?"
-		description="Its history is kept, and you can reactivate it anytime."
-		confirmLabel="Disable"
+		title="Revoke this API key?"
+		description="Requests signed with it start failing immediately. You can issue a new one."
+		confirmLabel="Revoke"
 		cancelLabel="Cancel"
 		variant="destructive"
-		onconfirm={() => removed++}
+		onconfirm={() => revoked++}
 	>
 		{#snippet trigger({ props })}
-			<Button {...props} variant="outline">Disable workspace</Button>
+			<Button {...props} variant="outline">Revoke key</Button>
 		{/snippet}
 	</ConfirmDialog>
 
-	<p class="text-sm text-muted-foreground">Disabled: {removed}</p>
+	<p class="text-sm text-muted-foreground">Revoked: {revoked}</p>
 </div>

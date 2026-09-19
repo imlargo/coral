@@ -2,25 +2,25 @@
 	import Combobox from '$lib/coral/kit/combobox/combobox.svelte';
 
 	// `value` is whatever the project already has - here a numeric id, not a string.
-	const clients = [
-		{ value: 1, label: 'Aurora Energy' },
-		{ value: 2, label: 'Andes Construction' },
-		{ value: 3, label: 'Savanna Group', disabled: true },
-		{ value: 4, label: 'Northfield Textiles' }
+	const projects = [
+		{ value: 1, label: 'web-dashboard' },
+		{ value: 2, label: 'billing-api' },
+		{ value: 3, label: 'legacy-gateway', disabled: true },
+		{ value: 4, label: 'docs-site' }
 	];
 
-	let clientId = $state<number>();
+	let projectId = $state<number>();
 </script>
 
 <div class="flex w-64 flex-col gap-3">
 	<Combobox
-		options={clients}
-		bind:value={clientId}
-		placeholder="Select a client..."
-		searchPlaceholder="Search clients..."
-		emptyMessage="No client found."
+		options={projects}
+		bind:value={projectId}
+		placeholder="Select a project..."
+		searchPlaceholder="Search projects..."
+		emptyMessage="No project found."
 	/>
 	<p class="text-sm text-muted-foreground">
-		Selected id: {clientId ?? 'none'} ({typeof clientId})
+		Selected id: {projectId ?? 'none'} ({typeof projectId})
 	</p>
 </div>

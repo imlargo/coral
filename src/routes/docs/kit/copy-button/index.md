@@ -85,5 +85,5 @@ button - a keyboard shortcut, a context menu item.
 ```ts
 import { writeText } from '$lib/coral/kit/copy-button/clipboard.js';
 
-await writeText(invoice.reference); // rejects when the text did not reach the clipboard
+await writeText(deployment.url); // rejects when the text did not reach the clipboard
 ```

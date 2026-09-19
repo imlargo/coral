@@ -50,8 +50,8 @@
 	/**
 	 * Reads the field on commit - blur, Enter, a native arrow step - not per keystroke. Clamping per
 	 * keystroke fights the typist: with a max of 100, the `1` and the `15` of `150` are both fine,
-	 * and only the finished number is wrong. One project in the corpus skips the clamp entirely and
-	 * lets typed entry commit values its own steppers refuse to reach.
+	 * and only the finished number is wrong. Skipping the commit-time clamp is the other half of
+	 * the bug: typed entry then lands on values the steppers themselves refuse to reach.
 	 */
 	function handleChange(event: Event & { currentTarget: HTMLInputElement }) {
 		const field = event.currentTarget;

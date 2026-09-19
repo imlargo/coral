@@ -1,7 +1,7 @@
 <script lang="ts">
 	import TagsInput from '$lib/coral/kit/tags-input/tags-input.svelte';
 
-	let emails = $state(['ana@kora.dev']);
+	let emails = $state(['amara@example.com']);
 	let rejected = $state(0);
 </script>
 
@@ -19,7 +19,7 @@
 		placeholder="Add an email..."
 	/>
 	<p class="text-sm text-muted-foreground">
-		Paste <code class="font-mono text-xs">Ana@Kora.dev; nope; luis@kora.dev</code> · turned away:
-		{rejected}
+		Paste <code class="font-mono text-xs">Wei@Example.com; nope; sofia@example.com</code> · turned
+		away: {rejected}
 	</p>
 </div>

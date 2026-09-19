@@ -1,6 +1,6 @@
 /**
  * @coral/kit/file-input
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import type { Snippet } from 'svelte';
@@ -46,9 +46,9 @@ export type FileInputProps = InputProps & {
 	/**
 	 * Called with everything that was turned away, and why.
 	 *
-	 * Coral renders no error of its own: the message is copy, copy is the project's, and the corpus
-	 * is split on where it belongs - two projects put it inline, one raises a toast. Wire this up
-	 * whenever you set `accept`, `maxSize` or `maxFiles`, or files will be dropped silently.
+	 * Coral renders no error of its own: the message is copy, copy is the project's, and where it
+	 * belongs - inline under the field, or a toast - is the project's too. Wire this up whenever
+	 * you set `accept`, `maxSize` or `maxFiles`, or files will be dropped silently.
 	 */
 	onreject?: (rejections: FileRejection[]) => void;
 	/** Which files the picker offers and a drop accepts, e.g. `image/*,.pdf`. */

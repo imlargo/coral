@@ -11,10 +11,10 @@
 		attempts++;
 		await new Promise((r) => setTimeout(r, 900));
 		if (attempts === 1) {
-			log = [...log, 'error: workspace is in use'];
-			throw new Error('in use');
+			log = [...log, 'error: a build is still running'];
+			throw new Error('build running');
 		}
-		log = [...log, 'disabled'];
+		log = [...log, 'deleted'];
 	}
 </script>
 
@@ -23,9 +23,9 @@
 
 	<ConfirmDialog
 		bind:open
-		title="Disable this workspace?"
-		description="It can't be disabled while an active resource is using it."
-		confirmLabel="Disable"
+		title="Delete this deployment?"
+		description="It can't be deleted while a build is still running."
+		confirmLabel="Delete"
 		cancelLabel="Cancel"
 		variant="destructive"
 		onconfirm={save}

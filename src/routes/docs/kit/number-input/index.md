@@ -7,10 +7,10 @@ description: A number field with steppers, bounds that hold, and arithmetic that
 	import Preview from '$lib/docs/preview.svelte';
 </script>
 
-Three projects in the corpus wrote this. Two are copies of each other that have since diverged: one
-of them clamps a typed value to `[min, max]`, the other does not - so its steppers refuse to pass the
-cap while the keyboard walks straight through it. The third dropped the text field entirely and
-shipped `-` / value / `+`.
+A hand-rolled stepper field clamps in one direction and forgets the other: the buttons stop at the
+cap while a typed `150` walks straight through it, so the same field enforces its bounds with the
+mouse and not with the keyboard. Dropping the text field entirely - just `-` / value / `+` - closes
+that hole by taking typing away, which turns a jump from `1` to `40` into thirty-nine presses.
 
 <Preview name="kit/number-input/basic" />
 
@@ -39,8 +39,8 @@ keystroke fights the person typing: with a max of `100` the `1` of `150` is fine
 fine, and only the finished number is wrong.
 
 A stepper disables itself once the value is against its bound. Leave `min` or `max` out and that
-direction is unbounded - **negatives included**. One project in the corpus defaults `min` to `0`,
-which quietly makes a temperature or a balance field impossible.
+direction is unbounded - **negatives included**. Defaulting `min` to `0` is the tempting shortcut,
+and it quietly makes a temperature or a balance field impossible to express.
 
 ## Decimals
 

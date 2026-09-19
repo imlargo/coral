@@ -134,8 +134,9 @@ never reads it.
 
 <Preview name="kit/activity-calendar/select" class="justify-start overflow-x-auto" />
 
-`onselect` fires on click, Enter and Space. There is no selected state: no project in the corpus
-keeps one on the grid itself - they open a panel, filter a list, push a route.
+`onselect` fires on click, Enter and Space. There is no selected state: a square is where a day is
+picked, not where it is held - the selection opens a panel, filters a list or pushes a route, and it
+belongs to whichever of those owns it.
 
 ## Keyboard and screen readers
 
@@ -199,7 +200,8 @@ Everything else lands on the root element.
 
 ## What it does not do
 
-- **No range picker, no year tabs, no "last 12 months" button.** Those are three different products
-  in three different projects; `start` and `end` are the seam they all sit on.
+- **No range picker, no year tabs, no "last 12 months" button.** Each of those is a control with its
+  own state, sitting beside the grid rather than inside it; `start` and `end` are the seam they all
+  meet at.
 - **No fetching.** The grid takes an array.
 - **No `count` formatting.** A count is a number until `label` says otherwise.

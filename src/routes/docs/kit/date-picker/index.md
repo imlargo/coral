@@ -75,7 +75,7 @@ them recognise it as `Aug 24 – 31` is asking them to do arithmetic to read the
 
 Identity cannot answer that question - a thunk hands back a fresh `CalendarDate` on every call, so
 `===` is always false. `activePreset` in
-[`presets.ts`](https://github.com/kora/coral/blob/main/src/lib/coral/kit/date-picker/presets.ts)
+[`presets.ts`](https://github.com/imlargo/coral/blob/main/src/lib/coral/kit/date-picker/presets.ts)
 compares the day fields instead, and is exported on its own for a preset row that lives outside the
 popover.
 
@@ -185,9 +185,9 @@ Everything the wrapped calendar accepts stays available. On top of that:
 
 ## Deliberately absent
 
-- **No `type="multiple"`.** The shadcn calendar has it; nothing in the corpus has ever picked an
-  arbitrary set of days out of a popover, and adding it would triple the number of value shapes for a
-  case nobody has written.
+- **No `type="multiple"`.** The shadcn calendar has it, and surfacing it here would add a third
+  shape - an array - to `value`, to `presets` and to `onchange`, for a selection the trigger cannot
+  print: a scattered set of days does not fold into one line of text the way a day or a range does.
 - **No time.** A date and a time are two controls - the shadcn recipe itself puts an
   `<Input type="time">` next to the picker rather than inside it. Coral's `footer` is where that
   goes.

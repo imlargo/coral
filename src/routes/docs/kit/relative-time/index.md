@@ -21,7 +21,8 @@ second to change nothing.
   once, since background timers are throttled.
 - **Right units.** The unit is picked on the rounded value, so 59 minutes 40 seconds is "1 hour ago".
   Four weeks never sits next to one month.
-- **Worded by `Intl`.** "ayer", "hace 5 minutos", "in 3 days" - any locale, `long`, `short` or `narrow`.
+- **Worded by `Intl`.** "yesterday", "in 3 days", "hace 5 minutos", "5 分前" - any locale, and
+  `long`, `short` or `narrow`.
 - **A real `<time>`.** `datetime` carries the instant for machines and `title` the full date for
   whoever hovers.
 - **Symmetric.** 2.5 minutes ago and in 2.5 minutes both round to 3.
@@ -37,8 +38,8 @@ every second draws the eye for no reason. Use `second` where the seconds matter.
 
 <Preview name="kit/relative-time/cutoff" />
 
-"40 days ago" is rarely what anyone wants to read about a document. Past `cutoff` milliseconds the
-date is shown in full instead, formatted with `titleFormat`, and nothing is scheduled for it.
+"40 days ago" is rarely what anyone wants to read about a deployment. Past `cutoff` milliseconds
+the date is shown in full instead, formatted with `titleFormat`, and nothing is scheduled for it.
 
 ## Installation
 
@@ -76,7 +77,8 @@ server-rendered feed:
 import { describe } from '$lib/coral/kit/relative-time/relative.js';
 
 const { value, unit } = describe(new Date(comment.createdAt), new Date());
-new Intl.RelativeTimeFormat('es-CO', { numeric: 'auto' }).format(value, unit); // "hace 5 minutos"
+// `undefined` is the reader's own locale; pass one to pin it.
+new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' }).format(value, unit); // "5 minutes ago"
 ```
 
 Months and years are average lengths - a relative label is approximate by nature. For "on 12 March",

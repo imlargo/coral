@@ -20,7 +20,7 @@ get past it - and a screen reader hears a list of lists with no idea what is ope
   it, then steps out to the parent; Home and End; Enter and Space select; `*` opens every sibling;
   typing letters jumps to the next matching row, ignoring case and accents.
 - **Announced structure.** `aria-level`, `aria-posinset`, `aria-setsize` and `aria-expanded` on every
-  row: "Contracts, expanded, level 1, 1 of 3".
+  row: "src, expanded, level 1, 1 of 3".
 - **Focus never lost.** Collapsing a folder that contains the focused row moves focus to the folder.
 - **Disabled nodes stay reachable.** They cannot be selected, but can still be read and expanded.
 - **Right-to-left aware.** Left and Right swap, and the chevron flips.

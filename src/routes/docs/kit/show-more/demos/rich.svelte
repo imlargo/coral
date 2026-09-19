@@ -9,10 +9,10 @@
 	<ShowMore lines={4} bind:expanded>
 		<p class="mb-2">What's new in version 2.4:</p>
 		<ul class="list-disc ps-5">
-			<li>Export reports to Excel.</li>
-			<li>Saved filters per user.</li>
-			<li>Electronic signatures on purchase orders.</li>
-			<li>Configurable email notifications.</li>
+			<li>Deploy previews on every pull request.</li>
+			<li>Saved filters per project.</li>
+			<li>API keys scoped to a single environment.</li>
+			<li>Configurable webhook notifications.</li>
 			<li><a class="underline" href="#main-content">View full changelog</a></li>
 		</ul>
 

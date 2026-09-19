@@ -7,7 +7,7 @@
 	async function sync() {
 		attempts++;
 		await new Promise((resolve) => setTimeout(resolve, 800));
-		if (attempts % 2 === 1) throw new Error('The server did not respond');
+		if (attempts % 2 === 1) throw new Error('The remote did not respond');
 	}
 </script>
 
@@ -15,10 +15,10 @@
 	<ActionButton
 		variant="outline"
 		onclick={sync}
-		onsuccess={() => (message = 'Synced.')}
+		onsuccess={() => (message = 'Repository synced.')}
 		onerror={(error) => (message = `Error: ${(error as Error).message}. Try again.`)}
 	>
-		Sync
+		Sync repository
 	</ActionButton>
 	<p class="text-sm text-muted-foreground" role="status">{message}</p>
 </div>

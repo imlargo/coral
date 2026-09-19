@@ -8,24 +8,24 @@
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
 
-	const steps = ['company', 'payment', 'summary'] as const;
+	const steps = ['project', 'environment', 'review'] as const;
 	type Step = (typeof steps)[number];
 	const titles: Record<Step, string> = {
-		company: 'Company',
-		payment: 'Payment',
-		summary: 'Summary'
+		project: 'Project',
+		environment: 'Environment',
+		review: 'Review'
 	};
 
-	let taxId = $state('');
+	let slug = $state('');
 	let error = $state('');
 
-	// Simulates checking the tax id against a server before letting the reader move on.
+	// Simulates checking the slug against a server before letting the reader move on.
 	async function beforeNext(step: Step) {
 		error = '';
-		if (step !== 'company') return;
+		if (step !== 'project') return;
 		await new Promise((resolve) => setTimeout(resolve, 700));
-		if (!/^\d{9}$/.test(taxId)) {
-			error = 'Tax ID must be 9 digits.';
+		if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug)) {
+			error = 'Use lowercase letters, numbers and hyphens.';
 			return false;
 		}
 	}
@@ -33,7 +33,7 @@
 
 <div class="flex w-full max-w-md flex-col gap-4">
 	<Stepper {steps} onbeforenext={beforeNext}>
-		<StepperList aria-label="New company setup">
+		<StepperList aria-label="New project setup">
 			{#each steps as step, index (step)}
 				<StepperItem {step} class="rounded-md px-2 py-1 data-[state=current]:bg-muted">
 					<span class="text-sm">{index + 1}. {titles[step]}</span>
@@ -41,24 +41,19 @@
 			{/each}
 		</StepperList>
 
-		<StepperContent step="company" class="flex flex-col gap-2">
-			<Label for="taxId">Tax ID</Label>
-			<Input
-				id="taxId"
-				bind:value={taxId}
-				inputmode="numeric"
-				aria-invalid={error ? 'true' : undefined}
-			/>
-			<p class="text-sm text-muted-foreground" role="status">{error || 'Try 123.'}</p>
+		<StepperContent step="project" class="flex flex-col gap-2">
+			<Label for="slug">Project slug</Label>
+			<Input id="slug" bind:value={slug} aria-invalid={error ? 'true' : undefined} />
+			<p class="text-sm text-muted-foreground" role="status">{error || 'Try «My Service».'}</p>
 		</StepperContent>
-		<StepperContent step="payment" class="text-sm">Payment method.</StepperContent>
-		<StepperContent step="summary" class="text-sm">All set.</StepperContent>
+		<StepperContent step="environment" class="text-sm">Production or preview.</StepperContent>
+		<StepperContent step="review" class="text-sm">All set.</StepperContent>
 
 		<div class="flex justify-between">
 			<StepperPrevious>Back</StepperPrevious>
 			<StepperNext>
 				{#snippet children({ isLast, pending })}
-					{pending ? 'Validating…' : isLast ? 'Create company' : 'Next'}
+					{pending ? 'Validating…' : isLast ? 'Create project' : 'Next'}
 				{/snippet}
 			</StepperNext>
 		</div>

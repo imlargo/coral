@@ -116,7 +116,7 @@ way the form example does. Each option names itself `3 / 5` - wordless, because 
 is copy and copy is the project's. `label` is where that goes:
 
 ```svelte
-<RatingGroup bind:value label={(value, count) => `${value} de ${count} estrellas`} />
+<RatingGroup bind:value label={(value, count) => `${value} out of ${count} stars`} />
 ```
 
 <Preview name="kit/rating-group/states" />

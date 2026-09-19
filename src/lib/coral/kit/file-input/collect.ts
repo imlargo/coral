@@ -1,6 +1,6 @@
 /**
  * @coral/kit/file-input
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import { matchesAccept } from './accept.js';
@@ -26,7 +26,7 @@ export type CollectOptions = {
 
 /**
  * Whether two files are, for a picker's purposes, the same one. Name, size and last-modified are as
- * close to identity as a `File` gets. Every copy in the corpus concatenates without this check, so
+ * close to identity as a `File` gets. Concatenating without the check is the default mistake, so
  * dropping the same file twice puts two identical rows on screen and posts it twice.
  */
 function isSameFile(a: File, b: File): boolean {

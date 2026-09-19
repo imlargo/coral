@@ -13,7 +13,7 @@
 </script>
 
 <div class="w-full max-w-md">
-	<FileInput bind:value={files} multiple label="Attach the supporting documents">
+	<FileInput bind:value={files} multiple label="Attach screenshots or log files">
 		{#snippet file({ file, remove })}
 			<Item.Root variant="muted">
 				<Item.Content class="min-w-0 gap-2">

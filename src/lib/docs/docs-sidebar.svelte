@@ -14,7 +14,7 @@
 		>
 			<span aria-hidden="true" class="text-base">🪸</span>
 			<span class="font-semibold tracking-tight">Coral</span>
-			<Badge variant="secondary" class="ml-auto font-mono text-[0.65rem]">Kora</Badge>
+			<Badge variant="secondary" class="ml-auto font-mono text-[0.65rem]">MIT</Badge>
 		</a>
 	</Sidebar.Header>
 

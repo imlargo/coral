@@ -10,7 +10,7 @@
 	One snippet, drawn twice per star: once as the track with `fill: 0`, once clipped to the real
 	fill. Two different glyphs still get half steps for free.
 -->
-<RatingGroup bind:value count={3} allowHalf aria-label="Peligro">
+<RatingGroup bind:value count={3} allowHalf aria-label="Severity">
 	{#snippet star({ fill })}
 		{#if fill > 0}
 			<SkullIcon class="size-full" />

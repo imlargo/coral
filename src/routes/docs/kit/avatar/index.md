@@ -121,7 +121,7 @@ it.
 import { initials } from '$lib/coral/kit/avatar/initials.js';
 
 initials('Elena van der Meer'); // 'EM'
-initials('Juan'); // 'J'
+initials('Kenji'); // 'K'
 initials('   '); // ''
 initials(undefined); // ''
 ```

@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/file-input
-	 * @version 1.0.0
+	 * @version 1.1.0
 	 */
 	import FileIcon from '@lucide/svelte/icons/file';
 	import UploadIcon from '@lucide/svelte/icons/upload';
@@ -35,9 +35,9 @@
 	}: FileInputProps = $props();
 
 	/**
-	 * One number instead of two contradictory ones. Every copy in the corpus carries both a
-	 * single/multiple switch and a `maxFiles`, defaulting to `single` and `5` - so the props
-	 * disagree out of the box and the reader has to find out which wins.
+	 * One number instead of two contradictory ones. The usual build carries both a single/multiple
+	 * switch and a `maxFiles`, defaulting to `single` and `5` - so the props disagree out of the
+	 * box and the reader has to find out which wins.
 	 */
 	const limit = $derived(multiple ? (maxFiles ?? Number.POSITIVE_INFINITY) : 1);
 
@@ -112,9 +112,9 @@
 	<!--
 		A `<label>`, not a div with a click handler.
 
-		All four pickers in the corpus hang `onclick` off a div and hide the input with `hidden`,
-		which takes it out of the accessibility tree - so none of them can be opened from the
-		keyboard at all, and each needed an `a11y_click_events_have_key_events` suppression to build.
+		The usual picker hangs `onclick` off a div and hides the input with `hidden`, which takes it
+		out of the accessibility tree - so it cannot be opened from the keyboard at all, and needs
+		an `a11y_click_events_have_key_events` suppression to build.
 		A label wrapping a focusable input needs no handler and no suppression: the click is native,
 		Tab reaches the input, and Space and Enter open the picker the way the platform intends.
 	-->

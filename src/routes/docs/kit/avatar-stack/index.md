@@ -69,6 +69,6 @@ that:
 ```ts
 import { split } from '$lib/coral/kit/avatar-stack/overflow.js';
 
-split(['Ana', 'Beto', 'Carla', 'Dario', 'Elena'], 4);
-// { visible: ['Ana', 'Beto', 'Carla'], hidden: ['Dario', 'Elena'] }
+split(['Amara', 'Wei', 'Sofia', 'Liam', 'Priya'], 4);
+// { visible: ['Amara', 'Wei', 'Sofia'], hidden: ['Liam', 'Priya'] }
 ```

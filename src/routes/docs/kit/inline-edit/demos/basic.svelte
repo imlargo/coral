@@ -1,7 +1,7 @@
 <script lang="ts">
 	import InlineEdit from '$lib/coral/kit/inline-edit/inline-edit.svelte';
 
-	let name = $state('Q3 Budget');
+	let name = $state('api-gateway');
 </script>
 
 <div class="flex w-72 flex-col gap-2">

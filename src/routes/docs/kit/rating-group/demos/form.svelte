@@ -15,7 +15,7 @@
 <form class="flex w-full max-w-sm flex-col gap-4" onsubmit={submit}>
 	<!-- The legend names the group; the rating points at it instead of carrying its own copy. -->
 	<Field.Set>
-		<Field.Legend variant="label" id="score-legend">How was the service?</Field.Legend>
+		<Field.Legend variant="label" id="score-legend">How helpful was this page?</Field.Legend>
 		<RatingGroup name="score" required aria-labelledby="score-legend" />
 	</Field.Set>
 

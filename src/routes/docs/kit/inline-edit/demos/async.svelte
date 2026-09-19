@@ -1,9 +1,9 @@
 <script lang="ts">
 	import InlineEdit from '$lib/coral/kit/inline-edit/inline-edit.svelte';
 
-	const taken = ['North Office', 'South Office'];
+	const taken = ['api-gateway', 'design-tokens'];
 
-	let name = $state('Central Office');
+	let name = $state('web-app');
 	let error = $state('');
 
 	async function rename(next: string) {
@@ -19,6 +19,6 @@
 <div class="flex w-72 flex-col gap-2">
 	<InlineEdit bind:value={name} class="w-full" onsave={rename} oncancel={() => (error = '')} />
 	<p class="text-sm text-muted-foreground" role="status">
-		{error || 'Try «North Office».'}
+		{error || 'Try «api-gateway».'}
 	</p>
 </div>

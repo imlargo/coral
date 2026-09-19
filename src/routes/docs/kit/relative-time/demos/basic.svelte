@@ -4,11 +4,11 @@
 	const minute = 60_000;
 	const now = Date.now();
 	const events = [
-		{ what: 'New comment', at: now - 20_000 },
-		{ what: 'Invoice paid', at: now - 7 * minute },
-		{ what: 'Report generated', at: now - 5 * 60 * minute },
-		{ what: 'Contract signed', at: now - 26 * 60 * minute },
-		{ what: 'Meeting', at: now + 3 * 24 * 60 * minute }
+		{ what: 'Build passed', at: now - 20_000 },
+		{ what: 'Deployed to production', at: now - 7 * minute },
+		{ what: 'Issue closed', at: now - 5 * 60 * minute },
+		{ what: 'API key rotated', at: now - 26 * 60 * minute },
+		{ what: 'Maintenance window', at: now + 3 * 24 * 60 * minute }
 	];
 </script>
 

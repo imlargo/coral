@@ -17,5 +17,5 @@
 	label={(day) =>
 		day.count === 0
 			? `No commits on ${format.format(day.date)}`
-			: `${day.count} commits on ${format.format(day.date)}`}
+			: `${day.count} ${day.count === 1 ? 'commit' : 'commits'} on ${format.format(day.date)}`}
 />

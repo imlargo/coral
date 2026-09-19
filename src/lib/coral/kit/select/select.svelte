@@ -38,8 +38,8 @@
 
 	/**
 	 * bits-ui keys an item by a string, and `T` is not one. An index cannot collide with itself;
-	 * `String(value)` - what three of the four selects in the corpus used - collides twice over,
-	 * on ids that stringify alike and on objects, which all become `[object Object]`.
+	 * `String(value)` - the obvious reach - collides twice over, on ids that stringify alike and
+	 * on objects, which all become `[object Object]`.
 	 */
 	const indexed = $derived.by(() => {
 		let index = 0;
@@ -67,9 +67,9 @@
 	);
 
 	/**
-	 * The only place `onchange` is called from. Deriving it from `value` with an `$effect`, as both
-	 * selects in the corpus did, also fires on mount and on every programmatic assignment - so a
-	 * form loading a saved record announces a change nobody made.
+	 * The only place `onchange` is called from. Deriving it from `value` with an `$effect` also
+	 * fires on mount and on every programmatic assignment - so a form loading a saved record
+	 * announces a change nobody made.
 	 */
 	function handleValueChange(key: string) {
 		// bits-ui reports a deselection as an empty string.

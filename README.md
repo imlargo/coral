@@ -197,17 +197,21 @@ a request: confirm-dialog, action-button, inline-edit and stepper. `kit/avatar-s
 
 ## Localization
 
-Coral was extracted from Spanish-language products, and that shows in two different ways:
+Nothing here is pinned to one language or region.
 
-**Configurable.** `activity-calendar`, `date-picker` and `rating-group` take a `locale` prop that
-defaults to `es-CO`. Pass your own and every date, weekday and number follows it.
+**Configurable.** `activity-calendar`, `date-picker`, `rating-group` and `relative-time` take a
+`locale` prop, defaulting to `en-US`. Pass your own and every date, weekday and number follows it.
+`formatBytes` takes one as an optional second argument.
 
-**Hardcoded, for now.** Three helpers still assume `es-CO`: accent folding in combobox search
-(`kit/combobox/fold.ts`), byte formatting in the file input (`kit/file-input/format-bytes.ts`), and
-initials casing in the avatar (`kit/avatar/initials.ts`). They are correct for most Latin-script
-locales and wrong for none that Coral has been used in - but they are not yours to configure yet.
-Making locale configurable throughout is on the roadmap below. Since you own the copied folder,
-changing the three string literals is also a perfectly good answer today.
+**The reader's locale by default.** The helpers that format without a prop go through `Intl` on
+whatever locale the reader is actually in, not one chosen when the file was written: byte sizes
+(`kit/file-input/format-bytes.ts`) print `1.5 MB` or `1,5 MB` accordingly, and initials casing
+(`kit/avatar/initials.ts`) follows the same rule.
+
+**Accent-insensitive, both ways.** Combobox search folds accents before comparing
+(`kit/combobox/fold.ts`), so `acai` finds `Açaí` and `sao paulo` finds `São Paulo` - because that is
+how people type words their keyboard layout does not spell. The one thing that never depends on a
+locale is which of two strings match.
 
 ## Architecture
 
@@ -349,7 +353,8 @@ pnpm test     # vitest
 Ordered by rewrite cost × frequency, not by what is fun to build:
 
 1. **shadcn-svelte registry** - one-command install, described above
-2. **Configurable locale throughout** - the three hardcoded helpers under [Localization](#localization)
+2. **`locale` prop on `file-input`** - `formatBytes` takes one; the component does not thread it
+   through yet
 3. **Component tests** - the pure logic is well covered; the interaction layer (focus, keyboard,
    drag) is only starting to be
 4. **DataTable** - sorting, filtering, pagination, empty state. Highest cost per project; was

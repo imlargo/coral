@@ -7,32 +7,33 @@ description: Pick files by click or drop, validate them, show what was picked. A
 	import Preview from '$lib/docs/preview.svelte';
 </script>
 
-Eight of the nine projects in the corpus have one. Four wrote a generic wrapper, and two of those
-four are forks of the same file - which is the interesting part, because one fork diverged to patch a
-bug in production and the patch never travelled back to its sibling. That bug is fixed here.
+Almost every app grows one, and it is almost always the same hand-rolled shape: a `<div>` with an
+`onclick` over a hidden `<input type="file">`, a MIME check that turns away valid files, and a list
+that grows a second row when the same file is dropped twice. This is that input with those fixed.
 
 <Preview name="kit/file-input/basic" />
 
 ## What Coral adds
 
-- **The keyboard can open it.** All four wrappers in the corpus put `onclick` on a `<div>` and hide
-  the input with `hidden`, which removes it from the accessibility tree. None of them can be operated
-  without a mouse.
+- **The keyboard can open it.** Putting `onclick` on a `<div>` and hiding the input with `hidden`
+  removes it from the accessibility tree, and the result cannot be operated without a mouse. Here
+  the input is real and the zone is its `<label>`.
 - **Drag and drop that actually works**, and stays highlighted while the pointer moves over the
   contents of the zone.
 - **`accept` that does not reject valid files.** The bug below.
 - **One selection, one source of truth.** `value` is the state, not a mirror of some private copy.
-- **Sizes read correctly in Spanish** - `1,5 MB`, not `1.5 MB`.
-- **The same file twice is once.** Every copy in the corpus appends blindly, so dropping a file again
-  puts two identical rows on screen and posts it twice.
+- **Sizes go through `Intl`**, so the decimal separator follows the locale - `1,5 MB` where that is
+  how the number is written, rather than a hardcoded `1.5 MB`.
+- **The same file twice is once.** A hand-rolled input appends blindly, so dropping the same file
+  again puts two identical rows on screen and posts it twice.
 
 ## An input, not an uploader
 
 Coral stops at `File[]`. There is no progress, no retry, no remote URL, no queue - all of that needs
 to know where the bytes are going, and Coral does not.
 
-This is not a hypothetical boundary. Both Svelte wrappers in the corpus render a progress bar driven
-by this:
+The boundary is easy to cross by accident. A file picker that wants to look like an uploader ends up
+rendering a progress bar driven by this:
 
 ```ts
 // Don't. This measures nothing.
@@ -44,8 +45,8 @@ $effect(() => {
 });
 ```
 
-A bar that fills at a fixed rate the moment a file is chosen, with no request behind it. They wanted
-an uploader, could not have one without an API, and shipped the appearance of one instead.
+A bar that fills at a fixed rate the moment a file is chosen, with no request behind it - the
+appearance of an uploader, which is all a component without an API can offer.
 
 The real seam is the `file` snippet: Coral holds the selection and renders the zone, the project
 renders each row with whatever its own uploader knows.
@@ -62,9 +63,8 @@ accept.split(',').some((type) => type === file.type || file.type.startsWith(cate
 ```
 
 Browsers report an **empty `file.type`** for plenty of ordinary files - `.mov`, `.avi`, `.m4v`,
-`.mkv` - notably on Windows, in installed PWAs, and on iOS. One project hit this in production and
-forked its copy to patch it; the patch was a hardcoded table of video and image extensions, and its
-sibling repo still rejects those files today.
+`.mkv` - notably on Windows, in installed PWAs, and on iOS. The usual patch is a hardcoded table of
+video and image extensions, which is wrong again the first time a format is missing from it.
 
 Coral needs no table. A file the browser refuses to type can only be judged by its extension:
 
@@ -74,7 +74,7 @@ Coral needs no table. A file the browser refuses to type can only be judged by i
 | `.pdf,image/*`   | `clip.mov`   | `''`        | **rejected** - extensions were listed, none matched                          |
 | `.mov,video/mp4` | `clip.mov`   | `''`        | **accepted** - the extension matches                                         |
 | `image/*`        | `photo.png`  | `image/png` | accepted                                                                     |
-| `.pdf`           | `report.pdf` | anything    | accepted - extension entries are read at all, which the corpus versions skip |
+| `.pdf`           | `report.pdf` | anything    | accepted - extension entries are read at all, which a MIME check alone skips |
 
 The server is the real gate either way; the point is not to turn away a file the person is looking at.
 
@@ -92,14 +92,13 @@ type FileRejection = {
 };
 ```
 
-**Coral renders no error text.** The message is copy, copy belongs to the project, and the corpus is
-split on where it even goes - two projects render it inline, one raises a toast. Coral says what
-happened and stays out of it.
+**Coral renders no error text.** The message is copy, copy belongs to the project, and so does where
+it goes - inline under the field, or a toast. Coral says what happened and stays out of it.
 
 The consequence to respect: **set a constraint, wire `onreject`**, or files are dropped in silence.
 
-Every rejection is reported, not just the first - one corpus version keeps `errors[0]` and discards
-the rest, so dropping five oversized files explains one of them.
+Every rejection is reported, not just the first. Keeping only `errors[0]` and discarding the rest
+means dropping five oversized files explains one of them.
 
 ### `multiple` and `maxFiles`
 
@@ -107,9 +106,8 @@ One number, not two. `multiple` opens the door, `maxFiles` says how many fit, an
 the limit is 1 whatever `maxFiles` says. A single-file input **replaces** what it holds rather than
 refusing the new file.
 
-Every wrapper in the corpus carries both a `variant: 'single' | 'multiple'` and a `maxFiles`, and
-defaults them to `'single'` and `5` - so the two props contradict each other before anyone touches
-them.
+The shape to avoid is carrying both a `variant: 'single' | 'multiple'` and a `maxFiles`, defaulted
+to `'single'` and `5` - two props that contradict each other before anyone touches them.
 
 ## Accessibility
 
@@ -117,7 +115,7 @@ The zone is a `<label>` wrapping a real `<input type="file">` that is `sr-only` 
 That single change is the difference between a picker the keyboard can open and one it cannot:
 
 - The click is native. No `onclick`, no `.click()` call, no `a11y_click_events_have_key_events`
-  suppression - all four corpus versions need one to build.
+  suppression - which a clickable `<div>` needs just to compile.
 - Tab reaches the input; the zone shows the focus ring through `has-[input:focus-visible]`.
 - Space and Enter open the picker, because that is what a focused file input does.
 
@@ -173,5 +171,5 @@ for (const file of files) body.append('attachments', file);
 ```
 
 Native file submission would need the hidden input's own `FileList` kept in step with `value` on
-every removal, and no project in the corpus posts a form that way - all nine build the request
-themselves. It stays out until one does.
+every removal, and code that uploads files builds its own request anyway. It stays out until a real
+case needs it.

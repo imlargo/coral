@@ -7,9 +7,10 @@ description: Clamps long content to a few lines, and only offers to expand what 
 	import Preview from '$lib/docs/preview.svelte';
 </script>
 
-A description, a review, release notes: clamp it with `line-clamp-3` and add a "Show more" button,
-and the button shows up under text that already fits, the clamp does nothing to a paragraph followed
-by a list, and tabbing onto a link inside the hidden part puts focus somewhere nobody can see.
+A description, an incident note, release notes: clamp it with `line-clamp-3` and add a "Show more"
+button, and the button shows up under text that already fits, the clamp does nothing to a paragraph
+followed by a list, and tabbing onto a link inside the hidden part puts focus somewhere nobody can
+see.
 
 <Preview name="kit/show-more/basic" />
 

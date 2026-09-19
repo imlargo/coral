@@ -36,8 +36,8 @@
 	/**
 	 * Runs the confirmation and decides whether the dialog has earned the right to close.
 	 *
-	 * A write can fail. Closing on click - the primitive's own behaviour, and every hand-written
-	 * version in the corpus - throws away the one place that failure could be reported. So the
+	 * A write can fail. Closing on click - the primitive's own behaviour, and what a hand-rolled
+	 * dialog inherits - throws away the one place that failure could be reported. So the
 	 * close waits for the promise, and a rejection or an explicit `false` keeps the dialog open -
 	 * the convention `lib/action` holds for every component that waits on a request. `busy` guards
 	 * the entry too: a second click would submit the same destructive action twice.

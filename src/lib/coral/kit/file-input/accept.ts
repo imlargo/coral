@@ -1,6 +1,6 @@
 /**
  * @coral/kit/file-input
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 /**
@@ -9,8 +9,8 @@
  *
  * The MIME type is the part that cannot be trusted: browsers report an empty `file.type` for
  * plenty of ordinary files - `.mov`, `.avi`, `.mkv`, notably on Windows, PWAs and iOS - so reading
- * only `file.type` turns away files the user can plainly see are videos. Two projects in the
- * corpus shipped that bug, one patching it with a hardcoded extension table its sibling never got.
+ * only `file.type` turns away files the user can plainly see are videos. The usual patch is a
+ * hardcoded extension table, which goes stale the moment an unfamiliar container turns up.
  *
  * No table needed: a file the browser refuses to type is judged by its extension when the caller
  * listed any, and let through when they did not, there being no evidence to convict it with.

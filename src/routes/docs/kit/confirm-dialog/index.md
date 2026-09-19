@@ -7,10 +7,11 @@ description: Are you sure? - with the request it guards, and what happens when t
 	import Preview from '$lib/docs/preview.svelte';
 </script>
 
-One project in the corpus writes this inline **ten times**, with `AlertDialog`, a `Spinner`, an
-`isSaving` flag and a `try/catch` each time. Two others extracted a component - built on `Dialog`,
-which is the wrong primitive: it closes when you click outside, so a destructive confirmation is one
-stray click away from being dismissed, and neither of them can wait for a request.
+Written by hand, this is an `AlertDialog`, a `Spinner`, an `isSaving` flag and a `try/catch` at
+every call site that guards a destructive request. Extracting it over `Dialog` is the other common
+move, and `Dialog` is the wrong primitive: it closes when you click outside, so a destructive
+confirmation is one stray click away from being dismissed, and it has nothing that waits for a
+request.
 
 <Preview name="kit/confirm-dialog/basic" />
 
@@ -35,14 +36,14 @@ The rule is one line - **return `false`, or throw, to keep it open**:
 
 ```svelte
 <ConfirmDialog
-	title="Disable {unit.name}?"
-	description="It can't be disabled while an active resource is using it."
+	title="Delete {deployment.name}?"
+	description="It can't be deleted while a build is still running."
 	variant="destructive"
-	confirmLabel="Disable"
+	confirmLabel="Delete"
 	onconfirm={async () => {
 		try {
-			await units.setStatus(unit.id, RecordStatus.INACTIVE);
-			toast.success(`${unit.name} was disabled.`);
+			await deployments.remove(deployment.id);
+			toast.success(`${deployment.name} was deleted.`);
 		} catch (err) {
 			toast.error(normalizeError(err).message);
 			return false; // stays open, so they can retry
@@ -51,9 +52,9 @@ The rule is one line - **return `false`, or throw, to keep it open**:
 />
 ```
 
-Catching inside `onconfirm` is the shape to aim for - it is what the corpus already does, and it puts
-the message where the reader is looking. Letting the error propagate instead also keeps the dialog
-open, but it surfaces as an unhandled rejection rather than as something a person can read.
+Catching inside `onconfirm` is the shape to aim for - it puts the message where the reader is
+looking. Letting the error propagate instead also keeps the dialog open, but it surfaces as an
+unhandled rejection rather than as something a person can read.
 
 While the promise is pending both buttons are disabled, the confirm button carries a spinner, and
 Escape is ignored. Letting Escape through would read as _cancelled_ for a delete already on its way
@@ -129,10 +130,10 @@ attribute where a keyboard and a screen reader can both see it.
 
 ## Why flat props
 
-There is a canonical case and twelve sites in the corpus use exactly it: a question, a consequence,
-two buttons. What varies - the trigger, extra body detail - is a snippet, so the
+There is a canonical case, and nearly every call site is exactly it: a question, a consequence, two
+buttons. What varies - the trigger, extra body detail - is a snippet, so the
 [conventions](/docs/conventions) are satisfied without a prop for every variation.
 
 The one thing deliberately not here is a promise-returning `confirm()` helper you could `await` in
 an event handler. It reads well in a single call site and badly everywhere else: the dialog has to be
-mounted, and the corpus keeps it mounted per row.
+mounted, so a list screen ends up with one mounted per row.

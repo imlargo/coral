@@ -33,8 +33,8 @@ export type ConfirmDialogProps = RootProps & {
 	 * something is happening, and Escape stops closing it. It closes when the promise resolves.
 	 *
 	 * Return exactly `false` - or throw - to keep it open, which is what a failed request wants. The
-	 * same convention the form dialogs in the corpus already use. Any other return value, including
-	 * none, closes it, so an existing handler can be passed straight in.
+	 * same convention `kit/action-button` follows. Any other return value, including none, closes
+	 * it, so an existing handler can be passed straight in.
 	 */
 	onconfirm?: () => unknown;
 	/**

@@ -7,36 +7,36 @@
 
 	const nodes: TreeNode[] = [
 		{
-			id: 'contracts',
-			label: 'Contracts',
+			id: 'src',
+			label: 'src',
 			children: [
 				{
-					id: 'contracts-2026',
-					label: '2026',
+					id: 'src-routes',
+					label: 'routes',
 					children: [
-						{ id: 'c-001', label: 'North Site.pdf' },
-						{ id: 'c-002', label: 'Inspection Report.pdf' }
+						{ id: 'src-routes-page', label: '+page.svelte' },
+						{ id: 'src-routes-layout', label: '+layout.svelte' }
 					]
 				},
 				{
-					id: 'contracts-2025',
-					label: '2025',
-					children: [{ id: 'c-003', label: 'Supplies.pdf' }]
+					id: 'src-lib',
+					label: 'lib',
+					children: [{ id: 'src-lib-utils', label: 'utils.ts' }]
 				}
 			]
 		},
 		{
-			id: 'minutes',
-			label: 'Minutes',
+			id: 'tests',
+			label: 'tests',
 			children: [
-				{ id: 'm-001', label: 'Kickoff minutes.docx' },
-				{ id: 'm-002', label: 'Progress minutes.docx', disabled: true }
+				{ id: 'tests-utils', label: 'utils.test.ts' },
+				{ id: 'tests-e2e', label: 'smoke.test.ts', disabled: true }
 			]
 		},
-		{ id: 'readme', label: 'ReadMe.txt' }
+		{ id: 'readme', label: 'README.md' }
 	];
 
-	let expanded = $state(['contracts']);
+	let expanded = $state(['src']);
 	let selected = $state<string>();
 </script>
 
@@ -45,7 +45,7 @@
 		{nodes}
 		bind:expanded
 		bind:selected
-		label="Documents"
+		label="Source tree"
 		rowClass="rounded-md px-1 py-0.5 data-selected:bg-muted"
 	>
 		{#snippet node({ node, expandable, expanded })}

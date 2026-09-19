@@ -7,16 +7,16 @@ description: A short list of known options, with the trigger label, the value ma
 	import Preview from '$lib/docs/preview.svelte';
 </script>
 
-Six of the nine projects in the corpus use a select - 159 files. Four of them wrote a generic
-wrapper for it, and two of those four are the same file: `suntalk` and `butter` are byte-identical
-apart from one added `disabled?: boolean`. They have since drifted anyway.
+Wrapping a select is the first thing most projects do with the primitive and the last thing any of
+them revisit: derive the trigger label, map the value in and out of the primitive's own keys,
+decide what cleared means. Written by hand, no two copies of those few lines stay the same for long.
 
 <Preview name="kit/select/basic" />
 
 ## What Coral adds
 
-- **The trigger label derives itself.** Every wrapper in the corpus opens with the same line -
-  `options.find((o) => o.value === value)?.label ?? placeholder`.
+- **The trigger label derives itself.** The hand-rolled version opens with the same line every
+  time - `options.find((o) => o.value === value)?.label ?? placeholder`.
 - **The value keeps its type.** `options` is `Option<T>[]`, so a numeric id goes in and a numeric id
   comes out. bits-ui keys items by string; the mapping happens here, once.
 - **`onchange` fires when the user changes something.** Not on mount, not when `value` is assigned
@@ -41,20 +41,20 @@ input, which announces itself as editable and sets the expectation that typing n
 That expectation is the whole point when there is a search behind it, and a liability when there is
 not. Stripping the search out of a combobox leaves a text field that ignores what you type into it.
 
-**There is no `type="multiple"` here, on purpose.** The one project in the corpus that needed a
-multi-select did not extend its select - it hand-rolled 200 lines of Popover, Checkbox, Badge and
-Input, and the first thing it added was a search box. That component is the combobox. Multiple
-selection arrives with search attached; keeping it out of `select` costs no one anything and keeps
-this component the size of the problem it solves.
+**There is no `type="multiple"` here, on purpose.** A multi-select is not a select with one more
+prop: it needs a checkbox per row, badges in the trigger, and - as soon as the list is long enough
+for anyone to want more than two of its entries - a search box. That component is the combobox.
+Multiple selection arrives with search attached; keeping it out of `select` costs no one anything
+and keeps this component the size of the problem it solves.
 
 ## Typed values
 
 <Preview name="kit/select/typed-values" />
 
-Three of the four wrappers in the corpus reached for `String(option.value)` as the item key. It is
-lossy twice: two ids that stringify the same collapse onto one item, and any object value becomes
-`[object Object]` - so every option in the list shares a key. Coral keys items by their position
-instead, which cannot collide with itself, and hands the value back untouched.
+The obvious item key is `String(option.value)`, and it is lossy twice: two ids that stringify the
+same collapse onto one item, and any object value becomes `[object Object]` - so every option in
+the list shares a key. Coral keys items by their position instead, which cannot collide with
+itself, and hands the value back untouched.
 
 ## Groups
 

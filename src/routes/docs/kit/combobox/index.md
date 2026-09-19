@@ -11,8 +11,8 @@ shadcn builds the combobox out of a popover and a command menu, and its docs are
 is a recipe rather than a component: around fifty lines of markup, a `triggerRef`, and a
 `closeAndFocusTrigger` that has to be written by hand every time.
 
-Three projects in the corpus wrote it. Two are byte-identical copies of each other; the third diverged and
-lost the accent handling on the way. That is the pattern this component ends.
+Hand-rolled, that recipe gets pasted rather than read, and the parts it leaves out - accent
+handling first - are the ones that quietly go missing. That is the pattern this component ends.
 
 <Preview name="kit/combobox/basic" />
 
@@ -34,8 +34,8 @@ Everything else is shadcn's, unchanged.
 Both the search term and the label are folded before comparison: lower case, accents removed, `ñ`
 to `n`. It matches how people type, not how the word is spelled.
 
-This is the difference between the existing implementations. `butter` and `suntalk` fold; the third
-project does not, so its fruit picker is empty for anyone who types `acai`.
+Without the folding the control looks correct until someone types `acai` and the list comes back
+empty - a failure that only ever shows up for the users whose words carry accents.
 
 ## Installation
 
@@ -128,8 +128,8 @@ from the value instead:
 $effect(() => save(city));
 ```
 
-is what two projects in the corpus do, and both ship the same bug: an `onchange('')` on mount,
-before anyone has touched the control.
+is the usual shortcut, and it ships the same bug every time: an `onchange('')` on mount, before
+anyone has touched the control.
 
 Use `bind:value` when you only need the state, `onchange` when something should _happen_. Both
 together is fine.
@@ -212,7 +212,7 @@ Values are stringified with `String` by default, which is right for ids, numbers
 Object values need `serialize`, or they submit as `[object Object]`:
 
 ```svelte
-<Combobox {options} bind:value name="client" serialize={(v) => String(v.id)} />
+<Combobox {options} bind:value name="project" serialize={(v) => String(v.id)} />
 ```
 
 ## Accessibility
@@ -233,8 +233,8 @@ Two caveats, both upstream and both outside what Coral can reach from `kit/`:
 ## Why flat props, for now
 
 The [conventions](/docs/conventions) call for composition when the parts vary independently, and a
-combobox eventually does - a custom trigger, grouped options, options loaded from a server. This
-version is deliberately the canonical case only: one value, a static list, a search box.
+combobox eventually does. This version stays flat and hands the varying parts to snippets instead,
+because the canonical case - a list, a value, a search box - is the one every caller writes first.
 
 Two decisions keep that from becoming a dead end:
 
@@ -242,10 +242,9 @@ Two decisions keep that from becoming a dead end:
   project that had already worked around it.
 - **The popover root's props are forwarded**, so `open` and `onOpenChange` are already the caller's.
 
-What is not here yet - multi-select, remote options, a custom trigger, per-option rendering - is
-deferred, not designed away. The [analysis](/docs/conventions) that produced this component found
-remote options to be the first thing that breaks a static `options` array in a real list, so that
-is the likely next extension.
+What is not here yet is deferred, not designed away. Splitting the trigger, the list and the search
+box into separate parts is the extension that stays open, and it can land without moving any of the
+props above.
 
 ## fold()
 
@@ -261,5 +260,4 @@ fold('Café'); // 'cafe'
 ```
 
 It stays inside the component's folder because it has exactly one consumer in Coral today. It moves
-to `lib/` the day a second component needs it - which, on current evidence, is when the select
-lands.
+to `lib/` the day a second component needs it.

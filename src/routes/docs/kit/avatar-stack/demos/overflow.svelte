@@ -18,7 +18,7 @@
 <AvatarStack
 	items={members}
 	max={3}
-	label="Participants"
+	label="Project members"
 	getKey={(member) => member.id}
 	getPerson={(member) => ({ name: member.fullName, src: member.photo })}
 >

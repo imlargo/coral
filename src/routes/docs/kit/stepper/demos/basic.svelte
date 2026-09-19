@@ -8,11 +8,11 @@
 	import StepperPrevious from '$lib/coral/kit/stepper/stepper-previous.svelte';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 
-	const steps = ['details', 'address', 'confirm'];
+	const steps = ['repository', 'build', 'deploy'];
 	const titles: Record<string, string> = {
-		details: 'Details',
-		address: 'Address',
-		confirm: 'Confirm'
+		repository: 'Repository',
+		build: 'Build',
+		deploy: 'Deploy'
 	};
 
 	let current = $state<string>();
@@ -21,7 +21,7 @@
 
 <div class="flex w-full max-w-md flex-col gap-4">
 	<Stepper {steps} bind:value={current} onfinish={() => (finished = true)}>
-		<StepperList aria-label="Registration steps">
+		<StepperList aria-label="Deployment steps">
 			{#each steps as step, index (step)}
 				<StepperItem {step}>
 					{#snippet children({ state })}
@@ -49,6 +49,6 @@
 	</Stepper>
 
 	{#if finished}<p class="text-sm text-muted-foreground" role="status">
-			Registration complete.
+			Deployment queued for production.
 		</p>{/if}
 </div>

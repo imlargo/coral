@@ -5,11 +5,11 @@
 <div class="flex w-96 flex-col gap-6 text-sm">
 	<ShowMore lines={3} moreLabel="Show more" lessLabel="Show less">
 		<p>
-			The team shipped the second phase two weeks behind schedule after an unexpected surge in
-			support tickets. QA signed off on the core test suite, but flagged the checkout flow for a
-			follow-up pass before the next release. The revised timeline moves the final rollout to August
-			30 and does not affect the budget. A last review from the security team is still pending
-			before the feature can be turned on for everyone.
+			Between 09:14 and 10:02 UTC, around 8% of builds in the Production environment failed with a
+			503 from the artifact store. The cause was a connection pool that was never resized after last
+			week's database upgrade. Builds queued during the window were replayed automatically once the
+			pool was widened, so no deployment was lost. Adding a pool-size check to the upgrade checklist
+			is tracked as a follow-up on the incident review.
 		</p>
 	</ShowMore>
 

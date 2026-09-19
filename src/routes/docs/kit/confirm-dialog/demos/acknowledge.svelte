@@ -4,8 +4,8 @@
 </script>
 
 <ConfirmDialog
-	title="Session updated"
-	description="Your permissions changed. Some sections may look different."
+	title="Permissions updated"
+	description="Your role on this project changed. Some sections may look different."
 	confirmLabel="Got it"
 	showCancel={false}
 >

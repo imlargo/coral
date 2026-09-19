@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ReorderList from '$lib/coral/kit/reorder-list/reorder-list.svelte';
 
-	let stages = $state(['Lead', 'Contacted', 'Proposal sent', 'Negotiation', 'Closed']);
+	let stages = $state(['Install', 'Lint', 'Test', 'Build', 'Deploy']);
 	let saves = $state(0);
 </script>
 

@@ -1,26 +1,26 @@
 <script lang="ts">
 	import Select from '$lib/coral/kit/select/select.svelte';
 
-	const specialties = [
+	const regions = [
 		{
-			label: 'Clinical',
+			label: 'Americas',
 			options: [
-				{ value: 'general', label: 'General medicine' },
-				{ value: 'pediatrics', label: 'Pediatrics' }
+				{ value: 'us-east-1', label: 'N. Virginia' },
+				{ value: 'sa-east-1', label: 'São Paulo' }
 			]
 		},
 		{
-			label: 'Surgical',
+			label: 'Europe',
 			options: [
-				{ value: 'orthopedics', label: 'Orthopedics' },
-				{ value: 'surgery', label: 'General surgery' }
+				{ value: 'eu-west-1', label: 'Ireland' },
+				{ value: 'eu-central-1', label: 'Frankfurt' }
 			]
 		}
 	];
 
-	let specialty = $state<string>();
+	let region = $state<string>();
 </script>
 
 <div class="w-64">
-	<Select options={specialties} bind:value={specialty} placeholder="Select a specialty..." />
+	<Select options={regions} bind:value={region} placeholder="Select a region..." />
 </div>

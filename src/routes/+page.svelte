@@ -28,16 +28,18 @@
 	];
 
 	const test = [
-		['Written twice already?', 'In real, paid projects. Otherwise it waits.'],
+		['Written twice already?', 'In real production code. Otherwise it waits.'],
 		['Does it define appearance?', 'Then it is the theme’s job, not Coral’s.'],
-		['Does it know the client’s domain?', 'Then it belongs in the project’s features/.'],
+		['Does it know your domain?', 'Then it belongs in your own features/.'],
 		['Does the API match its nature?', 'Flat props only where a canonical case exists.'],
 		['Does the rare case force a rewrite?', 'Then the pieces are not exposed enough.']
 	];
+
+	const REPO = 'https://github.com/imlargo/coral';
 </script>
 
 <svelte:head>
-	<title>Coral - Kora’s component library</title>
+	<title>Coral - components for shadcn-svelte</title>
 	<meta
 		name="description"
 		content="An ergonomics layer on top of shadcn-svelte. One folder, copied into the project."
@@ -58,7 +60,13 @@
 			<a href={resolve('/docs/kit/avatar')} class="transition-colors hover:text-foreground">Kit</a>
 		</nav>
 		<div class="ml-auto flex items-center gap-1">
-			<span class="hidden text-xs text-muted-foreground md:inline">Kora</span>
+			<a
+				href={REPO}
+				rel="noreferrer"
+				class="hidden text-sm text-muted-foreground transition-colors hover:text-foreground md:inline"
+			>
+				GitHub
+			</a>
 			<Button variant="ghost" size="icon" onclick={toggleMode} aria-label="Toggle theme">
 				<SunIcon class="dark:hidden" />
 				<MoonIcon class="hidden dark:block" />
@@ -69,17 +77,18 @@
 
 <main id="main-content" class="mx-auto w-full max-w-4xl px-6">
 	<section class="py-16 sm:py-24">
-		<Badge variant="secondary">Internal to Kora</Badge>
+		<Badge variant="secondary">Open source · MIT</Badge>
 
 		<h1 class="mt-6 max-w-2xl text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
 			The repetitive code, already resolved.
 		</h1>
 
 		<p class="mt-5 max-w-2xl text-lg text-pretty text-muted-foreground">
-			Coral is an ergonomics layer on top of shadcn-svelte. Its only job is to remove the code
-			rewritten in every project - the combobox with search, the data table with sorting and
-			pagination, the form with validation, the confirm dialog - and hand it over already solved,
-			without closing the door on taking it apart.
+			Coral is an ergonomics layer on top of shadcn-svelte. Its only job is to remove the code you
+			were going to write on top of the primitives anyway - a combobox whose search ignores accents,
+			a date picker with ranges and presets, a confirm dialog that waits on the request and stays
+			open when it fails - and hand it over already solved, without closing the door on taking it
+			apart.
 		</p>
 
 		<div class="mt-8 flex flex-wrap items-center gap-3">
@@ -94,6 +103,13 @@
 				Browse the kit
 			</a>
 		</div>
+
+		<!-- The install is one line, and seeing it is the fastest answer to "what is this". -->
+		<code
+			class="mt-6 block w-fit rounded-md border bg-muted/40 px-3 py-2 font-mono text-xs text-muted-foreground sm:text-sm"
+		>
+			npx degit imlargo/coral/src/lib/coral src/lib/coral
+		</code>
 	</section>
 
 	<!-- Coral rendering itself. The initials below are derived by `kit/avatar`, not typed in. -->
@@ -163,10 +179,11 @@
 	<div
 		class="mx-auto flex max-w-4xl flex-wrap items-center gap-x-6 gap-y-2 px-6 py-8 text-sm text-muted-foreground"
 	>
-		<span>Built by Kora.</span>
+		<span>MIT licensed. Copy it, own it.</span>
 		<a href={resolve('/docs')} class="transition-colors hover:text-foreground">Docs</a>
 		<a href={resolve('/docs/conventions')} class="transition-colors hover:text-foreground">
 			Conventions
 		</a>
+		<a href={REPO} rel="noreferrer" class="transition-colors hover:text-foreground">GitHub</a>
 	</div>
 </footer>

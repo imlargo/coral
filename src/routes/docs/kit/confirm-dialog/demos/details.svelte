@@ -2,13 +2,17 @@
 	import ConfirmDialog from '$lib/coral/kit/confirm-dialog/confirm-dialog.svelte';
 	import { Button } from '$lib/components/ui/button/index.js';
 
-	const affected = ['Contract 2024-118', 'Contract 2024-204', 'Contract 2025-011'];
+	const affected = [
+		'#412 Flaky test on CI',
+		'#418 Webhook retries never stop',
+		'#423 Stale cache after deploy'
+	];
 </script>
 
 <ConfirmDialog
-	title="Close 3 contracts?"
+	title="Close 3 issues?"
 	description="This action cannot be undone."
-	confirmLabel="Close contracts"
+	confirmLabel="Close issues"
 	cancelLabel="Cancel"
 	variant="destructive"
 >

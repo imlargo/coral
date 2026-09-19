@@ -13,7 +13,7 @@
 		loading = true;
 		requests++;
 		await new Promise((resolve) => setTimeout(resolve, 600));
-		results = [`${term} — client`, `${term} — vendor`, `${term} — contact`];
+		results = [`${term} — repository`, `${term} — issue`, `${term} — member`];
 		loading = false;
 	}
 </script>
@@ -21,7 +21,7 @@
 <div class="flex w-80 flex-col gap-3">
 	<SearchInput
 		placeholder="Type at least 3 letters"
-		aria-label="Search the directory"
+		aria-label="Search the workspace"
 		minLength={3}
 		debounce={400}
 		{loading}
