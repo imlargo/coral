@@ -1,7 +1,13 @@
-/** Sidebar structure. Adding a page means adding a line here - there is no filesystem magic. */
+/**
+ * Sidebar structure. "Getting started" and "Blocks" are hand-ordered and barely change - three
+ * items is not worth deriving. "Kit" is the section that actually grows with every new component,
+ * so it comes from the docs collection itself: add `kit/<name>/index.md` and it appears here,
+ * titled and sorted, with no second place to update.
+ */
 
 import { resolve } from '$app/paths';
 import type { ResolvedPathname } from '$app/types';
+import { getCollection, type DocsFrontmatter } from './content.js';
 
 export type DocLink = {
 	title: string;
@@ -14,6 +20,15 @@ export type DocSection = {
 	/** Shown in place of the list while the section is still empty. */
 	empty?: string;
 };
+
+const KIT_PREFIX = 'kit/';
+
+const kit: DocLink[] = getCollection('docs', (entry) => entry.slug.startsWith(KIT_PREFIX))
+	.map((entry) => ({
+		title: (entry.data as unknown as DocsFrontmatter).title,
+		href: resolve(`/docs/${entry.slug}`)
+	}))
+	.sort((a, b) => a.title.localeCompare(b.title));
 
 // Routes are resolved here rather than at each `<a>`, so a page that gets moved or renamed fails
 // type-checking in one place instead of turning into a dead link.
@@ -28,31 +43,7 @@ export const nav: DocSection[] = [
 	},
 	{
 		title: 'Kit',
-		items: [
-			{ title: 'Action button', href: resolve('/docs/kit/action-button') },
-			{ title: 'Activity calendar', href: resolve('/docs/kit/activity-calendar') },
-			{ title: 'Avatar', href: resolve('/docs/kit/avatar') },
-			{ title: 'Avatar stack', href: resolve('/docs/kit/avatar-stack') },
-			{ title: 'Combobox', href: resolve('/docs/kit/combobox') },
-			{ title: 'Confirm dialog', href: resolve('/docs/kit/confirm-dialog') },
-			{ title: 'Copy button', href: resolve('/docs/kit/copy-button') },
-			{ title: 'Date picker', href: resolve('/docs/kit/date-picker') },
-			{ title: 'File input', href: resolve('/docs/kit/file-input') },
-			{ title: 'Inline edit', href: resolve('/docs/kit/inline-edit') },
-			{ title: 'Number input', href: resolve('/docs/kit/number-input') },
-			{ title: 'Password input', href: resolve('/docs/kit/password-input') },
-			{ title: 'Rating group', href: resolve('/docs/kit/rating-group') },
-			{ title: 'Relative time', href: resolve('/docs/kit/relative-time') },
-			{ title: 'Reorder list', href: resolve('/docs/kit/reorder-list') },
-			{ title: 'Responsive dialog', href: resolve('/docs/kit/responsive-dialog') },
-			{ title: 'Search input', href: resolve('/docs/kit/search-input') },
-			{ title: 'Select', href: resolve('/docs/kit/select') },
-			{ title: 'Shortcut', href: resolve('/docs/kit/shortcut') },
-			{ title: 'Show more', href: resolve('/docs/kit/show-more') },
-			{ title: 'Stepper', href: resolve('/docs/kit/stepper') },
-			{ title: 'Tags input', href: resolve('/docs/kit/tags-input') },
-			{ title: 'Tree view', href: resolve('/docs/kit/tree-view') }
-		]
+		items: kit
 	},
 	{
 		title: 'Blocks',
