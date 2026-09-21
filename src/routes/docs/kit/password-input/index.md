@@ -51,7 +51,7 @@ pnpm dlx shadcn-svelte@latest add input-group
 ## Props
 
 Everything the shadcn input accepts stays available: `name`, `id`, `placeholder`, `required`,
-`minlength`, `aria-*`. On top of that:
+`minlength`, `disabled`, `aria-*`. On top of that:
 
 | Prop                | Type                         | Default            | Description                                                 |
 | ------------------- | ---------------------------- | ------------------ | ----------------------------------------------------------- |

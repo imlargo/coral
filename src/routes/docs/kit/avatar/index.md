@@ -21,12 +21,16 @@ That last line is the problem. It is rewritten in every project, and it is wrong
 
 <Preview name="kit/avatar/basic" />
 
-## Why flat props
+## What Coral adds
 
-Avatar has a defensible canonical case: a person, maybe a photo, initials when there is no photo.
-The parts do not vary independently, so composition would be ceremony. This is the shape the
-[conventions](/docs/conventions) call for: flat props, and the pieces still reachable when the
-rare case shows up.
+- **Correct initials, not `slice(0, 2)`.** First letter of the first word, plus first letter of the
+  last one: "Elena van der Meer" gives `EM`, not `EL`.
+- **One accessible label, never doubled.** The image's `alt` and the fallback's hidden label are the
+  same text, and only one of the two is ever in the accessibility tree at a time.
+- **An empty state without a placeholder nobody asked for.** No `name` and no `fallback` is an empty
+  circle, not text made up to fill it.
+- **The pieces stay reachable.** `children` renders alongside the image, and `AvatarGroup` still
+  wraps a Coral avatar unchanged.
 
 ## Installation
 
@@ -110,6 +114,13 @@ The same goes for grouping: `AvatarGroup` comes from shadcn and Coral avatars si
 unchanged.
 
 <Preview name="kit/avatar/group" />
+
+## Why flat props
+
+Avatar has a defensible canonical case: a person, maybe a photo, initials when there is no photo.
+The parts do not vary independently, so composition would be ceremony. This is the shape the
+[conventions](/docs/conventions) call for: flat props, and the pieces still reachable when the
+rare case shows up.
 
 ## initials()
 

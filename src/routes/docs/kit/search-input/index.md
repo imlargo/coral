@@ -51,8 +51,8 @@ pnpm dlx shadcn-svelte@latest add input-group spinner
 
 ## Props
 
-Everything the shadcn input accepts stays available: `placeholder`, `name`, `id`, `aria-*`. On top
-of that:
+Everything the shadcn input accepts stays available: `placeholder`, `disabled`, `readonly`, `name`,
+`id`, `aria-*`. On top of that:
 
 | Prop         | Type                     | Default        | Description                                         |
 | ------------ | ------------------------ | -------------- | --------------------------------------------------- |
