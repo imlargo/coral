@@ -1,0 +1,259 @@
+---
+title: Combobox
+description: A select with a search box, filtering the way accented text is actually typed.
+---
+
+<script lang="ts">
+	import Preview from '$docs/preview.svelte';
+</script>
+
+shadcn builds the combobox out of a popover and a command menu, and its docs are explicit that this
+is a recipe rather than a component: around fifty lines of markup, a `triggerRef`, and a
+`closeAndFocusTrigger` that has to be written by hand every time.
+
+Hand-rolled, that recipe gets pasted rather than read, and the parts it leaves out (accent
+handling first) are the ones that quietly go missing. That is the pattern this component ends.
+
+<Preview name="kit/combobox/basic" />
+
+## What Coral adds
+
+Only two things, both behavior:
+
+- **Accent-insensitive search:** typing `acai` finds `Açaí`. Command's own matcher compares raw
+  strings, so it finds nothing.
+- **Focus returns to the trigger** after a selection, so the next Tab continues through the form
+  instead of restarting at the top of the document.
+
+Everything else is shadcn's, unchanged.
+
+## Search
+
+<Preview name="kit/combobox/accents" />
+
+Both the search term and the label are folded before comparison: lower case, accents removed, `ñ`
+to `n`. It matches how people type, not how the word is spelled.
+
+Without the folding the control looks correct until someone types `acai` and the list comes back
+empty. That failure only ever shows up for the users whose words carry accents.
+
+## Import
+
+```svelte
+<script lang="ts">
+	import Combobox from '$lib/components/coral/kit/combobox/combobox.svelte';
+</script>
+```
+
+## Props
+
+Everything the shadcn popover root accepts stays available: `open`, `onOpenChange`,
+`onOpenChangeComplete`. On top of that:
+
+| Prop                | Type                                | Default               | Description                                                     |
+| ------------------- | ----------------------------------- | --------------------- | --------------------------------------------------------------- |
+| `options`           | `Option<T>[]` \| `OptionGroup<T>[]` | -                     | The list to choose from, flat or grouped.                       |
+| `type`              | `'single'` \| `'multiple'`          | `'single'`            | Decides the shape of `value` and `onchange`.                    |
+| `value`             | `T` \| `T[]`                        | -                     | The selection. Bindable.                                        |
+| `onchange`          | `(selection) => void`               | -                     | Fired when the user picks, toggles or clears.                   |
+| `open`              | `boolean`                           | `false`               | Popover state. Bindable.                                        |
+| `search`            | `string`                            | `''`                  | The search term. Bindable.                                      |
+| `onsearch`          | `(search: string) => void`          | -                     | Fired as the user types. For server-side search.                |
+| `searchDebounce`    | `number`                            | `0`                   | Milliseconds to wait before `onsearch` fires.                   |
+| `shouldFilter`      | `boolean`                           | `true`                | Client-side filtering. `false` when the server filtered.        |
+| `filter`            | `(option, search) => boolean`       | folded match          | Replaces the built-in matching.                                 |
+| `clearable`         | `boolean`                           | `false`               | Adds a clear control; re-picking deselects.                     |
+| `loading`           | `boolean`                           | `false`               | Swaps the list for an indicator.                                |
+| `disabled`          | `boolean`                           | `false`               | Blocks the trigger.                                             |
+| `name`              | `string`                            | -                     | Submits with a surrounding form, one field per value.           |
+| `form`              | `string`                            | -                     | `id` of the form, for a combobox outside it.                    |
+| `required`          | `boolean`                           | `false`               | Blocks submission while nothing is selected.                    |
+| `serialize`         | `(value: T) => string`              | `String`              | Turns a value into the submitted string. Object values need it. |
+| `maxDisplay`        | `number`                            | `3`                   | Badges before collapsing into a counter.                        |
+| `placeholder`       | `string`                            | `Select an option...` | Trigger text while nothing is selected.                         |
+| `searchPlaceholder` | `string`                            | `Search...`           | Placeholder for the search box.                                 |
+| `emptyMessage`      | `string`                            | `No results found.`   | Shown when the search matches nothing.                          |
+| `clearLabel`        | `string`                            | `Clear selection`     | Accessible label for the clear control.                         |
+| `class`             | `string`                            | -                     | Merged onto the trigger button.                                 |
+| `contentClass`      | `string`                            | -                     | Merged onto the popover content.                                |
+| `listClass`         | `string`                            | -                     | Merged onto the scrolling list - e.g. its max height.           |
+
+### Snippets
+
+| Snippet     | Receives                                         | Replaces                              |
+| ----------- | ------------------------------------------------ | ------------------------------------- |
+| `trigger`   | `{ props, selected, open, disabled, clear }`     | The whole trigger.                    |
+| `option`    | `{ option, selected }`                           | The body of a row.                    |
+| `empty`     | -                                                | The empty state.                      |
+| `indicator` | -                                                | The loading row.                      |
+| `footer`    | `{ selected, visible, clear, selectAll, close }` | Nothing - it is added below the list. |
+
+### Option
+
+| Field         | Type       | Description                                     |
+| ------------- | ---------- | ----------------------------------------------- |
+| `value`       | `T`        | Matched with `===`.                             |
+| `label`       | `string`   | Shown, and searched.                            |
+| `description` | `string`   | Second line. Searched.                          |
+| `keywords`    | `string[]` | Searched, never shown.                          |
+| `disabled`    | `boolean`  | Blocks selection; stays visible and searchable. |
+
+The defaults are English because Coral is written in English. Every consuming project passes its
+own copy. These exist so the component renders during a spike, not as a translation layer.
+
+## Reacting to a selection
+
+`bind:value` keeps state in sync. `onchange` answers a different question: _the user just chose
+something_. It receives the **selection**, in the same shape as `value` but hydrated into options:
+`Option<T> | undefined` for a single select, `Option<T>[]` for a multiple one.
+
+It does not also receive the raw value, because that would be the same fact twice: `option.value`
+recovers it, and `bind:value` already has it. The reverse is not free: handed a bare value, a
+caller who wants the label has to search the list it just passed in.
+
+<Preview name="kit/combobox/onchange" />
+
+It fires from the selection handler and nowhere else, so it never fires on mount and never fires
+when `value` is assigned from code, as the button in that demo shows.
+
+That distinction is the reason it exists rather than being left to the caller. Deriving the signal
+from the value instead:
+
+```svelte
+<!-- Don't. Fires on mount, and on every programmatic assignment. -->
+$effect(() => save(city));
+```
+
+is the usual shortcut, and it ships the same bug every time: an `onchange('')` on mount, before
+anyone has touched the control.
+
+Use `bind:value` when you only need the state, `onchange` when something should _happen_. Both
+together is fine.
+
+For `type="multiple"` the selection is the whole list, not the row that toggled, which is what
+makes a bulk change legible too: `clear` reports `[]` and the footer's `selectAll` reports the whole
+resulting selection.
+A single changed row could only have reported nothing. When the delta is what matters, diff against
+the previous value.
+
+## Multiple selection
+
+`type="multiple"` switches `value` to an array. The trigger collapses into badges plus a counter
+past `maxDisplay`, and the popover stays open while picking. Choosing one of several is rarely
+choosing the last one.
+
+<Preview name="kit/combobox/multiple" />
+
+The `footer` snippet gets `selectAll`, `clear`, the current selection and everything passing the
+filter, which is enough to build bulk actions without Coral guessing what they should say.
+
+> `selectAll` adds what is visible to the selection rather than replacing it. With a search term
+> active the two differ, and replacing would deselect the options the filter is hiding (silently,
+> since they are exactly the rows the user cannot see).
+
+> Badges in the trigger are not individually removable. A button nested inside a button is invalid
+> HTML, and browsers recover by dropping one of the two, which is how a per-badge remove control
+> ends up unreachable by keyboard. Deselect from the list, or use the clear control.
+
+## Groups, descriptions and keywords
+
+<Preview name="kit/combobox/groups" />
+
+Pass groups instead of options and each gets a heading. `description` renders as a second line and
+is searched. `keywords` are searched but never shown: synonyms, codes, an old name. Try `berry`,
+`mango` or `citrus` in that demo.
+
+Filtering removes rows rather than hiding them, so a group whose options all fail the search
+disappears along with its heading. No empty section is left behind.
+
+## Server-side search
+
+`onsearch` fires as the user types, debounced by `searchDebounce`. Fetch, hand the results back
+through `options`, and set `shouldFilter={false}` so a list the server already filtered is not
+filtered twice.
+
+<Preview name="kit/combobox/remote" />
+
+`loading` swaps the list for an indicator. The search term is cleared when the popover closes, so
+the next open starts from the full list rather than from whatever was typed last time.
+
+## Custom trigger and options
+
+<Preview name="kit/combobox/custom-trigger" />
+
+The `trigger` snippet replaces the button entirely. Spread `props` onto whatever you render and
+the popover still wires itself up. The `option` snippet replaces the body of each row, and the
+theme's check indicator stays.
+
+Between those two, `footer`, `empty` and `indicator`, every visible part is replaceable without
+dropping Coral and rebuilding from raw shadcn.
+
+## Typed values
+
+`Option<T>` is generic. The value stays whatever the project already has (an id, an enum member)
+and comes back out the same type, with no conversion at the call site.
+
+<Preview name="kit/combobox/typed-values" />
+
+Options are matched with `===`, so object values compare by reference. `disabled` on an option is
+forwarded to the command item.
+
+## Forms
+
+`name` renders one field per selected value, so `type="multiple"` posts the shape
+`FormData.getAll(name)` already reads back as a list. `form` points those fields at a form by `id`,
+for a combobox that renders outside it. `required` blocks submission while nothing is selected.
+
+Values are stringified with `String` by default, which is right for ids, numbers and enum members.
+Object values need `serialize`, or they submit as `[object Object]`:
+
+```svelte
+<Combobox {options} bind:value name="project" serialize={(v) => String(v.id)} />
+```
+
+## Accessibility
+
+The trigger carries `role="combobox"` and `aria-expanded`; the list is a `listbox`; disabled
+options carry `aria-disabled` and are skipped by both pointer and keyboard. Selection returns focus
+to the trigger, and in `type="multiple"` to the search box, so the keyboard never lands back at the
+top of the document.
+
+Two caveats, both upstream and both outside what Coral can reach from `kit/`:
+
+- **The search box does not expose `aria-activedescendant`.** Arrowing through options moves the
+  visual highlight, but a screen reader is not told which option is active. This lives in bits-ui's
+  command input.
+- **Disabled options get no visual treatment.** shadcn's command item styles `data-[disabled=true]`
+  while bits-ui renders `data-disabled=""`, so the dimming never applies. They are still inert.
+
+## Why flat props, for now
+
+The [conventions](/docs/conventions) call for composition when the parts vary independently, and a
+combobox eventually does. This version stays flat and hands the varying parts to snippets instead,
+because the canonical case (a list, a value, a search box) is the one every caller writes first.
+
+Two decisions keep that from becoming a dead end:
+
+- **The value type is generic from day one.** Widening a closed `string` later would break every
+  project that had already worked around it.
+- **The popover root's props are forwarded**, so `open` and `onOpenChange` are already the caller's.
+
+What is not here yet is deferred, not designed away. Splitting the trigger, the list and the search
+box into separate parts is the extension that stays open, and it can land without moving any of the
+props above.
+
+## fold()
+
+The search folding lives in `kit/combobox/fold.ts` and is exported on its own, so a project that
+needs the same comparison elsewhere (a client-side table filter, a sort) does not re-implement it.
+
+```ts
+import { fold } from '$lib/components/coral/kit/combobox/fold.js';
+
+fold('Açaí'); // 'acai'
+fold('Piña'); // 'pina'
+fold('Café'); // 'cafe'
+```
+
+It stays inside the component's folder because it has exactly one consumer in Coral today. It moves
+to `lib/` the day a second component needs it.

@@ -1,0 +1,191 @@
+{
+	"components": {
+		"lib/action": {
+			"title": "Action",
+			"description": "The pending flag, the double-submit guard and the one agreed way to say an async handler failed.",
+			"version": "1.0.0",
+			"shadcn": []
+		},
+		"lib/debounce": {
+			"title": "Debounce",
+			"description": "Delays a call until the calls stop coming, with cancel, flush and a pending flag.",
+			"version": "1.0.0",
+			"shadcn": []
+		},
+		"lib/hidden-field": {
+			"title": "Hidden field",
+			"description": "The hidden input that lets a select, combobox or date picker take part in a plain form.",
+			"version": "1.0.0",
+			"shadcn": []
+		},
+		"lib/options": {
+			"title": "Options",
+			"description": "The Option<T> vocabulary the selectable components share, and the helpers that flatten and group it.",
+			"version": "1.0.0",
+			"shadcn": []
+		},
+		"kit/action-button": {
+			"title": "Action button",
+			"description": "A button that waits on its own request, blocks the second click, and keeps focus.",
+			"version": "1.0.0",
+			"shadcn": ["button", "spinner"]
+		},
+		"kit/activity-calendar": {
+			"title": "Activity calendar",
+			"description": "A year of daily counts as a grid of squares - the GitHub contribution graph, with the timezone and the scale done right.",
+			"version": "1.0.1",
+			"shadcn": ["tooltip"]
+		},
+		"kit/avatar": {
+			"title": "Avatar",
+			"description": "A person's image with an initials fallback, wired in one line.",
+			"version": "1.1.0",
+			"shadcn": ["avatar"]
+		},
+		"kit/avatar-stack": {
+			"title": "Avatar stack",
+			"description": "Overlapping avatars with a count for the rest - and a list a screen reader can read.",
+			"version": "1.0.0",
+			"shadcn": ["avatar"]
+		},
+		"kit/combobox": {
+			"title": "Combobox",
+			"description": "A select with a search box, filtering the way accented text is actually typed.",
+			"version": "4.2.0",
+			"shadcn": ["popover", "command", "button", "badge"],
+			"npm": ["@lucide/svelte"]
+		},
+		"kit/command-palette": {
+			"title": "Command palette",
+			"description": "\u2318K over your own actions - with recents, per-action shortcuts, and a run that can fail.",
+			"version": "1.0.0",
+			"shadcn": ["command"],
+			"npm": ["@lucide/svelte"]
+		},
+		"kit/confirm-dialog": {
+			"title": "Confirm dialog",
+			"description": "Are you sure? - with the request it guards, and what happens when that request fails.",
+			"version": "1.1.0",
+			"shadcn": ["alert-dialog", "button", "spinner"]
+		},
+		"kit/copy-button": {
+			"title": "Copy button",
+			"description": "Copies text to the clipboard, says so out loud, and says so when it could not.",
+			"version": "1.0.0",
+			"shadcn": ["button"],
+			"npm": ["@lucide/svelte"]
+		},
+		"kit/date-picker": {
+			"title": "Date picker",
+			"description": "A popover, a calendar and a formatted trigger. One day or two, with shortcuts.",
+			"version": "1.1.1",
+			"shadcn": ["popover", "calendar", "range-calendar", "button"],
+			"npm": ["@lucide/svelte"]
+		},
+		"kit/file-input": {
+			"title": "File input",
+			"description": "Pick files by click or drop, validate them, show what was picked. An input, not an uploader.",
+			"version": "1.1.0",
+			"shadcn": ["empty", "item", "button"],
+			"npm": ["@lucide/svelte"]
+		},
+		"kit/inline-edit": {
+			"title": "Inline edit",
+			"description": "Text that turns into a field in place - rename a project, a column, a file.",
+			"version": "1.0.0",
+			"shadcn": ["input-group", "spinner"]
+		},
+		"kit/number-input": {
+			"title": "Number input",
+			"description": "A number field with steppers, bounds that hold, and arithmetic that stays exact.",
+			"version": "1.0.0",
+			"shadcn": ["input-group"],
+			"npm": ["@lucide/svelte"]
+		},
+		"kit/password-input": {
+			"title": "Password input",
+			"description": "A password field with a visibility toggle that does not break password managers.",
+			"version": "1.0.0",
+			"shadcn": ["input-group"],
+			"npm": ["@lucide/svelte"]
+		},
+		"kit/rating-group": {
+			"title": "Rating group",
+			"description": "Stars you can pick and stars you can only read. Native radios underneath, so the keyboard, the form and the screen reader come for free.",
+			"version": "1.0.1",
+			"shadcn": [],
+			"npm": ["@lucide/svelte"]
+		},
+		"kit/relative-time": {
+			"title": "Relative time",
+			"description": "Timestamps like 5 minutes ago that stay true, in the reader's language, without a timer per second.",
+			"version": "1.0.1",
+			"shadcn": []
+		},
+		"kit/reorder-list": {
+			"title": "Reorder list",
+			"description": "Drag to reorder with a mouse, a finger or the keyboard - and persist once per drop.",
+			"version": "1.0.0",
+			"shadcn": [],
+			"npm": ["@lucide/svelte"]
+		},
+		"kit/responsive-dialog": {
+			"title": "Responsive dialog",
+			"description": "A dialog on wide screens and a drawer on narrow ones, written once.",
+			"version": "1.0.0",
+			"shadcn": ["dialog", "drawer"]
+		},
+		"kit/search-input": {
+			"title": "Search input",
+			"description": "A search field that debounces, deduplicates, clears with Escape, and leaves dialogs open.",
+			"version": "1.0.0",
+			"shadcn": ["input-group", "spinner"],
+			"npm": ["@lucide/svelte"]
+		},
+		"kit/select": {
+			"title": "Select",
+			"description": "A short list of known options, with the trigger label, the value mapping and the change signal already wired.",
+			"version": "2.1.0",
+			"shadcn": ["select", "button"],
+			"npm": ["@lucide/svelte"]
+		},
+		"kit/shortcut": {
+			"title": "Shortcut",
+			"description": "Draws a keyboard shortcut the way the reader's platform prints it, and binds it.",
+			"version": "1.0.0",
+			"shadcn": ["kbd"]
+		},
+		"kit/show-more": {
+			"title": "Show more",
+			"description": "Clamps long content to a few lines, and only offers to expand what actually overflows.",
+			"version": "1.0.0",
+			"shadcn": ["button"]
+		},
+		"kit/stepper": {
+			"title": "Stepper",
+			"description": "Multi-step flows with validation that waits, steps that cannot be skipped, and focus that follows.",
+			"version": "1.0.0",
+			"shadcn": ["button", "spinner"]
+		},
+		"kit/tags-input": {
+			"title": "Tags input",
+			"description": "A field that turns typed and pasted text into tags, with one rule for both.",
+			"version": "1.0.0",
+			"shadcn": ["input-group", "badge"],
+			"npm": ["@lucide/svelte"]
+		},
+		"kit/toc": {
+			"title": "Table of contents",
+			"description": "A table of contents that highlights the section being read, including the last one.",
+			"version": "1.0.0",
+			"shadcn": []
+		},
+		"kit/tree-view": {
+			"title": "Tree view",
+			"description": "A hierarchy the keyboard can walk - the WAI-ARIA tree pattern, from a plain array.",
+			"version": "1.0.0",
+			"shadcn": [],
+			"npm": ["@lucide/svelte"]
+		}
+	}
+}

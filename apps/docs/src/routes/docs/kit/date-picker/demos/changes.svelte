@@ -1,0 +1,25 @@
+<script lang="ts">
+	import DatePicker from '$lib/components/coral/kit/date-picker/date-picker.svelte';
+	import type { DateRange } from '$lib/components/coral/kit/date-picker/types.js';
+
+	let value = $state<DateRange>();
+	let log = $state<string[]>([]);
+
+	function handleChange(next: DateRange | undefined) {
+		const label = next?.start && next?.end ? `${next.start} → ${next.end}` : 'no range';
+		log = [label, ...log].slice(0, 4);
+	}
+</script>
+
+<div class="flex w-72 flex-col gap-3">
+	<DatePicker type="range" bind:value onchange={handleChange} placeholder="Date range" clearable />
+
+	<ul class="text-sm text-muted-foreground">
+		{#each log as entry, index (`${index}-${entry}`)}
+			<li>{entry}</li>
+		{/each}
+		{#if log.length === 0}
+			<li>No changes yet.</li>
+		{/if}
+	</ul>
+</div>

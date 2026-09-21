@@ -1,6 +1,6 @@
 # Coral 🪸
 
-> A component library for shadcn-svelte. Copied into your project, not installed as a dependency.
+> A component library for shadcn-svelte. Installed as source into your project, not as a dependency.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![Svelte](https://img.shields.io/badge/svelte-5-FF3E00)](https://svelte.dev)
@@ -11,14 +11,17 @@
 - shadcn-svelte gives you primitives. Coral gives you the compositions you were going to write on
   top of them anyway: a combobox whose search ignores accents, a date picker with ranges and
   presets, a confirm dialog that waits on the request and stays open when it fails.
-- **Copied, not installed:** `npx degit` drops the folder into your project; from then it's your
-  code, versioned like the rest of your codebase, with no npm dependency to fall behind.
+- **One command, then it's yours:** `shadcn-svelte add` pulls a component from Coral's registry into
+  your `src/lib/components/coral/`, next to shadcn's `ui/`, with its primitives resolved and its
+  imports rewritten to your aliases. From then it's your code, versioned like the rest of your
+  codebase, with no npm dependency to fall behind.
 - **Extraction only, never speculation:** a component enters only after the same pattern has been
   written twice in real production work. Twenty-five components exist, not eighty.
 - **No appearance of its own:** no colors, shadows, radii or typography, only layout utilities.
   Everything visual comes from _your_ shadcn theme.
 - Every component's version and required shadcn primitives are recorded in
-  [`coral.json`](./src/lib/coral/coral.json), and follow semver independently.
+  [`coral.json`](./packages/coral/src/lib/components/coral/coral.json), and follow semver
+  independently.
 
 ## Behavior
 
@@ -52,55 +55,42 @@ on each component's own page, linked under [Components](#components).
 ### Requirements
 
 A SvelteKit project on **Svelte 5**, already initialized with shadcn-svelte, meaning it has a
-`components.json`, a `src/lib/components/ui/` folder, and `src/lib/utils.ts` exporting `cn`:
+`components.json`, a `src/lib/components/ui/` folder and `src/lib/utils.ts` exporting `cn`:
 
 ```bash
 pnpm dlx shadcn-svelte@latest init
 ```
 
-Those two paths plus `@lucide/svelte` are the only things Coral reaches for outside its own folder,
-and all three come with any shadcn-svelte setup: the paths from the aliases in `components.json`,
-the icons from its `iconLibrary`. That is what makes the folder portable.
+Those two paths are the only things Coral reaches for outside its own folder, and both come with
+any shadcn-svelte setup - as do the icons, which follow whatever `iconLibrary` your
+`components.json` names. That is what makes the folder portable.
 
-### 1. Copy the folder
-
-```bash
-npx degit imlargo/coral/src/lib/coral src/lib/coral
-```
-
-Take the whole folder, or just the component directories you want plus `lib/`; each `kit/*` folder
-is self-contained apart from what `lib/` holds.
-
-### 2. Install the primitives it declares
-
-Every component lists the shadcn primitives it imports in
-[`src/lib/coral/coral.json`](./src/lib/coral/coral.json):
-
-```json
-{
-	"kit/combobox": {
-		"version": "4.2.0",
-		"shadcn": ["popover", "command", "button", "badge"],
-		"npm": ["@lucide/svelte"]
-	}
-}
-```
+### Add what you need
 
 ```bash
-pnpm dlx shadcn-svelte@latest add popover command button badge
+pnpm dlx shadcn-svelte@latest add https://coral.imlargo.dev/r/kit-combobox.json
 ```
 
-Only what a component **imports** is listed. Primitives those primitives need in turn are the CLI's
-job. Entries under `npm` are real dependencies for `package.json`; `@lucide/svelte` is already there
-in any project whose `components.json` sets `"iconLibrary": "lucide"`, which is the default.
+The CLI installs the shadcn primitives the component imports (`popover`, `command`, `button`,
+`badge`, in your style), the shared Coral modules it depends on, and the component itself under
+`src/lib/components/coral/kit/combobox/`. Imports are rewritten to your aliases and icons to your
+icon library on the way in.
 
-### 3. Import by file path
+An item is its manifest name with the slash swapped - `kit/combobox` is published as
+`kit-combobox` - and [`/r/index.json`](https://coral.imlargo.dev/r/index.json) lists them all.
+`/r/coral.json` installs every component at once, which is a fine way to look around and a poor
+way to start a project.
+
+Updating is the same command with `--overwrite`, which is also the moment any local edit to that
+component disappears.
+
+### Import by file path
 
 There are no barrels. One component, one folder, imported directly:
 
 ```svelte
 <script lang="ts">
-	import Combobox from '$lib/coral/kit/combobox/combobox.svelte';
+	import Combobox from '$lib/components/coral/kit/combobox/combobox.svelte';
 
 	const fruits = [
 		{ value: 1, label: 'Açaí' },
@@ -115,11 +105,17 @@ There are no barrels. One component, one folder, imported directly:
 
 That makes filenames public API: renaming one is a breaking change, and gets a major bump.
 
-> **Coming: one-command install.** shadcn-svelte can add components straight from a custom registry,
-> which is exactly the right shape for Coral: still copied into your project, still yours, but with
-> the primitives resolved for you. Publishing `https://coral.imlargo.dev/r/*` so that
-> `pnpm dlx shadcn-svelte@latest add https://coral.imlargo.dev/r/combobox.json` just works is the
-> next milestone. Until then, the three steps above are the install.
+### Or copy the folder
+
+The registry is the convenient path, not the only one:
+
+```bash
+npx degit imlargo/coral/packages/coral/src/lib/components/coral src/lib/components/coral
+```
+
+Then install the primitives each component declares under `shadcn` in
+[`coral.json`](./packages/coral/src/lib/components/coral/coral.json) yourself. You keep the tests
+and lose the alias and icon rewriting.
 
 ## Components
 
@@ -190,9 +186,9 @@ Twenty-five so far. Each links to its full API, props table and live demos:
 - **[tree-view](https://coral.imlargo.dev/docs/kit/tree-view):** the WAI-ARIA tree pattern from a
   plain array: one tab stop, the full arrow-key model, typeahead, children loaded on demand.
 
-Each one's version and the shadcn primitives it needs are recorded in
-[`coral.json`](./src/lib/coral/coral.json): the manifest the install step reads, and the only place
-they are written down.
+Each one's version, title and the shadcn primitives it needs are recorded in
+[`coral.json`](./packages/coral/src/lib/components/coral/coral.json): the manifest the registry is
+derived from, and the only place they are written down.
 
 `kit/select`, `kit/combobox` and `kit/date-picker` share `lib/`, which holds the `Option<T>`
 vocabulary and the clipped field that makes `name`, `form` and `required` work on a control the
@@ -225,22 +221,36 @@ locale is which of two strings match.
 
 ## Architecture
 
-Coral is a **single self-contained folder**. Installing it is copying `src/lib/coral/` across;
-nothing else in this repo travels.
+Coral is a **single self-contained folder**. What lands in your project is `coral/`; nothing else
+in this repo travels.
+
+The repo is two workspaces, so the library is not entangled with the site that documents it:
 
 ```
-src/lib/
-├─ components/ui/   → shadcn-svelte (owned by your project - Coral does NOT touch it)
-├─ utils.ts         → cn (shadcn's)
-├─ docs/            → this repo's own documentation site - not copied
-└─ coral/           → 📦 the folder that gets copied
-   ├─ coral.json    → manifest: version + required primitives per component
-   ├─ lib/          → shared across components (options.ts, hidden-field.svelte)
-   └─ kit/          → composed, generic components - the actual product
-      ├─ activity-calendar/
-      ├─ avatar/
-      └─ …
+packages/coral/           → the library, and the registry built from it
+├─ registry.config.js     → where the registry is published
+├─ scripts/               → derives registry.json from coral.json, and smoke-installs the result
+└─ src/lib/
+   ├─ utils.ts            → cn (shadcn's)
+   └─ components/
+      ├─ ui/              → shadcn-svelte (CLI-managed - Coral does NOT touch it)
+      └─ coral/           → 📦 the folder that gets installed, beside ui/
+         ├─ coral.json    → manifest: version, title, description + required primitives
+         ├─ lib/          → shared across components (options.ts, hidden-field.svelte)
+         └─ kit/          → composed, generic components - the actual product
+            ├─ activity-calendar/
+            ├─ avatar/
+            └─ …
+
+apps/docs/                → the documentation site, deployed to coral.imlargo.dev
+├─ src/routes/docs/       → one Markdown page per component, with its demos
+├─ src/docs/              → the site's own components, under `$docs`
+└─ static/r/              → the built registry (generated)
 ```
+
+The site's `$lib` points at `packages/coral/src/lib`, so every demo renders the exact file the
+registry ships - no copy in between, and no way for a demo to document something that is not what
+gets installed.
 
 `blocks/` (app-level compositions, rule of 3) and `hooks/` appear the day a component actually needs
 them. A util with one consumer stays inside its component's folder until a second one needs it,
@@ -262,7 +272,7 @@ project's own domain types.
 import { Avatar } from '$lib/components/ui/avatar/index.js';
 
 // ✅ from your project, consuming Coral - by file path, no barrels
-import Avatar from '$lib/coral/kit/avatar/avatar.svelte';
+import Avatar from '$lib/components/coral/kit/avatar/avatar.svelte';
 
 // ❌
 import { Avatar } from 'bits-ui';
@@ -312,9 +322,10 @@ One person maintains this. What bounds the risk if that changes:
 - **You already own a working copy.** Coral is copied into your project, not installed as a live
   dependency: nothing you shipped breaks if this repository disappears tomorrow. Forking it is
   copying the one folder you already have.
-- **No hidden runtime:** twenty-five components, no framework of their own underneath. shadcn-svelte and
-  bits-ui, which this repository doesn't maintain, do the actual work.
-- **Versioned per component.** Each entry in [`coral.json`](./src/lib/coral/coral.json) carries its
+- **No hidden runtime:** twenty-five components, no framework of their own underneath. shadcn-svelte
+  and bits-ui, which this repository doesn't maintain, do the actual work.
+- **Versioned per component.** Each entry in
+  [`coral.json`](./packages/coral/src/lib/components/coral/coral.json) carries its
   own semver, so a breaking change to one is visible without reading a diff, and doesn't force a
   repo-wide version bump.
 - **MIT:** no license ambiguity for a folder you're about to make part of your own codebase.
@@ -323,18 +334,23 @@ One person maintains this. What bounds the risk if that changes:
 
 ```sh
 pnpm install
-pnpm dev      # docs site + live demos at /docs
-pnpm test     # vitest, run once
-pnpm format   # prettier --write
-pnpm build    # production build - run `pnpm check` FIRST, build deletes its own output
+pnpm dev        # docs site + live demos at /docs
+pnpm test       # vitest across both workspaces, run once
+pnpm format     # prettier --write
+pnpm registry   # rebuild the registry into apps/docs/static/r
+pnpm build      # production build - run `pnpm check` FIRST, build deletes its own output
 ```
 
-This repo doubles as Coral's documentation site (`src/routes/docs/`): one Markdown page per
-component, with live sandboxed previews whose source is read from the demo file at build time, so a
-snippet shown can never drift from what is actually running. Search and a "Copy Page" button (raw
-Markdown, for pasting into an LLM) come with it.
+`apps/docs` is Coral's documentation site: one Markdown page per component, with live sandboxed
+previews whose source is read from the demo file at build time, so a snippet shown can never drift
+from what is actually running. Search and a "Copy Page" button (raw Markdown, for pasting into an
+LLM) come with it. Each component page prints its own install command, built from the same
+constant the registry is published under.
 
-To add a shadcn primitive: `pnpm dlx shadcn-svelte@latest add <component>`.
+`pnpm --filter coral smoke` is the end-to-end check: it serves the built registry, installs every
+item into a throwaway SvelteKit project and type-checks what lands there.
+
+To add a shadcn primitive: `pnpm dlx shadcn-svelte@latest add <component>` from `packages/coral`.
 
 ## Contributing
 
@@ -354,7 +370,7 @@ conventions and the checklist) and make sure these pass:
 
 ```sh
 pnpm lint     # prettier + eslint
-pnpm check    # expected: exactly 1 error, shadcn's untouchable ui/native-select
+pnpm check    # type-checks both workspaces - expected: 0 errors
 pnpm test     # vitest
 ```
 
@@ -362,16 +378,15 @@ pnpm test     # vitest
 
 Ordered by rewrite cost × frequency, not by what is fun to build:
 
-1. **shadcn-svelte registry:** one-command install, described above
-2. **`locale` prop on `file-input`:** `formatBytes` takes one; the component does not thread it
+1. **`locale` prop on `file-input`:** `formatBytes` takes one; the component does not thread it
    through yet
-3. **Component tests:** the pure logic is well covered; the interaction layer (focus, keyboard,
+2. **Component tests:** the pure logic is well covered; the interaction layer (focus, keyboard,
    drag) is only starting to be
-4. **DataTable:** sorting, filtering, pagination, empty state. Highest cost per project; was
+3. **DataTable:** sorting, filtering, pagination, empty state. Highest cost per project; was
    prototyped once and pulled back out until it has been written twice for real
-5. **Form field + validation**
-6. **Empty states and skeletons:** shadcn ships the primitives; nothing in `kit/` composes them yet
-7. **App shell** and **generic CRUD page:** `blocks/`, waiting on the rule of 3
+4. **Form field + validation**
+5. **Empty states and skeletons:** shadcn ships the primitives; nothing in `kit/` composes them yet
+6. **App shell** and **generic CRUD page:** `blocks/`, waiting on the rule of 3
 
 ## License
 
