@@ -14,9 +14,10 @@ philosophy but is deliberately untracked - don't assume a reader has it.)
 
 Coral lives in **`src/lib/coral/`** - one self-contained folder, copied whole into the target
 project. Currently: `kit/{action-button, activity-calendar, avatar, avatar-stack, combobox,
-confirm-dialog, copy-button, date-picker, file-input, inline-edit, number-input, password-input,
-rating-group, relative-time, reorder-list, responsive-dialog, search-input, select, shortcut,
-show-more, stepper, tags-input, tree-view}`, over `lib/{action, debounce, hidden-field, options}`.
+command-palette, confirm-dialog, copy-button, date-picker, file-input, inline-edit, number-input,
+password-input, rating-group, relative-time, reorder-list, responsive-dialog, search-input, select,
+shortcut, show-more, stepper, tags-input, toc, tree-view}`, over
+`lib/{action, debounce, hidden-field, options}`.
 `src/lib/coral/coral.json` is the list that counts - read it rather than this sentence, which is the
 kind that goes stale.
 

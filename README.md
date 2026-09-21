@@ -14,7 +14,7 @@
 - **Copied, not installed.** `npx degit` drops the folder into your project; from then it's your
   code, versioned like the rest of your codebase, with no npm dependency to fall behind.
 - **Extraction only, never speculation.** A component enters only after the same pattern has been
-  written twice in real production work. Twenty-three components exist, not eighty.
+  written twice in real production work. Twenty-five components exist, not eighty.
 - **No appearance of its own.** No colors, shadows, radii or typography - only layout utilities.
   Everything visual comes from _your_ shadcn theme.
 - Every component's version and required shadcn primitives are recorded in
@@ -41,6 +41,8 @@ whether you need it than a list of props would:
 | Copy button on plain `http`          | throws, or shows a check mark for nothing               | falls back, and reports a failure as a failure            |
 | Reordering a list on a phone         | HTML5 drag-and-drop fires nothing on touch              | pointer events for touch, plus a full keyboard path       |
 | "5 minutes ago" on a page left open  | stale, or an interval per timestamp every second        | each label wakes only when its own text changes           |
+| Table of contents, last section      | never highlights - it cannot cross the boundary         | the end of the page activates the final heading           |
+| ⌘K palette off a Mac                 | opens on Ctrl+K, then refuses to close on it            | the primitive's vim bindings give way to your combo       |
 
 Every row is one line of a fuller story - the full reasoning, the edge cases and a live demo are
 on each component's own page, linked under [Components](#components).
@@ -121,7 +123,7 @@ That makes filenames public API: renaming one is a breaking change, and gets a m
 
 ## Components
 
-Twenty-three so far. Each links to its full API, props table and live demos:
+Twenty-five so far. Each links to its full API, props table and live demos:
 
 - **[action-button](https://coral.imlargo.dev/docs/kit/action-button)** - a button that waits on
   its own async `onclick`. One click, one request; busy without dropping keyboard focus; the same
@@ -137,6 +139,9 @@ Twenty-three so far. Each links to its full API, props table and live demos:
 - **[combobox](https://coral.imlargo.dev/docs/kit/combobox)** - a select with a search box.
   Accent-insensitive search, focus returned to the trigger, single or multiple, server-side search
   with debounce.
+- **[command-palette](https://coral.imlargo.dev/docs/kit/command-palette)** - ⌘K over your own
+  actions: one combo to open and close, per-action shortcuts that work outside the list, recents
+  lifted rather than re-sorted, and a `run` that can fail without closing it.
 - **[confirm-dialog](https://coral.imlargo.dev/docs/kit/confirm-dialog)** - "are you sure?", on
   `alert-dialog` so an outside click cannot dismiss a destructive action. Waits on an async
   `onconfirm`, stays open on failure, blocks double-submit.
@@ -179,6 +184,9 @@ Twenty-three so far. Each links to its full API, props table and live demos:
   on Next, linear by completion rather than position, focus moved to the new step.
 - **[tags-input](https://coral.imlargo.dev/docs/kit/tags-input)** - one delimiter rule for typed and
   pasted alike, full keyboard handling, and it reports _why_ a tag was rejected.
+- **[toc](https://coral.imlargo.dev/docs/kit/toc)** - a table of contents whose highlight follows
+  what has been scrolled past rather than what is on screen, so short sections and the last heading
+  both work. Invents the anchors when the markup has none.
 - **[tree-view](https://coral.imlargo.dev/docs/kit/tree-view)** - the WAI-ARIA tree pattern from a
   plain array: one tab stop, the full arrow-key model, typeahead, children loaded on demand.
 
@@ -190,10 +198,12 @@ they are written down.
 vocabulary and the clipped field that makes `name`, `form` and `required` work on a control the
 browser cannot validate on its own.
 
-`lib/` also holds `debounce`, shared by combobox and search-input, and `action` - the pending flag,
+`kit/command-palette` composes `kit/shortcut`, and `kit/avatar-stack` composes `kit/avatar`, so
+those pairs travel together.
+
+`lib/` also holds `debounce`, shared by combobox, search-input and command-palette, and `action` - the pending flag,
 the double-submit guard and the `false`-or-throw convention - read by every component that waits on
-a request: confirm-dialog, action-button, inline-edit and stepper. `kit/avatar-stack` composes
-`kit/avatar`, so copy both.
+a request: confirm-dialog, action-button, inline-edit and stepper.
 
 ## Localization
 
@@ -302,7 +312,7 @@ One person maintains this. What bounds the risk if that changes:
 - **You already own a working copy.** Coral is copied into your project, not installed as a live
   dependency - nothing you shipped breaks if this repository disappears tomorrow. Forking it is
   copying the one folder you already have.
-- **No hidden runtime.** Twenty-three components, no framework of their own underneath - shadcn-svelte and
+- **No hidden runtime.** Twenty-five components, no framework of their own underneath - shadcn-svelte and
   bits-ui, which this repository doesn't maintain, do the actual work.
 - **Versioned per component.** Each entry in [`coral.json`](./src/lib/coral/coral.json) carries its
   own semver, so a breaking change to one is visible without reading a diff, and doesn't force a
