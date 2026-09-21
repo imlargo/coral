@@ -12,8 +12,8 @@ describe('slug', () => {
 	});
 
 	it('folds accents instead of dropping the letter', () => {
-		expect(slug('Instalación')).toBe('instalacion');
-		expect(slug('Año')).toBe('ano');
+		expect(slug('Deploying to São Paulo')).toBe('deploying-to-sao-paulo');
+		expect(slug('Naïve caching')).toBe('naive-caching');
 	});
 
 	it('drops punctuation and collapses separators', () => {
@@ -21,7 +21,7 @@ describe('slug', () => {
 	});
 
 	it('falls back rather than returning an empty anchor', () => {
-		expect(slug('¿?')).toBe('section');
+		expect(slug('!?')).toBe('section');
 	});
 });
 

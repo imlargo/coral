@@ -5,11 +5,11 @@
 	// Headings the page already knows about - from a CMS payload, or a markdown pipeline - so
 	// nothing is read back out of the DOM, and the ids are its doing rather than Coral's.
 	const headings: TocHeading[] = [
-		{ id: 'demo-resumen', text: 'Resumen', level: 2 },
-		{ id: 'demo-alcance', text: 'Alcance', level: 2 },
-		{ id: 'demo-entregables', text: 'Entregables', level: 3 },
-		{ id: 'demo-plazos', text: 'Plazos', level: 3 },
-		{ id: 'demo-anexos', text: 'Anexos', level: 2 }
+		{ id: 'demo-overview', text: 'Overview', level: 2 },
+		{ id: 'demo-authentication', text: 'Authentication', level: 2 },
+		{ id: 'demo-api-keys', text: 'API keys', level: 3 },
+		{ id: 'demo-rotation', text: 'Rotating a key', level: 3 },
+		{ id: 'demo-rate-limits', text: 'Rate limits', level: 2 }
 	];
 
 	let article = $state<HTMLElement | null>(null);
@@ -25,7 +25,7 @@
 			>
 				{heading.text}
 			</svelte:element>
-			<p class="mt-2 mb-6 text-sm text-muted-foreground">Contenido de «{heading.text}».</p>
+			<p class="mt-2 mb-6 text-sm text-muted-foreground">Content for «{heading.text}».</p>
 		{/each}
 	</div>
 
@@ -34,6 +34,6 @@
 		root={article}
 		offset={8}
 		class="w-44 [--coral-toc-indent:1.25rem]"
-		label="Contenido"
+		label="On this page"
 	/>
 </div>

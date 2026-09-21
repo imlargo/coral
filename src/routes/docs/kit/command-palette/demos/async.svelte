@@ -9,38 +9,38 @@
 
 	const actions: CommandAction[] = [
 		{
-			id: 'publish',
-			label: 'Publicar cambios',
-			description: 'Falla la primera vez',
-			group: 'Despliegue',
+			id: 'deploy',
+			label: 'Deploy to production',
+			description: 'Fails the first time',
+			group: 'Deploy',
 			run: async () => {
 				message = '';
 				await new Promise((resolve) => setTimeout(resolve, 900));
 				attempts++;
 				if (attempts % 2 === 1) {
-					message = 'El servidor rechazó la publicación. Intenta de nuevo.';
-					// Exactly `false` keeps the palette open, con el mensaje a la vista.
+					message = 'The build server refused the deploy. Try again.';
+					// Exactly `false` keeps the palette open, with the message still on screen.
 					return false;
 				}
-				message = 'Publicado.';
+				message = 'Deployed.';
 			}
 		},
 		{
 			id: 'rollback',
-			label: 'Revertir al despliegue anterior',
-			group: 'Despliegue',
-			run: () => (message = 'Revertido.')
+			label: 'Roll back to the previous deployment',
+			group: 'Deploy',
+			run: () => (message = 'Rolled back.')
 		}
 	];
 </script>
 
 <div class="flex flex-col items-center gap-3">
-	<Button variant="outline" onclick={() => (open = true)}>Abrir paleta</Button>
+	<Button variant="outline" onclick={() => (open = true)}>Open the palette</Button>
 
-	<CommandPalette {actions} bind:open shortcut="" placeholder="Buscar…">
+	<CommandPalette {actions} bind:open shortcut="" placeholder="Search…">
 		{#snippet footer()}
 			<div class="border-t px-3 py-2 text-xs text-muted-foreground">
-				{message || 'Enter ejecuta la acción seleccionada.'}
+				{message || 'Enter runs the selected action.'}
 			</div>
 		{/snippet}
 	</CommandPalette>

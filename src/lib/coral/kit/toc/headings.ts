@@ -14,8 +14,8 @@ export type TocHeading = {
 
 /**
  * A slug for a heading with no `id` of its own - markdown rendered by a CMS, or an article whose
- * anchors nobody added. Accents are folded rather than dropped, so `Instalación` gives
- * `instalacion` and not `instalacin`.
+ * anchors nobody added. Accents are folded rather than dropped, so `Deploying to São Paulo`
+ * gives `deploying-to-sao-paulo` and not `deploying-to-so-paulo`.
  */
 export function slug(text: string): string {
 	return (
@@ -76,10 +76,10 @@ export function collect(
  * Which heading the reader is in, given each heading's distance from the top of the viewport (or of
  * the scrolling box) and where the boundary sits.
  *
- * The last heading that has crossed the boundary, not the first one visible. Both hand-written
- * versions this replaces read it off `IntersectionObserver` entries instead, and that is what makes
- * them wrong in two ordinary places: a heading whose whole section fits above the band never
- * becomes active, and entries arrive in the order they changed rather than in document order.
+ * The last heading that has crossed the boundary, not the first one visible. Reading it off
+ * `IntersectionObserver` entries is the obvious build, and it is wrong in two ordinary places: a
+ * heading whose whole section fits above the band never becomes active, and entries arrive in the
+ * order they changed rather than in document order.
  *
  * `atEnd` is the other half. Scrolled to the bottom of the page, the last section usually has not
  * crossed the boundary - it cannot, there is nothing left to scroll - so a boundary rule alone

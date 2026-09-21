@@ -15,10 +15,10 @@ const action = (id: string, extra: Partial<CommandAction> = {}): CommandAction =
 });
 
 const actions = [
-	action('new', { group: 'Crear' }),
-	action('import', { group: 'Crear' }),
-	action('settings', { group: 'Cuenta' }),
-	action('logout', { group: 'Cuenta', disabled: true }),
+	action('new', { group: 'Create' }),
+	action('import', { group: 'Create' }),
+	action('settings', { group: 'Account' }),
+	action('logout', { group: 'Account', disabled: true }),
 	action('help')
 ];
 
@@ -29,25 +29,25 @@ describe('searchValue', () => {
 	it('gathers everything an action can be found by', () => {
 		const value = searchValue(
 			action('new', {
-				label: 'Nuevo proyecto',
-				description: 'Desde cero',
-				keywords: ['crear'],
-				group: 'Crear'
+				label: 'New project',
+				description: 'From a template',
+				keywords: ['scaffold'],
+				group: 'Create'
 			})
 		);
-		expect(value).toBe('Nuevo proyecto Desde cero crear Crear');
+		expect(value).toBe('New project From a template scaffold Create');
 	});
 
 	it('leaves out what an action does not carry', () => {
-		expect(searchValue(action('help', { label: 'Ayuda' }))).toBe('Ayuda');
+		expect(searchValue(action('help', { label: 'Help' }))).toBe('Help');
 	});
 });
 
 describe('group', () => {
 	it('keeps groups in the order their first action appears', () => {
 		expect(labels(group(actions))).toEqual([
-			['Crear', ['new', 'import']],
-			['Cuenta', ['settings', 'logout']],
+			['Create', ['new', 'import']],
+			['Account', ['settings', 'logout']],
 			[undefined, ['help']]
 		]);
 	});
@@ -55,8 +55,8 @@ describe('group', () => {
 	it('lifts recents into their own group, most recent first', () => {
 		expect(labels(group(actions, { recent: ['settings', 'new'] }))).toEqual([
 			['Recent', ['settings', 'new']],
-			['Crear', ['import']],
-			['Cuenta', ['logout']],
+			['Create', ['import']],
+			['Account', ['logout']],
 			[undefined, ['help']]
 		]);
 	});
@@ -78,7 +78,7 @@ describe('group', () => {
 	});
 
 	it('renders no recent group when nothing was remembered', () => {
-		expect(group(actions, { recent: [] })[0].label).toBe('Crear');
+		expect(group(actions, { recent: [] })[0].label).toBe('Create');
 	});
 
 	it('leaves the order of everything else alone', () => {

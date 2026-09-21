@@ -21,22 +21,23 @@ const headings = () =>
 
 function actions(run = vi.fn()): CommandAction[] {
 	return [
-		{ id: 'new', label: 'Nuevo proyecto', group: 'Crear', shortcut: 'mod+shift+n', run },
-		{ id: 'import', label: 'Importar', group: 'Crear', keywords: ['csv'], run },
-		{ id: 'settings', label: 'Preferencias', group: 'Cuenta', run }
+		{ id: 'new', label: 'New project', group: 'Create', shortcut: 'ctrl+shift+n', run },
+		{ id: 'import', label: 'Import from CSV', group: 'Create', keywords: ['spreadsheet'], run },
+		{ id: 'settings', label: 'Settings', group: 'Account', run }
 	];
 }
 
 describe('opening', () => {
 	it('closes on its own combo even where the primitive reads it as vim navigation', async () => {
 		// Ctrl+K is "previous item" to the command primitive, which preventDefaults it.
-		await render(CommandPalette, { actions: actions(), open: true });
+		// Spelled `ctrl` rather than `mod`, which would be Cmd on a Mac and test nothing here.
+		await render(CommandPalette, { actions: actions(), open: true, shortcut: 'ctrl+k' });
 		await userEvent.keyboard('{Control>}k{/Control}');
 		await expect.poll(dialog).toBeNull();
 	});
 
 	it('opens on its shortcut and closes on it again', async () => {
-		await render(CommandPalette, { actions: actions() });
+		await render(CommandPalette, { actions: actions(), shortcut: 'ctrl+k' });
 		expect(dialog()).toBeNull();
 
 		await userEvent.keyboard('{Control>}k{/Control}');
@@ -70,7 +71,7 @@ describe('running', () => {
 
 	it('stays open when the action refuses', async () => {
 		await render(CommandPalette, {
-			actions: [{ id: 'save', label: 'Guardar', run: () => false }],
+			actions: [{ id: 'save', label: 'Save', run: () => false }],
 			open: true
 		});
 
@@ -92,15 +93,15 @@ describe('listing', () => {
 	it('lifts recents into their own group without repeating them', async () => {
 		await render(CommandPalette, { actions: actions(), open: true, recent: ['settings'] });
 
-		// "Cuenta" held nothing but the lifted action, so it is gone rather than left empty.
-		await expect.poll(headings).toEqual(['Recent', 'Crear']);
-		expect(rows().filter((row) => row === 'Preferencias').length).toBe(1);
+		// "Account" held nothing but the lifted action, so it is gone rather than left empty.
+		await expect.poll(headings).toEqual(['Recent', 'Create']);
+		expect(rows().filter((row) => row === 'Settings').length).toBe(1);
 	});
 
 	it('finds an action by a keyword that is never shown', async () => {
 		await render(CommandPalette, { actions: actions(), open: true });
 
-		await userEvent.keyboard('csv');
-		await expect.poll(rows).toEqual(['Importar']);
+		await userEvent.keyboard('spreadsheet');
+		await expect.poll(rows).toEqual(['Import from CSV']);
 	});
 });

@@ -1,5 +1,5 @@
 ---
-title: Toc
+title: Table of contents
 description: A table of contents that highlights the section being read, including the last one.
 ---
 
@@ -7,12 +7,12 @@ description: A table of contents that highlights the section being read, includi
 	import Preview from '$lib/docs/preview.svelte';
 </script>
 
-Two projects in the corpus have written this, and both got the same thing wrong - this site's own
-sidebar included. They track the active heading with an `IntersectionObserver` and take whichever
-entry reports itself as visible, which answers "what is on screen" when the question is "what have I
-scrolled past". A section short enough to sit entirely above the band never lights up, and the last
-heading on a page can never win at all: at the bottom of the document there is nothing left to
-scroll, so it never crosses the line.
+The hand-rolled version tracks the active heading with an `IntersectionObserver` and takes
+whichever entry reports itself as visible - which answers "what is on screen" when the question is
+"what have I scrolled past". This site's own sidebar still does it that way, and shows both holes:
+a section short enough to sit entirely above the band never lights up, and the last heading on a
+page can never win at all, because at the bottom of the document there is nothing left to scroll
+and it never crosses the line.
 
 <Preview name="kit/toc/basic" class="min-h-80" />
 

@@ -80,9 +80,9 @@
 	/**
 	 * Measured on scroll rather than watched with `IntersectionObserver`. What is wanted is "the last
 	 * heading the reader has passed", which is a question about position; an observer answers "what
-	 * is on screen", and turning one answer into the other is where both hand-written versions of
-	 * this went wrong. Reading a rect per heading on a frame is cheap at the scale a table of
-	 * contents lives at - tens of entries, not thousands.
+	 * is on screen", and turning one answer into the other is where the obvious build goes wrong.
+	 * Reading a rect per heading on a frame is cheap at the scale a table of contents lives at -
+	 * tens of entries, not thousands.
 	 */
 	$effect(() => {
 		if (entries.length === 0) return;

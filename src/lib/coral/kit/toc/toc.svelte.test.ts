@@ -12,8 +12,8 @@ function article(): HTMLElement {
 	const box = document.createElement('div');
 	box.style.cssText = 'height: 200px; overflow-y: auto';
 	box.innerHTML = `
-		<h2>Instalación</h2><p style="height: 300px"></p>
-		<h2 id="fijo">Uso</h2><p style="height: 300px"></p>
+		<h2>Installation</h2><p style="height: 300px"></p>
+		<h2 id="pinned">Usage</h2><p style="height: 300px"></p>
 		<h3>Props</h3><p style="height: 60px"></p>
 		<h2>Props</h2><p style="height: 300px"></p>`;
 	document.body.appendChild(box);
@@ -36,14 +36,14 @@ describe('headings read from the page', () => {
 		await render(Toc, { container: box, root: box, offset: 0 });
 
 		expect(links().map((link) => link.textContent?.trim())).toEqual([
-			'Instalación',
-			'Uso',
+			'Installation',
+			'Usage',
 			'Props',
 			'Props'
 		]);
 		expect(links().map((link) => link.getAttribute('href'))).toEqual([
-			'#instalacion',
-			'#fijo',
+			'#installation',
+			'#pinned',
 			'#props',
 			'#props-2'
 		]);
@@ -68,7 +68,7 @@ describe('the active heading', () => {
 		await render(Toc, { container: box, root: box, offset: 0 });
 		await scrollTo(box, 0);
 
-		expect(current()).toBe('Instalación');
+		expect(current()).toBe('Installation');
 		box.remove();
 	});
 
@@ -77,9 +77,9 @@ describe('the active heading', () => {
 		await render(Toc, { container: box, root: box, offset: 0 });
 
 		// Measured, not a magic number: default heading margins differ between engines.
-		const second = box.querySelector<HTMLElement>('#fijo')!;
+		const second = box.querySelector<HTMLElement>('#pinned')!;
 		await scrollTo(box, second.offsetTop - box.offsetTop + 1);
-		expect(current()).toBe('Uso');
+		expect(current()).toBe('Usage');
 		box.remove();
 	});
 
@@ -97,7 +97,7 @@ describe('the active heading', () => {
 describe('rendering', () => {
 	it('draws nothing until there are enough headings', async () => {
 		const box = document.createElement('div');
-		box.innerHTML = '<h2>Solo uno</h2>';
+		box.innerHTML = '<h2>Only one</h2>';
 		document.body.appendChild(box);
 
 		await render(Toc, { container: box, root: box });

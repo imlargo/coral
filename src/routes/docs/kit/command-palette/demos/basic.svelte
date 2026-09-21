@@ -11,30 +11,35 @@
 	const actions: CommandAction[] = [
 		{
 			id: 'new-project',
-			label: 'Nuevo proyecto',
-			description: 'Empieza desde cero',
-			group: 'Crear',
+			label: 'New project',
+			description: 'Start from a template',
+			group: 'Create',
 			shortcut: 'alt+n',
-			keywords: ['crear', 'obra'],
-			run: () => (last = 'Nuevo proyecto')
+			keywords: ['scaffold', 'repository'],
+			run: () => (last = 'New project')
 		},
 		{
 			id: 'import',
-			label: 'Importar desde CSV',
-			group: 'Crear',
-			keywords: ['excel', 'planilla'],
-			run: () => (last = 'Importar desde CSV')
+			label: 'Import from CSV',
+			group: 'Create',
+			keywords: ['spreadsheet', 'upload'],
+			run: () => (last = 'Import from CSV')
 		},
-		{ id: 'members', label: 'Invitar a alguien', group: 'Equipo', run: () => (last = 'Invitar') },
+		{
+			id: 'members',
+			label: 'Invite a teammate',
+			group: 'Team',
+			run: () => (last = 'Invite a teammate')
+		},
 		{
 			id: 'billing',
-			label: 'Facturación',
-			description: 'Requiere permisos de administrador',
-			group: 'Cuenta',
+			label: 'Billing',
+			description: 'Requires admin permissions',
+			group: 'Account',
 			disabled: true,
 			run: () => {}
 		},
-		{ id: 'theme', label: 'Cambiar tema', group: 'Cuenta', run: () => (last = 'Cambiar tema') }
+		{ id: 'theme', label: 'Toggle theme', group: 'Account', run: () => (last = 'Toggle theme') }
 	];
 </script>
 
@@ -43,9 +48,9 @@
 		{actions}
 		bind:recent
 		shortcut="alt+k"
-		placeholder="Escribe una acción…"
-		emptyMessage="Nada coincide con eso."
-		recentLabel="Recientes"
+		placeholder="Type a command…"
+		emptyMessage="Nothing matches that."
+		recentLabel="Recent"
 	>
 		{#snippet trigger({ props })}
 			<button
@@ -53,13 +58,13 @@
 				class="flex h-8 w-64 items-center gap-2 rounded-md border px-2.5 text-sm text-muted-foreground"
 			>
 				<SearchIcon class="size-4 shrink-0" />
-				<span>Buscar acción…</span>
+				<span>Search actions…</span>
 				<Shortcut keys="alt+k" class="ms-auto" />
 			</button>
 		{/snippet}
 
 		{#snippet action({ action })}
-			{#if action.group === 'Crear'}<FilePlusIcon />{/if}
+			{#if action.group === 'Create'}<FilePlusIcon />{/if}
 			<span class="flex min-w-0 flex-col">
 				<span class="truncate">{action.label}</span>
 				{#if action.description}
@@ -73,6 +78,6 @@
 	</CommandPalette>
 
 	<p class="text-sm text-muted-foreground">
-		Última acción: {last || '—'} · recientes: {recent.length}
+		Last action: {last || '—'} · recent: {recent.length}
 	</p>
 </div>
