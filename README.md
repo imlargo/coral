@@ -190,16 +190,19 @@ Each one's version, title and the shadcn primitives it needs are recorded in
 [`coral.json`](./packages/coral/src/lib/components/coral/coral.json): the manifest the registry is
 derived from, and the only place they are written down.
 
-`kit/select`, `kit/combobox` and `kit/date-picker` share `lib/`, which holds the `Option<T>`
-vocabulary and the clipped field that makes `name`, `form` and `required` work on a control the
-browser cannot validate on its own.
+`kit/select` and `kit/combobox` speak the `Option<T>` vocabulary in `lib/options`, and share
+`lib/hidden-field` with `kit/date-picker`: the clipped field that makes `name`, `form` and
+`required` work on a control the browser cannot validate on its own.
 
 `kit/command-palette` composes `kit/shortcut`, and `kit/avatar-stack` composes `kit/avatar`, so
 those pairs travel together.
 
 `lib/` also holds `debounce`, shared by combobox, search-input and command-palette, and `action`
 (the pending flag, the double-submit guard and the `false`-or-throw convention), read by every
-component that waits on a request: confirm-dialog, action-button, inline-edit and stepper.
+component that waits on a request: confirm-dialog, action-button, inline-edit, stepper and
+command-palette.
+
+Installing any of these through the registry brings what it shares along with it.
 
 ## Localization
 
@@ -207,7 +210,8 @@ Nothing here is pinned to one language or region.
 
 **Configurable.** `activity-calendar`, `date-picker`, `rating-group` and `relative-time` take a
 `locale` prop, defaulting to `en-US`. Pass your own and every date, weekday and number follows it.
-`formatBytes` takes one as an optional second argument.
+`formatBytes` takes one as an optional second argument, and `tree-view` takes one for its
+typeahead, following the reader's locale when it is not given.
 
 **The reader's locale by default.** The helpers that format without a prop go through `Intl` on
 whatever locale the reader is actually in, not one chosen when the file was written: byte sizes
@@ -252,8 +256,8 @@ The site's `$lib` points at `packages/coral/src/lib`, so every demo renders the 
 registry ships - no copy in between, and no way for a demo to document something that is not what
 gets installed.
 
-`blocks/` (app-level compositions, rule of 3) and `hooks/` appear the day a component actually needs
-them. A util with one consumer stays inside its component's folder until a second one needs it,
+Inside `coral/`, `blocks/` (app-level compositions, rule of 3) and `hooks/` appear the day a
+component actually needs them. A util with one consumer stays inside its component's folder until a second one needs it,
 which is exactly how `lib/options.ts` came to be, when `select` became the second component to speak
 `Option<T>`, and how `lib/hidden-field.svelte` did when a third needed to submit a value from a
 control that is not an input.
@@ -319,15 +323,15 @@ contributor's PR as to the maintainer's own idea:
 
 One person maintains this. What bounds the risk if that changes:
 
-- **You already own a working copy.** Coral is copied into your project, not installed as a live
-  dependency: nothing you shipped breaks if this repository disappears tomorrow. Forking it is
-  copying the one folder you already have.
+- **You already own a working copy.** Coral is installed into your project as source, not as a
+  live dependency: nothing you shipped breaks if this repository or its registry disappears
+  tomorrow. Forking it is copying the one folder you already have.
 - **No hidden runtime:** twenty-five components, no framework of their own underneath. shadcn-svelte
   and bits-ui, which this repository doesn't maintain, do the actual work.
 - **Versioned per component.** Each entry in
-  [`coral.json`](./packages/coral/src/lib/components/coral/coral.json) carries its
-  own semver, so a breaking change to one is visible without reading a diff, and doesn't force a
-  repo-wide version bump.
+  [`coral.json`](./packages/coral/src/lib/components/coral/coral.json) carries its own semver, so a
+  breaking change to one is visible without reading a diff, and doesn't force a repo-wide version
+  bump.
 - **MIT:** no license ambiguity for a folder you're about to make part of your own codebase.
 
 ## Development
