@@ -6,8 +6,9 @@ bun.lock
 bun.lockb
 
 # Miscellaneous
-/static/
-src/lib/components/ui/
+apps/docs/static/
+apps/docs/worker-configuration.d.ts
+**/components/ui/
 
 # Agent tooling - written by the tools, not by us
 .claude/

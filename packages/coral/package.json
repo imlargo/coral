@@ -1,0 +1,49 @@
+{
+	"name": "coral",
+	"private": true,
+	"type": "module",
+	"exports": {
+		"./registry-config": "./registry.config.js"
+	},
+	"scripts": {
+		"registry": "node scripts/build-registry.js",
+		"smoke": "node scripts/smoke-install.js",
+		"check": "svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
+		"test:unit": "vitest",
+		"test": "vitest --run"
+	},
+	"dependencies": {
+		"@internationalized/date": "^3.12.3",
+		"@lucide/svelte": "^1.31.0",
+		"bits-ui": "^2.18.1",
+		"clsx": "^2.1.1",
+		"embla-carousel-svelte": "^8.6.0",
+		"formsnap": "^2.0.1",
+		"layerchart": "^2.2.0",
+		"mode-watcher": "^1.1.0",
+		"paneforge": "^1.0.2",
+		"svelte-sonner": "^1.2.1",
+		"sveltekit-superforms": "^2.30.2",
+		"tailwind-merge": "^3.6.0",
+		"tailwind-variants": "^3.3.1",
+		"vaul-svelte": "1.0.0-next.7"
+	},
+	"devDependencies": {
+		"@sveltejs/vite-plugin-svelte": "^7.1.2",
+		"@tailwindcss/forms": "^0.5.11",
+		"@tailwindcss/vite": "^4.3.0",
+		"@types/node": "^24",
+		"@vitest/browser-playwright": "^4.1.8",
+		"playwright": "^1.60.0",
+		"shadcn-svelte": "^1.5.0",
+		"svelte": "^5.56.1",
+		"svelte-check": "^4.6.0",
+		"tailwindcss": "^4.3.0",
+		"tw-animate-css": "^1.4.0",
+		"typescript": "^6.0.3",
+		"vite": "^8.0.16",
+		"vitest": "^4.1.8",
+		"vitest-browser-svelte": "^2.1.1"
+	}
+}

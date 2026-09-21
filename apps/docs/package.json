@@ -1,0 +1,39 @@
+{
+	"name": "coral-docs",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "pnpm --filter coral registry && rm -rf .svelte-kit/cloudflare && wrangler types --check && vite build",
+		"preview": "wrangler dev .svelte-kit/cloudflare/_worker.js --port 4173",
+		"check": "rm -rf .svelte-kit/cloudflare .svelte-kit/output && wrangler types --check && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"gen": "wrangler types"
+	},
+	"dependencies": {
+		"coral": "workspace:*"
+	},
+	"devDependencies": {
+		"@fontsource-variable/inter": "^5.3.0",
+		"@internationalized/date": "^3.12.3",
+		"@lucide/svelte": "^1.31.0",
+		"@sveltejs/adapter-cloudflare": "latest",
+		"@sveltejs/kit": "^2.63.0",
+		"@sveltejs/vite-plugin-svelte": "^7.1.2",
+		"@svmd/content": "^0.2.0",
+		"@svmd/core": "^0.2.0",
+		"@svmd/vite": "^0.2.0",
+		"@tailwindcss/typography": "^0.5.19",
+		"@tailwindcss/vite": "^4.3.0",
+		"@types/hast": "^3.0.5",
+		"@types/node": "^24",
+		"mode-watcher": "^1.1.0",
+		"shiki": "^4.4.3",
+		"svelte": "^5.56.1",
+		"svelte-check": "^4.6.0",
+		"tailwindcss": "^4.3.0",
+		"typescript": "^6.0.3",
+		"vite": "^8.0.16",
+		"wrangler": "^4.97.0"
+	}
+}

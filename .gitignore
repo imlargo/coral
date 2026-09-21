@@ -5,8 +5,8 @@ node_modules
 .vercel
 .netlify
 .wrangler
-/.svelte-kit
-/build
+.svelte-kit/
+build/
 
 # OS
 .DS_Store
@@ -17,6 +17,11 @@ Thumbs.db
 .env.*
 !.env.example
 !.env.test
+
+# Registry build output - generated from `coral.json` and the source tree by
+# `pnpm --filter coral registry`, and served by the docs site.
+packages/coral/registry.json
+apps/docs/static/r/
 
 # Vite
 vite.config.js.timestamp-*
