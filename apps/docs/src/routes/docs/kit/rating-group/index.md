@@ -146,7 +146,7 @@ Nothing to add: the component uses no shadcn primitives.
 | `locale`     | `string`                          | `en-US`                   | The number in the default label.                    |
 | `color`      | `string`                          | `var(--primary)`          | The filled part.                                    |
 | `emptyColor` | `string`                          | `var(--muted-foreground)` | The rest.                                           |
-| `label`      | `(value, count) => string`        | `4,3 / 5`                 | Names one option, and the whole `readonly` control. |
+| `label`      | `(value, count) => string`        | `4.3 / 5`                 | Names one option, and the whole `readonly` control. |
 | `onchange`   | `(value: number) => void`         | -                         | Never on mount.                                     |
 | `onhover`    | `(value: number \| null) => void` | -                         | `null` when the pointer leaves.                     |
 | `ref`        | `HTMLDivElement \| null`          | `null`                    | Bindable. The root element.                         |
