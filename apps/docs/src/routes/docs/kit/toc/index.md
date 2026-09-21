@@ -42,9 +42,7 @@ sticky header, or a heading parked underneath one still counts as unread. It pai
 `scroll-margin-top` on the headings themselves, which is what keeps the jump from putting the
 heading under that same header.
 
-## Installation
-
-No shadcn primitives.
+## Import
 
 ```svelte
 <script lang="ts">

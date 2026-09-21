@@ -157,11 +157,7 @@ for a screen reader and only every other one says it out loud, because seven lab
 collide. Each square carries its `label` as its accessible name, so the tooltip is decoration rather
 than the only way to read a value.
 
-## Installation
-
-```bash
-pnpm dlx shadcn-svelte@latest add tooltip
-```
+## Import
 
 ```svelte
 <script lang="ts">

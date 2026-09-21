@@ -38,9 +38,7 @@ row.
 Entries are keyed by `getKey`, which defaults to the entry itself. Pass it for objects that are
 recreated between renders, and never return the index, since the index is what changes.
 
-## Installation
-
-No shadcn primitives.
+## Import
 
 ```svelte
 <script lang="ts">

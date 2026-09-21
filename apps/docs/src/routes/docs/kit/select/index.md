@@ -91,11 +91,7 @@ dialog, a sticky toolbar. `required` blocks submission while nothing is selected
 > order and out of the accessibility tree; the only thing that reaches it is the browser's own
 > validation message.
 
-## Installation
-
-```bash
-pnpm dlx shadcn-svelte@latest add select button
-```
+## Import
 
 ```svelte
 <script lang="ts">

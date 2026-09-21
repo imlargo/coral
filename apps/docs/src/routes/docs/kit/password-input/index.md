@@ -36,11 +36,7 @@ Show the password and submit: the form reports `type="password"`. Turn this off 
 `autocomplete` defaults to `current-password`. Set `new-password` on sign-up and change-password
 forms, which is what tells a password manager to offer a generated one.
 
-## Installation
-
-```bash
-pnpm dlx shadcn-svelte@latest add input-group
-```
+## Import
 
 ```svelte
 <script lang="ts">

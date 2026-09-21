@@ -35,11 +35,7 @@ to nobody using the page. Catching inside `onclick` and returning `false` works 
 For a form submitted with SvelteKit's `enhance`, the form is what is pending, not the click: pass
 `pending` and let the form action drive it.
 
-## Installation
-
-```bash
-pnpm dlx shadcn-svelte@latest add button spinner
-```
+## Import
 
 ```svelte
 <script lang="ts">

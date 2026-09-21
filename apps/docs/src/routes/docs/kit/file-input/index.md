@@ -122,11 +122,7 @@ That single change is the difference between a picker the keyboard can open and 
 Every prop a native file input takes is forwarded to it: `id`, `required`, `capture`, `aria-*`, so
 a surrounding `Field` labels it the usual way.
 
-## Installation
-
-```bash
-pnpm dlx shadcn-svelte@latest add empty item button
-```
+## Import
 
 ```svelte
 <script lang="ts">

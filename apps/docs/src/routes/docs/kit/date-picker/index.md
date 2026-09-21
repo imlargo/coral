@@ -129,11 +129,7 @@ Leave `timeZone` out of it. Coral turns the selected day into a `Date` at **loca
 that: a calendar day means that day where the reader is, and noon is the only hour no DST jump can
 delete.
 
-## Installation
-
-```bash
-pnpm dlx shadcn-svelte@latest add popover calendar range-calendar button
-```
+## Import
 
 ```svelte
 <script lang="ts">

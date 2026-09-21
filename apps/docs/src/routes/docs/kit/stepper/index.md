@@ -56,11 +56,7 @@ When every step's fields post in a single `<form>`, set `keepMounted`: inactive 
 with `hidden`. Validate each step in `onbeforenext`: the browser cannot focus a `required` field
 inside a hidden panel to report it.
 
-## Installation
-
-```bash
-pnpm dlx shadcn-svelte@latest add button spinner
-```
+## Import
 
 ```svelte
 <script lang="ts">

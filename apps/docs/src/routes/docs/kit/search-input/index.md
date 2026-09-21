@@ -37,11 +37,7 @@ closing the dialog.
 A `value` set from code (restoring `?q=` from the URL, a "reset filters" button) is adopted as
 already searched, so it is not reported back as if the reader typed it.
 
-## Installation
-
-```bash
-pnpm dlx shadcn-svelte@latest add input-group spinner
-```
+## Import
 
 ```svelte
 <script lang="ts">

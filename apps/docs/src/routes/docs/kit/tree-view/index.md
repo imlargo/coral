@@ -44,9 +44,7 @@ type TreeNode<T = unknown> = {
 };
 ```
 
-## Installation
-
-No shadcn primitives.
+## Import
 
 ```svelte
 <script lang="ts">

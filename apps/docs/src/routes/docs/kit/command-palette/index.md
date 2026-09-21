@@ -51,13 +51,9 @@ combo, on every machine that is not a Mac.
 So when a combo the palette binds would be swallowed, those bindings give way to it. Set
 `vimBindings` to force the question either way.
 
-## Installation
+## Import
 
-```bash
-pnpm dlx shadcn-svelte@latest add command
-```
-
-Composes [`kit/shortcut`](/docs/kit/shortcut): copy both folders.
+Composes [`kit/shortcut`](/docs/kit/shortcut), which the install brings with it.
 
 ```svelte
 <script lang="ts">

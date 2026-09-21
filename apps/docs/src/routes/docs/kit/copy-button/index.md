@@ -41,11 +41,7 @@ accessible name comes from the text, and `label` is not applied.
 `status` is bindable, so something beside the button can react to it. A copy that is still resolving
 ignores further clicks.
 
-## Installation
-
-```bash
-pnpm dlx shadcn-svelte@latest add button
-```
+## Import
 
 ```svelte
 <script lang="ts">

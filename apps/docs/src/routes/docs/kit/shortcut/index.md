@@ -58,11 +58,7 @@ Put `aria-keyshortcuts` on the control the shortcut activates, so assistive tech
 </script>
 ```
 
-## Installation
-
-```bash
-pnpm dlx shadcn-svelte@latest add kbd
-```
+## Import
 
 ```svelte
 <script lang="ts">

@@ -33,13 +33,9 @@ renders `+1`, a circle that hides exactly one avatar the same size as itself.
 The `overflow` snippet receives the hidden items, the count and its label, enough to put the count in
 a popover or a tooltip. Render an `AvatarGroupCount` so it keeps its place in the overlap.
 
-## Installation
+## Import
 
-```bash
-pnpm dlx shadcn-svelte@latest add avatar
-```
-
-Composes [`kit/avatar`](/docs/kit/avatar): copy both folders.
+Composes [`kit/avatar`](/docs/kit/avatar), which the install brings with it.
 
 ```svelte
 <script lang="ts">

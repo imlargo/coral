@@ -82,11 +82,7 @@ a nudge and not a trap.
 
 <Preview name="kit/confirm-dialog/acknowledge" />
 
-## Installation
-
-```bash
-pnpm dlx shadcn-svelte@latest add alert-dialog button spinner
-```
+## Import
 
 ```svelte
 <script lang="ts">

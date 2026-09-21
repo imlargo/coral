@@ -45,11 +45,7 @@ The dialog pads its content; the drawer pads its header and footer and leaves th
 the primitives' own layout and Coral does not paper over it: give the body `px-4 md:px-0`, as the
 demo does, or whatever matches your `query`.
 
-## Installation
-
-```bash
-pnpm dlx shadcn-svelte@latest add dialog drawer
-```
+## Import
 
 ```svelte
 <script lang="ts">

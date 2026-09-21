@@ -32,11 +32,7 @@ see.
 The `toggle` snippet receives `props` to spread onto your own button (they carry the ARIA wiring and
 the click handler), plus `expanded` and `toggle`.
 
-## Installation
-
-```bash
-pnpm dlx shadcn-svelte@latest add button
-```
+## Import
 
 ```svelte
 <script lang="ts">

@@ -113,11 +113,7 @@ back in the field.
 
 Arrow directions are read off the element, so they reverse inside an RTL subtree without being told.
 
-## Installation
-
-```bash
-pnpm dlx shadcn-svelte@latest add input-group badge
-```
+## Import
 
 ```svelte
 <script lang="ts">

@@ -37,11 +37,7 @@ to `n`. It matches how people type, not how the word is spelled.
 Without the folding the control looks correct until someone types `acai` and the list comes back
 empty. That failure only ever shows up for the users whose words carry accents.
 
-## Installation
-
-```bash
-pnpm dlx shadcn-svelte@latest add popover command button
-```
+## Import
 
 ```svelte
 <script lang="ts">

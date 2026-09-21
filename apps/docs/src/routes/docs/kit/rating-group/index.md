@@ -121,9 +121,7 @@ is copy and copy is the project's. `label` is where that goes:
 
 <Preview name="kit/rating-group/states" />
 
-## Installation
-
-Nothing to add: the component uses no shadcn primitives.
+## Import
 
 ```svelte
 <script lang="ts">

@@ -56,11 +56,7 @@ genuinely differ (money that steps by whole units but stores cents), set `decima
 An empty field keeps both steppers live, because stepping from empty has somewhere to go either way.
 The first press lands on the first allowed value: with `min={5}`, `+` gives `5`, not `6`.
 
-## Installation
-
-```bash
-pnpm dlx shadcn-svelte@latest add input-group
-```
+## Import
 
 ```svelte
 <script lang="ts">

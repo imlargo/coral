@@ -39,11 +39,7 @@ its way.
 default) runs before both. A refused edit marks the field `aria-invalid` and stays open. What to say
 about it is copy, and copy is the project's. Render the message next to the component.
 
-## Installation
-
-```bash
-pnpm dlx shadcn-svelte@latest add input-group spinner
-```
+## Import
 
 ```svelte
 <script lang="ts">

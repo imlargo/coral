@@ -41,9 +41,7 @@ ticking every second draws the eye for no reason. Use `second` where the seconds
 "40 days ago" is rarely what anyone wants to read about a deployment. Past `cutoff` milliseconds
 the date is shown in full instead, formatted with `titleFormat`, and nothing is scheduled for it.
 
-## Installation
-
-No shadcn primitives.
+## Import
 
 ```svelte
 <script lang="ts">

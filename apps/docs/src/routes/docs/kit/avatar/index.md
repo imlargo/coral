@@ -32,11 +32,7 @@ That last line is the problem. It is rewritten in every project, and it is wrong
 - **The pieces stay reachable.** `children` renders alongside the image, and `AvatarGroup` still
   wraps a Coral avatar unchanged.
 
-## Installation
-
-```bash
-pnpm dlx shadcn-svelte@latest add avatar
-```
+## Import
 
 ```svelte
 <script lang="ts">
