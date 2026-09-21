@@ -5,9 +5,10 @@ Operating guide for AI agents (and humans) working in this repo. These rules are
 ## What this repo is
 
 Coral: an open-source ergonomics layer on top of shadcn-svelte. Not a design system, not a fork,
-not an npm package - it's a folder meant to be copied into a project, which then owns it. Started
-as one studio's internal library, now public and built in public. See [`README.md`](./README.md)
-for stack, install and status.
+not an npm package - it's a folder meant to be copied into a project, which then owns it. It began
+as an internal library and is now public, built in the open for an international audience - nothing
+in it should still read as internal. See [`README.md`](./README.md) for stack, install and status,
+and **Language and demos** below for what that means line by line.
 
 This file is self-contained: every rule you need is here. (`context/coral.md` holds the long-form
 philosophy but is deliberately untracked - don't assume a reader has it.)
@@ -29,7 +30,9 @@ kind that goes stale.
   project's `features/` first.
 - **No appearance.** No hardcoded colors, shadows, radii, or typography. Only layout utilities
   (`flex`, `gap-*`, `w-full`). Appearance is the shadcn theme's job, not Coral's.
-- **No domain knowledge.** Never reference client entities (invoice, student, contract...).
+- **No domain knowledge.** Never reference a consuming app's entities (invoice, student,
+  contract...) in `kit/`. Demos are the exception and have their own rules - see **Language and
+  demos**.
 - **`src/lib/components/ui/` is untouchable.** shadcn-managed, excluded from lint/format on
   purpose. Compose around it, never edit it.
 - **Import direction is one-way:** `blocks/` → `kit/` → `ui/`. `kit/` composing `kit/` is fine and
@@ -100,6 +103,35 @@ every project that already copied it.
   `shadcn` and `npm` are what makes installing Coral "copy the folder, then install these" -
   declare every primitive the component imports. Omit `npm` when there are none.
 
+## Language and demos
+
+The rules most often missed, because nothing in the code enforces them.
+
+- **Everything ships in English** - UI strings, comments, tests, demo data, docs. Coral is read by
+  people who do not share the maintainer's first language, so a Spanish label in a demo is a defect
+  like any other. Translate on sight rather than leaving it for a later pass.
+- **Demos live in a dev/SaaS product world**, because that is what the reader is building:
+  projects, repositories, deployments, environments, API keys, team members and invites, issues,
+  builds, webhooks, plans and seats. Never invoices, contracts, tax ids, construction sites or
+  clinics.
+- **People come from one cast**, so the docs read as one product rather than a pile of samples:
+  Amara Diallo, Wei Zhang, Sofia Rossi, Liam O'Connor, Priya Sharma, Kenji Tanaka, Lucas Andersen,
+  Elena van der Meer.
+- **Plain option lists use fruits** - Açaí, Guava, Kiwi, Mango, Papaya, Lychee. A deliberate
+  convention, matching Radix and shadcn docs, and a standing reminder that search folds accents.
+  Don't "improve" them into something else.
+- **No provenance claims.** Never cite private codebases as evidence: "three projects wrote this",
+  "every copy in the corpus", counts of files or repos. A reader cannot check any of it, and it
+  leaks client names. Say what goes wrong when the thing is hand-rolled, and what Coral does
+  instead. The admission rule under **Hard rules** is policy and stays - the counting does not.
+- **Locale is never a region.** A `locale` prop defaults to `en-US`; a helper that formats without
+  one passes `undefined` and follows the reader's own locale. Don't hardcode a country.
+- **A docs page is `index.md` plus `demos/*.svelte`**, found by glob - there is no registry to
+  update. `<Preview name="kit/<component>/<demo>" />` embeds one. Frontmatter `title` is what the
+  sidebar shows: spelled out, sentence case - "Table of contents", not "Toc".
+- **Change a demo, resync its `index.md`.** Prose quoting a demo's strings is the first thing to
+  rot.
+
 ## Formatting
 
 Tabs, single quotes, no trailing commas, 100 cols - enforced by Prettier, don't fight it. Tailwind
@@ -127,8 +159,17 @@ pnpm test
 
 Run them for real, read the output.
 
-Expect `pnpm check` to report exactly **1** error: shadcn's `ui/native-select`, untouchable.
-Anything else is yours.
+Expect `pnpm check` to report **12** errors, none of them yours: 7 for a missing `hast` type
+package and 4 in `svmd-highlight.js` - both docs tooling - plus shadcn's untouchable
+`ui/native-select`. Anything else is yours.
+
+> ⚠️ `pnpm check` currently stops **before** `svelte-check` runs: `wrangler types --check` reports
+> `worker-configuration.d.ts` out of date, because the committed file was generated with a newer
+> wrangler than `^4.97.0` resolves to here. Regenerating downgrades ~27k lines to that older
+> wrangler's output - don't.
+> Until that floor is bumped, type-check with
+> `npx svelte-kit sync && npx svelte-check --tsconfig ./tsconfig.json`, and read the count above.
+> A green `pnpm check` that printed no `COMPLETED` line did not type-check anything.
 
 > ⚠️ **Build output poisons both scripts, so `build` and `check` delete it first.** `vite build`
 > writes a bundled worker to `.svelte-kit/cloudflare/` plus `.svelte-kit/output/`, and that breaks
@@ -148,6 +189,10 @@ Anything else is yours.
 > ⚠️ `worker-configuration.d.ts` declares a global `Element` whose HTMLRewriter `append`/`prepend`
 > signatures merge with - and shadow - the DOM ones. Use `appendChild` / `insertBefore` in DOM code.
 
+> ⚠️ `mod` in a `kit/shortcut` combo resolves to Cmd on a Mac and Ctrl everywhere else, from the
+> real browser via `detectPlatform()`. A test that presses Control against a `mod+k` binding passes
+> in CI and fails on a Mac - spell `ctrl` or `meta` explicitly in test fixtures.
+
 > ⚠️ Cloudflare's build image defaults to **pnpm 10.11.1** and does not read `packageManager` from
 > `package.json`; the override is a `PNPM_VERSION` build variable in the dashboard. Keep
 > `pnpm-workspace.yaml`'s `packages: ['.']` - older 10.x refuses a workspace file without it.
@@ -156,7 +201,7 @@ Then re-check the **Coral test**:
 
 1. **Written twice already?** → If not, it doesn't enter yet.
 2. **Does it define appearance?** → If so, it doesn't belong in Coral.
-3. **Does it know the client's domain?** → If so, it belongs in the project's `features/`.
+3. **Does it know your app's domain?** → If so, it belongs in the project's `features/`.
 4. **Does the API match the component's nature?** → Flat props only if there's a canonical case;
    otherwise composition.
 5. **Does the rare case force abandoning Coral?** → If so, expose the pieces.
