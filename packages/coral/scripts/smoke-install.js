@@ -105,11 +105,12 @@ async function scaffold(cwd) {
 		],
 		cwd
 	);
+	// The `pnpm` on PATH, never `npx pnpm`: shadcn-svelte installs the primitives' dependencies with
+	// whatever `pnpm` it finds, and a project scaffolded by a different major of pnpm has a store
+	// that one refuses to touch (ERR_PNPM_UNEXPECTED_STORE).
 	await run(
-		'npx',
+		'pnpm',
 		[
-			'--yes',
-			'pnpm',
 			'add',
 			'-D',
 			'tailwindcss',
