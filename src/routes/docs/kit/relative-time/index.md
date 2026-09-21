@@ -9,7 +9,7 @@ description: Timestamps like 5 minutes ago that stay true, in the reader's langu
 
 `relativeTime(date)` helpers get written once per project, and they share the same limits: the text
 is computed at render and goes stale while the page is open, "60 minutes ago" shows up where "1 hour
-ago" belongs, and the fix - a `setInterval` per timestamp - wakes a two-hundred-row table every
+ago" belongs, and the fix (a `setInterval` per timestamp) wakes a two-hundred-row table every
 second to change nothing.
 
 <Preview name="kit/relative-time/basic" />
@@ -19,11 +19,11 @@ second to change nothing.
 - **Stays current, cheaply.** Each instance sleeps until the exact moment its own text changes: "3
   days ago" wakes up in hours, not every second. A tab brought back to the foreground refreshes at
   once, since background timers are throttled.
-- **Right units.** The unit is picked on the rounded value, so 59 minutes 40 seconds is "1 hour ago".
+- **Right units:** the unit is picked on the rounded value, so 59 minutes 40 seconds is "1 hour ago".
   Four weeks never sits next to one month.
-- **Worded by `Intl`.** "yesterday", "in 3 days", "hace 5 minutos", "5 分前" - any locale, and
+- **Worded by `Intl`.** "yesterday", "in 3 days", "hace 5 minutos", "5 分前": any locale, in
   `long`, `short` or `narrow`.
-- **A real `<time>`.** `datetime` carries the instant for machines and `title` the full date for
+- **A real `<time>`:** `datetime` carries the instant for machines and `title` the full date for
   whoever hovers.
 - **Symmetric.** 2.5 minutes ago and in 2.5 minutes both round to 3.
 
@@ -31,8 +31,8 @@ second to change nothing.
 
 <Preview name="kit/relative-time/live" />
 
-`precision="minute"`, the default, reads anything within half a minute as "now" - a label ticking
-every second draws the eye for no reason. Use `second` where the seconds matter.
+`precision="minute"`, the default, reads anything within half a minute as "now", since a label
+ticking every second draws the eye for no reason. Use `second` where the seconds matter.
 
 ## Past a cutoff
 
@@ -53,7 +53,7 @@ No shadcn primitives.
 
 ## Props
 
-Everything a `<time>` accepts stays available - `class`, `aria-*`, `id`. On top of that:
+Everything a `<time>` accepts stays available: `class`, `aria-*`, `id`. On top of that:
 
 | Prop          | Type                                  | Default                                     | Description                                  |
 | ------------- | ------------------------------------- | ------------------------------------------- | -------------------------------------------- |
@@ -70,8 +70,8 @@ Everything a `<time>` accepts stays available - `class`, `aria-*`, `id`. On top 
 
 ## relative.ts
 
-`describe` and `nextChange` are exported for use outside a component - a label in an email, a
-server-rendered feed:
+`describe` and `nextChange` are exported for use outside a component, such as a label in an email or
+a server-rendered feed:
 
 ```ts
 import { describe } from '$lib/coral/kit/relative-time/relative.js';
@@ -81,5 +81,5 @@ const { value, unit } = describe(new Date(comment.createdAt), new Date());
 new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' }).format(value, unit); // "5 minutes ago"
 ```
 
-Months and years are average lengths - a relative label is approximate by nature. For "on 12 March",
-use the absolute date.
+Months and years are average lengths, so a relative label is approximate by nature. For "on 12
+March", use the absolute date.

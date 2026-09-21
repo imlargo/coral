@@ -8,7 +8,7 @@ description: Drag to reorder with a mouse, a finger or the keyboard - and persis
 </script>
 
 HTML5 `draggable` gets a sortable list working on a desktop in an afternoon, and then it does not work
-on a phone - touch devices do not fire its events - and there is no way to do it from the keyboard at
+on a phone (touch devices do not fire its events), and there is no way to do it from the keyboard at
 all. The bound array usually updates on every row the pointer crosses, so an `$effect` that saves the
 order sends a request for each one.
 
@@ -16,14 +16,14 @@ order sends a request for each one.
 
 ## What Coral adds
 
-- **Pointer events, not drag-and-drop.** Mouse, pen and touch alike, with the page kept from
+- **Pointer events, not drag-and-drop:** mouse, pen and touch alike, with the page kept from
   scrolling under the finger.
-- **A keyboard path.** Focus a handle, Space to pick up, arrows (and Home, End) to move, Space to
+- **A keyboard path:** focus a handle, Space to pick up, arrows (and Home, End) to move, Space to
   drop, Escape to put it back. Tabbing away drops it where it is.
-- **Announced.** Picked up, each move, dropped and cancelled are spoken with the position - "moved to
-  position 3 of 5" - and the handle describes how to use it. All wording is replaceable.
-- **One write per drop.** Rows slide live while dragging, but `items` and `onreorder` only change on
-  drop - and not at all for a drop back where it started.
+- **Announced.** Picked up, each move, dropped and cancelled are spoken with the position ("moved to
+  position 3 of 5"), and the handle describes how to use it. All wording is replaceable.
+- **One write per drop:** rows slide live while dragging, but `items` and `onreorder` only change on
+  drop, and not at all for a drop back where it started.
 - **Swaps where the eye expects.** A row gives way when the dragged row's centre passes its centre,
   whichever part of the handle was grabbed. Neighbours slide aside, unless reduced motion is on.
 
@@ -32,10 +32,11 @@ order sends a request for each one.
 <Preview name="kit/reorder-list/custom-row" />
 
 The `item` snippet replaces the row's body and keeps Coral's grip. The `row` snippet replaces
-everything: spread `handle` onto whatever should grab the row - a grip, or the whole row.
+everything: spread `handle` onto whatever should grab the row, whether that's a grip or the whole
+row.
 
 Entries are keyed by `getKey`, which defaults to the entry itself. Pass it for objects that are
-recreated between renders, and never return the index - the index is what changes.
+recreated between renders, and never return the index, since the index is what changes.
 
 ## Installation
 
@@ -69,6 +70,6 @@ Everything a `<ul>` accepts stays available. On top of that:
 
 ## Scope
 
-Vertical lists only, and no auto-scroll while dragging near the edge of a scrolling container - both
+Vertical lists only, and no auto-scroll while dragging near the edge of a scrolling container. Both
 are real needs, and neither has come up in a list short enough for this component to be the right
 tool. A board with columns is a block, not this.

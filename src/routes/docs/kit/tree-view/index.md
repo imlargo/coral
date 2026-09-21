@@ -8,18 +8,18 @@ description: A hierarchy the keyboard can walk - the WAI-ARIA tree pattern, from
 </script>
 
 Nested `<ul>`s with a chevron that toggles a boolean is a tree for the mouse. The keyboard gets
-nothing - or a tab stop per row, which in a folder of two hundred files is two hundred Tab presses to
-get past it - and a screen reader hears a list of lists with no idea what is open.
+nothing, or a tab stop per row, which in a folder of two hundred files is two hundred Tab presses to
+get past it. A screen reader hears a list of lists with no idea what is open.
 
 <Preview name="kit/tree-view/basic" />
 
 ## What Coral adds
 
-- **One tab stop.** The tree is reached with Tab once; inside it, the arrows move.
-- **The whole keyboard pattern.** Up and Down move; Right opens a node, then steps into it; Left closes
+- **One tab stop:** the tree is reached with Tab once; inside it, the arrows move.
+- **The whole keyboard pattern:** Up and Down move; Right opens a node, then steps into it; Left closes
   it, then steps out to the parent; Home and End; Enter and Space select; `*` opens every sibling;
   typing letters jumps to the next matching row, ignoring case and accents.
-- **Announced structure.** `aria-level`, `aria-posinset`, `aria-setsize` and `aria-expanded` on every
+- **Announced structure:** `aria-level`, `aria-posinset`, `aria-setsize` and `aria-expanded` on every
   row: "src, expanded, level 1, 1 of 3".
 - **Focus never lost.** Collapsing a folder that contains the focused row moves focus to the folder.
 - **Disabled nodes stay reachable.** They cannot be selected, but can still be read and expanded.
@@ -29,7 +29,7 @@ get past it - and a screen reader hears a list of lists with no idea what is ope
 
 <Preview name="kit/tree-view/lazy" />
 
-A node with `children: []` is a branch with nothing loaded yet - it can be opened. Fetch when its id
+A node with `children: []` is a branch with nothing loaded yet: it can be opened. Fetch when its id
 appears in `onexpandedchange`, then hand back `nodes` with the children filled in.
 
 ## Data

@@ -11,8 +11,8 @@ shadcn builds the combobox out of a popover and a command menu, and its docs are
 is a recipe rather than a component: around fifty lines of markup, a `triggerRef`, and a
 `closeAndFocusTrigger` that has to be written by hand every time.
 
-Hand-rolled, that recipe gets pasted rather than read, and the parts it leaves out - accent
-handling first - are the ones that quietly go missing. That is the pattern this component ends.
+Hand-rolled, that recipe gets pasted rather than read, and the parts it leaves out (accent
+handling first) are the ones that quietly go missing. That is the pattern this component ends.
 
 <Preview name="kit/combobox/basic" />
 
@@ -20,7 +20,7 @@ handling first - are the ones that quietly go missing. That is the pattern this 
 
 Only two things, both behavior:
 
-- **Accent-insensitive search.** Typing `acai` finds `Açaí`. Command's own matcher compares raw
+- **Accent-insensitive search:** typing `acai` finds `Açaí`. Command's own matcher compares raw
   strings, so it finds nothing.
 - **Focus returns to the trigger** after a selection, so the next Tab continues through the form
   instead of restarting at the top of the document.
@@ -35,7 +35,7 @@ Both the search term and the label are folded before comparison: lower case, acc
 to `n`. It matches how people type, not how the word is spelled.
 
 Without the folding the control looks correct until someone types `acai` and the list comes back
-empty - a failure that only ever shows up for the users whose words carry accents.
+empty. That failure only ever shows up for the users whose words carry accents.
 
 ## Installation
 
@@ -51,7 +51,7 @@ pnpm dlx shadcn-svelte@latest add popover command button
 
 ## Props
 
-Everything the shadcn popover root accepts stays available - `open`, `onOpenChange`,
+Everything the shadcn popover root accepts stays available: `open`, `onOpenChange`,
 `onOpenChangeComplete`. On top of that:
 
 | Prop                | Type                                | Default               | Description                                                     |
@@ -103,22 +103,22 @@ Everything the shadcn popover root accepts stays available - `open`, `onOpenChan
 | `disabled`    | `boolean`  | Blocks selection; stays visible and searchable. |
 
 The defaults are English because Coral is written in English. Every consuming project passes its
-own copy - these exist so the component renders during a spike, not as a translation layer.
+own copy. These exist so the component renders during a spike, not as a translation layer.
 
 ## Reacting to a selection
 
 `bind:value` keeps state in sync. `onchange` answers a different question: _the user just chose
-something_. It receives the **selection**, in the same shape as `value` but hydrated into options -
+something_. It receives the **selection**, in the same shape as `value` but hydrated into options:
 `Option<T> | undefined` for a single select, `Option<T>[]` for a multiple one.
 
 It does not also receive the raw value, because that would be the same fact twice: `option.value`
-recovers it, and `bind:value` already has it. The reverse is not free - handed a bare value, a
+recovers it, and `bind:value` already has it. The reverse is not free: handed a bare value, a
 caller who wants the label has to search the list it just passed in.
 
 <Preview name="kit/combobox/onchange" />
 
 It fires from the selection handler and nowhere else, so it never fires on mount and never fires
-when `value` is assigned from code - as the button in that demo shows.
+when `value` is assigned from code, as the button in that demo shows.
 
 That distinction is the reason it exists rather than being left to the caller. Deriving the signal
 from the value instead:
@@ -134,7 +134,7 @@ anyone has touched the control.
 Use `bind:value` when you only need the state, `onchange` when something should _happen_. Both
 together is fine.
 
-For `type="multiple"` the selection is the whole list, not the row that toggled - which is what
+For `type="multiple"` the selection is the whole list, not the row that toggled, which is what
 makes a bulk change legible too: `clear` reports `[]` and the footer's `selectAll` reports the whole
 resulting selection.
 A single changed row could only have reported nothing. When the delta is what matters, diff against
@@ -143,7 +143,7 @@ the previous value.
 ## Multiple selection
 
 `type="multiple"` switches `value` to an array. The trigger collapses into badges plus a counter
-past `maxDisplay`, and the popover stays open while picking - choosing one of several is rarely
+past `maxDisplay`, and the popover stays open while picking. Choosing one of several is rarely
 choosing the last one.
 
 <Preview name="kit/combobox/multiple" />
@@ -152,11 +152,11 @@ The `footer` snippet gets `selectAll`, `clear`, the current selection and everyt
 filter, which is enough to build bulk actions without Coral guessing what they should say.
 
 > `selectAll` adds what is visible to the selection rather than replacing it. With a search term
-> active the two differ, and replacing would deselect the options the filter is hiding - silently,
-> since they are exactly the rows the user cannot see.
+> active the two differ, and replacing would deselect the options the filter is hiding (silently,
+> since they are exactly the rows the user cannot see).
 
 > Badges in the trigger are not individually removable. A button nested inside a button is invalid
-> HTML, and browsers recover by dropping one of the two - which is how a per-badge remove control
+> HTML, and browsers recover by dropping one of the two, which is how a per-badge remove control
 > ends up unreachable by keyboard. Deselect from the list, or use the clear control.
 
 ## Groups, descriptions and keywords
@@ -164,11 +164,11 @@ filter, which is enough to build bulk actions without Coral guessing what they s
 <Preview name="kit/combobox/groups" />
 
 Pass groups instead of options and each gets a heading. `description` renders as a second line and
-is searched. `keywords` are searched but never shown - synonyms, codes, an old name. Try `berry`,
+is searched. `keywords` are searched but never shown: synonyms, codes, an old name. Try `berry`,
 `mango` or `citrus` in that demo.
 
 Filtering removes rows rather than hiding them, so a group whose options all fail the search
-disappears along with its heading - no empty section left behind.
+disappears along with its heading. No empty section is left behind.
 
 ## Server-side search
 
@@ -185,7 +185,7 @@ the next open starts from the full list rather than from whatever was typed last
 
 <Preview name="kit/combobox/custom-trigger" />
 
-The `trigger` snippet replaces the button entirely - spread `props` onto whatever you render and
+The `trigger` snippet replaces the button entirely. Spread `props` onto whatever you render and
 the popover still wires itself up. The `option` snippet replaces the body of each row, and the
 theme's check indicator stays.
 
@@ -194,7 +194,7 @@ dropping Coral and rebuilding from raw shadcn.
 
 ## Typed values
 
-`Option<T>` is generic. The value stays whatever the project already has - an id, an enum member -
+`Option<T>` is generic. The value stays whatever the project already has (an id, an enum member)
 and comes back out the same type, with no conversion at the call site.
 
 <Preview name="kit/combobox/typed-values" />
@@ -204,7 +204,7 @@ forwarded to the command item.
 
 ## Forms
 
-`name` renders one field per selected value - so `type="multiple"` posts the shape
+`name` renders one field per selected value, so `type="multiple"` posts the shape
 `FormData.getAll(name)` already reads back as a list. `form` points those fields at a form by `id`,
 for a combobox that renders outside it. `required` blocks submission while nothing is selected.
 
@@ -234,7 +234,7 @@ Two caveats, both upstream and both outside what Coral can reach from `kit/`:
 
 The [conventions](/docs/conventions) call for composition when the parts vary independently, and a
 combobox eventually does. This version stays flat and hands the varying parts to snippets instead,
-because the canonical case - a list, a value, a search box - is the one every caller writes first.
+because the canonical case (a list, a value, a search box) is the one every caller writes first.
 
 Two decisions keep that from becoming a dead end:
 
@@ -249,7 +249,7 @@ props above.
 ## fold()
 
 The search folding lives in `kit/combobox/fold.ts` and is exported on its own, so a project that
-needs the same comparison elsewhere - a client-side table filter, a sort - does not re-implement it.
+needs the same comparison elsewhere (a client-side table filter, a sort) does not re-implement it.
 
 ```ts
 import { fold } from '$lib/coral/kit/combobox/fold.js';

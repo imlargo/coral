@@ -8,7 +8,7 @@ description: Draws a keyboard shortcut the way the reader's platform prints it, 
 </script>
 
 `<Kbd>⌘</Kbd><Kbd>K</Kbd>` is right for half the readers, and the `keydown` listener next to it usually
-checks `metaKey` - so on Windows the hint is wrong and the shortcut does not work. Pressing `/` to
+checks `metaKey`, so on Windows the hint is wrong and the shortcut does not work. Pressing `/` to
 search fires while someone is typing a slash into a field, and a combo checked with `includes` also
 fires on every combo that contains it.
 
@@ -16,11 +16,11 @@ fires on every combo that contains it.
 
 ## What Coral adds
 
-- **`mod` means the right key.** Command on a Mac, Control everywhere else - drawn and matched alike.
+- **`mod` means the right key.** Command on a Mac, Control everywhere else; drawn and matched alike.
 - **Drawn by platform convention.** `⌃⌥⇧⌘` in Apple's order on a Mac, `Ctrl Alt Shift` elsewhere.
 - **Read out by name.** Symbols are hidden from screen readers and named instead: `⌘` is otherwise
   read as "place of interest sign".
-- **Exact matching.** `mod+k` does not fire on `mod+shift+k`.
+- **Exact matching:** `mod+k` does not fire on `mod+shift+k`.
 - **Layout-aware.** Keys are matched by the character typed, so `ctrl+z` is the key labelled Z on an
   AZERTY keyboard; the physical key is only consulted when Option has turned `k` into `˚`.
 - **Stays out of fields.** A plain key such as `s` or `?` does not fire while the reader is typing;
@@ -31,14 +31,14 @@ fires on every combo that contains it.
 <Preview name="kit/shortcut/platforms" />
 
 The platform is detected in the browser after mount. The server cannot know it, so it renders the
-non-Mac version and a Mac corrects it on hydration - one repaint, and no hydration mismatch. When the
+non-Mac version and a Mac corrects it on hydration: one repaint, and no hydration mismatch. When the
 server does know, from the user-agent, pass `platform` and there is nothing to correct.
 
 ## Plain keys
 
 <Preview name="kit/shortcut/in-button" />
 
-A shortcut something closer to the focus already handled - its `keydown` called `preventDefault` - is
+A shortcut something closer to the focus already handled (its `keydown` called `preventDefault`) is
 left alone. This site's own search takes `mod+k` and `/`, which is why these demos use other keys.
 
 Put `aria-keyshortcuts` on the control the shortcut activates, so assistive tech announces it there.
@@ -72,7 +72,7 @@ pnpm dlx shadcn-svelte@latest add kbd
 
 ## Props
 
-Everything the shadcn kbd group accepts stays available - `class`, `aria-*`, `ref`. On top of that:
+Everything the shadcn kbd group accepts stays available: `class`, `aria-*`, `ref`. On top of that:
 
 | Prop             | Type                             | Default         | Description                                   |
 | ---------------- | -------------------------------- | --------------- | --------------------------------------------- |

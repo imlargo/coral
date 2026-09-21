@@ -8,7 +8,7 @@ description: Text that turns into a field in place - rename a project, a column,
 </script>
 
 Rename-in-place has more states than it looks: showing, editing, saving, rejected. The usual version
-swaps a span for an input on click and handles two of them - leaving the keyboard with no way in,
+swaps a span for an input on click and handles two of them: leaving the keyboard with no way in,
 the Escape key closing the dialog it sits in, and a failed rename throwing away what was typed.
 
 <Preview name="kit/inline-edit/basic" />
@@ -30,14 +30,14 @@ the Escape key closing the dialog it sits in, and a failed rename throwing away 
 <Preview name="kit/inline-edit/async" />
 
 While saving, the field is `readonly` rather than `disabled`: disabling a focused field blurs it, and
-that blur would read as the reader leaving - saving a second time, or cancelling a save already on
+that blur would read as the reader leaving: saving a second time, or cancelling a save already on
 its way.
 
 ## Validation
 
 `required` refuses empty text, `validate` refuses anything else, and `sanitize` (trimming, by
 default) runs before both. A refused edit marks the field `aria-invalid` and stays open. What to say
-about it is copy, and copy is the project's - render the message next to the component.
+about it is copy, and copy is the project's. Render the message next to the component.
 
 ## Installation
 
@@ -53,7 +53,7 @@ pnpm dlx shadcn-svelte@latest add input-group spinner
 
 ## Props
 
-Everything the shadcn input accepts goes to the field while editing - `maxlength`, `aria-*`,
+Everything the shadcn input accepts goes to the field while editing: `maxlength`, `aria-*`,
 `autocomplete`. On top of that:
 
 | Prop           | Type                                | Default        | Description                                                 |
@@ -76,5 +76,5 @@ Everything the shadcn input accepts goes to the field while editing - `maxlength
 ## Accessibility
 
 The default `editLabel` includes the visible value, so the accessible name contains the text on
-screen - what WCAG 2.5.3 asks of a control a voice-control user will address by what it says.
+screen. That's what WCAG 2.5.3 asks of a control a voice-control user will address by what it says.
 `aria-busy` is set while saving and `aria-invalid` after a refused edit.

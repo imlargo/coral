@@ -18,7 +18,7 @@ see.
 
 - **A toggle only when there is more.** Overflow is measured, and re-measured as the width or the
   content changes. Short content gets no button.
-- **Any markup.** Clipped by height in `lh` units - the content's own line height - so paragraphs,
+- **Any markup:** clipped by height in `lh` units (the content's own line height), so paragraphs,
   lists and inline elements are cut alike. `line-clamp` only counts one run of inline text.
 - **Focus never lands out of sight.** Tabbing onto a link in the clipped part expands the content.
 - **Collapsing keeps your place.** If the top of a long block has scrolled away, collapsing brings it
@@ -29,8 +29,8 @@ see.
 
 <Preview name="kit/show-more/rich" />
 
-The `toggle` snippet receives `props` to spread onto your own button - they carry the ARIA wiring and
-the click handler - plus `expanded` and `toggle`.
+The `toggle` snippet receives `props` to spread onto your own button (they carry the ARIA wiring and
+the click handler), plus `expanded` and `toggle`.
 
 ## Installation
 
@@ -62,7 +62,7 @@ Everything a `<div>` accepts stays available on the root. On top of that:
 
 ## Accessibility
 
-Clipped content is still in the accessibility tree, so a screen reader reads all of it - clamping is
+Clipped content is still in the accessibility tree, so a screen reader reads all of it: clamping is
 a visual convenience, not a way to hide text. That is also why the button's label does not need to
 describe what is hidden.
 

@@ -17,12 +17,12 @@ request.
 
 ## What Coral adds
 
-- **The right primitive.** `alert-dialog`: outside clicks are ignored, focus is trapped, the role is
+- **The right primitive: `alert-dialog`.** Outside clicks are ignored, focus is trapped, the role is
   `alertdialog` and the title and description are wired to it.
 - **It waits.** Hand it an async `onconfirm` and the dialog stays put until the promise settles.
 - **It survives failure.** A rejected promise leaves the dialog open, so the error has somewhere to
   be reported and the reader can try again.
-- **One click, one write.** A second click while the first request is in flight does nothing.
+- **One click, one write:** a second click while the first request is in flight does nothing.
 - **Escape stops meaning "cancel"** while a request is on its way to the server.
 
 ## Waiting, and failing
@@ -32,7 +32,7 @@ request.
 That demo fails the first time and succeeds after. Nothing closes on the failure: the buttons come
 back, the reader reads the error, and pressing the button again retries.
 
-The rule is one line - **return `false`, or throw, to keep it open**:
+The rule is one line: **return `false`, or throw, to keep it open**.
 
 ```svelte
 <ConfirmDialog
@@ -52,7 +52,7 @@ The rule is one line - **return `false`, or throw, to keep it open**:
 />
 ```
 
-Catching inside `onconfirm` is the shape to aim for - it puts the message where the reader is
+Catching inside `onconfirm` is the shape to aim for: it puts the message where the reader is
 looking. Letting the error propagate instead also keeps the dialog open, but it surfaces as an
 unhandled rejection rather than as something a person can read.
 
@@ -71,7 +71,7 @@ Two ways, and the choice is usually made for you:
 
 ## Extra detail in the body
 
-Anything between the description and the buttons - what exactly is about to change.
+Anything between the description and the buttons: what exactly is about to change.
 
 <Preview name="kit/confirm-dialog/details" />
 
@@ -96,7 +96,7 @@ pnpm dlx shadcn-svelte@latest add alert-dialog button spinner
 
 ## Props
 
-Everything the shadcn alert-dialog root accepts stays available - `open`, `onOpenChange`. On top of
+Everything the shadcn alert-dialog root accepts stays available: `open`, `onOpenChange`. On top of
 that:
 
 | Prop           | Type                   | Default     | Description                                                      |
@@ -119,7 +119,7 @@ that:
 ## Accessibility
 
 `role="alertdialog"`, `aria-modal`, and `aria-labelledby` / `aria-describedby` pointing at the title
-and description - all from the primitive, all verified. Focus is trapped: Tab cycles inside the
+and description, all from the primitive, all verified. Focus is trapped: Tab cycles inside the
 dialog and cannot reach the page behind it. Outside clicks are ignored by design, which is the
 difference between `alert-dialog` and `dialog`.
 
@@ -131,7 +131,7 @@ attribute where a keyboard and a screen reader can both see it.
 ## Why flat props
 
 There is a canonical case, and nearly every call site is exactly it: a question, a consequence, two
-buttons. What varies - the trigger, extra body detail - is a snippet, so the
+buttons. What varies (the trigger, extra body detail) is a snippet, so the
 [conventions](/docs/conventions) are satisfied without a prop for every variation.
 
 The one thing deliberately not here is a promise-returning `confirm()` helper you could `await` in

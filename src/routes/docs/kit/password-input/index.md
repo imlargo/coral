@@ -9,7 +9,7 @@ description: A password field with a visibility toggle that does not break passw
 
 Switching `type` between `password` and `text` is one line, and it is the line that goes wrong: the
 caret jumps to the start, the toggle announces itself as a different button after every press, and a
-form submitted while the password is showing hands a password manager a plain text field - so the
+form submitted while the password is showing hands a password manager a plain text field, so the
 offer to save it never comes.
 
 <Preview name="kit/password-input/basic" />
@@ -19,9 +19,9 @@ offer to save it never comes.
 - **Hidden again on submit.** The field goes back to `type="password"` inside the form's `submit`
   event, before the browser reads it, so saving and autofill keep working.
 - **The caret stays put.** Selection is read before the switch and restored after it.
-- **One toggle, one name.** `aria-pressed` carries the state, so "Show password, pressed" means what
-  it says - instead of a name that flips between "Show" and "Hide" and never says which is current.
-- **Caps Lock warning.** Read with `getModifierState`, which catches a lock that was already on and
+- **One toggle, one name:** `aria-pressed` carries the state, so "Show password, pressed" means what
+  it says, instead of a name that flips between "Show" and "Hide" and never says which is current.
+- **Caps Lock warning:** read with `getModifierState`, which catches a lock that was already on and
   does not get it backwards on macOS. Announced politely, cleared on blur.
 - **Nothing sent to a spellchecker.** Spellcheck, autocorrect and autocapitalize are off. A shown
   password is a text field to the browser, and enhanced spellcheck services upload text fields.
@@ -50,7 +50,7 @@ pnpm dlx shadcn-svelte@latest add input-group
 
 ## Props
 
-Everything the shadcn input accepts stays available - `name`, `id`, `placeholder`, `required`,
+Everything the shadcn input accepts stays available: `name`, `id`, `placeholder`, `required`,
 `minlength`, `aria-*`. On top of that:
 
 | Prop                | Type                         | Default            | Description                                                 |

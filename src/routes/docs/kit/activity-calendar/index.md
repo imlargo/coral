@@ -15,12 +15,12 @@ handles the keyboard; what the numbers mean stays with the project.
 ## What Coral adds
 
 - **The squares land on the right day.** `new Date('2026-01-05')` is UTC midnight, which in a UTC-5 zone is
-  the 4th - so the naive grid is a day off, all year, only for readers west of Greenwich.
-- **A scale that survives real data.** Levels come from quantiles of the non-empty days, not from
+  the 4th, so the naive grid is a day off all year, only for readers west of Greenwich.
+- **A scale that survives real data:** levels come from quantiles of the non-empty days, not from
   slicing `0..max`.
-- **One tab stop, arrow keys inside it.** Not 365 tab stops between whatever sits above the grid and
+- **One tab stop, arrow keys inside it:** not 365 tab stops between whatever sits above the grid and
   whatever sits below it.
-- **One tooltip, not 365.** A single floating instance is moved onto the live square.
+- **One tooltip, not 365:** a single floating instance is moved onto the live square.
 - **Repeats are summed.** Activity arrives as events; three commits on Tuesday are three rows.
 - **Missing days are drawn, not skipped.** A gap in the data is an empty square, not a missing column.
 
@@ -35,8 +35,8 @@ type ActivityDay<T = unknown> = {
 };
 ```
 
-Order does not matter. Days you leave out are drawn empty. Days you repeat are added together -
-every wrapper worth comparing against keys them into a `Map` and silently keeps the last one.
+Order does not matter. Days you leave out are drawn empty. Days you repeat are added together.
+Every wrapper worth comparing against keys them into a `Map` and silently keeps the last one.
 
 Without `start` and `end` the grid spans the earliest and latest days in the data. Pass both to hold
 a window still while the data underneath it changes.
@@ -51,8 +51,8 @@ The two are read differently, on purpose:
 | `'2026-01-05T02:00:00Z'`   | a moment - its **local** day              |
 | `new Date(2026, 0, 5, 23)` | a moment - its **local** day              |
 
-A bare date has no time in it, so treating it as UTC midnight - which is what `new Date` is
-specified to do - shifts the whole grid one square in every negative-offset timezone. Anything with
+A bare date has no time in it, so treating it as UTC midnight (which is what `new Date` is
+specified to do) shifts the whole grid one square in every negative-offset timezone. Anything with
 a clock in it is a real instant, and its day is the day it happened where you are.
 
 Dates are normalised to **local noon** rather than midnight. Midnight is the one instant a DST jump
@@ -66,7 +66,7 @@ Four steps above zero by default. The cuts are quantiles of the **non-empty** da
 thresholdsFor([1, 2, 3, 4, 5, 6, 7, 8], 4); // [1, 3, 5, 7]
 ```
 
-Level 1 always starts at 1 - any activity at all has to read as activity - and every cut is forced
+Level 1 always starts at 1 (any activity at all has to read as activity), and every cut is forced
 above the one before it, so flat data degrades to `1, 2, 3, 4` instead of collapsing three levels
 onto the same count.
 
@@ -74,7 +74,7 @@ Slicing `0..max` into equal bands is the obvious alternative and it is wrong for
 activity is long-tailed, so a single 40-commit day pushes the whole year into the first band and
 paints one square dark.
 
-Pass `thresholds` to fix the cuts yourself. Do that whenever two grids sit side by side - otherwise
+Pass `thresholds` to fix the cuts yourself. Do that whenever two grids sit side by side, otherwise
 each one is scaled to its own busiest day and the darker grid is not the busier one. The number of
 cuts is then the number of steps and `levels` is ignored, so the ramp cannot end up with more levels
 than the scale has room for.
@@ -89,7 +89,7 @@ Coral picks none. The ramp is mixed between two theme tokens:
 color-mix(in oklab, var(--primary) 50%, var(--muted));
 ```
 
-What Coral defines is the _distance_ between the ends - which is the data, not the appearance. Move
+What Coral defines is the _distance_ between the ends, which is the data, not the appearance. Move
 the ends with `color` and `emptyColor`; a chart token is usually what you want.
 
 `color-mix` rather than an opacity ramp: opacity would fade the focus ring along with the square, and
@@ -121,7 +121,7 @@ once fixes both.
 ## The pieces
 
 For anything richer than a line of text, `tooltip` replaces the body outright and receives the same
-cell - including whatever `meta` you hung on the day. `legend` replaces the swatch row and is handed
+cell, including whatever `meta` you hung on the day. `legend` replaces the swatch row and is handed
 the ramp and the cuts, so a legend that reads `1 ▢▢▢▢▢ 12+` needs nothing Coral did not already
 compute.
 
@@ -135,7 +135,7 @@ never reads it.
 <Preview name="kit/activity-calendar/select" class="justify-start overflow-x-auto" />
 
 `onselect` fires on click, Enter and Space. There is no selected state: a square is where a day is
-picked, not where it is held - the selection opens a panel, filters a list or pushes a route, and it
+picked, not where it is held. The selection opens a panel, filters a list or pushes a route, and it
 belongs to whichever of those owns it.
 
 ## Keyboard and screen readers
@@ -200,8 +200,8 @@ Everything else lands on the root element.
 
 ## What it does not do
 
-- **No range picker, no year tabs, no "last 12 months" button.** Each of those is a control with its
+- **No range picker, no year tabs, no "last 12 months" button:** each of those is a control with its
   own state, sitting beside the grid rather than inside it; `start` and `end` are the seam they all
   meet at.
-- **No fetching.** The grid takes an array.
-- **No `count` formatting.** A count is a number until `label` says otherwise.
+- **No fetching:** the grid takes an array.
+- **No `count` formatting:** a count is a number until `label` says otherwise.

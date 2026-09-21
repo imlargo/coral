@@ -16,13 +16,13 @@ faster than the first. The search box at the top of this site is that hand-writt
 
 ## What Coral adds
 
-- **The shortcut, both ways.** One combo opens and closes it, in [`kit/shortcut`](/docs/kit/shortcut)
-  syntax - so `mod+k` is Command on a Mac and Control elsewhere.
+- **The shortcut, both ways:** one combo opens and closes it, in [`kit/shortcut`](/docs/kit/shortcut)
+  syntax, so `mod+k` is Command on a Mac and Control elsewhere.
 - **Actions carry their own shortcut.** Drawn beside the action, and bound for as long as the palette
   is mounted, so the combo is true everywhere and not only inside the list.
-- **Recents, lifted not reordered.** Recently run actions move into a group at the top; everything
+- **Recents, lifted not reordered:** recently run actions move into a group at the top; everything
   else stays exactly where it was, because a list that re-sorts itself defeats the muscle memory a
-  palette exists for. `recent` is bindable - where it is stored is the project's to decide.
+  palette exists for. `recent` is bindable: where it is stored is the project's to decide.
 - **Running can fail.** `run` may be async: the row reports that it is working, and returning `false`
   or throwing keeps the palette open, which is where the error can still be read.
 - **Search by things you do not show.** `keywords` are matched but never rendered.
@@ -33,7 +33,7 @@ faster than the first. The search box at the top of this site is that hand-writt
 
 The same rule as [confirm dialog](/docs/kit/confirm-dialog) and
 [action button](/docs/kit/action-button): return `false`, or throw, to stay put. An action is
-remembered as recent whether or not it succeeded - the reader reached for it, which is what the list
+remembered as recent whether or not it succeeded: the reader reached for it, which is what the list
 is a record of.
 
 ## Server-side search
@@ -44,7 +44,7 @@ server's answer and filtering it again locally would hide rows it meant to retur
 
 ## One thing to know about `mod+k`
 
-Off a Mac, `mod+k` is `Ctrl+K` - and the command primitive reads Ctrl+K as "previous item" in its vim
+Off a Mac, `mod+k` is `Ctrl+K`, and the command primitive reads Ctrl+K as "previous item" in its vim
 bindings, cancelling the key. A palette bound that way opens and then refuses to close on the same
 combo, on every machine that is not a Mac.
 
@@ -57,7 +57,7 @@ So when a combo the palette binds would be swallowed, those bindings give way to
 pnpm dlx shadcn-svelte@latest add command
 ```
 
-Composes [`kit/shortcut`](/docs/kit/shortcut) - copy both folders.
+Composes [`kit/shortcut`](/docs/kit/shortcut): copy both folders.
 
 ```svelte
 <script lang="ts">
@@ -82,7 +82,7 @@ type CommandAction = {
 
 ## Props
 
-Everything the shadcn command dialog accepts stays available - `title`, `description`, `portalProps`.
+Everything the shadcn command dialog accepts stays available: `title`, `description`, `portalProps`.
 On top of that:
 
 | Prop                           | Type                              | Default                       | Description                                       |
@@ -112,7 +112,7 @@ On top of that:
 The dialog, the combobox semantics, the arrow keys and the focus trap are the primitive's, including
 the visually hidden title and description every dialog needs. What is added here is the trigger's
 `aria-haspopup`, `aria-expanded` and `aria-keyshortcuts`, and shortcut glyphs that are read out by
-name rather than as "place of interest sign" - see [shortcut](/docs/kit/shortcut).
+name rather than as "place of interest sign." See [shortcut](/docs/kit/shortcut).
 
 A disabled action stays in the list. Hiding it is how a reader concludes the feature does not exist,
 rather than that they cannot use it right now.
@@ -120,7 +120,7 @@ rather than that they cannot use it right now.
 ## actions.ts
 
 `group`, `remember` and `searchValue` are pure and exported, so the same ordering can drive a
-different surface - a menu, a toolbar, a mobile sheet:
+different surface (a menu, a toolbar, a mobile sheet):
 
 ```ts
 import { group, remember } from '$lib/coral/kit/command-palette/actions.js';

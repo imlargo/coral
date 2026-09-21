@@ -8,8 +8,8 @@ description: A popover, a calendar and a formatted trigger. One day or two, with
 </script>
 
 The shadcn docs are honest about this one: there is no date picker component, there is a recipe.
-Every project writes the same forty lines - a popover, a trigger button, a `DateFormatter`, a
-`getLocalTimeZone()`, an `open` flag that has to be closed by hand - and every project writes them
+Every project writes the same forty lines (a popover, a trigger button, a `DateFormatter`, a
+`getLocalTimeZone()`, an `open` flag that has to be closed by hand), and every project writes them
 slightly differently.
 
 <Preview name="kit/date-picker/basic" />
@@ -18,17 +18,17 @@ slightly differently.
 
 - **The popover closes itself**, and focus goes back to the trigger. The recipe leaves that to a
   hand-written `onValueChange`, which is where it gets forgotten.
-- **A range closes when it is _complete_**, not on the first click - the single most common bug in a
-  hand-rolled range picker.
+- **A range closes when it is _complete_**, not on the first click (the single most common bug in a
+  hand-rolled range picker).
 - **The trigger label is formatted, and a range is formatted _as a range_**: `Jan 5 – 9, 2026`,
   one month and one year, in whatever separator the locale uses.
 - **Presets know which of them is active**, which is the only reason a preset row is worth composing
   rather than writing inline.
-- **No `@internationalized/date` import.** `Intl` formats the day; the calendar keeps owning the
+- **No `@internationalized/date` import:** `Intl` formats the day; the calendar keeps owning the
   dates.
 - **Days survive timezones and DST.** The recipe's `value.toDate(getLocalTimeZone())` hands `Intl`
-  local midnight, and midnight is the one instant a DST jump can delete - where it does, the picker
-  prints the day before the one that is selected.
+  local midnight, and midnight is the one instant a DST jump can delete. Where that happens, the
+  picker prints the day before the one that is selected.
 - **`onchange` fires when the user picks**, never on mount and never when `value` is assigned from
   code.
 
@@ -41,7 +41,7 @@ popover stays open through the middle of a selection and shuts when the second e
 
 A range is **half picked** for as long as it takes to click the second day: `value` carries a
 `start` and no `end`, and the trigger prints that one day rather than falling back to the
-placeholder - a picker that says "Pick a range" while a start day sits highlighted is lying
+placeholder. A picker that says "Pick a range" while a start day sits highlighted is lying
 about its own state. It is also why the `trigger` snippet gets `empty` as a signal of its own
 instead of testing `value === undefined`.
 
@@ -73,7 +73,7 @@ Which brings up the part worth having: **the row knows which preset is active**,
 prints its label rather than the dates behind it. `Last 7 days` is what the user chose; making
 them recognise it as `Aug 24 – 31` is asking them to do arithmetic to read their own selection.
 
-Identity cannot answer that question - a thunk hands back a fresh `CalendarDate` on every call, so
+Identity cannot answer that question. A thunk hands back a fresh `CalendarDate` on every call, so
 `===` is always false. `activePreset` in
 [`presets.ts`](https://github.com/imlargo/coral/blob/main/src/lib/coral/kit/date-picker/presets.ts)
 compares the day fields instead, and is exported on its own for a preset row that lives outside the
@@ -90,7 +90,7 @@ Unrecognised props go to the **calendar**, not to the popover: `minValue`, `maxV
 <Preview name="kit/date-picker/birth" />
 
 The popover's own surface is small on purpose, because a date picker only ever needs three knobs
-from it - `open`, `align` and `contentClass` - and those are named props.
+from it (`open`, `align` and `contentClass`), and those are named props.
 
 One rename: the calendar's `placeholder` (the month on screen, a `DateValue`) is Coral's **`month`**,
 because `placeholder` is already the trigger's empty text everywhere else in Coral. Two props with
@@ -100,20 +100,20 @@ one name, one a string and one a date, is a coin flip every caller loses once.
 
 <Preview name="kit/date-picker/form" />
 
-`name` puts the selection in the request as a field holding the ISO day - `2026-01-05`, which is
+`name` puts the selection in the request as a field holding the ISO day, `2026-01-05`, which is
 what `String(dateValue)` already gives you. A range submits two: `name`, and `endName` (defaulting
 to `${name}-end`).
 
 `form` points those fields at a form by `id`, for a picker that renders outside it. `required`
-blocks submission while nothing is selected - and on a range it holds for a half-picked one too,
-which is the user mid-gesture rather than a selection.
+blocks submission while nothing is selected. On a range it holds for a half-picked one too, which
+is the user mid-gesture rather than a selection.
 
 ## The pieces
 
 <Preview name="kit/date-picker/pieces" />
 
 `trigger` replaces the button entirely and receives `label` already formatted, so a custom trigger
-does not have to re-derive it. `footer` adds a strip below the calendar - a clear action, a hint, a
+does not have to re-derive it. `footer` adds a strip below the calendar: a clear action, a hint, a
 time field.
 
 ## Formatting
@@ -185,14 +185,14 @@ Everything the wrapped calendar accepts stays available. On top of that:
 
 ## Deliberately absent
 
-- **No `type="multiple"`.** The shadcn calendar has it, and surfacing it here would add a third
-  shape - an array - to `value`, to `presets` and to `onchange`, for a selection the trigger cannot
+- **No `type="multiple"`:** the shadcn calendar has it, and surfacing it here would add a third
+  shape (an array) to `value`, to `presets` and to `onchange`, for a selection the trigger cannot
   print: a scattered set of days does not fold into one line of text the way a day or a range does.
-- **No time.** A date and a time are two controls - the shadcn recipe itself puts an
+- **No time:** a date and a time are two controls; the shadcn recipe itself puts an
   `<Input type="time">` next to the picker rather than inside it. Coral's `footer` is where that
   goes.
-- **No natural-language parsing.** It needs `chrono-node`, it is English-only out of the box, and it
-  is a text input that happens to sit beside a calendar - a different component, if it is ever
-  written twice.
-- **No `format` string.** `Intl.DateTimeFormatOptions` is the vocabulary the platform already has,
+- **No natural-language parsing:** it needs `chrono-node`, it is English-only out of the box, and it
+  is a text input that happens to sit beside a calendar (a different component, if it is ever
+  written twice).
+- **No `format` string:** `Intl.DateTimeFormatOptions` is the vocabulary the platform already has,
   and a bespoke `'dd/MM/yyyy'` mini-language is a formatter Coral would then have to own.

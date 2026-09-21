@@ -10,16 +10,16 @@ description: Stars you can pick and stars you can only read. Native radios under
 <Preview name="kit/rating-group/basic" />
 
 Flat props, because a rating has a defensible canonical case: some stars, a value, click one. The
-compound alternative - a root, a control, a context, an each, an item - is eight lines of ceremony
+compound alternative (a root, a control, a context, an each, an item) is eight lines of ceremony
 to draw five stars, and it is the boilerplate Coral exists to delete.
 
 ## What Coral adds
 
-- **Native radios underneath.** Arrow keys, `Home`/`End`, roving focus, form submission and
+- **Native radios underneath:** arrow keys, `Home`/`End`, roving focus, form submission and
   `required` validation are the platform's, not a reimplementation of the platform's.
 - **Right-to-left works without a `dir` prop.** The halves swap, the fill grows the other way, and
-  the arrow keys reverse - the browser and CSS logical properties do all three.
-- **Half stars from one glyph.** No second icon, and any fraction, not just a half.
+  the arrow keys reverse: the browser and CSS logical properties do all three.
+- **Half stars from one glyph:** no second icon, and any fraction, not just a half.
 - **`readonly` is not a disabled control.** It leaves the tab order and becomes an image with the
   rating as its name, which is what showing someone else's average actually is.
 - **An average is drawn where it is.** `4.3` is four stars and a third.
@@ -52,8 +52,8 @@ to show what it would submit.
 
 <Preview name="kit/rating-group/icons" />
 
-One `star` snippet, not three. It is rendered **twice per star** - once as the track with `fill: 0`,
-once clipped to the real fill - so a custom shape keeps its half steps with no half-shaped glyph to
+One `star` snippet, not three. It is rendered **twice per star** (once as the track with `fill: 0`,
+once clipped to the real fill), so a custom shape keeps its half steps with no half-shaped glyph to
 draw:
 
 ```svelte
@@ -63,7 +63,7 @@ draw:
 ```
 
 The usual build asks for `empty`, `half` and `full`. Three glyphs is three chances for them to
-disagree, the half one only ever fits one shape, and it caps the component at halves - `4.3` has no
+disagree, the half one only ever fits one shape, and it caps the component at halves. `4.3` has no
 glyph. Clipping one shape has none of those problems.
 
 Fill is a **fraction**, `0` to `1`, not a state. `fill > 0` is the "is this one earned" test.
@@ -78,7 +78,7 @@ Fill is a **fraction**, `0` to `1`, not a state. `fill > 0` is the "is this one 
 
 `color` and `emptyColor` are the two ends; both default to theme tokens, and passing a literal is
 the project's call. `--coral-star` is the size, a custom property rather than a prop because a star
-is sized, not styled - everything else in the row derives from it. The gap is a plain `gap-*` on
+is sized, not styled; everything else in the row derives from it. The gap is a plain `gap-*` on
 `class`.
 
 ## Forms
@@ -89,7 +89,7 @@ is sized, not styled - everything else in the row derives from it. The gap is a 
 posted, `required` blocks submission natively, and the browser's own validation message points at
 the control.
 
-Without it, nothing is submitted at all - and that takes explaining, because radios need a name to
+Without it, nothing is submitted at all, and that takes explaining, because radios need a name to
 group _whatever_ they are for:
 
 - Radios with no shared `name` are each a group of one. Arrow keys do nothing, and two stars can be
@@ -112,7 +112,7 @@ below is the platform's behaviour, not an imitation of it:
 | `Home` `End`    | first, last                      |
 
 The group needs a name. Either pass `aria-label`, or point `aria-labelledby` at a `Field.Legend` the
-way the form example does. Each option names itself `3 / 5` - wordless, because `3 out of 5 stars`
+way the form example does. Each option names itself `3 / 5`, wordless, because `3 out of 5 stars`
 is copy and copy is the project's. `label` is where that goes:
 
 ```svelte
@@ -123,7 +123,7 @@ is copy and copy is the project's. `label` is where that goes:
 
 ## Installation
 
-Nothing to add - the component uses no shadcn primitives.
+Nothing to add: the component uses no shadcn primitives.
 
 ```svelte
 <script lang="ts">

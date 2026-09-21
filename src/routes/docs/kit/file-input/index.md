@@ -21,15 +21,15 @@ that grows a second row when the same file is dropped twice. This is that input 
 - **Drag and drop that actually works**, and stays highlighted while the pointer moves over the
   contents of the zone.
 - **`accept` that does not reject valid files.** The bug below.
-- **One selection, one source of truth.** `value` is the state, not a mirror of some private copy.
-- **Sizes go through `Intl`**, so the decimal separator follows the locale - `1,5 MB` where that is
+- **One selection, one source of truth:** `value` is the state, not a mirror of some private copy.
+- **Sizes go through `Intl`**, so the decimal separator follows the locale: `1,5 MB` where that is
   how the number is written, rather than a hardcoded `1.5 MB`.
 - **The same file twice is once.** A hand-rolled input appends blindly, so dropping the same file
   again puts two identical rows on screen and posts it twice.
 
 ## An input, not an uploader
 
-Coral stops at `File[]`. There is no progress, no retry, no remote URL, no queue - all of that needs
+Coral stops at `File[]`. There is no progress, no retry, no remote URL, no queue. All of that needs
 to know where the bytes are going, and Coral does not.
 
 The boundary is easy to cross by accident. A file picker that wants to look like an uploader ends up
@@ -45,7 +45,7 @@ $effect(() => {
 });
 ```
 
-A bar that fills at a fixed rate the moment a file is chosen, with no request behind it - the
+A bar that fills at a fixed rate the moment a file is chosen, with no request behind it: the
 appearance of an uploader, which is all a component without an API can offer.
 
 The real seam is the `file` snippet: Coral holds the selection and renders the zone, the project
@@ -62,8 +62,8 @@ A pure MIME check looks obviously right and is wrong:
 accept.split(',').some((type) => type === file.type || file.type.startsWith(category));
 ```
 
-Browsers report an **empty `file.type`** for plenty of ordinary files - `.mov`, `.avi`, `.m4v`,
-`.mkv` - notably on Windows, in installed PWAs, and on iOS. The usual patch is a hardcoded table of
+Browsers report an **empty `file.type`** for plenty of ordinary files: `.mov`, `.avi`, `.m4v`,
+`.mkv`, notably on Windows, in installed PWAs, and on iOS. The usual patch is a hardcoded table of
 video and image extensions, which is wrong again the first time a format is missing from it.
 
 Coral needs no table. A file the browser refuses to type can only be judged by its extension:
@@ -93,7 +93,7 @@ type FileRejection = {
 ```
 
 **Coral renders no error text.** The message is copy, copy belongs to the project, and so does where
-it goes - inline under the field, or a toast. Coral says what happened and stays out of it.
+it goes: inline under the field, or a toast. Coral says what happened and stays out of it.
 
 The consequence to respect: **set a constraint, wire `onreject`**, or files are dropped in silence.
 
@@ -107,7 +107,7 @@ the limit is 1 whatever `maxFiles` says. A single-file input **replaces** what i
 refusing the new file.
 
 The shape to avoid is carrying both a `variant: 'single' | 'multiple'` and a `maxFiles`, defaulted
-to `'single'` and `5` - two props that contradict each other before anyone touches them.
+to `'single'` and `5`: two props that contradict each other before anyone touches them.
 
 ## Accessibility
 
@@ -115,11 +115,11 @@ The zone is a `<label>` wrapping a real `<input type="file">` that is `sr-only` 
 That single change is the difference between a picker the keyboard can open and one it cannot:
 
 - The click is native. No `onclick`, no `.click()` call, no `a11y_click_events_have_key_events`
-  suppression - which a clickable `<div>` needs just to compile.
+  suppression, which a clickable `<div>` needs just to compile.
 - Tab reaches the input; the zone shows the focus ring through `has-[input:focus-visible]`.
 - Space and Enter open the picker, because that is what a focused file input does.
 
-Every prop a native file input takes is forwarded to it - `id`, `required`, `capture`, `aria-*` - so
+Every prop a native file input takes is forwarded to it: `id`, `required`, `capture`, `aria-*`, so
 a surrounding `Field` labels it the usual way.
 
 ## Installation
@@ -157,7 +157,7 @@ Everything a native file input accepts is forwarded to it. On top of that:
 | `zone`        | `Snippet<[{ dragging, disabled, hint }]>` | -                                     | Replaces the contents of the zone.       |
 | `file`        | `Snippet<[{ file, index, remove }]>`      | -                                     | Replaces each row. The uploader seam.    |
 
-`hint` defaults to a summary built from the constraints - `PDF, IMAGE · 1 MB`. It is deliberately
+`hint` defaults to a summary built from the constraints: `PDF, IMAGE · 1 MB`. It is deliberately
 wordless: extensions and categories reduce to bare tokens, so nothing in it needs translating.
 
 ## Forms

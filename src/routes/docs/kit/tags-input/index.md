@@ -16,8 +16,8 @@ is taken out.
 
 ## What Coral adds
 
-- **One rule for typed and pasted text.** The delimiter separates tags wherever the text came from,
-  so `red, blue` is two tags whether it was typed or pasted. Newlines separate too - a column out of
+- **One rule for typed and pasted text:** the delimiter separates tags wherever the text came from,
+  so `red, blue` is two tags whether it was typed or pasted. Newlines separate too, so a column out of
   a spreadsheet arrives as tags, not as one tag with line breaks in it.
 - **Nothing is lost on the way out.** Leaving the field with something half-typed in it turns that
   into a tag instead of dropping it.
@@ -25,24 +25,24 @@ is taken out.
   again removes it. Arrows walk the row, Escape goes back to the field, and typing anywhere in
   there lands in the field again.
 - **Focus never falls on the floor.** Removing a tag moves focus to the next one, or back to the
-  field when the last one goes - not to `<body>`.
+  field when the last one goes. It never lands on `<body>`.
 - **Rejections are reported, not guessed.** A duplicate, a failed `validate` or a full list arrives
   at `onreject` with the reason. The message is the project's; Coral does not write copy.
 - **It submits like a list.** One hidden input per tag, which is what a server already reads.
 
 Everything else is the primitive's: `input-group` draws the box, and the focus ring, the disabled
-dimming and `aria-invalid` come from it reacting to the field inside - so a tags input sits next to
-a plain input without either of them being told what a field looks like.
+dimming and `aria-invalid` come from it reacting to the field inside. That's why a tags input sits
+next to a plain input without either of them being told what a field looks like.
 
 ## Delimiters and pasting
 
-The `delimiter` is a comma by default, and a newline always separates as well - a single-line field
-cannot hold one, so there is nothing to lose by cutting there. Pass a string, a regular expression,
+The `delimiter` is a comma by default, and a newline always separates as well, since a single-line
+field cannot hold one, so there is nothing to lose by cutting there. Pass a string, a regular expression,
 or `''` to leave newlines as the only separator.
 
 The fragment after the last delimiter stays in the field. Pasting `red, blue` leaves `blue` being
-typed, which is where it would have ended up if the paste had no trailing comma either - and it
-becomes a tag on Enter, or on the way out of the field.
+typed, which is where it would have ended up if the paste had no trailing comma either. It becomes
+a tag on Enter, or on the way out of the field.
 
 There is no `addOnPaste` switch on purpose. With one, the same string becomes two tags or one
 depending on how it got into the field.
@@ -52,7 +52,7 @@ depending on how it got into the field.
 <Preview name="kit/tags-input/limits" />
 
 `max` caps the list, `allowDuplicates` opens or closes the door on repeats, and both report what
-they turned away through `onreject` - one call per batch, so a paste of thirty over the cap is one
+they turned away through `onreject`, one call per batch, so a paste of thirty over the cap is one
 message, not thirty.
 
 Coral says nothing on screen about it. What "only 4 fit" reads like is the project's, and a
@@ -62,8 +62,8 @@ component that ships that sentence ships a language with it.
 
 <Preview name="kit/tags-input/rules" />
 
-`sanitize` runs before anything is judged or stored - trimming by default, but lowercasing, or
-stripping a leading `#`, belongs here too. `validate` then decides whether the value is a tag at
+`sanitize` runs before anything is judged or stored (trimming by default, but lowercasing, or
+stripping a leading `#`, belongs here too). `validate` then decides whether the value is a tag at
 all. Both apply to typing, to pasting and to the value committed on blur, because all three go
 through the same door.
 
@@ -78,14 +78,14 @@ against what the values before it already added.
 visible field never carries the name: it holds what is being typed, which is precisely what has not
 been added yet.
 
-`required` is enforced while the list is empty and released as soon as it is not - so the browser's
+`required` is enforced while the list is empty and released as soon as it is not, so the browser's
 own validation guards the tags, and never blocks a submit over text left half-typed in the field.
 
 ## Custom tags
 
 <Preview name="kit/tags-input/custom" />
 
-The `tag` snippet replaces the body of each tag - an icon, an avatar, a count. The remove control
+The `tag` snippet replaces the body of each tag (an icon, an avatar, a count). The remove control
 stays, along with its label and its place in the keyboard order. `tagVariant`, `tagClass`,
 `inputClass` and `class` cover the rest without a snippet.
 
@@ -127,7 +127,7 @@ pnpm dlx shadcn-svelte@latest add input-group badge
 
 ## Props
 
-Everything the shadcn input accepts stays available on the field - `placeholder`, `id`, `aria-*`,
+Everything the shadcn input accepts stays available on the field: `placeholder`, `id`, `aria-*`,
 `maxlength`, `autocomplete`, `ref`. On top of that:
 
 | Prop              | Type                                         | Default               | Description                                               |
@@ -156,14 +156,14 @@ Everything the shadcn input accepts stays available on the field - `placeholder`
 | `tag`             | `Snippet<[{ value, index, remove }]>`        | -                     | Replaces the body of each tag. The remove control stays.  |
 
 `oninput`, `onkeydown` and `onblur` are forwarded rather than swallowed. The caller's `onkeydown`
-runs first, so calling `preventDefault` on it takes that key away from the component - which is how
+runs first, so calling `preventDefault` on it takes that key away from the component, which is how
 a project bolts on a key of its own without forking the file.
 
 ## Accessibility
 
 The field stays a native text input, so it keeps its label, its description, its placeholder and
-its own validation. Each tag carries a real `<button>` labelled with the tag it removes - `Remove
-vanilla`, not `Remove` - so the controls are reachable by Tab and named when they are reached. The
+its own validation. Each tag carries a real `<button>` labelled with the tag it removes: `Remove
+vanilla`, not `Remove`. That's why the controls are reachable by Tab and named when they are reached. The
 arrow keys are a shortcut over the top of that, not the only way in.
 
 Focus is the highlight. There is no second notion of "the selected tag" to keep in sync with it,
@@ -174,12 +174,12 @@ list empties.
 > **On editing a tag in place.** Some libraries let a double click turn a tag back into a text
 > field. Coral does not: it is a mode people fall into by accident and cannot discover on purpose,
 > and removing a short string and retyping it is two keystrokes. If a project genuinely needs it,
-> that is a `tag` snippet - the pieces are exposed.
+> that is a `tag` snippet: the pieces are exposed.
 
 ## tags.ts
 
 The rules live in `kit/tags-input/tags.ts` and are exported on their own, so the same splitting and
-validation can run where there is no field - normalising a payload, importing a CSV column.
+validation can run where there is no field: normalising a payload, importing a CSV column.
 
 ```ts
 import { add, split } from '$lib/coral/kit/tags-input/tags.js';

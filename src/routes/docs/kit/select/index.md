@@ -16,7 +16,7 @@ decide what cleared means. Written by hand, no two copies of those few lines sta
 ## What Coral adds
 
 - **The trigger label derives itself.** The hand-rolled version opens with the same line every
-  time - `options.find((o) => o.value === value)?.label ?? placeholder`.
+  time: `options.find((o) => o.value === value)?.label ?? placeholder`.
 - **The value keeps its type.** `options` is `Option<T>[]`, so a numeric id goes in and a numeric id
   comes out. bits-ui keys items by string; the mapping happens here, once.
 - **`onchange` fires when the user changes something.** Not on mount, not when `value` is assigned
@@ -34,7 +34,7 @@ They are not interchangeable and the boundary is worth stating once:
 | **`select`**   | The list is short and known - a status, a role, a priority. No search.           |
 | **`combobox`** | The list is long, needs a search box, comes from the server, or is multi-select. |
 
-Both open a `listbox` of `option`s - the difference is the trigger. A select's is a button: nothing
+Both open a `listbox` of `option`s. The difference is the trigger: a select's is a button, nothing
 to type into, and the platform's own typeahead while it is focused and shut. A combobox's is a text
 input, which announces itself as editable and sets the expectation that typing narrows the list.
 
@@ -42,8 +42,8 @@ That expectation is the whole point when there is a search behind it, and a liab
 not. Stripping the search out of a combobox leaves a text field that ignores what you type into it.
 
 **There is no `type="multiple"` here, on purpose.** A multi-select is not a select with one more
-prop: it needs a checkbox per row, badges in the trigger, and - as soon as the list is long enough
-for anyone to want more than two of its entries - a search box. That component is the combobox.
+prop: it needs a checkbox per row, badges in the trigger, and, as soon as the list is long enough
+for anyone to want more than two of its entries, a search box. That component is the combobox.
 Multiple selection arrives with search attached; keeping it out of `select` costs no one anything
 and keeps this component the size of the problem it solves.
 
@@ -52,7 +52,7 @@ and keeps this component the size of the problem it solves.
 <Preview name="kit/select/typed-values" />
 
 The obvious item key is `String(option.value)`, and it is lossy twice: two ids that stringify the
-same collapse onto one item, and any object value becomes `[object Object]` - so every option in
+same collapse onto one item, and any object value becomes `[object Object]`, so every option in
 the list shares a key. Coral keys items by their position instead, which cannot collide with
 itself, and hands the value back untouched.
 
@@ -61,14 +61,14 @@ itself, and hands the value back untouched.
 <Preview name="kit/select/groups" />
 
 Pass `OptionGroup[]` instead of `Option[]` and each run gets a heading. Do not mix the two shapes in
-one array - the first entry decides how the whole array is read.
+one array: the first entry decides how the whole array is read.
 
 ## Clearable
 
 <Preview name="kit/select/clearable" />
 
 `clearable` does both halves of unsetting: a `✕` appears on the trigger, and re-picking the selected
-option deselects it. Cleared means `undefined`, not `''` - an empty string is a value, and a field
+option deselects it. Cleared means `undefined`, not `''`. An empty string is a value, and a field
 that reports one when nothing is selected pushes the check onto every caller.
 
 The clear control sits beside the trigger rather than inside it. The trigger is a `<button>`, and a
@@ -80,10 +80,10 @@ button nested in a button is invalid HTML that browsers recover from by dropping
 
 `name` renders the field that submits. It is Coral's own rather than the primitive's, because
 bits-ui would submit the internal item key. `serialize` controls what gets written; it defaults to
-`String`, which is right for ids, numbers and enum members and wrong for objects - set it when `T`
+`String`, which is right for ids, numbers and enum members and wrong for objects, so set it when `T`
 is not a primitive.
 
-`form` points the field at a form by `id`, for a select that renders outside it - a portalled
+`form` points the field at a form by `id`, for a select that renders outside it: a portalled
 dialog, a sticky toolbar. `required` blocks submission while nothing is selected.
 
 > The field is clipped to a pixel rather than `type="hidden"`, because a hidden input is barred
@@ -106,7 +106,7 @@ pnpm dlx shadcn-svelte@latest add select button
 
 ## Props
 
-Everything the shadcn root accepts stays available - `open`, `onOpenChange`, `loop`,
+Everything the shadcn root accepts stays available: `open`, `onOpenChange`, `loop`,
 `scrollAlignment`, `autocomplete`. On top of that:
 
 | Prop           | Type                                             | Default               | Description                                     |
@@ -148,6 +148,6 @@ announces what the control is for rather than reading the visible placeholder as
 choice; and the clear control is a real button with `clearLabel` on it, outside the trigger, so it
 is reachable by keyboard.
 
-The `trigger` snippet replaces the label, not the button - the chevron and the trigger element
+The `trigger` snippet replaces the label, not the button: the chevron and the trigger element
 belong to the primitive. For a trigger that is not a button-with-a-label at all, use the combobox's
 `trigger` snippet, which replaces the whole element.

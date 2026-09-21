@@ -9,7 +9,7 @@ description: A number field with steppers, bounds that hold, and arithmetic that
 
 A hand-rolled stepper field clamps in one direction and forgets the other: the buttons stop at the
 cap while a typed `150` walks straight through it, so the same field enforces its bounds with the
-mouse and not with the keyboard. Dropping the text field entirely - just `-` / value / `+` - closes
+mouse and not with the keyboard. Dropping the text field entirely (just `-` / value / `+`) closes
 that hole by taking typing away, which turns a jump from `1` to `40` into thirty-nine presses.
 
 <Preview name="kit/number-input/basic" />
@@ -31,7 +31,7 @@ one control with one focus ring instead of three.
 
 <Preview name="kit/number-input/bounds" />
 
-Type `999` into that field and click away. It becomes `25`, and the field itself updates - the state
+Type `999` into that field and click away. It becomes `25`, and the field itself updates: the state
 and what you can see never disagree.
 
 Clamping happens on commit (blur, Enter, an arrow-key step), not on every keystroke. Clamping per
@@ -39,7 +39,7 @@ keystroke fights the person typing: with a max of `100` the `1` of `150` is fine
 fine, and only the finished number is wrong.
 
 A stepper disables itself once the value is against its bound. Leave `min` or `max` out and that
-direction is unbounded - **negatives included**. Defaulting `min` to `0` is the tempting shortcut,
+direction is unbounded, **negatives included**. Defaulting `min` to `0` is the tempting shortcut,
 and it quietly makes a temperature or a balance field impossible to express.
 
 ## Decimals
@@ -47,7 +47,7 @@ and it quietly makes a temperature or a balance field impossible to express.
 <Preview name="kit/number-input/decimals" />
 
 `step` sets the precision as well as the jump, so `step={0.1}` rounds to one decimal. When the two
-genuinely differ - money that steps by whole units but stores cents - set `decimals` on its own.
+genuinely differ (money that steps by whole units but stores cents), set `decimals` on its own.
 
 ## Empty, readonly, disabled
 
@@ -70,7 +70,7 @@ pnpm dlx shadcn-svelte@latest add input-group
 
 ## Props
 
-Everything the shadcn input accepts stays available - `placeholder`, `disabled`, `readonly`, `name`,
+Everything the shadcn input accepts stays available: `placeholder`, `disabled`, `readonly`, `name`,
 `id`, `aria-*`, `ref`. On top of that:
 
 | Prop             | Type                                   | Default     | Description                                                  |
@@ -98,12 +98,12 @@ one field is one too many.
 
 > **One thing to know about locale.** `type="number"` parses through the browser, which in a
 > Spanish locale may accept `1,5` and in another only `1.5`. If a field must accept a decimal comma
-> everywhere, that is a text field with its own parsing - not this component.
+> everywhere, that is a text field with its own parsing, not this component.
 
 ## step.ts
 
 The arithmetic lives in `kit/number-input/step.ts` and is exported on its own, so the same clamping
-and rounding can be reused where there is no input - validating a payload, totalling a column.
+and rounding can be reused where there is no input: validating a payload, totalling a column.
 
 ```ts
 import { clamp, decimalsOf, round, stepValue } from '$lib/coral/kit/number-input/step.js';

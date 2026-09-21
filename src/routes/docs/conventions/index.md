@@ -20,11 +20,11 @@ src/lib/coral/
 
 **Folders are created when something needs them, never in advance.** `blocks/` does not exist yet
 because nothing lives in it. A util with a single consumer stays inside its component's folder and
-moves to `lib/` the day a second component needs it - which is exactly how `lib/options.ts` came to
+moves to `lib/` the day a second component needs it, which is exactly how `lib/options.ts` came to
 be, when `select` became the second component to speak `Option<T>`.
 
 Moving a file is a breaking change: filenames are public API, so the component that gave the util up
-gets a major bump. `combobox` went to `3.0.0` for that reason and for no other - its props did not
+gets a major bump. `combobox` went to `3.0.0` for that reason and for no other. Its props did not
 change.
 
 ## Props
@@ -42,7 +42,7 @@ Every component accepts and merges a `class` prop, so overrides never require a 
 ```
 
 **Never remove capability the wrapped primitive already had.** Forward its props with
-`ComponentProps<typeof X>` and keep whatever it exposes for binding - `ref`, `loadingStatus`, and
+`ComponentProps<typeof X>` and keep whatever it exposes for binding: `ref`, `loadingStatus`, and
 friends. Derive types from the shadcn component, never from `bits-ui` directly:
 
 ```ts
@@ -71,10 +71,10 @@ export type Option<T = string> = {
 ```
 
 A `value: string` shape looks harmless until the first project selects by id, by object, or by
-enum - and then the component has to be rewritten.
+enum, and then the component has to be rewritten.
 
 One vocabulary, not one per component: `select` and `combobox` both read `Option<T>`, so a list
-moves between them without being rewritten. A component ignores the fields it has no use for - a
+moves between them without being rewritten. A component ignores the fields it has no use for: a
 select does not search, so it never reads `keywords`.
 
 ## Version headers
@@ -100,17 +100,17 @@ Every file carries a header, matched to an entry in `coral.json`:
 }
 ```
 
-`shadcn` and `npm` are what make installing Coral "copy the folder, then install these" - declare
+`shadcn` and `npm` are what make installing Coral "copy the folder, then install these." Declare
 every primitive the component imports. Omit `npm` when there are none.
 
 ## Formatting
 
-Tabs, single quotes, no trailing commas, 100 columns - enforced by Prettier. Tailwind classes are
+Tabs, single quotes, no trailing commas, 100 columns: enforced by Prettier. Tailwind classes are
 auto-sorted; do not hand-order them.
 
 ## Documenting a component
 
-Docs live next to nothing in Coral itself - this site is a separate app, and the folder that gets
+Docs live next to nothing in Coral itself: this site is a separate app, and the folder that gets
 copied stays clean. A page is one Markdown file plus its demos:
 
 ```
@@ -121,7 +121,7 @@ src/routes/docs/kit/avatar/
    └─ sizes.svelte
 ```
 
-Render a demo with its name - the path minus `demos/` and the extension:
+Render a demo with its name, the path minus `demos/` and the extension:
 
 ```svelte
 <Preview name="kit/avatar/basic" />

@@ -7,7 +7,7 @@ description: Copies text to the clipboard, says so out loud, and says so when it
 	import Preview from '$lib/docs/preview.svelte';
 </script>
 
-The five-line version - `navigator.clipboard.writeText`, a `copied` flag, a `setTimeout` - is the
+The five-line version (`navigator.clipboard.writeText`, a `copied` flag, a `setTimeout`) is the
 one every project writes, and it has four holes: it throws on any page not served over `https`, a
 screen reader never hears that anything happened, the timer keeps running after the component is
 gone, and a failure looks exactly like a success.
@@ -16,16 +16,16 @@ gone, and a failure looks exactly like a success.
 
 ## What Coral adds
 
-- **A fallback where the Clipboard API is missing.** Plain `http` on a LAN address, an embedded
+- **A fallback where the Clipboard API is missing:** plain `http` on a LAN address, an embedded
   webview: the selection-based copy is tried, and the reader's own selection and focus are put
   back afterwards.
 - **Failure is a state.** `failed` is drawn, announced and reported to `onerror`, instead of a check
   mark for a copy that never happened.
 - **It is heard.** Success and failure go through a polite status region. Changing the button's own
   `aria-label`, which is how most copy buttons do it, is not announced on the element that has focus.
-- **Text resolved on click.** Pass a function and it runs when the button is pressed - for a signed
-  URL, or an editor's current contents - with a `copying` state while it resolves.
-- **No leaked timers.** A reset scheduled before unmount is cancelled with it.
+- **Text resolved on click.** Pass a function (a signed URL, or an editor's current contents) and it
+  runs when the button is pressed, with a `copying` state while it resolves.
+- **No leaked timers:** a reset scheduled before unmount is cancelled with it.
 
 ## With text
 
@@ -55,7 +55,7 @@ pnpm dlx shadcn-svelte@latest add button
 
 ## Props
 
-Everything the shadcn button accepts stays available - `variant`, `size`, `disabled`, `class`,
+Everything the shadcn button accepts stays available: `variant`, `size`, `disabled`, `class`,
 `aria-*`, `ref`. On top of that:
 
 | Prop          | Type                                          | Default             | Description                                                   |
@@ -80,7 +80,7 @@ through `role="status"`, placed outside the button so it is not also read as par
 ## clipboard.ts
 
 `writeText` and `resolveText` are exported on their own, for copying from somewhere that is not a
-button - a keyboard shortcut, a context menu item.
+button: a keyboard shortcut, a context menu item.
 
 ```ts
 import { writeText } from '$lib/coral/kit/copy-button/clipboard.js';

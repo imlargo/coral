@@ -16,7 +16,7 @@ the moment the request starts.
 
 ## What Coral adds
 
-- **One click, one request.** Clicks while the promise is pending do nothing, and a submit button
+- **One click, one request:** clicks while the promise is pending do nothing, and a submit button
   that is busy does not submit its form again.
 - **Focus stays.** Busy is `aria-disabled` plus a click guard, not `disabled`, so the button keeps
   focus and is announced as unavailable.
@@ -29,7 +29,7 @@ the moment the request starts.
 
 <Preview name="kit/action-button/failure" />
 
-Without `onerror`, a thrown error propagates as an unhandled rejection - visible in the console, and
+Without `onerror`, a thrown error propagates as an unhandled rejection, visible in the console and
 to nobody using the page. Catching inside `onclick` and returning `false` works just as well.
 
 For a form submitted with SvelteKit's `enhance`, the form is what is pending, not the click: pass
@@ -49,7 +49,7 @@ pnpm dlx shadcn-svelte@latest add button spinner
 
 ## Props
 
-Everything the shadcn button accepts stays available - `variant`, `size`, `type`, `form`,
+Everything the shadcn button accepts stays available: `variant`, `size`, `type`, `form`,
 `disabled`, `class`, `aria-*`, `ref`. On top of that:
 
 | Prop           | Type                             | Default   | Description                                             |

@@ -8,7 +8,7 @@ description: Overlapping avatars with a count for the rest - and a list a screen
 </script>
 
 shadcn ships the overlap, `AvatarGroup` and `AvatarGroupCount`. What it leaves to each call site is
-the arithmetic - slice the list, count the rest, render `+N` - and that arithmetic is usually written
+the arithmetic: slice the list, count the rest, render `+N`. That arithmetic is usually written
 so that `max={4}` draws four avatars _and_ a count, a fifth circle, and six people in five slots
 renders `+1`, a circle that hides exactly one avatar the same size as itself.
 
@@ -19,18 +19,18 @@ renders `+1`, a circle that hides exactly one avatar the same size as itself.
 - **`max` is the width.** It counts circles, the count included, so the space a layout reserves is
   the space the stack takes.
 - **Never `+1`.** When one person would be hidden, they are drawn instead.
-- **A list.** `role="list"`, so a screen reader announces how many people there are before reading
+- **A list:** `role="list"`, so a screen reader announces how many people there are before reading
   them, and each avatar names its person through [kit/avatar](/docs/kit/avatar).
 - **Hidden people are not anonymous.** The count is labelled ("3 more") and lists the hidden names
   on hover.
-- **Any item shape.** `getPerson` maps your own type onto name and photo, so a list of users does
+- **Any item shape:** `getPerson` maps your own type onto name and photo, so a list of users does
   not have to be reshaped first.
 
 ## Listing the rest
 
 <Preview name="kit/avatar-stack/overflow" />
 
-The `overflow` snippet receives the hidden items, the count and its label - enough to put the count in
+The `overflow` snippet receives the hidden items, the count and its label, enough to put the count in
 a popover or a tooltip. Render an `AvatarGroupCount` so it keeps its place in the overlap.
 
 ## Installation
@@ -39,7 +39,7 @@ a popover or a tooltip. Render an `AvatarGroupCount` so it keeps its place in th
 pnpm dlx shadcn-svelte@latest add avatar
 ```
 
-Composes [`kit/avatar`](/docs/kit/avatar) - copy both folders.
+Composes [`kit/avatar`](/docs/kit/avatar): copy both folders.
 
 ```svelte
 <script lang="ts">
@@ -49,7 +49,7 @@ Composes [`kit/avatar`](/docs/kit/avatar) - copy both folders.
 
 ## Props
 
-Everything the shadcn avatar group accepts stays available - `class`, `aria-*`, `ref`. On top of
+Everything the shadcn avatar group accepts stays available: `class`, `aria-*`, `ref`. On top of
 that:
 
 | Prop            | Type                                  | Default        | Description                                           |

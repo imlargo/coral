@@ -7,8 +7,8 @@ description: A dialog on wide screens and a drawer on narrow ones, written once.
 	import Preview from '$lib/docs/preview.svelte';
 </script>
 
-shadcn's own docs show how to do this, and the way it is done is by writing the dialog twice - once
-inside `Dialog`, once inside `Drawer` - behind an `{#if isDesktop}`. Every change to the content is
+shadcn's own docs show how to do this, and the way it is done is by writing the dialog twice (once
+inside `Dialog`, once inside `Drawer`) behind an `{#if isDesktop}`. Every change to the content is
 then a change in two places, and crossing the breakpoint with it open closes it.
 
 <Preview name="kit/responsive-dialog/basic" />
@@ -18,10 +18,10 @@ then a change in two places, and crossing the breakpoint with it open closes it.
 - **Written once.** Each piece reads which primitive the root chose from context and renders that
   primitive's own part, so the content is composed a single time.
 - **Survives the breakpoint.** Both primitives bind the same `open`. Rotating a tablet or resizing a
-  window with it open swaps the surface and keeps it open; state the caller owns - what was typed -
+  window with it open swaps the surface and keeps it open; state the caller owns (what was typed)
   stays too.
 - **Each surface keeps its behaviour.** The dialog traps focus and closes on Escape; the drawer drags
-  to dismiss. Nothing is emulated - they are shadcn's `dialog` and `drawer`.
+  to dismiss. Nothing is emulated: they are shadcn's `dialog` and `drawer`.
 
 ## Composition
 
@@ -42,7 +42,7 @@ primitives do, since under both primitives they are the same bits-ui parts.
 ## Spacing
 
 The dialog pads its content; the drawer pads its header and footer and leaves the body to you. That is
-the primitives' own layout and Coral does not paper over it - give the body `px-4 md:px-0`, as the
+the primitives' own layout and Coral does not paper over it: give the body `px-4 md:px-0`, as the
 demo does, or whatever matches your `query`.
 
 ## Installation
@@ -61,7 +61,7 @@ pnpm dlx shadcn-svelte@latest add dialog drawer
 
 ## Props
 
-`ResponsiveDialog` accepts what the dialog root accepts - `open`, `onOpenChange`. On top of that:
+`ResponsiveDialog` accepts what the dialog root accepts: `open`, `onOpenChange`. On top of that:
 
 | Prop       | Type      | Default              | Description                                          |
 | ---------- | --------- | -------------------- | ---------------------------------------------------- |
@@ -75,4 +75,4 @@ only. The trigger, title, description and close forward everything to their prim
 ## Accessibility
 
 Both surfaces are `role="dialog"` with `aria-modal`, labelled by the title and described by the
-description - so always render a `ResponsiveDialogTitle`, even visually hidden with `sr-only`.
+description, so always render a `ResponsiveDialogTitle`, even visually hidden with `sr-only`.

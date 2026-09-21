@@ -8,7 +8,7 @@ description: A table of contents that highlights the section being read, includi
 </script>
 
 The hand-rolled version tracks the active heading with an `IntersectionObserver` and takes
-whichever entry reports itself as visible - which answers "what is on screen" when the question is
+whichever entry reports itself as visible, which answers "what is on screen" when the question is
 "what have I scrolled past". This site's own sidebar still does it that way, and shows both holes:
 a section short enough to sit entirely above the band never lights up, and the last heading on a
 page can never win at all, because at the bottom of the document there is nothing left to scroll
@@ -18,12 +18,12 @@ and it never crosses the line.
 
 ## What Coral adds
 
-- **Position, not intersection.** The active heading is the last one past the boundary, measured on
+- **Position, not intersection:** the active heading is the last one past the boundary, measured on
   scroll. Short sections work, and entries arriving out of order cannot confuse it.
 - **The last section is reachable.** At the bottom of the page or panel the final heading is active,
   which no boundary rule alone can produce.
-- **Anchors that exist.** Headings without an `id` get a slugged one - accents folded, repeats
-  numbered - so a table of contents over markdown or CMS HTML links somewhere.
+- **Anchors that exist:** headings without an `id` get a slugged one (accents folded, repeats
+  numbered), so a table of contents over markdown or CMS HTML links somewhere.
 - **Scrolls inside a panel too.** Pass `root` and it follows that box instead of the window.
 - **Focus follows a smooth scroll.** After a smooth jump the heading is focused, so the next Tab
   continues from the section rather than from the top of the page.
@@ -32,8 +32,8 @@ and it never crosses the line.
 
 <Preview name="kit/toc/given" />
 
-Pass `headings` and nothing is read from the DOM - the right shape when a markdown pipeline or a CMS
-payload already lists them, and the ids are its doing.
+Pass `headings` and nothing is read from the DOM. That's the right shape when a markdown pipeline
+or a CMS payload already lists them, and the ids are its doing.
 
 ## Offset
 
@@ -77,15 +77,15 @@ Everything a `<nav>` accepts stays available. On top of that:
 
 A `<nav>` with an accessible name and a list of real links, so it is reachable as a landmark and
 every entry works with the keyboard, with middle-click and with "open in new tab". The active link
-carries `aria-current="location"` - the section is where the reader is inside this document, not a
-different page.
+carries `aria-current="location"`, because the section is where the reader is inside this document,
+not a different page.
 
 Under `prefers-reduced-motion`, the click is left to the browser: it jumps, moves focus into the
 section and writes the hash, which is exactly the behaviour to fall back to.
 
 ## headings.ts
 
-`slug`, `uniqueId` and `pickActive` are exported on their own - `pickActive` is the whole
+`slug`, `uniqueId` and `pickActive` are exported on their own. `pickActive` is the whole
 scroll-spy rule, and it is a pure function over numbers:
 
 ```ts
