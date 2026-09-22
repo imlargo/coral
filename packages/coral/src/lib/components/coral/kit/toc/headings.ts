@@ -1,6 +1,6 @@
 /**
  * @coral/kit/toc
- * @version 1.1.1
+ * @version 1.1.2
  */
 
 /** One entry in the table of contents. */

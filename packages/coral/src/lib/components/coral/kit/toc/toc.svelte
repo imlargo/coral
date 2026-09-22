@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/toc
-	 * @version 1.1.1
+	 * @version 1.1.2
 	 */
 	import { cn } from '$lib/utils.js';
 	import { collect, pickActive } from './headings.js';
@@ -191,7 +191,7 @@
 		{#if headingSnippet}
 			{@render headingSnippet()}
 		{:else if label}
-			<span class="text-xs font-medium tracking-wider text-muted-foreground">
+			<span class="text-xs font-medium text-muted-foreground">
 				{label}
 			</span>
 		{/if}

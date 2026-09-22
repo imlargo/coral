@@ -1,7 +1,7 @@
 <script lang="ts" generics="T = unknown">
 	/**
 	 * @coral/kit/activity-calendar
-	 * @version 1.0.1
+	 * @version 1.0.2
 	 */
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import { cn } from '$lib/utils.js';
@@ -257,7 +257,7 @@
 												aria-label={labelFor(cell)}
 												style="background-color: {colorFor(cell.level)}"
 												class={cn(
-													'block size-(--coral-cell) rounded-xs outline-offset-1 focus-visible:outline-2 focus-visible:outline-ring',
+													'block size-(--coral-cell) rounded-sm outline-offset-1 focus-visible:outline-2 focus-visible:outline-ring',
 													onselect ? 'cursor-pointer' : 'cursor-default',
 													cellClass
 												)}
@@ -299,7 +299,7 @@
 			<!-- Swatches, no words: `Less`/`More` is copy, and the ramp reads without it. -->
 			<div class="flex items-center gap-(--coral-gap) self-end" aria-hidden="true">
 				{#each fills as fill, level (level)}
-					<span class="block size-(--coral-cell) rounded-xs" style="background-color: {fill}"
+					<span class="block size-(--coral-cell) rounded-sm" style="background-color: {fill}"
 					></span>
 				{/each}
 			</div>

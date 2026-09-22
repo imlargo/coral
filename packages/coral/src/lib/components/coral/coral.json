@@ -33,7 +33,7 @@
 		"kit/activity-calendar": {
 			"title": "Activity calendar",
 			"description": "A year of daily counts as a grid of squares - the GitHub contribution graph, with the timezone and the scale done right.",
-			"version": "1.0.1",
+			"version": "1.0.2",
 			"shadcn": ["tooltip"]
 		},
 		"kit/avatar": {
@@ -177,7 +177,7 @@
 		"kit/toc": {
 			"title": "Table of contents",
 			"description": "A table of contents that highlights the section being read, including the last one.",
-			"version": "1.1.1",
+			"version": "1.1.2",
 			"shadcn": []
 		},
 		"kit/tree-view": {
