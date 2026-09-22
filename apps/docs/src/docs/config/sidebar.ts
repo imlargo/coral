@@ -7,7 +7,6 @@
  * there, per the repo's rule of three.
  */
 
-import { resolve } from '$app/paths';
 import { getCollection, type DocsFrontmatter } from '$docs/content/docs.js';
 
 export interface SidebarLink {
@@ -22,10 +21,15 @@ export interface SidebarGroup {
 
 const KIT_PREFIX = 'kit/';
 
+// Plain pathnames, not run through `resolve()` here: with `(docs)` as a route group, `resolve()`'s
+// typed overload wants either a literal `RouteId` (which, for a group, is spelled with the
+// parens - not the real URL) or a value already typed `Pathname`. The consumers below already
+// carry these through `resolve(item.href as Pathname)`, so building plain strings here and
+// resolving them at the point of use is what lets a page keep the URL it actually has.
 const kit: SidebarLink[] = getCollection('docs', (entry) => entry.slug.startsWith(KIT_PREFIX))
 	.map((entry) => ({
 		title: (entry.data as unknown as DocsFrontmatter).title,
-		href: resolve(`/docs/${entry.slug}`)
+		href: `/docs/${entry.slug}`
 	}))
 	.sort((a, b) => a.title.localeCompare(b.title));
 
@@ -33,9 +37,9 @@ export const DOCS_SIDEBAR_GROUPS: SidebarGroup[] = [
 	{
 		title: 'Getting started',
 		items: [
-			{ title: 'Introduction', href: resolve('/docs') },
-			{ title: 'Installation', href: resolve('/docs/installation') },
-			{ title: 'Conventions', href: resolve('/docs/conventions') }
+			{ title: 'Introduction', href: '/docs' },
+			{ title: 'Installation', href: '/docs/installation' },
+			{ title: 'Conventions', href: '/docs/conventions' }
 		]
 	},
 	{

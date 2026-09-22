@@ -21,7 +21,7 @@ import { itemName, registry } from '../../scripts/registry.js';
 
 const CORAL = path.join(import.meta.dirname, 'components/coral');
 /** The docs site, which is a sibling workspace - see the note above about repo tooling. */
-const DOCS = path.resolve(import.meta.dirname, '../../../../apps/docs/src/routes/docs');
+const DOCS = path.resolve(import.meta.dirname, '../../../../apps/docs/src/routes/(docs)/docs');
 
 type Entry = {
 	title: string;

@@ -7,6 +7,7 @@
 	 * adapter build. Loading through a plain `.svelte` file sidesteps it, same as the docs route.
 	 */
 	import { resolve } from '$app/paths';
+	import type { Pathname } from '$app/types';
 	import { config } from '$docs/config/app.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 </script>
@@ -21,7 +22,7 @@
 <p>{config.branding.seo.description}</p>
 
 <div class="flex gap-3">
-	<Button href={resolve('/docs')}>Get started</Button>
+	<Button href={resolve('/docs' as Pathname)}>Get started</Button>
 	<Button href={config.links.github} target="_blank" rel="noreferrer" variant="outline">
 		GitHub
 	</Button>

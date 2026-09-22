@@ -12,8 +12,10 @@
 import type { Component } from 'svelte';
 import { sources } from 'virtual:coral-demo-sources';
 
+// `(docs)` is escaped: `import.meta.glob` matches with picomatch, where a bare `(...)` is
+// capture-group syntax, not a literal folder name.
 const modules = import.meta.glob<{ default: Component }>(
-	'/src/routes/(docs)/docs/**/demos/*.svelte',
+	'/src/routes/[(]docs[)]/docs/**/demos/*.svelte',
 	{ eager: true }
 );
 
