@@ -1,6 +1,9 @@
-<img src="apps/docs/src/assets/logo.svg" alt="Coral" width="40" height="40" align="left" />
+<div align="center">
+  <img src="apps/docs/src/assets/logo.svg" alt="Coral" width="64" height="64" />
 
 # Coral
+
+</div>
 
 > A component library for shadcn-svelte. Installed as source into your project, not as a dependency.
 
