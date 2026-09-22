@@ -1,4 +1,5 @@
-<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M128 256L0 128V64L128 192V256Z" fill="#FF4000"/>
-<path d="M128 192L256 64V0L128 128V192Z" fill="#FF4000"/>
+<svg width="384" height="384" viewBox="0 0 384 384" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="384" height="384" transform="matrix(1 0 0 -1 0 384)" fill="#100F0F"/>
+<path d="M192 320L64 192V128L192 256V320Z" fill="#FF4000"/>
+<path d="M192 256L320 128V64L192 192V256Z" fill="#FF4000"/>
 </svg>
