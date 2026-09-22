@@ -29,7 +29,7 @@
 
 {#if toc.headings.length > 1}
 	<nav aria-label="On this page" class="flex flex-col gap-3 text-sm">
-		<span class="text-[0.7rem] font-medium tracking-wider text-muted-foreground uppercase">
+		<span class="text-[0.7rem] font-medium tracking-wider text-muted-foreground">
 			On this page
 		</span>
 		<ul class="flex flex-col border-l">

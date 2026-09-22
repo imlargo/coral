@@ -1,6 +1,6 @@
 /**
  * @coral/kit/toc
- * @version 1.1.0
+ * @version 1.1.1
  */
 
 import type { Snippet } from 'svelte';
