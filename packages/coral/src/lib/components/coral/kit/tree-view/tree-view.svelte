@@ -1,7 +1,7 @@
 <script lang="ts" generics="T = unknown">
 	/**
 	 * @coral/kit/tree-view
-	 * @version 1.0.0
+	 * @version 1.0.1
 	 */
 	import { tick } from 'svelte';
 	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
@@ -184,7 +184,7 @@
 			data-disabled={row.node.disabled || undefined}
 			style="padding-inline-start: calc(var(--coral-indent) * {row.level - 1})"
 			class={cn(
-				'flex cursor-default items-center gap-1 outline-offset-[-2px] select-none focus-visible:outline-2 focus-visible:outline-ring',
+				'flex cursor-default items-center gap-1 -outline-offset-2 select-none focus-visible:outline-2 focus-visible:outline-ring',
 				rowClass
 			)}
 			onfocus={() => (focusedId = row.node.id)}

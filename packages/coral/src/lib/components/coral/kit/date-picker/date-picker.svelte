@@ -1,7 +1,7 @@
 <script lang="ts" generics="Type extends DatePickerType = 'single'">
 	/**
 	 * @coral/kit/date-picker
-	 * @version 1.1.1
+	 * @version 1.1.2
 	 */
 	import { tick } from 'svelte';
 	import CalendarIcon from '@lucide/svelte/icons/calendar';
@@ -201,7 +201,6 @@
 						<Button
 							type="button"
 							variant={preset === active ? 'secondary' : 'ghost'}
-							size="sm"
 							aria-pressed={preset === active}
 							class="justify-start whitespace-nowrap"
 							onclick={() => pick(preset)}

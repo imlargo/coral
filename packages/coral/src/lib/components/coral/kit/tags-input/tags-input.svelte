@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/tags-input
-	 * @version 1.0.0
+	 * @version 1.0.1
 	 */
 	import { tick } from 'svelte';
 	import XIcon from '@lucide/svelte/icons/x';
@@ -284,7 +284,7 @@
 	/>
 
 	{#if showClear}
-		<InputGroup.Button size="icon-xs" aria-label={clearLabel} onclick={clear}>
+		<InputGroup.Button size="icon-sm" aria-label={clearLabel} onclick={clear}>
 			<XIcon />
 		</InputGroup.Button>
 	{/if}

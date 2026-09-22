@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/password-input
-	 * @version 1.0.0
+	 * @version 1.0.1
 	 */
 	import { flushSync } from 'svelte';
 	import ArrowBigUpDashIcon from '@lucide/svelte/icons/arrow-big-up-dash';
@@ -126,7 +126,7 @@
 			after every press, and it is never clear which of the two words describes the current state.
 		-->
 		<InputGroup.Button
-			size="icon-xs"
+			size="icon-sm"
 			aria-label={toggleLabel}
 			aria-pressed={visible}
 			aria-controls={fieldId}

@@ -78,14 +78,14 @@
 		"kit/date-picker": {
 			"title": "Date picker",
 			"description": "A popover, a calendar and a formatted trigger. One day or two, with shortcuts.",
-			"version": "1.1.1",
+			"version": "1.1.2",
 			"shadcn": ["popover", "calendar", "range-calendar", "button"],
 			"npm": ["@lucide/svelte"]
 		},
 		"kit/file-input": {
 			"title": "File input",
 			"description": "Pick files by click or drop, validate them, show what was picked. An input, not an uploader.",
-			"version": "1.1.0",
+			"version": "1.1.1",
 			"shadcn": ["empty", "item", "button"],
 			"npm": ["@lucide/svelte"]
 		},
@@ -98,14 +98,14 @@
 		"kit/number-input": {
 			"title": "Number input",
 			"description": "A number field with steppers, bounds that hold, and arithmetic that stays exact.",
-			"version": "1.0.0",
+			"version": "1.0.1",
 			"shadcn": ["input-group"],
 			"npm": ["@lucide/svelte"]
 		},
 		"kit/password-input": {
 			"title": "Password input",
 			"description": "A password field with a visibility toggle that does not break password managers.",
-			"version": "1.0.0",
+			"version": "1.0.1",
 			"shadcn": ["input-group"],
 			"npm": ["@lucide/svelte"]
 		},
@@ -158,7 +158,7 @@
 		"kit/show-more": {
 			"title": "Show more",
 			"description": "Clamps long content to a few lines, and only offers to expand what actually overflows.",
-			"version": "1.0.0",
+			"version": "1.0.1",
 			"shadcn": ["button"]
 		},
 		"kit/stepper": {
@@ -170,7 +170,7 @@
 		"kit/tags-input": {
 			"title": "Tags input",
 			"description": "A field that turns typed and pasted text into tags, with one rule for both.",
-			"version": "1.0.0",
+			"version": "1.0.1",
 			"shadcn": ["input-group", "badge"],
 			"npm": ["@lucide/svelte"]
 		},
@@ -183,7 +183,7 @@
 		"kit/tree-view": {
 			"title": "Tree view",
 			"description": "A hierarchy the keyboard can walk - the WAI-ARIA tree pattern, from a plain array.",
-			"version": "1.0.0",
+			"version": "1.0.1",
 			"shadcn": [],
 			"npm": ["@lucide/svelte"]
 		}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/show-more
-	 * @version 1.0.0
+	 * @version 1.0.1
 	 */
 	import { tick } from 'svelte';
 	import { Button } from '$lib/components/ui/button/index.js';
@@ -113,7 +113,7 @@
 		{#if toggleSnippet}
 			{@render toggleSnippet({ props: toggleProps, expanded, toggle })}
 		{:else}
-			<Button {...toggleProps} variant="link" size="sm" class="h-auto px-0">
+			<Button {...toggleProps} variant="link" class="h-auto px-0">
 				{expanded ? lessLabel : moreLabel}
 			</Button>
 		{/if}

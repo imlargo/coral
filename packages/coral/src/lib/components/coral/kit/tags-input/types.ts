@@ -1,6 +1,6 @@
 /**
  * @coral/kit/tags-input
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 import type { ComponentProps, Snippet } from 'svelte';

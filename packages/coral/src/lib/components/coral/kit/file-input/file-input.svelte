@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/file-input
-	 * @version 1.1.0
+	 * @version 1.1.1
 	 */
 	import FileIcon from '@lucide/svelte/icons/file';
 	import UploadIcon from '@lucide/svelte/icons/upload';
@@ -185,7 +185,7 @@
 							<Button
 								type="button"
 								variant="ghost"
-								size="icon-xs"
+								size="icon"
 								aria-label={removeLabel}
 								{disabled}
 								onclick={() => remove(index)}

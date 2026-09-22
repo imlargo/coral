@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/number-input
-	 * @version 1.0.0
+	 * @version 1.0.1
 	 */
 	import MinusIcon from '@lucide/svelte/icons/minus';
 	import PlusIcon from '@lucide/svelte/icons/plus';
@@ -76,7 +76,7 @@
 <InputGroup.Root class={cn('max-w-max', groupClass)}>
 	<InputGroup.Addon>
 		<InputGroup.Button
-			size="icon-xs"
+			size="icon-sm"
 			aria-label={decrementLabel}
 			disabled={disabled || readonly || atMin}
 			onclick={() => nudge(-step)}
@@ -112,7 +112,7 @@
 
 	<InputGroup.Addon align="inline-end">
 		<InputGroup.Button
-			size="icon-xs"
+			size="icon-sm"
 			aria-label={incrementLabel}
 			disabled={disabled || readonly || atMax}
 			onclick={() => nudge(step)}
