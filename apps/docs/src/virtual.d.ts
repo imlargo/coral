@@ -4,14 +4,3 @@ declare module 'virtual:coral-demo-sources' {
 	/** Every docs demo's source, already highlighted, keyed by root-relative path. */
 	export const sources: Record<string, { html: string; text: string }>;
 }
-
-declare module 'virtual:coral-docs-index' {
-	/** One entry per docs page, for the search palette and the "Copy page" button. */
-	export const pages: {
-		href: string;
-		title: string;
-		description: string;
-		headings: { text: string; id: string }[];
-		raw: string;
-	}[];
-}

@@ -1,13 +1,16 @@
 <script lang="ts">
 	import './layout.css';
-	import favicon from '$assets/favicon.svg';
 	import { Toaster } from '$lib/components/ui/sonner/index.js';
 	import { ModeWatcher } from 'mode-watcher';
+	import { config } from '$docs/config/app.js';
+	import Navbar from '$docs/components/layout/navigation/navbar.svelte';
 
 	let { children } = $props();
 </script>
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<svelte:head>
+	<link rel="icon" href={config.branding.favicon} />
+</svelte:head>
 
 <ModeWatcher />
 <Toaster />
@@ -19,4 +22,12 @@
 	Skip to main content
 </a>
 
-{@render children()}
+<div>
+	<Navbar></Navbar>
+
+	<!-- Skip-link target only, not the `main` landmark: nested layouts (e.g. the docs sidebar's
+	     `Sidebar.Inset`) render their own `<main>`, and HTML forbids nesting two. -->
+	<div id="main-content" tabindex="-1">
+		{@render children?.()}
+	</div>
+</div>

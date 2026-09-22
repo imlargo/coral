@@ -6,8 +6,8 @@ import adapter from '@sveltejs/adapter-cloudflare';
  * ESLint both read *this* one.
  *
  * Docs pages are svmd Markdown (`index.md`, wired in `vite.config.ts`), loaded by slug through
- * `@svmd/content` from the single catch-all route `src/routes/docs/[...slug]/` rather than routed
- * directly as `+page.md`: SvelteKit's build resolves each route to its source file through Vite's
+ * `@svmd/content` from the single catch-all route `src/routes/(docs)/docs/[...slug]/` rather than
+ * routed directly as `+page.md`: SvelteKit's build resolves each route to its source file through Vite's
  * manifest by exact path, and svmd's `.md` -> `.md.svmd.svelte` module id means that lookup misses
  * for a `.md` route file, which only ever surfaces in a full adapter build, not in dev. Loading
  * `index.md` through `import.meta.glob` instead sidesteps it - only `+page.svelte` is ever a route

@@ -31,7 +31,7 @@ export default defineConfig({
 		// svmd goes before the Svelte plugin: it hands vite-plugin-svelte already-compiled Svelte,
 		// not markdown.
 		svmd({
-			include: ['src/routes/docs/**/index.md'],
+			include: ['src/routes/(docs)/docs/**/index.md'],
 			highlight: svmdHighlight,
 			rehypePlugins: [rehypeHeadingAnchors]
 		}),

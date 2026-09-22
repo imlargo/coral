@@ -1,40 +1,43 @@
 <script lang="ts">
 	/**
-	 * Wraps every docs page's Markdown body. Rendered once, from `docs/[...slug]/+page.svelte`,
-	 * around whichever page's `<Content />` the route loaded - title and description come from
-	 * `+page.ts`, which already read them off `entry.data` to resolve the page in the first place.
-	 *
-	 * Renders the title block. Heading ids and their permalink anchors are no longer this
-	 * component's job - `rehype-heading-anchors.js` puts both in at build time, through svmd's
-	 * `rehypePlugins`, so they exist before this ever mounts. What is left to do against the live
-	 * DOM: read those ids back out for the table of contents, and attach copy buttons to fenced
-	 * code blocks - both are things a mount is genuinely required for.
+	 * Everything here is svdocs's own `docs-prose.svelte`, unchanged, plus one addition this repo's
+	 * docs need that svdocs's own template has no reason to: a copy button on every fenced code
+	 * block in the rendered Markdown body. svmd/shiki wrap each one in `.docs-md-code` at build
+	 * time (`svmd-highlight.js`); attaching the button still needs a live mount, the same way
+	 * `Preview`'s own `CopyButton` needs one for its Svelte-rendered code tab.
 	 */
 	import type { Snippet } from 'svelte';
-	import { toc, type Heading } from './toc.svelte.js';
+	import { config } from '$docs/config/app.js';
+	import type { SidebarLink } from '$docs/config/sidebar.js';
+	import DocsBreadcrumbs from './docs-breadcrumbs.svelte';
+	import DocsPageActions from './docs-page-actions.svelte';
+	import DocsPageFooter from './docs-page-footer.svelte';
 
 	let {
 		title,
 		description,
+		raw,
+		updated,
+		prev,
+		next,
 		children
-	}: { title?: string; description?: string; children: Snippet } = $props();
+	}: {
+		title: string;
+		description?: string;
+		raw: string;
+		updated?: string;
+		prev?: SidebarLink;
+		next?: SidebarLink;
+		children: Snippet;
+	} = $props();
 
-	let article = $state<HTMLElement | null>(null);
+	let body = $state<HTMLElement | null>(null);
 
 	$effect(() => {
-		if (!article) return;
-
-		toc.headings = [...article.querySelectorAll<HTMLElement>('h2[id], h3[id]')].map((el) => ({
-			id: el.id,
-			text: el.textContent?.trim() ?? '',
-			level: el.tagName === 'H2' ? 2 : 3
-		})) satisfies Heading[];
-
-		const cleanups = [...article.querySelectorAll<HTMLElement>('.docs-md-code')].map(attachCopy);
-
+		if (!body) return;
+		const cleanups = [...body.querySelectorAll<HTMLElement>('.docs-md-code')].map(attachCopy);
 		return () => {
 			for (const cleanup of cleanups) cleanup();
-			toc.headings = [];
 		};
 	});
 
@@ -80,16 +83,25 @@
 </script>
 
 <svelte:head>
-	<title>{title ? `${title} - Coral` : 'Coral'}</title>
-	{#if description}<meta name="description" content={description} />{/if}
+	<title>{title} - {config.branding.name}</title>
+	{#if description}
+		<meta name="description" content={description} />
+	{/if}
 </svelte:head>
 
-<article bind:this={article} class="docs-prose">
-	{#if title}
-		<h1>{title}</h1>
-	{/if}
-	{#if description}
-		<p class="lead">{description}</p>
-	{/if}
-	{@render children()}
+<article>
+	<DocsBreadcrumbs class="mb-5" />
+	<div class="flex flex-wrap items-start justify-between gap-4">
+		<div>
+			<h1 class="text-3xl font-semibold">{title}</h1>
+			{#if description}
+				<p class="mt-2 text-lg text-muted-foreground">{description}</p>
+			{/if}
+		</div>
+		<DocsPageActions {raw} />
+	</div>
+	<div bind:this={body} class="prose mt-8 max-w-none dark:prose-invert">
+		{@render children()}
+	</div>
+	<DocsPageFooter {updated} {prev} {next} />
 </article>

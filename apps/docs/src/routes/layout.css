@@ -17,112 +17,28 @@
  * copied out of this repo without a single line of this file.
  * ------------------------------------------------------------------------------------------- */
 
+:root {
+	/* Height of the global navbar. Used by the navbar itself and by the docs shell, which sizes
+	   its own scroll area to the remaining viewport so the navbar never scrolls out of view. */
+	--header-height: 3.5rem;
+}
+
 @layer components {
-	.docs-prose {
-		@apply text-[0.9375rem]/[1.75];
-	}
-
-	.docs-prose h1 {
-		@apply text-3xl font-semibold tracking-tight text-balance;
-	}
-
-	.docs-prose .lead {
-		@apply mt-3 text-base text-pretty text-muted-foreground sm:text-lg;
-	}
-
-	.docs-prose h2 {
-		@apply mt-14 scroll-mt-20 border-b pb-2 text-xl font-semibold tracking-tight;
-	}
-
-	.docs-prose h3 {
-		@apply mt-10 scroll-mt-20 text-base font-semibold tracking-tight;
-	}
-
-	/* Permalink revealed on hover, and always reachable by keyboard through the heading itself. */
-	.docs-prose :is(h2, h3) {
-		@apply relative;
+	/* Permalink revealed on hover, and always reachable by keyboard through the heading itself.
+	   `docs-prose.svelte` uses Tailwind Typography's own `.prose`/`dark:prose-invert` for
+	   everything else - this repo does not maintain a second, bespoke set of heading/paragraph
+	   rules on top of it. */
+	.prose :is(h2, h3) {
+		@apply relative scroll-mt-20;
 	}
 
 	.docs-anchor {
 		@apply ml-2 inline-flex align-middle text-muted-foreground no-underline opacity-0 transition-opacity;
 	}
 
-	.docs-prose :is(h2, h3):hover .docs-anchor,
+	.prose :is(h2, h3):hover .docs-anchor,
 	.docs-anchor:focus-visible {
 		@apply opacity-100;
-	}
-
-	.docs-prose p,
-	.docs-prose ul,
-	.docs-prose ol {
-		@apply mt-4;
-	}
-
-	/*
-	 * Bulleted/numbered lists, stopping at `not-prose` for the same reason the table rules below do:
-	 * a demo's own `<ul>` (Coral's `kit/toc`, among others) is plain descendant-selector prey
-	 * otherwise, picking up a marker it never asked for.
-	 */
-	.docs-prose ul:not(:where(.not-prose *)) {
-		@apply list-disc pl-5 marker:text-muted-foreground/50;
-	}
-
-	.docs-prose ol:not(:where(.not-prose *)) {
-		@apply list-decimal pl-5 marker:text-muted-foreground/50;
-	}
-
-	.docs-prose li:not(:where(.not-prose *)) {
-		@apply mt-2 pl-1;
-	}
-
-	.docs-prose a:not(.docs-anchor) {
-		@apply font-medium text-foreground underline decoration-muted-foreground/40 underline-offset-4 transition-colors hover:decoration-foreground;
-	}
-
-	.docs-prose strong {
-		@apply font-semibold;
-	}
-
-	.docs-prose blockquote {
-		@apply mt-4 border-l-2 pl-4 text-muted-foreground;
-	}
-
-	/*
-	 * Inline code: no vertical padding. Padding on an inline box does not grow the line box, so it
-	 * overlaps neighbouring lines and makes paragraph leading look ragged wherever code appears.
-	 * The tint alone is enough to set it apart.
-	 */
-	.docs-prose :not(pre) > code {
-		@apply rounded bg-muted px-1 py-0 font-mono text-[0.85em] text-foreground;
-		box-decoration-break: clone;
-	}
-
-	/*
-	 * Tables, stopping at `not-prose`.
-	 *
-	 * A preview stage is `not-prose`, but these rules are plain descendant selectors and outrank
-	 * anything a demo sets on its own cells - so a component that happens to render a `<table>`
-	 * gets the docs' padding, uppercasing and bottom borders on top of its own layout. The
-	 * `:where()` keeps the exclusion at zero specificity, so nothing else about them moves.
-	 */
-	.docs-prose table:not(:where(.not-prose *)) {
-		@apply mt-6 block w-full overflow-x-auto text-sm;
-	}
-
-	.docs-prose thead:not(:where(.not-prose *)) {
-		@apply border-b;
-	}
-
-	.docs-prose th:not(:where(.not-prose *)) {
-		@apply px-3 py-2 text-left text-xs font-medium tracking-wide whitespace-nowrap text-muted-foreground uppercase;
-	}
-
-	.docs-prose td:not(:where(.not-prose *)) {
-		@apply border-b px-3 py-2.5 align-top;
-	}
-
-	.docs-prose td:first-child:not(:where(.not-prose *)) {
-		@apply font-medium whitespace-nowrap;
 	}
 
 	/*
@@ -136,7 +52,7 @@
 	}
 }
 
-/* Code blocks - shared by mdsvex fenced blocks and the Code tab of a preview. */
+/* Code blocks - shared by svmd fenced blocks and the Code tab of a preview. */
 @layer components {
 	.docs-md-code {
 		@apply relative mt-4 overflow-hidden rounded-lg border;
