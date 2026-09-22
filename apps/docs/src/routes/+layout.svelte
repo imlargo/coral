@@ -3,7 +3,6 @@
 	import favicon from '$assets/favicon.svg';
 	import { Toaster } from '$lib/components/ui/sonner/index.js';
 	import { ModeWatcher } from 'mode-watcher';
-	import Navbar from '$docs/navigation/navbar.svelte';
 
 	let { children } = $props();
 </script>
@@ -20,10 +19,4 @@
 	Skip to main content
 </a>
 
-<Navbar />
-
-<!-- Skip-link target only, not the `main` landmark: a nested layout (the docs sidebar's
-     `Sidebar.Inset`, the home page's own `<main>`) renders its own, and HTML forbids nesting two. -->
-<div id="main-content" tabindex="-1">
-	{@render children()}
-</div>
+{@render children()}
