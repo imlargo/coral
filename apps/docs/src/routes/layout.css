@@ -58,15 +58,20 @@
 		@apply mt-4;
 	}
 
-	.docs-prose ul {
+	/*
+	 * Bulleted/numbered lists, stopping at `not-prose` for the same reason the table rules below do:
+	 * a demo's own `<ul>` (Coral's `kit/toc`, among others) is plain descendant-selector prey
+	 * otherwise, picking up a marker it never asked for.
+	 */
+	.docs-prose ul:not(:where(.not-prose *)) {
 		@apply list-disc pl-5 marker:text-muted-foreground/50;
 	}
 
-	.docs-prose ol {
+	.docs-prose ol:not(:where(.not-prose *)) {
 		@apply list-decimal pl-5 marker:text-muted-foreground/50;
 	}
 
-	.docs-prose li {
+	.docs-prose li:not(:where(.not-prose *)) {
 		@apply mt-2 pl-1;
 	}
 
