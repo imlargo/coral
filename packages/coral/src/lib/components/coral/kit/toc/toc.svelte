@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/toc
-	 * @version 1.0.0
+	 * @version 1.1.0
 	 */
 	import { cn } from '$lib/utils.js';
 	import { collect, pickActive } from './headings.js';
@@ -185,12 +185,18 @@
 	<nav
 		bind:this={ref}
 		aria-label={label}
-		class={cn('flex flex-col gap-2 [--coral-toc-indent:1rem]', className)}
+		class={cn('flex flex-col gap-3 [--coral-toc-indent:1rem]', className)}
 		{...restProps}
 	>
-		{@render headingSnippet?.()}
+		{#if headingSnippet}
+			{@render headingSnippet()}
+		{:else if label}
+			<span class="text-xs font-medium tracking-wider text-muted-foreground uppercase">
+				{label}
+			</span>
+		{/if}
 
-		<ul class="flex flex-col">
+		<ul class="flex flex-col border-s">
 			{#each entries as heading (heading.id)}
 				{@const isActive = heading.id === active}
 				{@const depth = Math.max(0, heading.level - top)}
@@ -201,14 +207,15 @@
 					'aria-current': isActive ? ('location' as const) : undefined,
 					onclick: (event: MouseEvent) => handleClick(event, heading)
 				}}
-				<li style="padding-inline-start: calc(var(--coral-toc-indent) * {depth})">
+				<li>
 					{#if item}
 						{@render item({ heading, active: isActive, depth, props } satisfies TocItemContext)}
 					{:else}
 						<a
 							{...props}
+							style="padding-inline-start: calc(0.75rem + var(--coral-toc-indent) * {depth})"
 							class={cn(
-								'block py-1 text-sm text-muted-foreground transition-colors hover:text-foreground aria-[current]:font-medium aria-[current]:text-foreground',
+								'-ms-px block border-s-2 border-transparent py-1 text-sm text-muted-foreground transition-colors hover:text-foreground aria-[current]:border-primary aria-[current]:font-medium aria-[current]:text-foreground',
 								itemClass
 							)}
 						>

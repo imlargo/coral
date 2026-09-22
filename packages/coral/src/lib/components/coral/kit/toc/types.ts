@@ -1,6 +1,6 @@
 /**
  * @coral/kit/toc
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import type { Snippet } from 'svelte';
@@ -56,8 +56,8 @@ export type TocProps = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
 	/** Merged onto every link. */
 	itemClass?: string;
 	/**
-	 * Rendered above the list - a heading for the list itself. Not called `title`: on a `<nav>` that
-	 * is the tooltip attribute, and taking the name would cost the element something it already had.
+	 * Replaces the default label rendered above the list. Not called `title`: on a `<nav>` that is
+	 * the tooltip attribute, and taking the name would cost the element something it already had.
 	 */
 	heading?: Snippet;
 	/** Replaces each link. */

@@ -1,6 +1,6 @@
 /**
  * @coral/kit/toc
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -55,7 +55,7 @@ describe('headings read from the page', () => {
 		await render(Toc, { container: box, root: box, offset: 0 });
 
 		const padding = links().map((link) =>
-			(link.parentElement as HTMLElement).style.paddingInlineStart.includes('* 0')
+			(link as HTMLElement).style.paddingInlineStart.includes('* 0')
 		);
 		expect(padding).toEqual([true, true, false, true]);
 		box.remove();
@@ -102,6 +102,15 @@ describe('rendering', () => {
 
 		await render(Toc, { container: box, root: box });
 		expect(document.querySelector('nav')).toBeNull();
+		box.remove();
+	});
+
+	it('labels itself above the list by default, from the same prop that names the landmark', async () => {
+		const box = article();
+		await render(Toc, { container: box, root: box, label: 'Contents' });
+
+		expect(document.querySelector('nav')?.getAttribute('aria-label')).toBe('Contents');
+		expect(document.querySelector('nav > span')?.textContent?.trim()).toBe('Contents');
 		box.remove();
 	});
 });

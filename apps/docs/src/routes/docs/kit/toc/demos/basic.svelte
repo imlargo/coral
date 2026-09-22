@@ -38,20 +38,7 @@
 	</div>
 
 	<div class="w-44 shrink-0">
-		<Toc
-			container={article}
-			root={article}
-			offset={24}
-			bind:active
-			label="On this page"
-			minHeadings={1}
-		>
-			{#snippet heading()}
-				<span class="text-xs font-medium tracking-wider text-muted-foreground uppercase">
-					On this page
-				</span>
-			{/snippet}
-		</Toc>
+		<Toc container={article} root={article} offset={24} bind:active minHeadings={1} />
 		<p class="mt-3 text-xs text-muted-foreground">Active: {active || '—'}</p>
 	</div>
 </div>

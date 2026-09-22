@@ -27,6 +27,9 @@ and it never crosses the line.
 - **Scrolls inside a panel too.** Pass `root` and it follows that box instead of the window.
 - **Focus follows a smooth scroll.** After a smooth jump the heading is focused, so the next Tab
   continues from the section rather than from the top of the page.
+- **The familiar reading-line.** A vertical guide runs the length of the list, and the active
+  segment picks up the theme's primary color - the same shape as the outline on Vercel, Next.js and
+  shadcn's own docs, built from `border-primary` rather than anything hardcoded.
 
 ## Headings you already have
 
@@ -65,10 +68,10 @@ Everything a `<nav>` accepts stays available. On top of that:
 | `onactivechange` | `(id: string) => void`      | -               | The active heading changed.                                |
 | `smooth`         | `boolean`                   | `true`          | Smooth scroll on click. Ignored under reduced motion.      |
 | `minHeadings`    | `number`                    | `2`             | Renders nothing below this many headings.                  |
-| `label`          | `string`                    | `On this page`  | Names the navigation.                                      |
+| `label`          | `string`                    | `On this page`  | Names the navigation and is rendered above the list.       |
 | `class`          | `string`                    | -               | Merged onto the `<nav>`. Carries `[--coral-toc-indent:…]`. |
 | `itemClass`      | `string`                    | -               | Merged onto every link.                                    |
-| `heading`        | `Snippet`                   | -               | Rendered above the list.                                   |
+| `heading`        | `Snippet`                   | -               | Replaces the default label rendered above the list.        |
 | `item`           | `Snippet<[TocItemContext]>` | -               | Replaces each link. Spread `props`.                        |
 
 ## Accessibility
