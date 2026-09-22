@@ -17,6 +17,12 @@
  * copied out of this repo without a single line of this file.
  * ------------------------------------------------------------------------------------------- */
 
+:root {
+	/* Height of the global navbar. Used by the navbar itself and by the docs shell, which sizes
+	   its own scroll area to the remaining viewport so the navbar never scrolls out of view. */
+	--header-height: 3.5rem;
+}
+
 @layer components {
 	.docs-prose {
 		@apply text-[0.9375rem]/[1.75];

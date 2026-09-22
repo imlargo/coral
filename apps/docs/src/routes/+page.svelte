@@ -1,14 +1,11 @@
 <script lang="ts">
 	import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
-	import MoonIcon from '@lucide/svelte/icons/moon';
-	import SunIcon from '@lucide/svelte/icons/sun';
-	import { toggleMode } from 'mode-watcher';
 	import { itemUrl } from 'coral/registry-config';
 	import { resolve } from '$app/paths';
 	import Avatar from '$lib/components/coral/kit/avatar/avatar.svelte';
 	import { AvatarGroup, AvatarGroupCount } from '$lib/components/ui/avatar/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
-	import { Button, buttonVariants } from '$lib/components/ui/button/index.js';
+	import { buttonVariants } from '$lib/components/ui/button/index.js';
 
 	const team = ['Amara Diallo', 'Wei Zhang', 'Elena van der Meer', "Liam O'Connor"];
 
@@ -47,36 +44,7 @@
 	/>
 </svelte:head>
 
-<header class="sticky top-0 z-30 border-b bg-background/85 backdrop-blur-sm">
-	<div class="mx-auto flex h-14 max-w-4xl items-center gap-2 px-6">
-		<a href={resolve('/')} class="flex items-center gap-2 font-semibold tracking-tight">
-			<span aria-hidden="true">🪸</span>
-			Coral
-		</a>
-		<nav class="ml-6 hidden items-center gap-5 text-sm text-muted-foreground sm:flex">
-			<a href={resolve('/docs')} class="transition-colors hover:text-foreground">Docs</a>
-			<a href={resolve('/docs/installation')} class="transition-colors hover:text-foreground">
-				Installation
-			</a>
-			<a href={resolve('/docs/kit/avatar')} class="transition-colors hover:text-foreground">Kit</a>
-		</nav>
-		<div class="ml-auto flex items-center gap-1">
-			<a
-				href={REPO}
-				rel="noreferrer"
-				class="hidden text-sm text-muted-foreground transition-colors hover:text-foreground md:inline"
-			>
-				GitHub
-			</a>
-			<Button variant="ghost" size="icon" onclick={toggleMode} aria-label="Toggle theme">
-				<SunIcon class="dark:hidden" />
-				<MoonIcon class="hidden dark:block" />
-			</Button>
-		</div>
-	</div>
-</header>
-
-<main id="main-content" class="mx-auto w-full max-w-4xl px-6">
+<main class="mx-auto w-full max-w-4xl px-6">
 	<section class="py-16 sm:py-24">
 		<Badge variant="secondary">Open source · MIT</Badge>
 

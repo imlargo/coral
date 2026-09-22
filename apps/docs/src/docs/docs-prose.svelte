@@ -4,14 +4,15 @@
 	 * around whichever page's `<Content />` the route loaded - title and description come from
 	 * `+page.ts`, which already read them off `entry.data` to resolve the page in the first place.
 	 *
-	 * Renders the title block. Heading ids and their permalink anchors are no longer this
-	 * component's job - `rehype-heading-anchors.js` puts both in at build time, through svmd's
-	 * `rehypePlugins`, so they exist before this ever mounts. What is left to do against the live
-	 * DOM: read those ids back out for the table of contents, and attach copy buttons to fenced
-	 * code blocks - both are things a mount is genuinely required for.
+	 * The on-page table of contents is Coral's own `kit/toc`, rendered separately in the docs
+	 * layout's aside - it reads headings straight off the document, so nothing here has to collect
+	 * or store them. What is still this component's job, against the live DOM: attaching copy
+	 * buttons to fenced code blocks. Heading ids and their permalink anchors are `svmd`'s
+	 * `rehype-heading-anchors.js`, at build time, before this ever mounts.
 	 */
 	import type { Snippet } from 'svelte';
-	import { toc, type Heading } from './toc.svelte.js';
+	import DocsPageActions from './docs-page-actions.svelte';
+	import DocsPageFooter from './docs-page-footer.svelte';
 
 	let {
 		title,
@@ -24,17 +25,9 @@
 	$effect(() => {
 		if (!article) return;
 
-		toc.headings = [...article.querySelectorAll<HTMLElement>('h2[id], h3[id]')].map((el) => ({
-			id: el.id,
-			text: el.textContent?.trim() ?? '',
-			level: el.tagName === 'H2' ? 2 : 3
-		})) satisfies Heading[];
-
 		const cleanups = [...article.querySelectorAll<HTMLElement>('.docs-md-code')].map(attachCopy);
-
 		return () => {
 			for (const cleanup of cleanups) cleanup();
-			toc.headings = [];
 		};
 	});
 
@@ -84,12 +77,22 @@
 	{#if description}<meta name="description" content={description} />{/if}
 </svelte:head>
 
-<article bind:this={article} class="docs-prose">
-	{#if title}
-		<h1>{title}</h1>
-	{/if}
-	{#if description}
-		<p class="lead">{description}</p>
-	{/if}
-	{@render children()}
+<article bind:this={article}>
+	<div class="flex flex-wrap items-start justify-between gap-4">
+		<div>
+			{#if title}
+				<h1 class="text-3xl font-semibold tracking-tight text-balance">{title}</h1>
+			{/if}
+			{#if description}
+				<p class="mt-3 text-base text-pretty text-muted-foreground sm:text-lg">{description}</p>
+			{/if}
+		</div>
+		<DocsPageActions />
+	</div>
+
+	<div class="docs-prose mt-8">
+		{@render children()}
+	</div>
+
+	<DocsPageFooter />
 </article>
