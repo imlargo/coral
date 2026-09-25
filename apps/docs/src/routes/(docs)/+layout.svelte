@@ -8,9 +8,7 @@
 </script>
 
 <Sidebar.Provider class="min-h-[calc(100svh-var(--header-height))]">
-	<div
-		class="sticky top-(--header-height) h-[calc(100svh-var(--header-height))] shrink-0 overflow-y-auto overscroll-contain border-r"
-	>
+	<div class="sticky top-(--header-height) h-[calc(100svh-var(--header-height))] shrink-0">
 		<DocsSidebar />
 	</div>
 	<Sidebar.Inset>

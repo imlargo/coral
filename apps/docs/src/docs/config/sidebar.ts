@@ -3,8 +3,8 @@
  * `docs-page-footer.svelte` unchanged. "Getting started" is hand-ordered and barely changes - three
  * items is not worth deriving. "Kit" is the section that actually grows with every new component,
  * so it comes from the docs collection itself: add `kit/<name>/index.md` and it appears here,
- * titled and sorted, with no second place to update. "Blocks" isn't listed yet - nothing lives
- * there, per the repo's rule of three.
+ * titled and sorted, with no second place to update. "Blocks" is an empty group for now - nothing
+ * lives there yet, per the repo's rule of three.
  */
 
 import { getCollection, type DocsFrontmatter } from '$docs/content/docs.js';
@@ -45,6 +45,10 @@ export const DOCS_SIDEBAR_GROUPS: SidebarGroup[] = [
 	{
 		title: 'Kit',
 		items: kit
+	},
+	{
+		title: 'Blocks',
+		items: []
 	}
 ];
 
