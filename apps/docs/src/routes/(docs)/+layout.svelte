@@ -7,8 +7,12 @@
 	let { children }: LayoutProps = $props();
 </script>
 
-<Sidebar.Provider style="height: calc(100svh - var(--header-height));">
-	<DocsSidebar />
+<Sidebar.Provider class="min-h-[calc(100svh-var(--header-height))]">
+	<div
+		class="sticky top-(--header-height) h-[calc(100svh-var(--header-height))] shrink-0 overflow-y-auto overscroll-contain border-r"
+	>
+		<DocsSidebar />
+	</div>
 	<Sidebar.Inset>
 		<div class="flex w-full gap-8 px-8 py-12">
 			<div class="min-w-0 flex-1">

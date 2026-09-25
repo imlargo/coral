@@ -7,7 +7,7 @@
 	import NavbarActions from './navbar-actions.svelte';
 </script>
 
-<header class="border-b">
+<header class="sticky top-0 z-40 border-b bg-background">
 	<div class="flex h-(--header-height) items-center justify-between pr-4 pl-8">
 		<div class="flex items-center gap-6">
 			<a href={resolve('/')} class="flex items-center gap-2 font-semibold">
