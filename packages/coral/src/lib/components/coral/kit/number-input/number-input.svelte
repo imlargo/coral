@@ -1,13 +1,13 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/number-input
-	 * @version 1.0.1
+	 * @version 2.0.0
 	 */
 	import MinusIcon from '@lucide/svelte/icons/minus';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import * as InputGroup from '$lib/components/ui/input-group/index.js';
 	import { cn } from '$lib/utils.js';
-	import { decimalsOf, parse, stepValue } from './step.js';
+	import { decimalsOf, parse, stepValue } from '../../lib/number.js';
 	import type { NumberInputProps } from './types.js';
 
 	let {

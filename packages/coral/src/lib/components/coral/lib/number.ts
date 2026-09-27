@@ -1,6 +1,6 @@
 /**
- * @coral/kit/number-input
- * @version 1.0.1
+ * @coral/lib/number
+ * @version 1.0.0
  */
 
 /**

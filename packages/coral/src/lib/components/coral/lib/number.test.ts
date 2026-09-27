@@ -1,10 +1,10 @@
 /**
- * @coral/kit/number-input
- * @version 1.0.1
+ * @coral/lib/number
+ * @version 1.0.0
  */
 
 import { describe, expect, it } from 'vitest';
-import { clamp, decimalsOf, parse, round, stepValue } from './step.js';
+import { clamp, decimalsOf, parse, round, stepValue } from './number.js';
 
 describe('decimalsOf', () => {
 	it('counts the decimals of a fractional step', () => {

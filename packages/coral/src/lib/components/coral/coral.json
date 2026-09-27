@@ -18,6 +18,12 @@
 			"version": "1.0.0",
 			"shadcn": []
 		},
+		"lib/number": {
+			"title": "Number",
+			"description": "The clamping, rounding and parsing the number fields share, as plain functions.",
+			"version": "1.0.0",
+			"shadcn": []
+		},
 		"lib/options": {
 			"title": "Options",
 			"description": "The Option<T> vocabulary the selectable components share, and the helpers that flatten and group it.",
@@ -57,7 +63,7 @@
 		},
 		"kit/command-palette": {
 			"title": "Command palette",
-			"description": "\u2318K over your own actions - with recents, per-action shortcuts, and a run that can fail.",
+			"description": "⌘K over your own actions - with recents, per-action shortcuts, and a run that can fail.",
 			"version": "1.0.0",
 			"shadcn": ["command"],
 			"npm": ["@lucide/svelte"]
@@ -98,7 +104,7 @@
 		"kit/number-input": {
 			"title": "Number input",
 			"description": "A number field with steppers, bounds that hold, and arithmetic that stays exact.",
-			"version": "1.0.1",
+			"version": "2.0.0",
 			"shadcn": ["input-group"],
 			"npm": ["@lucide/svelte"]
 		},
@@ -134,6 +140,12 @@
 			"description": "A dialog on wide screens and a drawer on narrow ones, written once.",
 			"version": "1.0.0",
 			"shadcn": ["dialog", "drawer"]
+		},
+		"kit/scrub-input": {
+			"title": "Scrub input",
+			"description": "A number field whose label is a drag handle - drag it, type it, or step it with the arrow keys.",
+			"version": "1.0.0",
+			"shadcn": ["input-group"]
 		},
 		"kit/search-input": {
 			"title": "Search input",

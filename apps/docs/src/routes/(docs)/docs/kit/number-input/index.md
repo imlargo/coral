@@ -96,21 +96,21 @@ one field is one too many.
 > Spanish locale may accept `1,5` and in another only `1.5`. If a field must accept a decimal comma
 > everywhere, that is a text field with its own parsing, not this component.
 
-## step.ts
+## lib/number
 
-The arithmetic lives in `kit/number-input/step.ts` and is exported on its own, so the same clamping
-and rounding can be reused where there is no input: validating a payload, totalling a column.
+The arithmetic lives in `lib/number.ts`, shared with [scrub input](/docs/kit/scrub-input) so a value
+moved by either field lands on the same number. It is exported on its own, so the same clamping and
+rounding can be reused where there is no input at all: validating a payload, totalling a column.
 
 ```ts
-import {
-	clamp,
-	decimalsOf,
-	round,
-	stepValue
-} from '$lib/components/coral/kit/number-input/step.js';
+import { clamp, decimalsOf, round, stepValue } from '$lib/components/coral/lib/number.js';
 
 decimalsOf(0.05); // 2
 round(0.1 + 0.2, 1); // 0.3
 clamp(150, 0, 25); // 25
 stepValue({ value: undefined, delta: 1, min: 5, decimals: 0 }); // 5
 ```
+
+It used to live at `kit/number-input/step.ts`. Moving it is why this component is at `2.0.0`:
+filenames are public API here, so an import that named the old path has to be updated to the new
+one.

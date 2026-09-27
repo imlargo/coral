@@ -1,6 +1,6 @@
 /**
  * @coral/kit/number-input
- * @version 1.0.1
+ * @version 2.0.0
  */
 
 import type { ComponentProps } from 'svelte';
@@ -12,9 +12,14 @@ import type { InputGroupInput } from '$lib/components/ui/input-group/index.js';
  * than a string, and the type is always `number`.
  *
  * `files` goes with `type`: the shadcn input discriminates on it, and a field that is always
- * `number` can never carry a `FileList`.
+ * `number` can never carry a `FileList`. `onchange` is Coral's as well - it reports the value, not
+ * the DOM event - and leaving the input's own one in place intersects the two into a handler no
+ * caller can actually satisfy.
  */
-type InputProps = Omit<ComponentProps<typeof InputGroupInput>, 'value' | 'type' | 'files'>;
+type InputProps = Omit<
+	ComponentProps<typeof InputGroupInput>,
+	'value' | 'type' | 'files' | 'onchange'
+>;
 
 export type NumberInputProps = InputProps & {
 	/** The value. Bindable. `undefined` means the field is empty. */
