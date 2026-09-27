@@ -1,13 +1,15 @@
 <script lang="ts" generics="T">
 	/**
 	 * @coral/kit/reorder-list
-	 * @version 1.0.0
+	 * @version 1.1.0
 	 */
 	import { flushSync } from 'svelte';
 	import { flip } from 'svelte/animate';
 	import { MediaQuery } from 'svelte/reactivity';
 	import GripVerticalIcon from '@lucide/svelte/icons/grip-vertical';
 	import { cn } from '$lib/utils.js';
+	import { Announcer } from '../../lib/announce.svelte.js';
+	import LiveRegion from '../../lib/live-region.svelte';
 	import { keyTarget, move, targetIndex } from './reorder.js';
 	import type { HandleProps, ItemContext, ReorderListProps } from './types.js';
 
@@ -60,7 +62,7 @@
 	let draft = $state<T[] | null>(null);
 	let drag = $state<Drag | null>(null);
 	let offset = $state(0);
-	let announcement = $state('');
+	const announcer = new Announcer();
 
 	/** Set while rows are being moved in the DOM, whose blur must not read as the reader leaving. */
 	let moving = false;
@@ -167,7 +169,7 @@
 	function say(announce: (label: string, position: number, total: number) => string, list: T[]) {
 		if (!drag) return;
 		const at = indexOfKey(list, drag.key);
-		announcement = announce(getLabel(list[at]), at + 1, list.length);
+		announcer.say(announce(getLabel(list[at]), at + 1, list.length));
 	}
 
 	function handleKeydown(event: KeyboardEvent, index: number) {
@@ -323,4 +325,6 @@
 </ul>
 
 <span id="{uid}-instructions" class="sr-only">{instructions}</span>
-<span role="status" aria-live="assertive" class="sr-only">{announcement}</span>
+
+<!-- Assertive: a row moving under the reader's hands is happening now, not a result to read later. -->
+<LiveRegion message={announcer.message} assertive />

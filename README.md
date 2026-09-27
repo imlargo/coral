@@ -21,7 +21,7 @@
   imports rewritten to your aliases. From then it's your code, versioned like the rest of your
   codebase, with no npm dependency to fall behind.
 - **Extraction only, never speculation:** a component enters only after the same pattern has been
-  written twice in real production work. Twenty-five components exist, not eighty.
+  written twice in real production work. Twenty-eight components exist, not eighty.
 - **No appearance of its own:** no colors, shadows, radii or typography, only layout utilities.
   Everything visual comes from _your_ shadcn theme.
 - Every component's version and required shadcn primitives are recorded in
@@ -124,7 +124,7 @@ and lose the alias and icon rewriting.
 
 ## Components
 
-Twenty-five so far. Each links to its full API, props table and live demos:
+Twenty-eight so far. Each links to its full API, props table and live demos:
 
 - **[action-button](https://coral.imlargo.dev/docs/kit/action-button):** a button that waits on
   its own async `onclick`. One click, one request; busy without dropping keyboard focus; the same
@@ -148,6 +148,9 @@ Twenty-five so far. Each links to its full API, props table and live demos:
   `onconfirm`, stays open on failure, blocks double-submit.
 - **[copy-button](https://coral.imlargo.dev/docs/kit/copy-button):** copies text, announces it to
   screen readers, falls back where the Clipboard API is missing, and treats failure as a state.
+- **[data-table](https://coral.imlargo.dev/docs/kit/data-table):** three-state sorting, selection
+  remembered by id so it survives a sort, a header checkbox that reads as partly selected, and its
+  own loading and empty states.
 - **[date-picker](https://coral.imlargo.dev/docs/kit/date-picker):** popover, calendar and
   formatted trigger, single day or range. Closes on range completion rather than first click;
   DST-safe day handling.
@@ -159,18 +162,23 @@ Twenty-five so far. Each links to its full API, props table and live demos:
   what was typed.
 - **[number-input](https://coral.imlargo.dev/docs/kit/number-input):** bounds that hold from the
   steppers _and_ from typing, exact decimal arithmetic, no silent wheel-scroll edits.
+- **[page-state](https://coral.imlargo.dev/docs/kit/page-state):** waiting, failed, empty and
+  content in one place. A fast request never flashes an indicator, and one that does appear stays
+  long enough to be read.
 - **[password-input](https://coral.imlargo.dev/docs/kit/password-input):** a visibility toggle
   that keeps the caret, hides the password again on submit so password managers still work, and
   warns about Caps Lock.
 - **[rating-group](https://coral.imlargo.dev/docs/kit/rating-group):** stars on native radios, so
   keyboard and form semantics come from the platform. Half fills from one glyph; `readonly` reads as
   an image, not a disabled control.
-- **[relative-time](https://coral.imlargo.dev/docs/kit/relative-time):** "hace 5 minutos" in a
+- **[relative-time](https://coral.imlargo.dev/docs/kit/relative-time):** "5 minutes ago" in a
   `<time>`, worded by `Intl`, kept current by one timeout set for the moment its text changes.
 - **[reorder-list](https://coral.imlargo.dev/docs/kit/reorder-list):** drag to reorder with mouse,
   touch or keyboard, announced, and written once per drop rather than once per row crossed.
 - **[responsive-dialog](https://coral.imlargo.dev/docs/kit/responsive-dialog):** a dialog on wide
   screens and a drawer on narrow ones, composed once, and still open after crossing the breakpoint.
+- **[scrub-input](https://coral.imlargo.dev/docs/kit/scrub-input):** a number field whose label is
+  a drag handle. A slow drag is not lost, Escape puts the value back, and one drag is one undo entry.
 - **[search-input](https://coral.imlargo.dev/docs/kit/search-input):** debounced, deduplicated
   `onsearch`, a minimum length that clears instead of freezing results, and an Escape that does not
   close the dialog around it.
@@ -201,6 +209,11 @@ derived from, and the only place they are written down.
 
 `kit/command-palette` composes `kit/shortcut`, and `kit/avatar-stack` composes `kit/avatar`, so
 those pairs travel together.
+
+`lib/fold` is the accent-folding the combobox search and the table filter both compare with, and
+`lib/table` is the sorting, filtering, paging and selection behind `kit/data-table`, as plain
+functions. `lib/announce` and `lib/live-region` are what every component that speaks to a screen
+reader speaks through - including the rule that saying the same words twice has to be heard twice.
 
 `lib/` also holds `debounce`, shared by combobox, search-input and command-palette, and `action`
 (the pending flag, the double-submit guard and the `false`-or-throw convention), read by every

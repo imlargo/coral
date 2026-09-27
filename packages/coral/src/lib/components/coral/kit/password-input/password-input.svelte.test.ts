@@ -1,6 +1,6 @@
 /**
  * @coral/kit/password-input
- * @version 1.0.1
+ * @version 1.1.0
  */
 
 import { render } from 'vitest-browser-svelte';

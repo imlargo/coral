@@ -19,9 +19,10 @@ The repo is a pnpm workspace with two members: **`packages/coral`**, the library
 **`packages/coral/src/lib/components/coral/`**, one self-contained folder that lands in the target
 project at `$lib/components/coral/`, beside shadcn's `ui/`. Currently: `kit/{action-button,
 activity-calendar, avatar, avatar-stack, combobox, command-palette, confirm-dialog, copy-button,
-date-picker, file-input, inline-edit, number-input, password-input, rating-group, relative-time,
-reorder-list, responsive-dialog, search-input, select, shortcut, show-more, stepper, tags-input,
-toc, tree-view}`, over `lib/{action, debounce, hidden-field, options}`.
+data-table, date-picker, file-input, inline-edit, number-input, page-state, password-input,
+rating-group, relative-time, reorder-list, responsive-dialog, scrub-input, search-input, select,
+shortcut, show-more, stepper, tags-input, toc, tree-view}`, over `lib/{action, announce, debounce,
+fold, hidden-field, live-region, number, options, table}`.
 `packages/coral/src/lib/components/coral/coral.json` is the list that counts. Read it rather than
 this sentence, which is the kind that goes stale.
 

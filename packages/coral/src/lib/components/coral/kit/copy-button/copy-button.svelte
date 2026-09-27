@@ -1,12 +1,14 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/copy-button
-	 * @version 1.0.0
+	 * @version 1.1.0
 	 */
 	import CheckIcon from '@lucide/svelte/icons/check';
 	import CopyIcon from '@lucide/svelte/icons/copy';
 	import XIcon from '@lucide/svelte/icons/x';
 	import { Button } from '$lib/components/ui/button/index.js';
+	import { Announcer } from '../../lib/announce.svelte.js';
+	import LiveRegion from '../../lib/live-region.svelte';
 	import { resolveText, writeText } from './clipboard.js';
 	import type { CopyButtonProps } from './types.js';
 
@@ -34,19 +36,22 @@
 	$effect(() => () => clearTimeout(timer));
 
 	/**
-	 * What the live region says. Swapping the button's own `aria-label` is how most copy buttons
-	 * report success, and screen readers do not announce a changed name on the element that already
-	 * has focus - so the reader who most needs the confirmation hears nothing. A polite status
-	 * region is announced wherever focus is.
+	 * What the button says out loud. Swapping its own `aria-label` is how most copy buttons report
+	 * success, and screen readers do not announce a changed name on the element that already has
+	 * focus - so the reader who most needs the confirmation hears nothing. A status region is
+	 * announced wherever focus is, and `Announcer` is what makes a second copy of the same value
+	 * heard again rather than landing in a region that already holds those words.
 	 */
-	const announcement = $derived(
-		status === 'copied' ? copiedLabel : status === 'failed' ? failedLabel : ''
-	);
+	const announcer = new Announcer();
 
 	function settle(next: 'copied' | 'failed') {
 		status = next;
+		announcer.say(next === 'copied' ? copiedLabel : failedLabel);
 		clearTimeout(timer);
-		timer = setTimeout(() => (status = 'idle'), timeout);
+		timer = setTimeout(() => {
+			status = 'idle';
+			announcer.clear();
+		}, timeout);
 	}
 
 	async function copy(event: MouseEvent) {
@@ -94,5 +99,4 @@
 	{/if}
 </Button>
 
-<!-- Outside the button, so the announcement is not also read as part of the button's name. -->
-<span role="status" class="sr-only">{announcement}</span>
+<LiveRegion message={announcer.message} />

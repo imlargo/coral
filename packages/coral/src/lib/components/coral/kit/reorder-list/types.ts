@@ -1,6 +1,6 @@
 /**
  * @coral/kit/reorder-list
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import type { Snippet } from 'svelte';

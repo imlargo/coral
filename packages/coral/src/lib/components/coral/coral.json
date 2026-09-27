@@ -6,6 +6,12 @@
 			"version": "1.0.0",
 			"shadcn": []
 		},
+		"lib/announce": {
+			"title": "Announce",
+			"description": "Says something to a screen reader, and says it again when the words have not changed.",
+			"version": "1.0.0",
+			"shadcn": []
+		},
 		"lib/debounce": {
 			"title": "Debounce",
 			"description": "Delays a call until the calls stop coming, with cancel, flush and a pending flag.",
@@ -21,6 +27,12 @@
 		"lib/hidden-field": {
 			"title": "Hidden field",
 			"description": "The hidden input that lets a select, combobox or date picker take part in a plain form.",
+			"version": "1.0.0",
+			"shadcn": []
+		},
+		"lib/live-region": {
+			"title": "Live region",
+			"description": "The visually hidden region every component announces through, polite or assertive.",
 			"version": "1.0.0",
 			"shadcn": []
 		},
@@ -45,7 +57,7 @@
 		"kit/action-button": {
 			"title": "Action button",
 			"description": "A button that waits on its own request, blocks the second click, and keeps focus.",
-			"version": "1.0.0",
+			"version": "1.1.0",
 			"shadcn": ["button", "spinner"]
 		},
 		"kit/activity-calendar": {
@@ -89,7 +101,7 @@
 		"kit/copy-button": {
 			"title": "Copy button",
 			"description": "Copies text to the clipboard, says so out loud, and says so when it could not.",
-			"version": "1.0.0",
+			"version": "1.1.0",
 			"shadcn": ["button"],
 			"npm": ["@lucide/svelte"]
 		},
@@ -127,10 +139,17 @@
 			"shadcn": ["input-group"],
 			"npm": ["@lucide/svelte"]
 		},
+		"kit/page-state": {
+			"title": "Page state",
+			"description": "The states a screen goes through - waiting, failed, empty, content - and a wait that does not flash.",
+			"version": "1.0.0",
+			"shadcn": ["empty", "spinner"],
+			"npm": ["@lucide/svelte"]
+		},
 		"kit/password-input": {
 			"title": "Password input",
 			"description": "A password field with a visibility toggle that does not break password managers.",
-			"version": "1.0.1",
+			"version": "1.1.0",
 			"shadcn": ["input-group"],
 			"npm": ["@lucide/svelte"]
 		},
@@ -150,7 +169,7 @@
 		"kit/reorder-list": {
 			"title": "Reorder list",
 			"description": "Drag to reorder with a mouse, a finger or the keyboard - and persist once per drop.",
-			"version": "1.0.0",
+			"version": "1.1.0",
 			"shadcn": [],
 			"npm": ["@lucide/svelte"]
 		},

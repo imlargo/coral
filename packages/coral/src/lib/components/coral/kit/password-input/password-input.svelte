@@ -1,13 +1,14 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/password-input
-	 * @version 1.0.1
+	 * @version 1.1.0
 	 */
 	import { flushSync } from 'svelte';
 	import ArrowBigUpDashIcon from '@lucide/svelte/icons/arrow-big-up-dash';
 	import EyeIcon from '@lucide/svelte/icons/eye';
 	import EyeOffIcon from '@lucide/svelte/icons/eye-off';
 	import * as InputGroup from '$lib/components/ui/input-group/index.js';
+	import LiveRegion from '../../lib/live-region.svelte';
 	import type { PasswordInputProps } from './types.js';
 
 	let {
@@ -142,5 +143,5 @@
 	</InputGroup.Addon>
 </InputGroup.Root>
 
-<!-- Polite and outside the group, so the warning is heard while typing without moving focus. -->
-<span role="status" class="sr-only">{capsLock ? capsLockLabel : ''}</span>
+<!-- Polite: the warning is heard while typing, without interrupting what is being read. -->
+<LiveRegion message={capsLock ? capsLockLabel : ''} />
