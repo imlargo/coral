@@ -1,9 +1,9 @@
 /**
  * @coral/kit/combobox
- * @version 4.2.0
+ * @version 5.0.0
  */
 
-import { fold } from './fold.js';
+import { fold } from '../../lib/fold.js';
 import type { Option } from '../../lib/options.js';
 
 /** The strings an option can be found by: what is shown, plus anything it was tagged with. */

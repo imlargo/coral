@@ -1,6 +1,6 @@
 /**
- * @coral/kit/combobox
- * @version 4.2.0
+ * @coral/lib/fold
+ * @version 1.0.0
  */
 
 /**

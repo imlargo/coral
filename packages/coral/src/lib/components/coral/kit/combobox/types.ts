@@ -1,6 +1,6 @@
 /**
  * @coral/kit/combobox
- * @version 4.2.0
+ * @version 5.0.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';

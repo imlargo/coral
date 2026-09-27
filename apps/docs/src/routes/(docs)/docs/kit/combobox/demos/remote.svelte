@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Combobox from '$lib/components/coral/kit/combobox/combobox.svelte';
-	import { fold } from '$lib/components/coral/kit/combobox/fold.js';
+	import { fold } from '$lib/components/coral/lib/fold.js';
 
 	// Stands in for a paginated endpoint: too many rows to ship to the client.
 	const CATALOG = Array.from({ length: 400 }, (_, i) => ({

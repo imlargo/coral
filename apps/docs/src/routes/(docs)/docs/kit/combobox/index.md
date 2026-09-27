@@ -242,18 +242,20 @@ What is not here yet is deferred, not designed away. Splitting the trigger, the 
 box into separate parts is the extension that stays open, and it can land without moving any of the
 props above.
 
-## fold()
+## lib/fold
 
-The search folding lives in `kit/combobox/fold.ts` and is exported on its own, so a project that
-needs the same comparison elsewhere (a client-side table filter, a sort) does not re-implement it.
+The search folding lives in `lib/fold.ts` and is exported on its own, so the same comparison can be
+used anywhere the same question is asked:
 
 ```ts
-import { fold } from '$lib/components/coral/kit/combobox/fold.js';
+import { fold } from '$lib/components/coral/lib/fold.js';
 
 fold('Açaí'); // 'acai'
 fold('Piña'); // 'pina'
 fold('Café'); // 'cafe'
 ```
 
-It stays inside the component's folder because it has exactly one consumer in Coral today. It moves
-to `lib/` the day a second component needs it.
+It used to live at `kit/combobox/fold.ts`, and the page said it would move to `lib/` the day a
+second component needed it. [Data table](/docs/kit/data-table) is that second component: its search
+folds text the same way, and the two cannot be allowed to drift. Moving it is why this component is
+at `5.0.0` - filenames are public API here, so an import that named the old path has to be updated.

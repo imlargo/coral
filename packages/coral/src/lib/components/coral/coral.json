@@ -12,6 +12,12 @@
 			"version": "1.0.0",
 			"shadcn": []
 		},
+		"lib/fold": {
+			"title": "Fold",
+			"description": "Folds text into the form searches compare against - lower case, no accents.",
+			"version": "1.0.0",
+			"shadcn": []
+		},
 		"lib/hidden-field": {
 			"title": "Hidden field",
 			"description": "The hidden input that lets a select, combobox or date picker take part in a plain form.",
@@ -27,6 +33,12 @@
 		"lib/options": {
 			"title": "Options",
 			"description": "The Option<T> vocabulary the selectable components share, and the helpers that flatten and group it.",
+			"version": "1.0.0",
+			"shadcn": []
+		},
+		"lib/table": {
+			"title": "Table",
+			"description": "Sorting, filtering, paging and selection for a table of rows, as plain functions.",
 			"version": "1.0.0",
 			"shadcn": []
 		},
@@ -57,7 +69,7 @@
 		"kit/combobox": {
 			"title": "Combobox",
 			"description": "A select with a search box, filtering the way accented text is actually typed.",
-			"version": "4.2.0",
+			"version": "5.0.0",
 			"shadcn": ["popover", "command", "button", "badge"],
 			"npm": ["@lucide/svelte"]
 		},
@@ -79,6 +91,13 @@
 			"description": "Copies text to the clipboard, says so out loud, and says so when it could not.",
 			"version": "1.0.0",
 			"shadcn": ["button"],
+			"npm": ["@lucide/svelte"]
+		},
+		"kit/data-table": {
+			"title": "Data table",
+			"description": "Rows with sortable headers, selection that survives a sort, and its own loading and empty states.",
+			"version": "1.0.0",
+			"shadcn": ["table", "checkbox", "empty", "skeleton"],
 			"npm": ["@lucide/svelte"]
 		},
 		"kit/date-picker": {
