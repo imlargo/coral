@@ -1,14 +1,14 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/file-input
-	 * @version 1.0.0
+	 * @version 1.1.0
 	 */
+	import { SvelteMap } from 'svelte/reactivity';
 	import FileIcon from '@lucide/svelte/icons/file';
 	import UploadIcon from '@lucide/svelte/icons/upload';
 	import XIcon from '@lucide/svelte/icons/x';
+	import * as Attachment from '$lib/components/ui/attachment/index.js';
 	import * as Empty from '$lib/components/ui/empty/index.js';
-	import * as Item from '$lib/components/ui/item/index.js';
-	import { Button } from '$lib/components/ui/button/index.js';
 	import { cn } from '$lib/utils.js';
 	import { describeAccept } from './accept.js';
 	import { collect } from './collect.js';
@@ -57,6 +57,30 @@
 	const shownHint = $derived(hint ?? summary);
 
 	let input = $state<HTMLInputElement | null>(null);
+
+	/** Object URLs, kept per file so a re-render does not build a second one for the same preview. */
+	const previews = new SvelteMap<File, string>();
+
+	$effect(() => {
+		for (const entry of value) {
+			if (entry.type.startsWith('image/') && !previews.has(entry)) {
+				previews.set(entry, URL.createObjectURL(entry));
+			}
+		}
+		// A URL outlives the file it points at until it is revoked, and the bytes behind it stay in
+		// memory with it.
+		for (const [entry, url] of previews) {
+			if (!value.includes(entry)) {
+				URL.revokeObjectURL(url);
+				previews.delete(entry);
+			}
+		}
+	});
+
+	// Untracked on purpose: this cleanup is for the component going away, not for `value` changing.
+	$effect(() => () => {
+		for (const url of previews.values()) URL.revokeObjectURL(url);
+	});
 
 	/**
 	 * Puts the field's `files` back in step with `value`, so the browser validates and submits what
@@ -196,37 +220,41 @@
 	</label>
 
 	{#if value.length > 0}
-		<Item.Group class={listClass}>
+		<ul class={cn('flex flex-col gap-2', listClass)}>
 			{#each value as file, index (`${file.name}-${file.size}-${file.lastModified}`)}
-				<!-- The primitive's list is `role="list"`; its rows are not list items, so they are wrapped. -->
-				<div role="listitem">
+				{@const preview = previews.get(file)}
+				<li class="min-w-0">
 					{#if fileSnippet}
 						{@render fileSnippet({ file, index, remove: () => remove(index) })}
 					{:else}
-						<Item.Root variant="outline">
-							<Item.Media variant="icon">
-								<FileIcon />
-							</Item.Media>
-							<Item.Content class="min-w-0">
-								<Item.Title>{file.name}</Item.Title>
-								<Item.Description>{formatBytes(file.size)}</Item.Description>
-							</Item.Content>
-							<Item.Actions>
-								<Button
+						<!-- `idle`, not the primitive's default `done`: these files are held, not uploaded.
+						     An uploader drives the rest of the states through the `file` snippet. -->
+						<Attachment.Root state="idle" class="w-full">
+							<Attachment.Media variant={preview ? 'image' : 'icon'}>
+								{#if preview}
+									<img src={preview} alt="" />
+								{:else}
+									<FileIcon />
+								{/if}
+							</Attachment.Media>
+							<Attachment.Content>
+								<Attachment.Title>{file.name}</Attachment.Title>
+								<Attachment.Description>{formatBytes(file.size)}</Attachment.Description>
+							</Attachment.Content>
+							<Attachment.Actions>
+								<Attachment.Action
 									type="button"
-									variant="ghost"
-									size="icon"
 									aria-label={removeLabel(file)}
 									{disabled}
 									onclick={() => remove(index)}
 								>
-									<XIcon class="opacity-50" />
-								</Button>
-							</Item.Actions>
-						</Item.Root>
+									<XIcon />
+								</Attachment.Action>
+							</Attachment.Actions>
+						</Attachment.Root>
 					{/if}
-				</div>
+				</li>
 			{/each}
-		</Item.Group>
+		</ul>
 	{/if}
 </div>

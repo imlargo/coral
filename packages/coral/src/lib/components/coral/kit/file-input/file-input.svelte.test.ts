@@ -1,6 +1,6 @@
 /**
  * @coral/kit/file-input
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -119,6 +119,35 @@ describe('in a form', () => {
 		await expect.poll(() => props.value).toEqual([]);
 		expect(onchange).toHaveBeenCalledWith([]);
 		document.getElementById('reset-me')?.remove();
+	});
+});
+
+describe('what a row shows', () => {
+	it('previews an image, and describes it by its row rather than twice', async () => {
+		renderInput({ value: [file('screenshot.png', 'bytes', 'image/png')] });
+
+		const preview = document.querySelector<HTMLImageElement>('[data-slot="attachment-media"] img')!;
+		expect(preview.src.startsWith('blob:')).toBe(true);
+		// The name is already the row's title; an alt repeating it is heard twice.
+		expect(preview.alt).toBe('');
+	});
+
+	it('falls back to an icon for anything that is not an image', async () => {
+		renderInput({ value: [file('roadmap.pdf', 'x', 'application/pdf')] });
+
+		expect(document.querySelector('[data-slot="attachment-media"] img')).toBeNull();
+		expect(document.querySelector('[data-slot="attachment-media"] svg')).not.toBeNull();
+	});
+
+	it('lets go of a preview when its file goes, so the bytes are not held for the session', async () => {
+		const revoke = vi.spyOn(URL, 'revokeObjectURL');
+		const props = $state({ value: [file('screenshot.png', 'bytes', 'image/png')] });
+		renderInput(props);
+
+		const url = document.querySelector<HTMLImageElement>('[data-slot="attachment-media"] img')!.src;
+		props.value = [];
+		await expect.poll(() => revoke.mock.calls.flat()).toContain(url);
+		revoke.mockRestore();
 	});
 });
 

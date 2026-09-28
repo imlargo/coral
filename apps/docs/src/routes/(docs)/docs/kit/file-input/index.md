@@ -26,6 +26,18 @@ that grows a second row when the same file is dropped twice. This is that input 
   how the number is written, rather than a hardcoded `1.5 MB`.
 - **The same file twice is once.** A hand-rolled input appends blindly, so dropping the same file
   again puts two identical rows on screen and posts it twice.
+- **Images show what they are.** An image file is previewed from an object URL, and that URL is
+  released when the file leaves the selection - otherwise the bytes behind it stay in memory for as
+  long as the page is open.
+
+## The rows
+
+Each held file is an `attachment`, in the `idle` state: picked, not uploaded. Images get a thumbnail
+and everything else a file icon, with the name, the size and a remove button that is named after the
+file rather than just "Remove".
+
+`idle` is the honest state for a picker, and the remaining ones - `uploading`, `processing`,
+`error`, `done` - are what an uploader drives through the `file` snippet below.
 
 ## An input, not an uploader
 
@@ -49,7 +61,8 @@ A bar that fills at a fixed rate the moment a file is chosen, with no request be
 appearance of an uploader, which is all a component without an API can offer.
 
 The real seam is the `file` snippet: Coral holds the selection and renders the zone, the project
-renders each row with whatever its own uploader knows.
+renders each row with whatever its own uploader knows - including the attachment states the default
+row deliberately leaves alone.
 
 <Preview name="kit/file-input/custom-row" />
 
@@ -121,6 +134,10 @@ That single change is the difference between a picker the keyboard can open and 
 
 Every prop a native file input takes is forwarded to it: `id`, `required`, `capture`, `aria-*`, so
 a surrounding `Field` labels it the usual way.
+
+The held files are a real list, one `<li>` per file, so their number is announced before they are
+read. An image preview carries an empty `alt`: the file's name is already the row's title, and
+repeating it makes a screen reader say it twice.
 
 ## Import
 
