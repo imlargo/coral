@@ -236,6 +236,12 @@
 			"version": "1.0.1",
 			"shadcn": [],
 			"npm": ["@lucide/svelte"]
+		},
+		"blocks/table-panel": {
+			"title": "Table panel",
+			"description": "A table with the screen around it - search, paging, bulk actions, and two different empty states.",
+			"version": "1.0.0",
+			"shadcn": ["pagination", "button", "native-select"]
 		}
 	}
 }

@@ -2,9 +2,10 @@
 	/**
 	 * The command that installs one component, per package manager.
 	 *
-	 * Rendered by `docs/[...slug]/+page.svelte` for every `kit/*` page rather than written into the
-	 * Markdown: the command is the item name and the registry URL, both of which the page already
-	 * knows, and 25 hand-written copies of it is 25 places to forget when either changes.
+	 * Rendered by `docs/[...slug]/+page.svelte` for every installable page - `kit/*` and `blocks/*` -
+	 * rather than written into the Markdown: the command is the item name and the registry URL, both
+	 * of which the page already knows, and one hand-written copy per page is one place per page to
+	 * forget when either changes.
 	 *
 	 * The command is printed rather than highlighted. Everything else on a docs page goes through
 	 * shiki at build time, and one line of shell that is mostly a URL has nothing to colour that

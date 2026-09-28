@@ -79,8 +79,23 @@ export function itemName(name) {
 }
 
 /**
- * The files one manifest entry owns. `kit/*` entries are folders; `lib/*` entries are a single
- * file that may carry any extension.
+ * The layers whose entries are folders, and which a consumer installs by name. `lib/*` entries are
+ * single files pulled in as dependencies of these, never asked for directly.
+ */
+export const COMPONENT_LAYERS = ['kit/', 'blocks/'];
+
+/**
+ * Whether a manifest entry is one of those - a thing with a page, an install command and a folder.
+ *
+ * @param {string} name
+ */
+export function isComponent(name) {
+	return COMPONENT_LAYERS.some((layer) => name.startsWith(layer));
+}
+
+/**
+ * The files one manifest entry owns. `kit/*` and `blocks/*` entries are folders; `lib/*` entries
+ * are a single file that may carry any extension.
  *
  * @param {string} name
  * @param {string[]} all
@@ -180,9 +195,7 @@ export async function registry(components) {
 		title: 'Coral',
 		description: 'Every Coral component, and the shadcn primitives they are composed from.',
 		meta: { coral: 'all' },
-		registryDependencies: names
-			.filter((name) => name.startsWith('kit/'))
-			.map((name) => `local:${itemName(name)}`),
+		registryDependencies: names.filter(isComponent).map((name) => `local:${itemName(name)}`),
 		files: []
 	});
 

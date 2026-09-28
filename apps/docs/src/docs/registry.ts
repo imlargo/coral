@@ -7,5 +7,5 @@
  * items against the pages.
  */
 
-/** The registry item a `kit/*` docs slug documents: `kit/select` is published as `kit-select`. */
+/** The registry item a docs slug documents: `kit/select` is published as `kit-select`. */
 export const itemName = (slug: string): string => slug.replace('/', '-');

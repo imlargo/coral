@@ -13,7 +13,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 import { SITE } from '../registry.config.js';
-import { CORAL, PACKAGE, registry } from './registry.js';
+import { CORAL, PACKAGE, isComponent, registry } from './registry.js';
 
 const REGISTRY_FILE = path.join(PACKAGE, 'registry.json');
 const DEFAULT_OUTPUT = path.resolve(PACKAGE, '../../apps/docs/static/r');
@@ -31,7 +31,7 @@ const DEFAULT_OUTPUT = path.resolve(PACKAGE, '../../apps/docs/static/r');
 async function addDocsLinks(output, items) {
 	for (const built of items) {
 		const component = built.meta?.coral;
-		if (!component?.startsWith('kit/')) continue;
+		if (!component || !isComponent(component)) continue;
 
 		const file = path.join(output, `${built.name}.json`);
 		const json = JSON.parse(await readFile(file, 'utf8'));

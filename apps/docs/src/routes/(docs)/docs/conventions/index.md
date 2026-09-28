@@ -13,19 +13,44 @@ src/lib/components/coral/     ← beside shadcn's ui/
 │     ├─ avatar.svelte
 │     ├─ types.ts
 │     └─ initials.ts
-├─ blocks/         → app-level compositions (rule of 3)
+├─ blocks/         → compositions of the above, one per use case
+│  └─ table-panel/
 └─ lib/            → shared across components
    └─ options.ts   → Option<T>, OptionGroup<T>, and reading either shape
 ```
 
-**Folders are created when something needs them, never in advance.** `blocks/` does not exist yet
-because nothing lives in it. A util with a single consumer stays inside its component's folder and
-moves to `lib/` the day a second component needs it, which is exactly how `lib/options.ts` came to
-be, when `select` became the second component to speak `Option<T>`.
+**Folders are created when something needs them, never in advance.** A util with a single consumer
+stays inside its component's folder and moves to `lib/` the day a second component needs it, which
+is exactly how `lib/options.ts` came to be, when `select` became the second component to speak
+`Option<T>`.
 
 Moving a file is a breaking change: filenames are public API, so the component that gave the util up
 gets a major bump. `combobox` went to `3.0.0` for that reason and for no other. Its props did not
 change.
+
+## What a block is
+
+`kit/` resolves the behaviour of one control. `blocks/` resolves the wiring _between_ several of
+them, for one use case: the pipeline a list screen runs, the order things happen in, which state is
+shared. A block that only arranges components on a page is a layout, and layouts are yours.
+
+Five rules, so the layer stays a library rather than a folder of templates:
+
+1. **It composes two or more `kit/` components** and earns its keep on what it wires, not on what it
+   arranges.
+2. **Still no appearance, still no entities.** A block is shaped by a use case, not by a domain:
+   "a table with the screen around it", never "an invoices table".
+3. **It takes data and callbacks.** No fetching, no routing, no knowledge of your data layer. Where
+   a block needs to reach outside itself, it takes a snippet or a handler - `table-panel` takes its
+   rows and hands back what was selected.
+4. **It may carry copy, with English defaults.** A block has more to say than a control does, and a
+   skeleton that has to be filled in entirely is not worth installing. Every string is a prop.
+5. **Rule of three.** A component enters `kit/` after the same pattern has been written twice; a
+   block waits for three, because the wiring is what varies most between projects.
+
+Blocks are published like anything else: `blocks/<name>/`, an entry in `coral.json`, a page under
+`docs/blocks/`, and a registry item named `blocks-<name>` that pulls in the `kit/` items it
+composes.
 
 ## Props
 

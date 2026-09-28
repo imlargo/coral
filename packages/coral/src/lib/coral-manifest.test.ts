@@ -17,7 +17,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import manifest from './components/coral/coral.json' with { type: 'json' };
-import { itemName, registry } from '../../scripts/registry.js';
+import { COMPONENT_LAYERS, isComponent, itemName, registry } from '../../scripts/registry.js';
 
 const CORAL = path.join(import.meta.dirname, 'components/coral');
 /** The docs site, which is a sibling workspace - see the note above about repo tooling. */
@@ -68,7 +68,7 @@ describe('coral.json', () => {
 		const all = await files();
 		const folders = new Set(
 			all
-				.filter((file) => file.startsWith('kit/'))
+				.filter((file) => COMPONENT_LAYERS.some((layer: string) => file.startsWith(layer)))
 				.map((file) => file.split('/').slice(0, 2).join('/'))
 		);
 		const singles = new Set(
@@ -129,9 +129,10 @@ describe('coral.json', () => {
 });
 
 describe('docs pages', () => {
-	const kit = entries.filter(([name]) => name.startsWith('kit/'));
+	/** `lib/*` is installed as a dependency of the layers above it, so it has no page of its own. */
+	const documented = entries.filter(([name]) => isComponent(name));
 
-	it.each(kit)(
+	it.each(documented)(
 		'%s is documented, with the title and description the manifest states',
 		async (name, entry) => {
 			const page = await readFile(path.join(DOCS, name, 'index.md'), 'utf8');
@@ -180,9 +181,15 @@ describe('registry', () => {
 		const names = items.map((item) => item.name);
 
 		expect(new Set(names).size).toBe(names.length);
+		// Derived from the layers rather than spelled out again: a new layer has one place to be
+		// declared, and this test then holds it to the same rule as the others.
+		const prefixes = [...COMPONENT_LAYERS, 'lib/'].map((layer) => layer.replace('/', '-'));
+
 		for (const name of names) {
 			if (name === 'coral') continue;
-			expect(name, `${name} is missing its kit-/lib- prefix`).toMatch(/^(kit|lib)-/);
+			expect(name, `${name} is missing its layer prefix`).toSatisfy((item: string) =>
+				prefixes.some((prefix) => item.startsWith(prefix))
+			);
 		}
 	});
 

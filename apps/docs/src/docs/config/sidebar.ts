@@ -1,10 +1,9 @@
 /**
  * Sidebar structure, consumed by svdocs's own `docs-sidebar.svelte` / `docs-breadcrumbs.svelte` /
  * `docs-page-footer.svelte` unchanged. "Getting started" is hand-ordered and barely changes - three
- * items is not worth deriving. "Kit" is the section that actually grows with every new component,
- * so it comes from the docs collection itself: add `kit/<name>/index.md` and it appears here,
- * titled and sorted, with no second place to update. "Blocks" is an empty group for now - nothing
- * lives there yet, per the repo's rule of three.
+ * items is not worth deriving. "Kit" and "Blocks" are the sections that grow, so they come from the
+ * docs collection itself: add `kit/<name>/index.md` or `blocks/<name>/index.md` and it appears
+ * here, titled and sorted, with no second place to update.
  */
 
 import { getCollection, type DocsFrontmatter } from '$docs/content/docs.js';
@@ -20,18 +19,24 @@ export interface SidebarGroup {
 }
 
 const KIT_PREFIX = 'kit/';
+const BLOCKS_PREFIX = 'blocks/';
 
 // Plain pathnames, not run through `resolve()` here: with `(docs)` as a route group, `resolve()`'s
 // typed overload wants either a literal `RouteId` (which, for a group, is spelled with the
 // parens - not the real URL) or a value already typed `Pathname`. The consumers below already
 // carry these through `resolve(item.href as Pathname)`, so building plain strings here and
 // resolving them at the point of use is what lets a page keep the URL it actually has.
-const kit: SidebarLink[] = getCollection('docs', (entry) => entry.slug.startsWith(KIT_PREFIX))
-	.map((entry) => ({
-		title: (entry.data as unknown as DocsFrontmatter).title,
-		href: `/docs/${entry.slug}`
-	}))
-	.sort((a, b) => a.title.localeCompare(b.title));
+function section(prefix: string): SidebarLink[] {
+	return getCollection('docs', (entry) => entry.slug.startsWith(prefix))
+		.map((entry) => ({
+			title: (entry.data as unknown as DocsFrontmatter).title,
+			href: `/docs/${entry.slug}`
+		}))
+		.sort((a, b) => a.title.localeCompare(b.title));
+}
+
+const kit = section(KIT_PREFIX);
+const blocks = section(BLOCKS_PREFIX);
 
 export const DOCS_SIDEBAR_GROUPS: SidebarGroup[] = [
 	{
@@ -48,7 +53,7 @@ export const DOCS_SIDEBAR_GROUPS: SidebarGroup[] = [
 	},
 	{
 		title: 'Blocks',
-		items: []
+		items: blocks
 	}
 ];
 

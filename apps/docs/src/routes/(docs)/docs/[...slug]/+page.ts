@@ -6,7 +6,7 @@ import { itemName } from '$docs/registry.js';
 // The sidebar links to every page anyway, but this keeps prerendering from depending on that.
 export const entries = () => getCollection('docs').map((entry) => ({ slug: entry.slug }));
 
-const KIT_PREFIX = 'kit/';
+const INSTALLABLE = ['kit/', 'blocks/'];
 
 export const load = async ({ params }) => {
 	const entry = getEntry('docs', params.slug);
@@ -21,7 +21,9 @@ export const load = async ({ params }) => {
 	const prev = index > 0 ? DOCS_PAGES[index - 1] : undefined;
 	const next = index !== -1 && index < DOCS_PAGES.length - 1 ? DOCS_PAGES[index + 1] : undefined;
 
-	const item = params.slug.startsWith(KIT_PREFIX) ? itemName(params.slug) : undefined;
+	const item = INSTALLABLE.some((layer) => params.slug.startsWith(layer))
+		? itemName(params.slug)
+		: undefined;
 
 	return { Content, title, description, raw, prev, next, item };
 };
