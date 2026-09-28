@@ -99,6 +99,7 @@ On top of that:
 | `vimBindings`                  | `boolean`                         | unless a combo clashes        | The primitive's Ctrl+N/P/J/K navigation.          |
 | `placeholder`                  | `string`                          | `Type a command or search...` | Shown in the search box.                          |
 | `emptyMessage`                 | `string`                          | `No results found.`           | Shown when nothing matches.                       |
+| `class`, `listClass`           | `string`                          | -                             | Merged onto the dialog, and onto the list.        |
 | `trigger`                      | `Snippet<[{ props, open }]>`      | -                             | The element that opens it.                        |
 | `action`                       | `Snippet<[{ action, pending }]>`  | -                             | Replaces each row's body.                         |
 | `indicator`, `empty`, `footer` | `Snippet`                         | -                             | Loading row, empty state, footer.                 |
@@ -109,6 +110,10 @@ The dialog, the combobox semantics, the arrow keys and the focus trap are the pr
 the visually hidden title and description every dialog needs. What is added here is the trigger's
 `aria-haspopup`, `aria-expanded` and `aria-keyshortcuts`, and shortcut glyphs that are read out by
 name rather than as "place of interest sign." See [shortcut](/docs/kit/shortcut).
+
+The search box also carries `aria-controls` and `aria-activedescendant`, which the primitive cannot
+derive here, so the highlighted action is announced. While results load the list is hidden and the
+indicator sits beside it, since a listbox may only own options, and a disabled action is dimmed.
 
 A disabled action stays in the list. Hiding it is how a reader concludes the feature does not exist,
 rather than that they cannot use it right now.

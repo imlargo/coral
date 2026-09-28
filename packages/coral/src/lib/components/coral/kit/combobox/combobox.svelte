@@ -13,6 +13,7 @@
 	import { Spinner } from '$lib/components/ui/spinner/index.js';
 	import { cn } from '$lib/utils.js';
 	import HiddenField from '../../lib/hidden-field.svelte';
+	import LiveRegion from '../../lib/live-region.svelte';
 	import { debounce } from '../../lib/debounce.js';
 	import { onClose } from '../../lib/on-close.svelte.js';
 	import { flatten, toGroups } from '../../lib/options.js';
@@ -66,6 +67,9 @@
 
 	const uid = $props.id();
 	const listId = `${uid}-list`;
+
+	/** The value of the option the primitive has highlighted - see `activeId`. */
+	let highlighted = $state('');
 
 	let triggerRef = $state<HTMLButtonElement | null>(null);
 	let searchRef = $state<HTMLInputElement | null>(null);
@@ -129,11 +133,19 @@
 			.filter((group) => group.entries.length > 0);
 	});
 
+	const noMatches = $derived(!loading && rendered.length === 0);
+
+	/** The highlighted option's element id, while there is a list for it to be in. */
+	const activeId = $derived(
+		highlighted !== '' && !noMatches && !loading ? `${listId}-${highlighted}` : undefined
+	);
+
 	/**
 	 * The selection is hydrated from `next` rather than read back off `selected`, so what the
 	 * caller is handed cannot depend on when a derived happens to recompute.
 	 */
 	function commit(next: T | T[] | undefined) {
+		// `type` picks the shape of `value` at runtime, which TypeScript cannot correlate with `Type`.
 		value = next as never;
 		if (!onchange) return;
 
@@ -271,39 +283,36 @@
 	</div>
 
 	<Popover.Content class={cn('w-(--bits-popover-anchor-width) p-0', contentClass)}>
-		<Command.Root shouldFilter={false}>
-			<!-- `aria-controls` by hand: the primitive derives it from a viewport the shadcn list does not render. -->
+		<Command.Root shouldFilter={false} bind:value={highlighted}>
+			<!--
+				`aria-controls` and `aria-activedescendant` by hand: the primitive derives both from a
+				viewport the shadcn list does not render, so a screen reader is told neither which list this
+				box drives nor which option is highlighted.
+			-->
 			<Command.Input
 				bind:ref={searchRef}
 				aria-controls={listId}
+				aria-activedescendant={activeId}
 				placeholder={searchPlaceholder}
 				bind:value={search}
 				oninput={handleSearch}
 			/>
 
-			<Command.List id={listId} class={listClass}>
-				{#if loading}
-					<Command.Loading>
-						{#if indicator}
-							{@render indicator()}
-						{:else}
-							<div class="flex items-center justify-center py-6">
-								<Spinner class="opacity-50" />
-							</div>
-						{/if}
-					</Command.Loading>
-				{:else}
-					<Command.Empty>
-						{#if empty}{@render empty()}{:else}{emptyMessage}{/if}
-					</Command.Empty>
-
+			<!--
+				A listbox may only own options and groups, so while it has none - nothing matches, or the
+				results are on their way - it is hidden and the message sits beside it instead.
+			-->
+			<Command.List id={listId} class={listClass} hidden={noMatches || loading}>
+				{#if !loading}
 					{#each rendered as group, groupIndex (groupIndex)}
 						<Command.Group heading={group.label}>
 							{#each group.entries as entry (entry.index)}
 								{@const isSelected = includesValue(values, entry.option.value)}
 								<Command.Item
+									id={`${listId}-${entry.index}`}
 									value={String(entry.index)}
 									disabled={entry.option.disabled}
+									class="data-disabled:pointer-events-none data-disabled:opacity-50"
 									data-checked={isSelected ? 'true' : undefined}
 									onSelect={() => select(entry.option)}
 								>
@@ -325,6 +334,27 @@
 					{/each}
 				{/if}
 			</Command.List>
+
+			{#if loading}
+				<Command.Loading>
+					{#if indicator}
+						{@render indicator()}
+					{:else}
+						<div class="flex items-center justify-center py-6">
+							<Spinner class="opacity-50" />
+						</div>
+					{/if}
+				</Command.Loading>
+			{/if}
+
+			{#if !loading}
+				<Command.Empty>
+					{#if empty}{@render empty()}{:else}{emptyMessage}{/if}
+				</Command.Empty>
+			{/if}
+
+			<!-- Typing into a field whose list is empty says nothing on its own, so the result is spoken. -->
+			<LiveRegion message={noMatches && !empty ? emptyMessage : ''} />
 
 			{#if footer}
 				<div class="border-t p-1">

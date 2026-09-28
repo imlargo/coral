@@ -127,25 +127,21 @@ every project that already copied it.
 - Never remove capability the wrapped primitive already had. Forward its props
   (`ComponentProps<typeof X>`) and keep whatever it exposes for binding (`ref`, and friends).
 - Generic types (`Option<T = string>`), never closed/string-only shapes.
-- **A handler that can fail is waited on through `lib/action`, and its component takes `onerror`.**
-  Return exactly `false`, or throw, and it stays where it is; `onerror` receives what was thrown,
-  and without it the error propagates as an unhandled rejection. Where `error` is already a prop
-  (`page-state`), it is `onretryerror`.
-- **A control whose trigger is a button takes `id` and `aria-*` on the trigger**, not on its root
-  (`lib/trigger`), so `<Label for>` and a form library's control props land where a screen reader
-  looks. Never set an `aria-label` over a label that already names the control.
-- **Every string a reader sees or hears is a prop, with an English default.** `*Message` is one
-  plain line; `*Title` and `*Description` are a heading and the line under it. `on<thing>change` is
-  the callback for a root that is an element (a `<div>` already has an `onchange` of its own).
-- **Reach for `$derived` before `$effect`.** An effect is for the DOM (an observer, a listener, a
-  measurement) and for writing a bindable output back. Something that has to happen when a popover
-  closes goes through `lib/on-close`, because the primitive only reports the closes it made itself.
-- **Formatters and collators come from `lib/intl`**, never `new Intl.*` in a component or a loop.
-- **Reduced motion is `prefersReducedMotion` from `svelte/motion`**, not a hand-rolled query.
-- **Component tests run in a real browser** (`*.svelte.test.ts`); logic worth testing on its own
-  lives in a plain module beside the component with a plain test. Every component is also listed in
-  `src/lib/a11y.svelte.test.ts`, which runs axe over it - add a new one there in its default state
-  and in each state that changes its markup (open, busy, empty).
+- **A handler that can fail goes through `lib/action`, and its component takes `onerror`.** Return
+  exactly `false`, or throw, and it stays where it is; `onerror` gets what was thrown, and without
+  it the error is an unhandled rejection. Where `error` is already a prop, it is `onretryerror`.
+- **A control whose trigger is a button takes `id` and `aria-*` on the trigger**, not its root
+  (`lib/trigger`). Never set an `aria-label` over a label that already names the control.
+- **Every string a reader sees or hears is a prop with an English default.** `*Message` is one
+  line; `*Title` and `*Description` are a heading and the line under it. `on<thing>change` is the
+  callback for a root that is an element, which already has an `onchange` of its own.
+- **Shared helpers first:** `lib/intl` for formatters and collators, `lib/focus` for focus rings,
+  `lib/on-close` for what must happen when a popover closes (the primitive does not report a close
+  made by assigning `open`), `prefersReducedMotion` from `svelte/motion`.
+- **Comment only what the code cannot say** - the why, in a line or two. No restating, no history.
+- **Tests run in a real browser** (`*.svelte.test.ts`); logic worth testing alone lives in a plain
+  module with a plain test. Every component is also listed in `src/lib/a11y.svelte.test.ts`, which
+  runs axe over it: add each state that changes its markup (open, busy, empty).
 - Every file carries a version header, matched to an entry in `coral.json`:
   ```ts
   /**

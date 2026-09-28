@@ -224,13 +224,17 @@ options carry `aria-disabled` and are skipped by both pointer and keyboard. Sele
 to the trigger, and in `type="multiple"` to the search box, so the keyboard never lands back at the
 top of the document.
 
-Two caveats, both upstream and both outside what Coral can reach from `kit/`:
+Three things the primitives leave out, which Coral supplies from outside them:
 
-- **The search box does not expose `aria-activedescendant`.** Arrowing through options moves the
-  visual highlight, but a screen reader is not told which option is active. This lives in bits-ui's
-  command input.
-- **Disabled options get no visual treatment.** shadcn's command item styles `data-[disabled=true]`
-  while bits-ui renders `data-disabled=""`, so the dimming never applies. They are still inert.
+- **The active option is announced.** The search box carries `aria-controls` and
+  `aria-activedescendant`, so a screen reader is told which list it drives and which option the
+  arrow keys are on. The primitive derives both from an element the shadcn list never renders.
+- **An empty list is not left as an empty listbox.** A listbox must own options, so while nothing
+  matches, or the results are loading, the list is hidden and the message or the indicator sits
+  beside it. With the default message, the result is also spoken: typing into a box whose list has
+  emptied otherwise says nothing at all.
+- **A disabled option looks disabled.** The shadcn item styles `data-[disabled=true]`, while the
+  primitive renders `data-disabled=""`, so the dimming never applied.
 
 ## Why flat props, for now
 

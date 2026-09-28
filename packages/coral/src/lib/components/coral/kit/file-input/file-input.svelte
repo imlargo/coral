@@ -198,31 +198,34 @@
 	{#if value.length > 0}
 		<Item.Group class={listClass}>
 			{#each value as file, index (`${file.name}-${file.size}-${file.lastModified}`)}
-				{#if fileSnippet}
-					{@render fileSnippet({ file, index, remove: () => remove(index) })}
-				{:else}
-					<Item.Root variant="outline">
-						<Item.Media variant="icon">
-							<FileIcon />
-						</Item.Media>
-						<Item.Content class="min-w-0">
-							<Item.Title>{file.name}</Item.Title>
-							<Item.Description>{formatBytes(file.size)}</Item.Description>
-						</Item.Content>
-						<Item.Actions>
-							<Button
-								type="button"
-								variant="ghost"
-								size="icon"
-								aria-label={removeLabel(file)}
-								{disabled}
-								onclick={() => remove(index)}
-							>
-								<XIcon class="opacity-50" />
-							</Button>
-						</Item.Actions>
-					</Item.Root>
-				{/if}
+				<!-- The primitive's list is `role="list"`; its rows are not list items, so they are wrapped. -->
+				<div role="listitem">
+					{#if fileSnippet}
+						{@render fileSnippet({ file, index, remove: () => remove(index) })}
+					{:else}
+						<Item.Root variant="outline">
+							<Item.Media variant="icon">
+								<FileIcon />
+							</Item.Media>
+							<Item.Content class="min-w-0">
+								<Item.Title>{file.name}</Item.Title>
+								<Item.Description>{formatBytes(file.size)}</Item.Description>
+							</Item.Content>
+							<Item.Actions>
+								<Button
+									type="button"
+									variant="ghost"
+									size="icon"
+									aria-label={removeLabel(file)}
+									{disabled}
+									onclick={() => remove(index)}
+								>
+									<XIcon class="opacity-50" />
+								</Button>
+							</Item.Actions>
+						</Item.Root>
+					{/if}
+				</div>
 			{/each}
 		</Item.Group>
 	{/if}

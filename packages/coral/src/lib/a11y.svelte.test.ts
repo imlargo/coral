@@ -17,6 +17,7 @@ import { render } from 'vitest-browser-svelte';
 import { createRawSnippet } from 'svelte';
 import type { Snippet } from 'svelte';
 import axe from 'axe-core';
+import { userEvent } from 'vitest/browser';
 import { describe, expect, it } from 'vitest';
 import ActionButton from './components/coral/kit/action-button/action-button.svelte';
 import ActivityCalendar from './components/coral/kit/activity-calendar/activity-calendar.svelte';
@@ -230,6 +231,167 @@ const cases: [string, () => unknown][] = [
 				selection: 'multiple',
 				pageSize: 1
 			})
+	],
+	// States that change the markup: a selection made, a search that found nothing, files held.
+	[
+		'select, with a selection and a clear control',
+		() => draw(Select, { options: fruits, value: 2, clearable: true, 'aria-label': 'Fruit' })
+	],
+	[
+		'combobox, groups and descriptions, open',
+		() =>
+			draw(Combobox, {
+				open: true,
+				'aria-label': 'Fruit',
+				options: [
+					{ label: 'Berries', options: [{ value: 1, label: 'Açaí', description: 'Berry' }] },
+					{ label: 'Tropical', options: [{ value: 2, label: 'Mango', disabled: true }] }
+				]
+			})
+	],
+	[
+		'combobox, nothing found',
+		async () => {
+			await draw(Combobox, { options: fruits, open: true, 'aria-label': 'Fruit' });
+			await userEvent.fill(document.querySelector('[data-slot="command-input"]')!, 'zzz');
+		}
+	],
+	['date-picker, one day, open', () => draw(DatePicker, { open: true, 'aria-label': 'Due date' })],
+	[
+		'date-picker, with presets and a clear control',
+		() =>
+			draw(DatePicker, {
+				open: true,
+				clearable: true,
+				'aria-label': 'Period',
+				type: 'range',
+				presets: [{ label: 'Today', value: () => ({ start: undefined, end: undefined }) }]
+			})
+	],
+	[
+		'data-table, everything selected',
+		() =>
+			draw(DataTable, {
+				rows,
+				columns,
+				getRowId: (row: (typeof rows)[number]) => row.id,
+				caption: 'Deploys',
+				selection: 'multiple',
+				selected: ['a', 'b'],
+				sort: { column: 'project', direction: 'desc' }
+			})
+	],
+	[
+		'table-panel, a search that matched nothing',
+		() =>
+			draw(TablePanel, {
+				rows,
+				columns,
+				getRowId: (row: (typeof rows)[number]) => row.id,
+				caption: 'Deploys',
+				search: 'zzz'
+			})
+	],
+	[
+		'file-input, files held',
+		() =>
+			draw(FileInput, {
+				'aria-label': 'Attachments',
+				multiple: true,
+				value: [new File(['x'], 'roadmap.pdf'), new File(['y'], 'notes.txt')]
+			})
+	],
+	[
+		'stepper, vertical',
+		() => draw(StepperHarness, { steps: ['a', 'b', 'c'], orientation: 'vertical' })
+	],
+	[
+		'page-state, loading',
+		() => draw(PageState, { loading: true, delay: 0, children: html('<p></p>') })
+	],
+	[
+		'confirm-dialog, waiting',
+		() => draw(ConfirmDialog, { open: true, title: 'Delete', pending: true })
+	],
+	['copy-button, copied', () => draw(CopyButton, { text: 'x', status: 'copied' })],
+	[
+		'tags-input, read only',
+		() => draw(TagsInput, { value: ['a'], readonly: true, 'aria-label': 'Tags' })
+	],
+	[
+		'command-palette, with recents and a disabled action',
+		() =>
+			draw(CommandPalette, {
+				open: true,
+				recent: ['docs'],
+				actions: [
+					{ id: 'new', label: 'New project', run: () => {} },
+					{ id: 'docs', label: 'Open docs', run: () => {} },
+					{ id: 'off', label: 'Deploy', disabled: true, run: () => {} }
+				]
+			})
+	],
+	[
+		'tree-view, with a selection',
+		() =>
+			draw(TreeView, {
+				label: 'Files',
+				expanded: ['src'],
+				selected: 'app',
+				nodes: [{ id: 'src', label: 'src', children: [{ id: 'app', label: 'app.ts' }] }]
+			})
+	],
+	[
+		'combobox, loading',
+		() => draw(Combobox, { options: fruits, open: true, loading: true, 'aria-label': 'Fruit' })
+	],
+	[
+		'command-palette, nothing found',
+		async () => {
+			await draw(CommandPalette, {
+				open: true,
+				actions: [{ id: 'new', label: 'New project', run: () => {} }]
+			});
+			await userEvent.fill(document.querySelector('[data-slot="command-input"]')!, 'zzz');
+		}
+	],
+	[
+		'command-palette, loading',
+		() =>
+			draw(CommandPalette, {
+				open: true,
+				loading: true,
+				actions: [{ id: 'new', label: 'New project', run: () => {} }]
+			})
+	],
+	[
+		'select, grouped, open',
+		() =>
+			draw(Select, {
+				open: true,
+				'aria-label': 'Fruit',
+				options: [
+					{ label: 'Berries', options: [{ value: 1, label: 'Açaí' }] },
+					{ label: 'Tropical', options: [{ value: 2, label: 'Mango' }] }
+				]
+			})
+	],
+	// States reached through the keyboard, which is how the people axe is protecting reach them.
+	[
+		'reorder-list, an item picked up',
+		async () => {
+			await draw(ReorderList, { items: ['Build', 'Test', 'Deploy'], 'aria-label': 'Pipeline' });
+			document.querySelector<HTMLElement>('[data-coral-handle="0"]')!.focus();
+			await userEvent.keyboard(' ');
+		}
+	],
+	[
+		'number-input, at its upper bound',
+		() => draw(NumberInput, { value: 10, max: 10, 'aria-label': 'Seats' })
+	],
+	[
+		'password-input, shown',
+		() => draw(PasswordInput, { visible: true, capsLock: true, 'aria-label': 'Password' })
 	]
 ];
 

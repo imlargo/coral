@@ -120,10 +120,28 @@ describe('searching', () => {
 		await expect.poll(labels).toEqual(['Açaí']);
 	});
 
-	it('says so when nothing matches', async () => {
+	it('says so when nothing matches, in the page and to a screen reader', async () => {
 		await draw({ options: fruits, open: true, emptyMessage: 'Nothing like that.' });
 		await userEvent.fill(search(), 'zzz');
 		await expect.poll(() => document.body.textContent).toContain('Nothing like that.');
+		expect(document.querySelector('[role="status"]')?.textContent?.trim()).toBe(
+			'Nothing like that.'
+		);
+		// An empty listbox is invalid ARIA, so it is hidden rather than left holding only the message.
+		expect(document.querySelector<HTMLElement>('[role="listbox"]')?.hidden).toBe(true);
+	});
+
+	it('brings the list back when the search matches again', async () => {
+		await draw({ options: fruits, open: true });
+		await userEvent.fill(search(), 'zzz');
+		await expect
+			.poll(() => document.querySelector<HTMLElement>('[role="listbox"]')?.hidden)
+			.toBe(true);
+		await userEvent.fill(search(), 'gua');
+		await expect
+			.poll(() => document.querySelector<HTMLElement>('[role="listbox"]')?.hidden)
+			.toBe(false);
+		expect(document.querySelector('[role="status"]')?.textContent?.trim()).toBe('');
 	});
 
 	it('takes over matching with a filter of its own', async () => {
@@ -192,7 +210,8 @@ describe('searching', () => {
 	it('shows a loading row in place of the list', async () => {
 		await draw({ options: fruits, open: true, loading: true });
 		expect(options()).toHaveLength(0);
-		expect(document.querySelector('[role="status"]')).not.toBeNull();
+		expect(document.querySelector('[role="progressbar"]')).not.toBeNull();
+		expect(document.querySelector<HTMLElement>('[role="listbox"]')?.hidden).toBe(true);
 	});
 });
 
@@ -325,6 +344,33 @@ describe('naming the trigger', () => {
 		expect(trigger().getAttribute('aria-label')).toBe('Fruit');
 		expect(trigger().getAttribute('aria-describedby')).toBe('fruit-hint');
 		expect(trigger().getAttribute('aria-invalid')).toBe('true');
+	});
+
+	it('tells a screen reader which option is highlighted, and follows the arrows', async () => {
+		await draw({ options: fruits, open: true });
+		const active = () => {
+			const id = search().getAttribute('aria-activedescendant');
+			return id ? document.getElementById(id)?.textContent?.trim() : undefined;
+		};
+
+		await expect.poll(active).toBe('Açaí');
+		await userEvent.keyboard('{ArrowDown}');
+		await expect.poll(active).toBe('Guava Tropical');
+		// Kiwi is disabled, so the highlight steps over it.
+		await userEvent.keyboard('{ArrowDown}');
+		await expect.poll(active).toBe('Mango');
+	});
+
+	it('points at nothing while there is no list to point into', async () => {
+		await draw({ options: fruits, open: true });
+		await userEvent.fill(search(), 'zzz');
+		await expect.poll(() => search().hasAttribute('aria-activedescendant')).toBe(false);
+	});
+
+	it('dims a disabled option', async () => {
+		await draw({ options: fruits, open: true });
+		await expect.poll(() => option('Kiwi')).toBeDefined();
+		expect(Number(getComputedStyle(option('Kiwi')).opacity)).toBeLessThan(1);
 	});
 
 	it('ties the search box to the list it filters', async () => {

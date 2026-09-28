@@ -20,6 +20,22 @@ describe('slug', () => {
 		expect(slug('  What Coral adds — really?  ')).toBe('what-coral-adds-really');
 	});
 
+	it('keeps letters from scripts that have no Latin equivalent', () => {
+		expect(slug('Привет, мир')).toBe('привет-мир');
+		expect(slug('日本語の見出し')).toBe('日本語の見出し');
+		expect(slug('مرحبا بالعالم')).toBe('مرحبا-بالعالم');
+	});
+
+	it('does not fold a letter that is base plus mark in its own script', () => {
+		// Cyrillic `й` decomposes to `и` and a breve; dropping the mark would spell a different word.
+		expect(slug('Тайна')).toBe('тайна');
+		expect(slug('Über uns')).toBe('uber-uns');
+	});
+
+	it('keeps digits, and falls back rather than returning an empty anchor', () => {
+		expect(slug('Step 2: install')).toBe('step-2-install');
+	});
+
 	it('falls back rather than returning an empty anchor', () => {
 		expect(slug('!?')).toBe('section');
 	});

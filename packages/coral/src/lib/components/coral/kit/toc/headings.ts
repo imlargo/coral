@@ -13,28 +13,26 @@ export type TocHeading = {
 };
 
 /**
- * A slug for a heading with no `id` of its own - markdown rendered by a CMS, or an article whose
- * anchors nobody added. Accents are folded rather than dropped, so `Deploying to São Paulo`
- * gives `deploying-to-sao-paulo` and not `deploying-to-so-paulo`.
+ * A slug for a heading with no `id` of its own. Accents on Latin letters are folded (`São Paulo`
+ * gives `sao-paulo`), but letters from other scripts are kept: an ASCII-only slug turns every
+ * Cyrillic, Arabic or CJK heading into `section`.
  */
 export function slug(text: string): string {
 	return (
 		text
+			// Marks are stripped only after a Latin letter, so `й` is not turned into `и`.
 			.normalize('NFD')
-			.replace(/[̀-ͯ]/g, '')
+			.replace(/(\p{Script=Latin})\p{M}+/gu, '$1')
+			.normalize('NFC')
 			.toLowerCase()
 			.trim()
-			.replace(/[^a-z0-9\s-]/g, '')
+			.replace(/[^\p{L}\p{N}\s-]/gu, '')
 			.replace(/\s+/g, '-')
 			.replace(/-+/g, '-')
 			.replace(/^-|-$/g, '') || 'section'
 	);
 }
 
-/**
- * Makes `candidate` unique against the ids already handed out. Two sections called "Props" would
- * otherwise share an anchor, and every link to the second one would land on the first.
- */
 export function uniqueId(candidate: string, taken: Set<string>): string {
 	if (!taken.has(candidate)) return candidate;
 

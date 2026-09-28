@@ -86,8 +86,11 @@ Everything a `<div>` accepts stays available on the root. On top of that:
 | `emptyDescription`     | `string`                                   | -                         | What would put something here.                   |
 | `noResultsTitle`       | `string`                                   | `No results.`             | When a search matched nothing.                   |
 | `noResultsDescription` | `string`                                   | `Try a different search.` | Line under it.                                   |
+| `caption`              | `string`                                   | -                         | Names the table for assistive tech.              |
 | `rangeLabel`           | `({ from, to, matched, total }) => string` | `1-10 of 42`              | Reads the range under the table.                 |
 | `selectedLabel`        | `(count: number) => string`                | `3 selected`              | Reads the selection count.                       |
+| `clearLabel`           | `string`                                   | `Clear selection`         | Label of the control that empties the selection. |
+| `pageSizeLabel`        | `string`                                   | `Rows per page`           | Label of the rows-per-page chooser.              |
 | `toolbar`              | `Snippet`                                  | -                         | Extra controls beside the search field.          |
 | `bulk`                 | `Snippet<[{ rows, ids, clear }]>`          | -                         | What can be done to the selected rows.           |
 
