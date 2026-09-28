@@ -158,6 +158,8 @@ describe('for a screen reader', () => {
 		await render(CommandPalette, { actions: actions(), open: true, shortcut: '' });
 
 		await expect.poll(active).toContain('New project');
+		// The dialog focuses the box on its own schedule; a key pressed before that goes nowhere.
+		input().focus();
 		await userEvent.keyboard('{ArrowDown}');
 		await expect.poll(active).toContain('Import from CSV');
 	});

@@ -354,6 +354,8 @@ describe('naming the trigger', () => {
 		};
 
 		await expect.poll(active).toBe('Açaí');
+		// Focus is put in the box rather than waited for, so a slow runner cannot press the key first.
+		search().focus();
 		await userEvent.keyboard('{ArrowDown}');
 		await expect.poll(active).toBe('Guava Tropical');
 		// Kiwi is disabled, so the highlight steps over it.
