@@ -126,6 +126,13 @@
 			"shadcn": ["empty", "item", "button"],
 			"npm": ["@lucide/svelte"]
 		},
+		"kit/follow-scroll": {
+			"title": "Follow scroll",
+			"description": "A scroller that stays at the end while new content arrives - and stops the moment the reader scrolls away.",
+			"version": "1.0.0",
+			"shadcn": ["button"],
+			"npm": ["@lucide/svelte"]
+		},
 		"kit/inline-edit": {
 			"title": "Inline edit",
 			"description": "Text that turns into a field in place - rename a project, a column, a file.",
@@ -223,6 +230,12 @@
 			"version": "1.0.1",
 			"shadcn": ["input-group", "badge"],
 			"npm": ["@lucide/svelte"]
+		},
+		"kit/textarea": {
+			"title": "Textarea",
+			"description": "A textarea that grows with its text, up to a line count you set, with a counter that agrees with the limit.",
+			"version": "1.0.0",
+			"shadcn": ["textarea"]
 		},
 		"kit/toc": {
 			"title": "Table of contents",

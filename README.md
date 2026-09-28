@@ -21,7 +21,7 @@
   imports rewritten to your aliases. From then it's your code, versioned like the rest of your
   codebase, with no npm dependency to fall behind.
 - **Extraction only, never speculation:** a component enters only after the same pattern has been
-  written twice in real production work. Twenty-eight components exist, not eighty.
+  written twice in real production work. Thirty components exist, not eighty.
 - **No appearance of its own:** no colors, shadows, radii or typography, only layout utilities.
   Everything visual comes from _your_ shadcn theme.
 - Every component's version and required shadcn primitives are recorded in
@@ -124,7 +124,7 @@ and lose the alias and icon rewriting.
 
 ## Components
 
-Twenty-eight so far. Each links to its full API, props table and live demos:
+Thirty so far. Each links to its full API, props table and live demos:
 
 - **[action-button](https://coral.imlargo.dev/docs/kit/action-button):** a button that waits on
   its own async `onclick`. One click, one request; busy without dropping keyboard focus; the same
@@ -157,6 +157,9 @@ Twenty-eight so far. Each links to its full API, props table and live demos:
 - **[file-input](https://coral.imlargo.dev/docs/kit/file-input):** click or drop, validate, show
   what was picked. Keyboard-operable, drag-and-drop that survives child elements, de-duplicates a
   file dropped twice.
+- **[follow-scroll](https://coral.imlargo.dev/docs/kit/follow-scroll):** a scroller that stays at
+  the end while output arrives, lets go the moment the reader scrolls back, and offers the way
+  forward with a count of what they missed.
 - **[inline-edit](https://coral.imlargo.dev/docs/kit/inline-edit):** rename in place. Keyboard
   reachable, Enter saves, Escape cancels without closing the dialog, an async save that fails keeps
   what was typed.
@@ -193,6 +196,9 @@ Twenty-eight so far. Each links to its full API, props table and live demos:
   on Next, linear by completion rather than position, focus moved to the new step.
 - **[tags-input](https://coral.imlargo.dev/docs/kit/tags-input):** one delimiter rule for typed and
   pasted alike, full keyboard handling, and it reports _why_ a tag was rejected.
+- **[textarea](https://coral.imlargo.dev/docs/kit/textarea):** grows with its text between a floor
+  and a ceiling in lines, without the page jumping, and counts characters the way `maxlength`
+  counts them.
 - **[toc](https://coral.imlargo.dev/docs/kit/toc):** a table of contents whose highlight follows
   what has been scrolled past rather than what is on screen, so short sections and the last heading
   both work. Invents the anchors when the markup has none.

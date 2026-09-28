@@ -19,10 +19,11 @@ The repo is a pnpm workspace with two members: **`packages/coral`**, the library
 **`packages/coral/src/lib/components/coral/`**, one self-contained folder that lands in the target
 project at `$lib/components/coral/`, beside shadcn's `ui/`. Currently: `kit/{action-button,
 activity-calendar, avatar, avatar-stack, combobox, command-palette, confirm-dialog, copy-button,
-data-table, date-picker, file-input, inline-edit, number-input, page-state, password-input,
-rating-group, relative-time, reorder-list, responsive-dialog, scrub-input, search-input, select,
-shortcut, show-more, stepper, tags-input, toc, tree-view}`, over `lib/{action, announce, debounce,
-fold, hidden-field, live-region, number, options, table}`.
+data-table, date-picker, file-input, follow-scroll, inline-edit, number-input, page-state,
+password-input, rating-group, relative-time, reorder-list, responsive-dialog, scrub-input,
+search-input, select, shortcut, show-more, stepper, tags-input, textarea, toc, tree-view}` and
+`blocks/{table-panel}`, over `lib/{action, announce, debounce, fold, hidden-field, live-region,
+number, options, table}`.
 `packages/coral/src/lib/components/coral/coral.json` is the list that counts. Read it rather than
 this sentence, which is the kind that goes stale.
 
@@ -94,11 +95,16 @@ project's `components.json` - the first two by its aliases, the third by `iconLi
 why an icon import must stay `@lucide/svelte` and must be declared under `npm` in `coral.json`.
 Reach for as few as the component actually needs: `kit/avatar` uses only the first.
 
-**Folders are created when something needs them, never in advance.** `blocks/` (app-level
-compositions, rule of 3) and `hooks/` don't exist yet because nothing lives in them. A util with one
-consumer stays inside its component's folder (`kit/avatar/initials.ts`) and moves to `lib/` the
-day a second component needs it, which is how `lib/options.ts` and `lib/hidden-field.svelte` got
-there.
+**Folders are created when something needs them, never in advance.** `hooks/` doesn't exist yet
+because nothing lives in it. A util with one consumer stays inside its component's folder
+(`kit/avatar/initials.ts`) and moves to `lib/` the day a second component needs it, which is how
+`lib/options.ts` and `lib/hidden-field.svelte` got there.
+
+**`blocks/` composes `kit/` for one use case**, and resolves the wiring between components rather
+than their looks: the order things happen in, the state they share, the pipeline a screen runs. It
+may carry copy, with English defaults, because a block with every string left blank is not worth
+installing. It still takes data and callbacks - never fetching, never routing. The contract is
+written out on the Conventions page.
 
 **No barrels.** One component, one folder (`kit/avatar/{avatar.svelte,types.ts,initials.ts}`),
 imported by file path. Consequence to respect: filenames are public API. Renaming one breaks
@@ -181,8 +187,9 @@ installed with `pnpm dlx shadcn-svelte@latest add <url>`.
   folder; `pnpm --filter coral registry` writes it and runs the CLI's `registry build` into
   `apps/docs/static/r/`. Both outputs are gitignored. Editing either by hand is editing a build
   artifact.
-- **Item names are `kit-*` and `lib-*`**, the manifest name with the slash swapped. Never publish
-  an item under a bare name: the CLI merges a dependency tree by name, so a Coral `select` and
+- **Item names carry their layer** - `kit-*`, `blocks-*`, `lib-*` - the manifest name with the
+  slash swapped. `COMPONENT_LAYERS` in `scripts/registry.js` is where the layers are declared, and
+  everything downstream reads it. Never publish an item under a bare name: the CLI merges a dependency tree by name, so a Coral `select` and
   shadcn's `select` would be taken for the same item and one of them dropped, files and all.
 - **Every file is `registry:component`**, with `target` mirroring its path under `coral/`. The CLI
   resolves that type against the consumer's `components` alias, which puts Coral in
