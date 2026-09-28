@@ -37,11 +37,7 @@ export type ConfirmDialogProps = RootProps & {
 	 * it, so an existing handler can be passed straight in.
 	 */
 	onconfirm?: () => unknown;
-	/**
-	 * Receives whatever `onconfirm` threw. The dialog stays open either way; this is where the
-	 * failure gets reported to someone. Without it the error propagates as an unhandled rejection,
-	 * which is visible in the console but to nobody using the page.
-	 */
+	/** What `onconfirm` threw. It stays open either way; without this the error is an unhandled rejection. */
 	onerror?: (error: unknown) => void;
 	/**
 	 * Runs when the reader backs out: the cancel button, or Escape. Not on confirm, and not when the

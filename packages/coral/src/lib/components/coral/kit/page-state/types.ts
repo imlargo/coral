@@ -29,11 +29,7 @@ export type PageStateProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & 
 	 * retry button is drawn.
 	 */
 	onretry?: () => unknown;
-	/**
-	 * Receives whatever `onretry` threw. The error state stays either way. Named for what failed,
-	 * because `error` is already the failure being shown. Without it the error propagates as an
-	 * unhandled rejection.
-	 */
+	/** What `onretry` threw; the error state stays. Named for what failed, since `error` is already a prop. */
 	onretryerror?: (error: unknown) => void;
 	/**
 	 * How long a wait has to last before anything is drawn for it, in milliseconds. Requests that

@@ -10,13 +10,9 @@ import type { Platform } from '../shortcut/keys.js';
 const VIM_KEYS = ['n', 'j', 'k', 'p', 'h', 'l'];
 
 /**
- * Whether any of these combos is one the primitive's vim bindings would eat.
- *
- * Off a Mac, `mod+k` **is** `ctrl+k`, and the command primitive reads that as "previous item" -
- * preventing the default, which is exactly the signal `listen` treats as "something closer to the
- * focus has claimed this key". The palette would open on the combo and then refuse to close on it,
- * on every machine that is not a Mac. Empty entries are skipped, so an action without a shortcut
- * can be passed straight in.
+ * Whether any combo is one the command primitive's vim bindings would eat. Off a Mac `mod+k` is
+ * `ctrl+k`, which the primitive reads as "previous item", so the palette would open on it and
+ * refuse to close. Empty entries are skipped.
  */
 export function swallowsVimKey(
 	combos: readonly (string | undefined)[],

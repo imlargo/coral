@@ -29,11 +29,7 @@ export type NumberFieldConfig = {
 export const numberFieldClass =
 	'w-16 [appearance:textfield] text-center [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none';
 
-/**
- * The behaviour `kit/number-input` and `kit/scrub-input` share: a value that is only ever written
- * through one door, a step that lands on the ladder the precision implies, a typed value read on
- * commit, and a wheel that does not edit. What differs between them is the controls around it.
- */
+/** The behaviour `kit/number-input` and `kit/scrub-input` share; what differs is the controls around it. */
 export function numberField(config: NumberFieldConfig) {
 	/** The one door: nothing is written, and nothing reported, unless the value actually moved. */
 	function commit(next: number | undefined) {

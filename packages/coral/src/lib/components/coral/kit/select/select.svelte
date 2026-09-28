@@ -64,10 +64,8 @@
 	const showClear = $derived(clearable && selected !== undefined && !disabled);
 
 	/**
-	 * Whether something outside already names the trigger - a `<label for>` pointing at its `id`.
-	 * Read off the element once it exists, because that is the only place the answer lives: an
-	 * `aria-label` written over an associated label silently replaces it, and a field labelled "Plan"
-	 * would be announced as "Select an option...".
+	 * Whether a `<label for>` already names the trigger. Read off the element, because an
+	 * `aria-label` written over it would silently replace it.
 	 */
 	let triggerRef = $state<HTMLButtonElement | null>(null);
 	let labelled = $state(false);
@@ -77,11 +75,7 @@
 		labelled = (triggerRef?.labels?.length ?? 0) > 0;
 	});
 
-	/**
-	 * The name the trigger falls back on while nothing is selected: the placeholder, since a combobox
-	 * does not take its name from its content. With a selection the value is announced on its own,
-	 * and with any label of the caller's the fallback stays out of its way.
-	 */
+	/** Falls back on the placeholder while nothing is selected, unless something else names the trigger. */
 	const fallbackName = $derived(
 		ariaLabel ?? (selected || labelled || ariaLabelledby ? undefined : placeholder)
 	);
@@ -130,10 +124,8 @@
 		<!-- `aria-required`: the primitive spends `required` on the field it submits, never here. -->
 		<!-- `pe-9` reserves the room the clear control sits in. -->
 		<!--
-			`role="combobox"` is what the primitive leaves out: it sets `aria-haspopup` and
-			`aria-activedescendant` on a bare button, and the second is not allowed there. This is the
-			select-only combobox pattern from the ARIA practices guide - which is also why the trigger
-			says which list it controls while that list is open, and why the list is named after it.
+			The primitive sets `aria-activedescendant` on a bare button, which is not allowed. This is the
+			select-only combobox pattern, so the trigger also says which list it controls while open.
 		-->
 		<Select.Trigger
 			bind:ref={triggerRef}

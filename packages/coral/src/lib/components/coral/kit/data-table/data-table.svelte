@@ -139,15 +139,11 @@
 					<Table.Head class="w-10">
 						{#if selection === 'multiple'}
 							<!--
-								Three states, and the middle one matters: partly selected has to read as partly
-								selected rather than as empty, or the reader cannot tell what the next press will do.
+								Partly selected has to read as partly selected, not empty.
 
-								Both boxes are bound to a getter and a setter that ignores what it is given. The
-								primitive flips its own copy of `checked` on every press, and a box that is only
-								handed a value keeps that copy: a row ticked by a Shift range, or unticked by the
-								press that is not its own, is then drawn the other way round from `selected`. Here
-								the press is reported through `onclick` and `selected` is the only thing that says
-								how a box looks.
+								Both boxes are bound to a getter and a no-op setter: the primitive flips its own copy of
+								`checked` on every press, which drifts from `selected` after a Shift range. The press is
+								reported through `onclick` instead.
 							-->
 							<Checkbox
 								bind:checked={() => headerState === 'all', () => {}}

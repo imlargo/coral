@@ -47,17 +47,12 @@
 	}: TablePanelProps<T, Id> = $props();
 
 	/**
-	 * What is in the search field, as typed. `search` is the term the table is filtered by - trimmed
-	 * and debounced by the field - which is not the same string: binding both to one variable writes
-	 * the trimmed term back into the field, and the space typed between two words is gone before the
-	 * second word is.
-	 *
-	 * A term set from code is the one direction that has to reach the field. It is told apart from
-	 * the field's own report by comparing against the draft, and only `search` is tracked, so typing
-	 * never re-runs this.
+	 * The field's text as typed. `search` is the trimmed, debounced term the table filters by, and
+	 * binding both to one variable writes the trimmed term back and eats a typed space.
 	 */
 	let draft = $state(untrack(() => search));
 
+	// Only `search` is tracked, so typing never re-runs this; it is for a term set from code.
 	$effect(() => {
 		const term = search;
 		untrack(() => {
