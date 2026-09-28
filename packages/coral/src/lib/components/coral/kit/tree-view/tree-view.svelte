@@ -1,7 +1,7 @@
 <script lang="ts" generics="T = unknown">
 	/**
 	 * @coral/kit/tree-view
-	 * @version 1.0.1
+	 * @version 1.0.2
 	 */
 	import { tick } from 'svelte';
 	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
@@ -164,7 +164,7 @@
 	bind:this={ref}
 	role="tree"
 	aria-label={label}
-	class={cn('flex flex-col [--coral-indent:1rem]', className)}
+	class={cn('flex flex-col [--coral-indent:--spacing(4)]', className)}
 	{...restProps}
 >
 	{#each rows as row (row.node.id)}
@@ -182,9 +182,9 @@
 			data-state={row.expanded ? 'open' : row.expandable ? 'closed' : undefined}
 			data-selected={context.selected || undefined}
 			data-disabled={row.node.disabled || undefined}
-			style="padding-inline-start: calc(var(--coral-indent) * {row.level - 1})"
+			style:--coral-pad="calc(var(--coral-indent) * {row.level - 1})"
 			class={cn(
-				'flex cursor-default items-center gap-1 -outline-offset-2 select-none focus-visible:outline-2 focus-visible:outline-ring',
+				'flex cursor-default items-center gap-1 ps-(--coral-pad) -outline-offset-2 select-none focus-visible:outline-2 focus-visible:outline-ring',
 				rowClass
 			)}
 			onfocus={() => (focusedId = row.node.id)}

@@ -96,6 +96,7 @@
 		{...restProps}
 	>
 		<!-- `aria-required`: the primitive spends `required` on the field it submits, never here. -->
+		<!-- `pe-9` reserves the room the clear control sits in. -->
 		<Select.Trigger
 			{size}
 			class={cn('w-full', showClear && 'pe-9', className)}

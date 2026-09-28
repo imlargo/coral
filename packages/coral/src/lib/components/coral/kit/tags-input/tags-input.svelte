@@ -231,6 +231,7 @@
 	added here is layout only - the row wraps, and it grows with its contents instead of staying one
 	line tall.
 -->
+<!-- the tags sit inside the box, so it pads and gaps them. -->
 <InputGroup.Root bind:ref={box} class={cn('h-auto min-h-8 flex-wrap gap-1 p-1', className)}>
 	{#each value as entry, index (index)}
 		<!-- Keyed by position, not by value: two tags may legitimately read the same. -->
@@ -269,6 +270,7 @@
 		`required` only while the list is empty, so the browser's own validation guards the tags
 		rather than whatever happens to be half-typed in the field.
 	-->
+	<!-- the field's padding drops to sit level with the tags. -->
 	<InputGroup.Input
 		bind:ref={() => ref, (node) => (ref = node as HTMLInputElement | null)}
 		value={inputValue}

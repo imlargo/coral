@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/rating-group
-	 * @version 1.0.1
+	 * @version 1.0.2
 	 */
 	import StarIcon from '@lucide/svelte/icons/star';
 	import { cn } from '$lib/utils.js';
@@ -112,14 +112,14 @@
 			starClass
 		)}
 	>
-		<span class="block size-(--coral-star)" style="color: {emptyColor}">
+		<span class="block size-(--coral-star) text-(--coral-empty)">
 			{@render glyph(index, 0)}
 		</span>
 
 		{#if fill > 0}
 			<span
-				class="absolute inset-y-0 start-0 overflow-hidden"
-				style="inline-size: {fill * 100}%; color: {color}"
+				class="absolute inset-y-0 start-0 w-(--coral-fill) overflow-hidden text-(--coral-color)"
+				style:--coral-fill="{fill * 100}%"
 			>
 				<!-- Full size inside a narrower box: the box does the clipping, so the glyph is never
 				     squashed, and in a right-to-left page it overflows the other way on its own. -->
@@ -133,9 +133,12 @@
 			{#each offsets as offset, slot (offset)}
 				{@const rating = index + offset}
 				<label
-					class={cn('absolute inset-y-0', disabled ? 'cursor-default' : 'cursor-pointer')}
-					style="inset-inline-start: {(slot * 100) / offsets.length}%; inline-size: {100 /
-						offsets.length}%"
+					class={cn(
+						'absolute inset-y-0 start-(--coral-start) w-(--coral-span)',
+						disabled ? 'cursor-default' : 'cursor-pointer'
+					)}
+					style:--coral-start="{(slot * 100) / offsets.length}%"
+					style:--coral-span="{100 / offsets.length}%"
 					onpointerenter={() => !disabled && hover(rating)}
 				>
 					<!-- `sr-only`, not `hidden`: it stays focusable, so the group keeps every bit of
@@ -165,8 +168,10 @@
 	aria-label={readonly ? labelFor(value, stars) : undefined}
 	aria-readonly={readonly ? 'true' : undefined}
 	data-disabled={disabled || undefined}
+	style:--coral-color={color}
+	style:--coral-empty={emptyColor}
 	class={cn(
-		'flex w-fit items-center gap-1 [--coral-star:1.25rem]',
+		'flex w-fit items-center gap-1 [--coral-star:--spacing(5)]',
 		'data-disabled:pointer-events-none data-disabled:opacity-50',
 		className
 	)}

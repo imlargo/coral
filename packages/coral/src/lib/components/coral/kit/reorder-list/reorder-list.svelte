@@ -1,7 +1,7 @@
 <script lang="ts" generics="T">
 	/**
 	 * @coral/kit/reorder-list
-	 * @version 1.1.0
+	 * @version 1.1.1
 	 */
 	import { flushSync } from 'svelte';
 	import { flip } from 'svelte/animate';
@@ -291,11 +291,11 @@
 			data-dragging={context.dragging || undefined}
 			class={cn(
 				'relative flex items-center gap-2',
-				context.dragging && drag?.mode === 'pointer' && 'z-10',
+				context.dragging && drag?.mode === 'pointer' && 'z-10 translate-y-(--coral-offset)',
 				itemClass
 			)}
-			style={context.dragging && drag?.mode === 'pointer'
-				? `transform: translateY(${offset}px)`
+			style:--coral-offset={context.dragging && drag?.mode === 'pointer'
+				? `${offset}px`
 				: undefined}
 			animate:flip={{
 				duration: reducedMotion.current || (context.dragging && drag?.mode === 'pointer') ? 0 : 150

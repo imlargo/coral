@@ -1,6 +1,6 @@
 /**
  * @coral/kit/toc
- * @version 1.1.2
+ * @version 1.1.3
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -55,7 +55,7 @@ describe('headings read from the page', () => {
 		await render(Toc, { container: box, root: box, offset: 0 });
 
 		const padding = links().map((link) =>
-			(link as HTMLElement).style.paddingInlineStart.includes('* 0')
+			(link as HTMLElement).style.getPropertyValue('--coral-pad').includes('* 0')
 		);
 		expect(padding).toEqual([true, true, false, true]);
 		box.remove();

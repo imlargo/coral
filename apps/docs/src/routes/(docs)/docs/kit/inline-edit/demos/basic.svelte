@@ -5,6 +5,7 @@
 </script>
 
 <div class="flex w-72 flex-col gap-2">
+	<!-- the same heading type in both states, reading and editing. -->
 	<InlineEdit
 		bind:value={name}
 		class="w-full text-lg font-medium"

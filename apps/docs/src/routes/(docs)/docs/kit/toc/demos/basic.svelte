@@ -29,7 +29,7 @@
 <div class="flex w-full max-w-2xl gap-8">
 	<div
 		bind:this={article}
-		class="h-64 flex-1 [scroll-padding-top:1rem] overflow-y-auto rounded-lg border p-4 [&_h2]:scroll-mt-0"
+		class="h-64 flex-1 scroll-pt-4 overflow-y-auto rounded-lg border p-4 [&_h2]:scroll-mt-0"
 	>
 		{#each sections as [title, body] (title)}
 			<h2 class="mt-4 text-base font-medium first:mt-0">{title}</h2>

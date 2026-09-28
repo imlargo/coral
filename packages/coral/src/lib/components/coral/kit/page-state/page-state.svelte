@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/page-state
-	 * @version 1.0.0
+	 * @version 1.0.1
 	 */
 	import TriangleAlertIcon from '@lucide/svelte/icons/triangle-alert';
 	import * as Empty from '$lib/components/ui/empty/index.js';
@@ -123,7 +123,7 @@
 			{@render loadingState()}
 		{:else}
 			<div class="flex items-center justify-center py-10">
-				<Spinner class="size-5 opacity-60" />
+				<Spinner class="size-5" />
 			</div>
 		{/if}
 	{:else if kind === 'empty'}

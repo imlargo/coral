@@ -1,6 +1,6 @@
 /**
  * @coral/kit/rating-group
- * @version 1.0.1
+ * @version 1.0.2
  */
 
 import type { Snippet } from 'svelte';

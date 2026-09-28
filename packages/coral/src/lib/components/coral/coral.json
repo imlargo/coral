@@ -63,7 +63,7 @@
 		"kit/activity-calendar": {
 			"title": "Activity calendar",
 			"description": "A year of daily counts as a grid of squares - the GitHub contribution graph, with the timezone and the scale done right.",
-			"version": "1.0.2",
+			"version": "1.0.3",
 			"shadcn": ["tooltip"]
 		},
 		"kit/avatar": {
@@ -81,7 +81,7 @@
 		"kit/combobox": {
 			"title": "Combobox",
 			"description": "A select with a search box, filtering the way accented text is actually typed.",
-			"version": "5.0.0",
+			"version": "5.0.1",
 			"shadcn": ["popover", "command", "button", "badge"],
 			"npm": ["@lucide/svelte"]
 		},
@@ -108,21 +108,21 @@
 		"kit/data-table": {
 			"title": "Data table",
 			"description": "Rows with sortable headers, selection that survives a sort, and its own loading and empty states.",
-			"version": "1.0.0",
+			"version": "1.0.1",
 			"shadcn": ["table", "checkbox", "empty", "skeleton"],
 			"npm": ["@lucide/svelte"]
 		},
 		"kit/date-picker": {
 			"title": "Date picker",
 			"description": "A popover, a calendar and a formatted trigger. One day or two, with shortcuts.",
-			"version": "1.1.2",
+			"version": "1.1.3",
 			"shadcn": ["popover", "calendar", "range-calendar", "button"],
 			"npm": ["@lucide/svelte"]
 		},
 		"kit/file-input": {
 			"title": "File input",
 			"description": "Pick files by click or drop, validate them, show what was picked. An input, not an uploader.",
-			"version": "1.1.1",
+			"version": "1.1.2",
 			"shadcn": ["empty", "item", "button"],
 			"npm": ["@lucide/svelte"]
 		},
@@ -142,7 +142,7 @@
 		"kit/page-state": {
 			"title": "Page state",
 			"description": "The states a screen goes through - waiting, failed, empty, content - and a wait that does not flash.",
-			"version": "1.0.0",
+			"version": "1.0.1",
 			"shadcn": ["empty", "spinner"],
 			"npm": ["@lucide/svelte"]
 		},
@@ -156,7 +156,7 @@
 		"kit/rating-group": {
 			"title": "Rating group",
 			"description": "Stars you can pick and stars you can only read. Native radios underneath, so the keyboard, the form and the screen reader come for free.",
-			"version": "1.0.1",
+			"version": "1.0.2",
 			"shadcn": [],
 			"npm": ["@lucide/svelte"]
 		},
@@ -169,7 +169,7 @@
 		"kit/reorder-list": {
 			"title": "Reorder list",
 			"description": "Drag to reorder with a mouse, a finger or the keyboard - and persist once per drop.",
-			"version": "1.1.0",
+			"version": "1.1.1",
 			"shadcn": [],
 			"npm": ["@lucide/svelte"]
 		},
@@ -208,7 +208,7 @@
 		"kit/show-more": {
 			"title": "Show more",
 			"description": "Clamps long content to a few lines, and only offers to expand what actually overflows.",
-			"version": "1.0.1",
+			"version": "1.0.2",
 			"shadcn": ["button"]
 		},
 		"kit/stepper": {
@@ -227,13 +227,13 @@
 		"kit/toc": {
 			"title": "Table of contents",
 			"description": "A table of contents that highlights the section being read, including the last one.",
-			"version": "1.1.2",
+			"version": "1.1.3",
 			"shadcn": []
 		},
 		"kit/tree-view": {
 			"title": "Tree view",
 			"description": "A hierarchy the keyboard can walk - the WAI-ARIA tree pattern, from a plain array.",
-			"version": "1.0.1",
+			"version": "1.0.2",
 			"shadcn": [],
 			"npm": ["@lucide/svelte"]
 		},

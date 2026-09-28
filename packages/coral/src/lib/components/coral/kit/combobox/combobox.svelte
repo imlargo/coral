@@ -1,7 +1,7 @@
 <script lang="ts" generics="T, Type extends ComboboxType = 'single'">
 	/**
 	 * @coral/kit/combobox
-	 * @version 5.0.0
+	 * @version 5.0.1
 	 */
 	import { tick } from 'svelte';
 	import ChevronsUpDownIcon from '@lucide/svelte/icons/chevrons-up-down';
@@ -208,7 +208,7 @@
 						aria-expanded={open}
 						aria-required={required ? 'true' : undefined}
 						{disabled}
-						class={cn('w-full justify-between gap-2', className)}
+						class={cn('w-full justify-between', className)}
 					>
 						<!-- The label reserves the room, not the button padding: padding would push the
 						     chevron in too, stranding the clear control to the right of it. -->

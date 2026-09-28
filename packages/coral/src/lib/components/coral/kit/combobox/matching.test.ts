@@ -1,6 +1,6 @@
 /**
  * @coral/kit/combobox
- * @version 5.0.0
+ * @version 5.0.1
  */
 
 import { describe, expect, it } from 'vitest';

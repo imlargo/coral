@@ -1,7 +1,7 @@
 <script lang="ts" generics="Type extends DatePickerType = 'single'">
 	/**
 	 * @coral/kit/date-picker
-	 * @version 1.1.2
+	 * @version 1.1.3
 	 */
 	import { tick } from 'svelte';
 	import CalendarIcon from '@lucide/svelte/icons/calendar';
@@ -158,7 +158,7 @@
 						aria-label={ariaLabel}
 						aria-labelledby={ariaLabelledby}
 						aria-required={required ? 'true' : undefined}
-						class={cn('w-full justify-between gap-2', className)}
+						class={cn('w-full justify-between', className)}
 					>
 						<!-- The label reserves the room, not the button padding: padding would push the
 						     icon in too, stranding the clear control to the right of it. -->

@@ -30,7 +30,8 @@
 			<div class="flex items-center gap-1">
 				<span>1</span>
 				{#each { length: levels + 1 }, level (level)}
-					<span class="block size-3 rounded-xs" style="background-color: {colorFor(level)}"></span>
+					<span class="block size-3 rounded-xs bg-(--swatch)" style:--swatch={colorFor(level)}
+					></span>
 				{/each}
 				<span>{thresholds.at(-1)}+</span>
 			</div>

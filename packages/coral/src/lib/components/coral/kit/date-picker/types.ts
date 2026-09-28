@@ -1,6 +1,6 @@
 /**
  * @coral/kit/date-picker
- * @version 1.1.2
+ * @version 1.1.3
  */
 
 import type { ComponentProps, Snippet } from 'svelte';

@@ -1,6 +1,6 @@
 /**
  * @coral/kit/activity-calendar
- * @version 1.0.2
+ * @version 1.0.3
  */
 
 import { addDays, startOfWeek, toDate, toKey } from './dates.js';

@@ -1,7 +1,7 @@
 <script lang="ts" generics="T, Id extends string = string">
 	/**
 	 * @coral/kit/data-table
-	 * @version 1.0.0
+	 * @version 1.0.1
 	 */
 	import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
 	import ChevronUpIcon from '@lucide/svelte/icons/chevron-up';
@@ -127,6 +127,8 @@
 			<Table.Caption class="sr-only">{caption}</Table.Caption>
 		{/if}
 
+		<!-- A sticky header needs an opaque surface or the rows scroll visibly through it. It is the
+		     theme's own `background`, so it follows a retheme; only the opacity is Coral's. -->
 		<Table.Header class={cn(stickyHeader && 'sticky top-0 z-10 bg-background')}>
 			<Table.Row>
 				{#if selectable}
@@ -220,7 +222,7 @@
 						{#if empty}
 							{@render empty()}
 						{:else}
-							<Empty.Root class="border-0">
+							<Empty.Root>
 								<Empty.Header>
 									<Empty.Title>{emptyMessage}</Empty.Title>
 								</Empty.Header>

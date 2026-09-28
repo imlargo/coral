@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/show-more
-	 * @version 1.0.1
+	 * @version 1.0.2
 	 */
 	import { tick } from 'svelte';
 	import { Button } from '$lib/components/ui/button/index.js';
@@ -100,8 +100,8 @@
 	<div
 		bind:this={region}
 		id={contentId}
-		class={cn('w-full overflow-hidden', contentClass)}
-		style={expanded ? undefined : `max-height: calc(${lines} * 1lh)`}
+		class={cn('w-full overflow-hidden', !expanded && 'max-h-(--coral-clamp)', contentClass)}
+		style:--coral-clamp={expanded ? undefined : `calc(${lines} * 1lh)`}
 		onfocusin={handleFocusIn}
 	>
 		<div bind:this={inner}>
@@ -113,6 +113,7 @@
 		{#if toggleSnippet}
 			{@render toggleSnippet({ props: toggleProps, expanded, toggle })}
 		{:else}
+			<!-- a link, so it lines up with the text above. -->
 			<Button {...toggleProps} variant="link" class="h-auto px-0">
 				{expanded ? lessLabel : moreLabel}
 			</Button>

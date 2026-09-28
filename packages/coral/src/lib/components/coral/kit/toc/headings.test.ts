@@ -1,6 +1,6 @@
 /**
  * @coral/kit/toc
- * @version 1.1.2
+ * @version 1.1.3
  */
 
 import { describe, expect, it } from 'vitest';

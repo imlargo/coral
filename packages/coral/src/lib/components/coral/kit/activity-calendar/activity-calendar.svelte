@@ -1,7 +1,7 @@
 <script lang="ts" generics="T = unknown">
 	/**
 	 * @coral/kit/activity-calendar
-	 * @version 1.0.2
+	 * @version 1.0.3
 	 */
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import { cn } from '$lib/utils.js';
@@ -90,7 +90,10 @@
 	let focusKey = $state<string | null>(null);
 	const tabbable = $derived((focusKey && byKey.get(focusKey)) || grid.cells[0]);
 
-	type Live = { cell: ActivityCell<T>; box: string };
+	type Live = {
+		cell: ActivityCell<T>;
+		box: { left: number; top: number; width: number; height: number };
+	};
 
 	/**
 	 * Hover and focus tracked apart, hover winning where both are live. One `active` for the two
@@ -112,10 +115,7 @@
 		const around = frame.getBoundingClientRect();
 		const left = square.left - around.left + frame.scrollLeft;
 		const top = square.top - around.top + frame.scrollTop;
-		return {
-			cell,
-			box: `left:${left}px;top:${top}px;width:${square.width}px;height:${square.height}px`
-		};
+		return { cell, box: { left, top, width: square.width, height: square.height } };
 	}
 
 	/**
@@ -158,11 +158,14 @@
 
 <!--
 	Two knobs, as custom properties rather than props: a grid is sized, not styled, and every size
-	in it derives from the square. Override them through `class` - `[--coral-cell:1rem]`.
+	in it derives from the square. Override them through `class` - `[--coral-cell:--spacing(4)]`.
 -->
 <div
 	bind:this={ref}
-	class={cn('flex w-full flex-col gap-3 [--coral-cell:0.75rem] [--coral-gap:0.1875rem]', className)}
+	class={cn(
+		'flex w-full flex-col gap-3 [--coral-cell:--spacing(3)] [--coral-gap:--spacing(0.75)]',
+		className
+	)}
 	{...restProps}
 >
 	<Tooltip.Provider delayDuration={0} disableHoverableContent>
@@ -187,8 +190,11 @@
 						<span
 							{...{ ...props, tabindex: -1 }}
 							aria-hidden="true"
-							class="pointer-events-none absolute"
-							style={live?.box ?? 'left:0;top:0;width:0;height:0'}
+							class="pointer-events-none absolute top-(--coral-top) left-(--coral-left) h-(--coral-height) w-(--coral-width)"
+							style:--coral-left="{live?.box.left ?? 0}px"
+							style:--coral-top="{live?.box.top ?? 0}px"
+							style:--coral-width="{live?.box.width ?? 0}px"
+							style:--coral-height="{live?.box.height ?? 0}px"
 						></span>
 					{/snippet}
 				</Tooltip.Trigger>
@@ -255,9 +261,9 @@
 												data-level={cell.level}
 												tabindex={cell === tabbable ? 0 : -1}
 												aria-label={labelFor(cell)}
-												style="background-color: {colorFor(cell.level)}"
+												style:--coral-fill={colorFor(cell.level)}
 												class={cn(
-													'block size-(--coral-cell) rounded-sm outline-offset-1 focus-visible:outline-2 focus-visible:outline-ring',
+													'block size-(--coral-cell) rounded-sm bg-(--coral-fill) outline-offset-1 focus-visible:outline-2 focus-visible:outline-ring',
 													onselect ? 'cursor-pointer' : 'cursor-default',
 													cellClass
 												)}
@@ -299,7 +305,9 @@
 			<!-- Swatches, no words: `Less`/`More` is copy, and the ramp reads without it. -->
 			<div class="flex items-center gap-(--coral-gap) self-end" aria-hidden="true">
 				{#each fills as fill, level (level)}
-					<span class="block size-(--coral-cell) rounded-sm" style="background-color: {fill}"
+					<span
+						class="block size-(--coral-cell) rounded-sm bg-(--coral-fill)"
+						style:--coral-fill={fill}
 					></span>
 				{/each}
 			</div>

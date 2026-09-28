@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/toc
-	 * @version 1.1.2
+	 * @version 1.1.3
 	 */
 	import { cn } from '$lib/utils.js';
 	import { collect, pickActive } from './headings.js';
@@ -185,7 +185,7 @@
 	<nav
 		bind:this={ref}
 		aria-label={label}
-		class={cn('flex flex-col gap-3 [--coral-toc-indent:1rem]', className)}
+		class={cn('flex flex-col gap-3 [--coral-toc-indent:--spacing(4)]', className)}
 		{...restProps}
 	>
 		{#if headingSnippet}
@@ -213,9 +213,9 @@
 					{:else}
 						<a
 							{...props}
-							style="padding-inline-start: calc(0.75rem + var(--coral-toc-indent) * {depth})"
+							style:--coral-pad="calc(var(--spacing) * 3 + var(--coral-toc-indent) * {depth})"
 							class={cn(
-								'-ms-px block border-s-2 border-transparent py-1 text-sm text-muted-foreground transition-colors hover:text-foreground aria-[current]:border-primary aria-[current]:font-medium aria-[current]:text-foreground',
+								'-ms-px block border-s-2 border-transparent py-1 ps-(--coral-pad) text-sm text-muted-foreground transition-colors hover:text-foreground aria-[current]:border-primary aria-[current]:font-medium aria-[current]:text-foreground',
 								itemClass
 							)}
 						>

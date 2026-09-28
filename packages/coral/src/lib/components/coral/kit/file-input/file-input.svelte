@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/file-input
-	 * @version 1.1.1
+	 * @version 1.1.2
 	 */
 	import FileIcon from '@lucide/svelte/icons/file';
 	import UploadIcon from '@lucide/svelte/icons/upload';
@@ -124,7 +124,7 @@
 		class={cn(
 			'group/zone relative block cursor-pointer rounded-xl border border-dashed transition-colors',
 			'hover:bg-accent/40',
-			'has-[input:focus-visible]:border-ring has-[input:focus-visible]:ring-[3px] has-[input:focus-visible]:ring-ring/50',
+			'has-[input:focus-visible]:border-ring has-[input:focus-visible]:ring-3 has-[input:focus-visible]:ring-ring/50',
 			'data-dragging:border-ring data-dragging:bg-accent/60',
 			'data-disabled:pointer-events-none data-disabled:opacity-50',
 			className
@@ -153,7 +153,7 @@
 		{:else}
 			<!-- `Empty` already carries the centred layout and the dashed radius; the border width is
 			     the one thing it leaves to its caller, so it lives on the label above. -->
-			<Empty.Root class="border-0">
+			<Empty.Root>
 				<Empty.Header>
 					<Empty.Media variant="icon">
 						<UploadIcon />
@@ -178,7 +178,7 @@
 							<FileIcon />
 						</Item.Media>
 						<Item.Content class="min-w-0">
-							<Item.Title class="truncate">{file.name}</Item.Title>
+							<Item.Title>{file.name}</Item.Title>
 							<Item.Description>{formatBytes(file.size)}</Item.Description>
 						</Item.Content>
 						<Item.Actions>

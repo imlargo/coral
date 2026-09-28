@@ -1,6 +1,6 @@
 /**
  * @coral/kit/tree-view
- * @version 1.0.1
+ * @version 1.0.2
  */
 
 import { describe, expect, it } from 'vitest';

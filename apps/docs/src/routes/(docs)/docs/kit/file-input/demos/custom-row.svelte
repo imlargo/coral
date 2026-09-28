@@ -16,8 +16,8 @@
 	<FileInput bind:value={files} multiple label="Attach screenshots or log files">
 		{#snippet file({ file, remove })}
 			<Item.Root variant="muted">
-				<Item.Content class="min-w-0 gap-2">
-					<Item.Title class="truncate">{file.name}</Item.Title>
+				<Item.Content class="min-w-0">
+					<Item.Title>{file.name}</Item.Title>
 					<Progress value={progressFor(file)} class="h-1" />
 					<Item.Description>{formatBytes(file.size)} · {progressFor(file)}%</Item.Description>
 				</Item.Content>

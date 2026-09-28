@@ -52,7 +52,7 @@
 		</Button>
 	</div>
 
-	<div class="rounded-lg border bg-muted/40" style="padding: {padding}px">
+	<div class="rounded-lg border bg-muted/40 p-(--pad)" style:--pad="{padding}px">
 		<div class="rounded border bg-background px-3 py-1.5 text-sm">deploy.yml</div>
 	</div>
 

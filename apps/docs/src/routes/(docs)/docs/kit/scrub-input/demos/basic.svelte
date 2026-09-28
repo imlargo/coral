@@ -16,10 +16,9 @@
 	<p class="text-sm text-muted-foreground">Drag a label sideways. Shift drags ten times faster.</p>
 
 	<div
-		class="border bg-muted/40"
-		style="width: {Math.min(width, 420)}px; height: {Math.min(
-			height,
-			160
-		)}px; border-radius: {radius}px"
+		class="h-(--box-h) w-(--box-w) rounded-(--box-r) border bg-muted/40"
+		style:--box-w="{Math.min(width, 420)}px"
+		style:--box-h="{Math.min(height, 160)}px"
+		style:--box-r="{radius}px"
 	></div>
 </div>
