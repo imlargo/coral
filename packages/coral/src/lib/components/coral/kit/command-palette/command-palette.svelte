@@ -57,11 +57,7 @@
 	const detected = new PlatformState();
 	const platform = $derived(detected.current);
 
-	/**
-	 * Whether the primitive's vim bindings would eat a combo this palette binds - see
-	 * `swallowsVimKey`. The bindings give way to the combos the caller actually asked for;
-	 * `vimBindings` forces the question either way.
-	 */
+	/** The primitive's vim bindings give way to combos the caller binds; `vimBindings` overrides. */
 	const swallowed = $derived(
 		swallowsVimKey([shortcut, ...actions.map((entry) => entry.shortcut)], platform)
 	);
@@ -93,11 +89,7 @@
 	);
 	$effect(() => () => searchLater.cancel());
 
-	/**
-	 * A term left behind would filter the list before the reader has typed anything next time.
-	 * Watched on `open`, because `run` closes the palette by assigning it, which the primitive does
-	 * not report.
-	 */
+	/** Forgets the term on any close; `run` closes by assigning `open`, which the primitive does not report. */
 	onClose(
 		() => open,
 		() => {

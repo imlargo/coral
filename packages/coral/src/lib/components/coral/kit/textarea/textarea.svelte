@@ -80,11 +80,7 @@
 		measured = untrack(() => value);
 	}
 
-	/**
-	 * Watches the field's own width, which is a height change nobody typed: a narrower field
-	 * rewraps its text into more lines. Set up once per element, not once per keystroke - the
-	 * effect that used to do both tore the observer down and rebuilt it on every character.
-	 */
+	/** Watches the field's width - a narrower field rewraps into more lines. Set up once per element. */
 	$effect(() => {
 		if (!ref) return;
 
@@ -93,11 +89,7 @@
 		return () => observer.disconnect();
 	});
 
-	/**
-	 * Re-measured when the limits change, and when the text changes some way other than typing -
-	 * a value assigned from code, a form reset. Typing has already been measured by `oninput`, in
-	 * time for the caller's own handler to read the height it will have.
-	 */
+	/** Re-measured when the limits change or the text changes other than by typing, which `oninput` measures. */
 	$effect(() => {
 		void rows;
 		void maxRows;

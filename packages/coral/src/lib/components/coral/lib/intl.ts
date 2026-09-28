@@ -6,16 +6,8 @@
 const cache = new Map<string, unknown>();
 
 /**
- * One instance per constructor, locale and option set, built the first time it is asked for.
- *
- * Constructing an `Intl` object costs about what formatting a hundred values does, and the places
- * that need one sit in loops: a table of two hundred rows compares through a collator on every
- * step of a sort, and a list of timestamps would otherwise build two formatters per row. The
- * objects are stateless, so sharing them is free.
- *
- * Two option objects with the same keys in a different order land on two entries. That is harmless:
- * the key comes from a prop, and a prop is written once per call site. The cache is not bounded for
- * the same reason - its size is the number of distinct formats the application spells out.
+ * One instance per constructor, locale and options, built on first use: `Intl` objects are costly
+ * to build and callers sit in loops. A `locale` left out follows the reader's own.
  */
 function cached<T>(
 	kind: string,
@@ -31,7 +23,6 @@ function cached<T>(
 	return built;
 }
 
-/** Text ordering. `locale` left out follows the reader's own. */
 export function collator(locale?: string, options?: Intl.CollatorOptions): Intl.Collator {
 	return cached('collator', locale, options, () => new Intl.Collator(locale, options));
 }

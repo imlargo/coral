@@ -190,10 +190,8 @@
 	}
 
 	/**
-	 * A term left behind would filter the list before the user has typed anything next time.
-	 *
-	 * Watched on `open` rather than hung on `onOpenChange`, which the primitive only calls for a
-	 * close it made itself: the footer's `close()` assigns `open`, and would leave the term behind.
+	 * Forgets the term on any close. Watched on `open`, not `onOpenChange`: the primitive does not
+	 * report a close made by assigning `open`, which is what a footer's `close()` does.
 	 */
 	onClose(
 		() => open,
@@ -274,11 +272,7 @@
 
 	<Popover.Content class={cn('w-(--bits-popover-anchor-width) p-0', contentClass)}>
 		<Command.Root shouldFilter={false}>
-			<!--
-				`aria-controls` is written here because the primitive computes it from a viewport element
-				the shadcn list does not render, and a combobox whose expanded state is not tied to a
-				list is one a screen reader cannot follow into it.
-			-->
+			<!-- `aria-controls` by hand: the primitive derives it from a viewport the shadcn list does not render. -->
 			<Command.Input
 				bind:ref={searchRef}
 				aria-controls={listId}

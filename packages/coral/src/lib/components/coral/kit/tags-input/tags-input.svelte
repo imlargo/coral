@@ -158,11 +158,8 @@
 	}
 
 	/**
-	 * A column copied out of a spreadsheet, or a list from a file. A single-line field flattens the
-	 * line breaks in what is pasted into spaces before an `input` event exists to be read, so
-	 * `one`, `two` and `three` on three lines would arrive as the one tag `one two three` - and
-	 * "a newline always separates" would be true of typing and never of the case it was written for.
-	 * Text without a line break is left to the browser: the delimiter handles it once it lands.
+	 * A single-line field flattens pasted line breaks into spaces before `input` fires, so a column
+	 * copied from a spreadsheet would arrive as one tag. Text without a line break is left alone.
 	 */
 	function handlePaste(event: ClipboardEvent & { currentTarget: HTMLInputElement }) {
 		onpaste?.(event);

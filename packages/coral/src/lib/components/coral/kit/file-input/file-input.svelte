@@ -59,16 +59,8 @@
 	let input = $state<HTMLInputElement | null>(null);
 
 	/**
-	 * Puts the field's own `files` back in step with `value`.
-	 *
-	 * The field is what a form validates and submits, so it has to hold what the reader has picked
-	 * rather than what the last dialog returned. Emptied after every pick - the usual way to let the
-	 * same file be chosen twice - `required` could never be satisfied and `name` would post nothing.
-	 * A `DataTransfer` is the one way to build a `FileList` by hand. Writing `files` fires no event,
-	 * so this cannot feed back into `onchange`.
-	 *
-	 * Emptying the field when a file is removed is also what keeps the same file pickable again: a
-	 * dialog that returns exactly what the field already holds fires no `change`.
+	 * Puts the field's `files` back in step with `value`, so the browser validates and submits what
+	 * is held rather than what the last dialog returned. Writing `files` fires no event.
 	 */
 	function sync() {
 		if (!input) return;

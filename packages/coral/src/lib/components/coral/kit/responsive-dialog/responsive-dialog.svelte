@@ -18,11 +18,7 @@
 		...restProps
 	}: ResponsiveDialogProps = $props();
 
-	/**
-	 * Rebuilt when the query changes. A `MediaQuery` subscribes to the one list it was created with,
-	 * so following a new query means a new instance - which is what deriving it does, and the old
-	 * one is let go with its subscription.
-	 */
+	/** A `MediaQuery` follows the one query it was built with, so a new query needs a new instance. */
 	const media = $derived(new MediaQuery(query, fallback));
 
 	setResponsiveDialog({

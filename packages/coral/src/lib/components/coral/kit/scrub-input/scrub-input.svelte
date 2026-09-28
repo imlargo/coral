@@ -166,11 +166,7 @@
 		const amount = amountFor(step, coarse, event.shiftKey);
 		const text = event.currentTarget;
 
-		/**
-		 * Each key answers whether it had anything to do. A key with nothing to do is left to the
-		 * browser and to whatever is listening above: Home in a field with no `min` is the caret
-		 * going to the start, and Escape with nothing being edited is a dialog closing.
-		 */
+		/** Each key returns whether it acted; one that did not is left to the caret or a dialog above. */
 		const keys: Record<string, () => boolean> = {
 			ArrowUp: () => (field.nudge(amount), true),
 			ArrowDown: () => (field.nudge(-amount), true),
