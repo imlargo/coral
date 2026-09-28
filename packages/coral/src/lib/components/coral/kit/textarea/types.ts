@@ -45,6 +45,11 @@ export type TextareaProps = BaseProps & {
 	 */
 	warnAt?: number;
 	/**
+	 * What is announced to a screen reader once the counter is in its warning zone, given how many
+	 * characters are left. Spoken only then - see `warnAt`.
+	 */
+	remainingLabel?: (left: number) => string;
+	/**
 	 * Which keys submit. `mod-enter` is the form convention - Enter still writes a newline; `enter`
 	 * is the chat one, where Shift-Enter is the newline. `false` leaves both alone.
 	 */

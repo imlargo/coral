@@ -11,6 +11,27 @@ import InlineEdit from './inline-edit.svelte';
 const trigger = () => document.querySelector<HTMLButtonElement>('button');
 const input = () => document.querySelector<HTMLInputElement>('input');
 
+describe('a save that throws', () => {
+	it('stays open with the text as typed, and reports the error', async () => {
+		const failure = new Error('name taken');
+		const onerror = vi.fn();
+		await render(InlineEdit, {
+			value: 'Central Office',
+			onsave: () => {
+				throw failure;
+			},
+			onerror
+		});
+
+		await userEvent.click(trigger()!);
+		await userEvent.keyboard('South Office{Enter}');
+
+		await expect.poll(() => onerror.mock.calls.length).toBe(1);
+		expect(onerror).toHaveBeenCalledWith(failure);
+		expect(input()?.value).toBe('South Office');
+	});
+});
+
 describe('editing', () => {
 	it('opens on click with the text selected', async () => {
 		await render(InlineEdit, { value: 'Central Office' });

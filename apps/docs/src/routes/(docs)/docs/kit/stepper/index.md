@@ -78,6 +78,7 @@ inside a hidden panel to report it.
 | `linear`        | `boolean`                      | `true`       | Refuses jumping past an incomplete step. |
 | `onbeforenext`  | `(step: T) => unknown`         | -            | Async-aware. `false` or throw stays.     |
 | `onfinish`      | `() => unknown`                | -            | Next on the last step.                   |
+| `onerror`       | `(error: unknown) => void`     | -            | What `onbeforenext` or `onfinish` threw. |
 | `onvaluechange` | `(step: T) => void`            | -            | The current step changed.                |
 | `orientation`   | `'horizontal' \| 'vertical'`   | `horizontal` | Arrow keys and layout direction.         |
 | `children`      | `Snippet<[StepperContext<T>]>` | -            | The pieces, with the shared state.       |
@@ -99,4 +100,5 @@ inside a hidden panel to report it.
 | `step`        | `T`       | -       | Which step. Required.                        |
 | `keepMounted` | `boolean` | `false` | Keeps inactive panels in the page, `hidden`. |
 
-`StepperPrevious` and `StepperNext` accept the shadcn button's props.
+`StepperPrevious` and `StepperNext` accept the shadcn button's props. Their words are props too:
+`label` on Previous, and `nextLabel` and `finishLabel` on Next, for when the children are left out.

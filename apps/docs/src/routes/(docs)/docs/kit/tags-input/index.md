@@ -44,6 +44,12 @@ The fragment after the last delimiter stays in the field. Pasting `red, blue` le
 typed, which is where it would have ended up if the paste had no trailing comma either. It becomes
 a tag on Enter, or on the way out of the field.
 
+A paste that contains a line break is intercepted, because a single-line field flattens line breaks
+into spaces before an `input` event exists to read: three lines copied out of a spreadsheet would
+arrive as the one tag `one two three`. The pasted text goes over the selection, like a paste would,
+and then through the same delimiter rule as typing. A paste without a line break is left to the
+browser.
+
 There is no `addOnPaste` switch on purpose. With one, the same string becomes two tags or one
 depending on how it got into the field.
 

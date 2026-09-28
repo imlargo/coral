@@ -1,7 +1,9 @@
 /**
  * @coral/kit/file-input
- * @version 1.1.2
+ * @version 1.0.0
  */
+
+import { numberFormat } from '../../lib/intl.js';
 
 const UNITS = ['B', 'KB', 'MB', 'GB', 'TB'];
 const STEP = 1024;
@@ -28,7 +30,7 @@ export function formatBytes(bytes: number, locale?: string): string {
 	if (bytes / STEP ** exponent >= 1023.95 && exponent < UNITS.length - 1) exponent += 1;
 
 	const value = bytes / STEP ** exponent;
-	const formatted = new Intl.NumberFormat(locale, {
+	const formatted = numberFormat(locale, {
 		maximumFractionDigits: exponent === 0 ? 0 : 1,
 		// Grouping off. Plenty of locales group thousands with the same mark others use for
 		// decimals, so `1023 B` would print as `1.023 B` - which reads as one thousand twenty-three

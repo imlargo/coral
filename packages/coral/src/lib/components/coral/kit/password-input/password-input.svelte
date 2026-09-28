@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/password-input
-	 * @version 1.1.0
+	 * @version 1.0.0
 	 */
 	import { flushSync } from 'svelte';
 	import ArrowBigUpDashIcon from '@lucide/svelte/icons/arrow-big-up-dash';

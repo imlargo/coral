@@ -1,19 +1,20 @@
 <script lang="ts" generics="T, Type extends ComboboxType = 'single'">
 	/**
 	 * @coral/kit/combobox
-	 * @version 5.0.1
+	 * @version 1.0.0
 	 */
 	import { tick } from 'svelte';
 	import ChevronsUpDownIcon from '@lucide/svelte/icons/chevrons-up-down';
 	import XIcon from '@lucide/svelte/icons/x';
-	import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
 	import * as Command from '$lib/components/ui/command/index.js';
 	import * as Popover from '$lib/components/ui/popover/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
+	import { Spinner } from '$lib/components/ui/spinner/index.js';
 	import { cn } from '$lib/utils.js';
 	import HiddenField from '../../lib/hidden-field.svelte';
 	import { debounce } from '../../lib/debounce.js';
+	import { onClose } from '../../lib/on-close.svelte.js';
 	import { flatten, toGroups } from '../../lib/options.js';
 	import { includesValue, matches } from './matching.js';
 	import { selectAllVisible } from './selection.js';
@@ -42,6 +43,11 @@
 		disabled = false,
 		clearable = false,
 		loading = false,
+		id,
+		'aria-label': ariaLabel,
+		'aria-labelledby': ariaLabelledby,
+		'aria-describedby': ariaDescribedby,
+		'aria-invalid': ariaInvalid,
 		name,
 		form,
 		required = false,
@@ -58,8 +64,11 @@
 		...restProps
 	}: ComboboxProps<T, Type> = $props();
 
-	let triggerRef = $state<HTMLButtonElement>(null!);
-	let searchRef = $state<HTMLInputElement>(null!);
+	const uid = $props.id();
+	const listId = `${uid}-list`;
+
+	let triggerRef = $state<HTMLButtonElement | null>(null);
+	let searchRef = $state<HTMLInputElement | null>(null);
 
 	/** Reads `searchDebounce` per call, so changing the prop takes effect without a remount. */
 	const searchLater = debounce(
@@ -180,9 +189,15 @@
 		searchLater(event.currentTarget.value);
 	}
 
-	/** A term left behind would filter the list before the user has typed anything next time. */
-	function handleOpenChange(next: boolean) {
-		if (!next) {
+	/**
+	 * A term left behind would filter the list before the user has typed anything next time.
+	 *
+	 * Watched on `open` rather than hung on `onOpenChange`, which the primitive only calls for a
+	 * close it made itself: the footer's `close()` assigns `open`, and would leave the term behind.
+	 */
+	onClose(
+		() => open,
+		() => {
 			searchLater.cancel();
 			// The caller hears about it too, undebounced. When the server owns the search, clearing
 			// only this side leaves an empty search box sitting above a list still filtered by a
@@ -190,11 +205,10 @@
 			if (search !== '') onsearch?.('');
 			search = '';
 		}
-		onOpenChange?.(next);
-	}
+	);
 </script>
 
-<Popover.Root bind:open onOpenChange={handleOpenChange} {...restProps}>
+<Popover.Root bind:open {onOpenChange} {...restProps}>
 	<div class="relative">
 		<Popover.Trigger bind:ref={triggerRef}>
 			{#snippet child({ props })}
@@ -203,8 +217,13 @@
 				{:else}
 					<Button
 						{...props}
+						id={id ?? (props.id as string | undefined)}
 						variant="outline"
 						role="combobox"
+						aria-label={ariaLabel}
+						aria-labelledby={ariaLabelledby}
+						aria-describedby={ariaDescribedby}
+						aria-invalid={ariaInvalid}
 						aria-expanded={open}
 						aria-required={required ? 'true' : undefined}
 						{disabled}
@@ -255,21 +274,27 @@
 
 	<Popover.Content class={cn('w-(--bits-popover-anchor-width) p-0', contentClass)}>
 		<Command.Root shouldFilter={false}>
+			<!--
+				`aria-controls` is written here because the primitive computes it from a viewport element
+				the shadcn list does not render, and a combobox whose expanded state is not tied to a
+				list is one a screen reader cannot follow into it.
+			-->
 			<Command.Input
 				bind:ref={searchRef}
+				aria-controls={listId}
 				placeholder={searchPlaceholder}
 				bind:value={search}
 				oninput={handleSearch}
 			/>
 
-			<Command.List class={listClass}>
+			<Command.List id={listId} class={listClass}>
 				{#if loading}
 					<Command.Loading>
 						{#if indicator}
 							{@render indicator()}
 						{:else}
 							<div class="flex items-center justify-center py-6">
-								<LoaderCircleIcon class="size-4 animate-spin opacity-50" />
+								<Spinner class="opacity-50" />
 							</div>
 						{/if}
 					</Command.Loading>

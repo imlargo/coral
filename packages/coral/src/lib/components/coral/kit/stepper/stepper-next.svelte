@@ -9,6 +9,8 @@
 	import type { StepperNextProps } from './types.js';
 
 	let {
+		nextLabel = 'Next',
+		finishLabel = 'Finish',
 		disabled = false,
 		ref = $bindable(null),
 		children,
@@ -43,6 +45,6 @@
 	{#if children}
 		{@render children({ isLast: stepper.isLast, pending: stepper.pending })}
 	{:else}
-		{stepper.isLast ? 'Finish' : 'Next'}
+		{stepper.isLast ? finishLabel : nextLabel}
 	{/if}
 </Button>

@@ -1,10 +1,12 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/rating-group
-	 * @version 1.0.2
+	 * @version 1.0.0
 	 */
 	import StarIcon from '@lucide/svelte/icons/star';
 	import { cn } from '$lib/utils.js';
+	import { numberFormat } from '../../lib/intl.js';
+	import { focusRingWithin } from '../../lib/focus.js';
 	import { fillOf, snap, stepsFor } from './rating.js';
 	import type { RatingGroupProps } from './types.js';
 
@@ -43,7 +45,7 @@
 	 */
 	const shown = $derived(hovered ?? (readonly ? value : checked));
 
-	const number = $derived(new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }));
+	const number = $derived(numberFormat(locale, { maximumFractionDigits: 1 }));
 	const labelFor = $derived(
 		label ?? ((rating: number, total: number) => `${number.format(rating)} / ${total}`)
 	);
@@ -106,12 +108,7 @@
 -->
 {#snippet unit(index: number)}
 	{@const fill = fillOf(shown, index)}
-	<span
-		class={cn(
-			'relative block size-(--coral-star) shrink-0 outline-offset-2 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring',
-			starClass
-		)}
-	>
+	<span class={cn('relative block size-(--coral-star) shrink-0', focusRingWithin, starClass)}>
 		<span class="block size-(--coral-star) text-(--coral-empty)">
 			{@render glyph(index, 0)}
 		</span>
@@ -166,7 +163,6 @@
 	bind:this={ref}
 	role={readonly ? 'img' : 'radiogroup'}
 	aria-label={readonly ? labelFor(value, stars) : undefined}
-	aria-readonly={readonly ? 'true' : undefined}
 	data-disabled={disabled || undefined}
 	style:--coral-color={color}
 	style:--coral-empty={emptyColor}

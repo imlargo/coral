@@ -118,6 +118,26 @@ describe('searching', () => {
 		expect(cells()).toHaveLength(3);
 	});
 
+	it('leaves what was typed in the field alone once the search has settled', async () => {
+		const props = $state(panelProps({ search: '' }));
+		await renderWith(props);
+
+		await userEvent.type(search(), 'ana ');
+		// Past the input's own debounce, which is when the trimmed term is written back.
+		await expect.poll(() => props.search).toBe('ana');
+		expect(search().value).toBe('ana ');
+	});
+
+	it('follows a search that is set from code', async () => {
+		const props = $state(panelProps({ search: 'papaya' }));
+		await renderWith(props);
+		expect(search().value).toBe('papaya');
+
+		props.search = '';
+		await expect.poll(() => search().value).toBe('');
+		await expect.poll(() => cells().length).toBe(5);
+	});
+
 	it('says something different when a search matched nothing', async () => {
 		await renderPanel({ emptyTitle: 'No runs yet.', noResultsTitle: 'No runs match that.' });
 		await userEvent.fill(search(), 'lychee');

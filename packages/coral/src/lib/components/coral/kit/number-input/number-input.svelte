@@ -1,13 +1,14 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/number-input
-	 * @version 2.0.0
+	 * @version 1.0.0
 	 */
 	import MinusIcon from '@lucide/svelte/icons/minus';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import * as InputGroup from '$lib/components/ui/input-group/index.js';
 	import { cn } from '$lib/utils.js';
-	import { decimalsOf, parse, stepValue } from '../../lib/number.js';
+	import { decimalsOf } from '../../lib/number.js';
+	import { numberField, numberFieldClass } from '../../lib/number-field.js';
 	import type { NumberInputProps } from './types.js';
 
 	let {
@@ -36,41 +37,15 @@
 	const atMin = $derived(min !== undefined && value !== undefined && value <= min);
 	const atMax = $derived(max !== undefined && value !== undefined && value >= max);
 
-	function commit(next: number | undefined) {
-		if (next === value) return;
-		value = next;
-		onchange?.(next);
-	}
-
-	function nudge(delta: number) {
-		if (disabled || readonly) return;
-		commit(stepValue({ value, delta, min, max, decimals: places }));
-	}
-
-	/**
-	 * Reads the field on commit - blur, Enter, a native arrow step - not per keystroke. Clamping per
-	 * keystroke fights the typist: with a max of 100, the `1` and the `15` of `150` are both fine,
-	 * and only the finished number is wrong. Skipping the commit-time clamp is the other half of
-	 * the bug: typed entry then lands on values the steppers themselves refuse to reach.
-	 */
-	function handleChange(event: Event & { currentTarget: HTMLInputElement }) {
-		const field = event.currentTarget;
-		const next = parse(field.value, min, max, places);
-
-		commit(next);
-
-		// The element keeps whatever was typed. When that text clamped to a number the value already
-		// held, nothing re-renders and the field is left showing `150` over a value of `100`.
-		field.value = next === undefined ? '' : String(next);
-	}
-
-	/**
-	 * A focused number input steps on scroll in Chromium, so scrolling the page with the pointer
-	 * over one edits it silently. Nothing here needs the wheel, so it never gets it.
-	 */
-	function handleWheel(event: WheelEvent & { currentTarget: HTMLInputElement }) {
-		if (document.activeElement === event.currentTarget) event.preventDefault();
-	}
+	const field = numberField({
+		value: () => value,
+		set: (next) => (value = next),
+		min: () => min,
+		max: () => max,
+		decimals: () => places,
+		editable: () => !disabled && !readonly,
+		onchange: () => onchange
+	});
 </script>
 
 <InputGroup.Root class={cn('max-w-max', groupClass)}>
@@ -79,7 +54,7 @@
 			size="icon-sm"
 			aria-label={decrementLabel}
 			disabled={disabled || readonly || atMin}
-			onclick={() => nudge(-step)}
+			onclick={() => field.nudge(-step)}
 		>
 			<MinusIcon />
 		</InputGroup.Button>
@@ -101,12 +76,9 @@
 		{step}
 		{disabled}
 		{readonly}
-		onchange={handleChange}
-		onwheel={handleWheel}
-		class={cn(
-			'w-16 [appearance:textfield] text-center [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
-			className
-		)}
+		onchange={field.change}
+		onwheel={field.wheel}
+		class={cn(numberFieldClass, className)}
 		{...restProps}
 	/>
 
@@ -115,7 +87,7 @@
 			size="icon-sm"
 			aria-label={incrementLabel}
 			disabled={disabled || readonly || atMax}
-			onclick={() => nudge(step)}
+			onclick={() => field.nudge(step)}
 		>
 			<PlusIcon />
 		</InputGroup.Button>

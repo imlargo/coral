@@ -1,8 +1,9 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/toc
-	 * @version 1.1.3
+	 * @version 1.0.0
 	 */
+	import { prefersReducedMotion } from 'svelte/motion';
 	import { cn } from '$lib/utils.js';
 	import { collect, pickActive } from './headings.js';
 	import type { TocHeading } from './headings.js';
@@ -153,8 +154,7 @@
 		const node = document.getElementById(heading.id);
 		if (!node) return;
 
-		const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-		if (!smooth || reduced) {
+		if (!smooth || prefersReducedMotion.current) {
 			// Left to the browser: it jumps, moves focus into the section, and writes the hash.
 			return;
 		}

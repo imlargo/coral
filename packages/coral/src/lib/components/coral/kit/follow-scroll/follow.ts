@@ -29,14 +29,6 @@ export function isAtEnd(viewport: Viewport, threshold = 32): boolean {
 }
 
 /**
- * Whether the content is taller than its box. A viewport with nothing to scroll is always at the
- * end, which would otherwise report every empty log as "following".
- */
-export function isScrollable({ clientHeight, scrollHeight }: Viewport): boolean {
-	return scrollHeight > clientHeight;
-}
-
-/**
  * How many entries arrived without being seen.
  *
  * Counted from what was there when following stopped, and never negative: a list that is trimmed

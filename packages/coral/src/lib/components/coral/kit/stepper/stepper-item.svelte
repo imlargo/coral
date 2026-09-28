@@ -4,6 +4,7 @@
 	 * @version 1.0.0
 	 */
 	import { cn } from '$lib/utils.js';
+	import { focusRing } from '../../lib/focus.js';
 	import { getStepper } from './context.js';
 	import type { StepperItemProps } from './types.js';
 
@@ -39,7 +40,8 @@
 		aria-controls={state === 'current' ? stepper.contentId(step) : undefined}
 		{disabled}
 		class={cn(
-			'flex items-center gap-2 text-start outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-50',
+			'flex items-center gap-2 text-start disabled:cursor-not-allowed disabled:opacity-50',
+			focusRing,
 			className
 		)}
 		onclick={() => stepper.goTo(step)}

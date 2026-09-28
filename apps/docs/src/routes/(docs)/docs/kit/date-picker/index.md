@@ -141,29 +141,30 @@ delete.
 
 Everything the wrapped calendar accepts stays available. On top of that:
 
-| Prop           | Type                               | Default                   | Description                                             |
-| -------------- | ---------------------------------- | ------------------------- | ------------------------------------------------------- |
-| `type`         | `'single'` \| `'range'`            | `'single'`                | Decides the shape of `value`, `presets` and `onchange`. |
-| `value`        | `DateValue` \| `DateRange`         | -                         | The selection. Bindable.                                |
-| `onchange`     | `(value) => void`                  | -                         | Fired when the user picks a day, a preset, or clears.   |
-| `open`         | `boolean`                          | `false`                   | Popover state. Bindable.                                |
-| `month`        | `DateValue`                        | today                     | The month on screen. Bindable. Follows the selection.   |
-| `presets`      | `Preset<Value>[]`                  | -                         | Shortcuts beside the calendar.                          |
-| `placeholder`  | `string`                           | `Select a date...`        | Trigger text while nothing is selected.                 |
-| `locale`       | `string`                           | `en-US`                   | Drives the calendar's strings and the trigger label.    |
-| `format`       | `Intl.DateTimeFormatOptions`       | `{ dateStyle: 'medium' }` | How the trigger prints the selection.                   |
-| `clearable`    | `boolean`                          | `false`                   | Adds a clear control to the trigger.                    |
-| `clearLabel`   | `string`                           | `Clear date`              | Accessible label for that control.                      |
-| `disabled`     | `boolean`                          | `false`                   | Blocks the trigger and the calendar.                    |
-| `name`         | `string`                           | -                         | Submits as a field holding the ISO day.                 |
-| `endName`      | `string`                           | `${name}-end`             | Field name for the end of a range.                      |
-| `form`         | `string`                           | -                         | `id` of the form, for a picker outside it.              |
-| `required`     | `boolean`                          | `false`                   | Blocks submission while nothing is selected.            |
-| `serialize`    | `(value: DateValue) => string`     | `String`                  | Turns a day into the submitted string.                  |
-| `id`           | `string`                           | -                         | Put on the trigger, for a `<Label for>`.                |
-| `align`        | `'start'` \| `'center'` \| `'end'` | `'start'`                 | Which trigger edge the popover lines up with.           |
-| `class`        | `string`                           | -                         | Merged onto the trigger button.                         |
-| `contentClass` | `string`                           | -                         | Merged onto the popover content.                        |
+| Prop           | Type                                                    | Default                   | Description                                             |
+| -------------- | ------------------------------------------------------- | ------------------------- | ------------------------------------------------------- |
+| `type`         | `'single'` \| `'range'`                                 | `'single'`                | Decides the shape of `value`, `presets` and `onchange`. |
+| `value`        | `DateValue` \| `DateRange`                              | -                         | The selection. Bindable.                                |
+| `onchange`     | `(value) => void`                                       | -                         | Fired when the user picks a day, a preset, or clears.   |
+| `open`         | `boolean`                                               | `false`                   | Popover state. Bindable.                                |
+| `month`        | `DateValue`                                             | today                     | The month on screen. Bindable. Follows the selection.   |
+| `presets`      | `Preset<Value>[]`                                       | -                         | Shortcuts beside the calendar.                          |
+| `placeholder`  | `string`                                                | `Select a date...`        | Trigger text while nothing is selected.                 |
+| `locale`       | `string`                                                | `en-US`                   | Drives the calendar's strings and the trigger label.    |
+| `format`       | `Intl.DateTimeFormatOptions`                            | `{ dateStyle: 'medium' }` | How the trigger prints the selection.                   |
+| `clearable`    | `boolean`                                               | `false`                   | Adds a clear control to the trigger.                    |
+| `clearLabel`   | `string`                                                | `Clear date`              | Accessible label for that control.                      |
+| `disabled`     | `boolean`                                               | `false`                   | Blocks the trigger and the calendar.                    |
+| `name`         | `string`                                                | -                         | Submits as a field holding the ISO day.                 |
+| `endName`      | `string`                                                | `${name}-end`             | Field name for the end of a range.                      |
+| `form`         | `string`                                                | -                         | `id` of the form, for a picker outside it.              |
+| `required`     | `boolean`                                               | `false`                   | Blocks submission while nothing is selected.            |
+| `serialize`    | `(value: DateValue) => string`                          | `String`                  | Turns a day into the submitted string.                  |
+| `id`           | `string`                                                | generated                 | Put on the trigger, for a `<Label for>`.                |
+| `aria-*`       | `aria-label`, `-labelledby`, `-describedby`, `-invalid` | -                         | Put on the trigger.                                     |
+| `align`        | `'start'` \| `'center'` \| `'end'`                      | `'start'`                 | Which trigger edge the popover lines up with.           |
+| `class`        | `string`                                                | -                         | Merged onto the trigger button.                         |
+| `contentClass` | `string`                                                | -                         | Merged onto the popover content.                        |
 
 ### Snippets
 

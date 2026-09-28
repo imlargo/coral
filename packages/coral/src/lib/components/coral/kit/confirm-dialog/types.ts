@@ -1,6 +1,6 @@
 /**
  * @coral/kit/confirm-dialog
- * @version 1.1.0
+ * @version 1.0.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -37,6 +37,12 @@ export type ConfirmDialogProps = RootProps & {
 	 * it, so an existing handler can be passed straight in.
 	 */
 	onconfirm?: () => unknown;
+	/**
+	 * Receives whatever `onconfirm` threw. The dialog stays open either way; this is where the
+	 * failure gets reported to someone. Without it the error propagates as an unhandled rejection,
+	 * which is visible in the console but to nobody using the page.
+	 */
+	onerror?: (error: unknown) => void;
 	/**
 	 * Runs when the reader backs out: the cancel button, or Escape. Not on confirm, and not when the
 	 * caller closes the dialog by assigning `open` - that close is the caller's own doing.

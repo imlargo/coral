@@ -138,6 +138,38 @@ describe('keyboard', () => {
 		expect(props.value).toBe(0);
 	});
 
+	it('leaves Home and End to the caret when there is no bound to jump to', async () => {
+		const props = $state({ label: 'W', value: 10 });
+		await render(ScrubInput, props);
+
+		const presses: KeyboardEvent[] = [];
+		field().addEventListener('keydown', (event) => presses.push(event), { once: false });
+		field().focus();
+		await userEvent.keyboard('{Home}{End}');
+
+		expect(props.value).toBe(10);
+		// Seen after the component's own handler: nothing took the key.
+		expect(presses.map((event) => event.defaultPrevented)).toEqual([false, false]);
+	});
+
+	it('lets Escape through when there is no edit to put back, and keeps it when there is', async () => {
+		const props = $state({ label: 'W', value: 10 });
+		await render(ScrubInput, props);
+		const reached = vi.fn();
+		document.addEventListener('keydown', (event) => event.key === 'Escape' && reached());
+
+		field().focus();
+		await userEvent.keyboard('{Escape}');
+		expect(reached).toHaveBeenCalledTimes(1);
+
+		await userEvent.keyboard('99');
+		expect(field().value).toBe('1099');
+		await userEvent.keyboard('{Escape}');
+		expect(field().value).toBe('10');
+		// The first Escape was the field's, and did not go on to close anything around it.
+		expect(reached).toHaveBeenCalledTimes(1);
+	});
+
 	it('leaves the caret keys alone', async () => {
 		const props = $state({ label: 'W', value: 10 });
 		await render(ScrubInput, props);

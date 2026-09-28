@@ -1,6 +1,6 @@
 /**
  * @coral/kit/page-state
- * @version 1.0.1
+ * @version 1.0.0
  */
 
 export type Window = {

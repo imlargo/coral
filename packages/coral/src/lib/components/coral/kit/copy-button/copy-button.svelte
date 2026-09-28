@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/copy-button
-	 * @version 1.1.0
+	 * @version 1.0.0
 	 */
 	import CheckIcon from '@lucide/svelte/icons/check';
 	import CopyIcon from '@lucide/svelte/icons/copy';

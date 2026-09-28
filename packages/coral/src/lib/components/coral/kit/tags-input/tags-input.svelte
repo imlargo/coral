@@ -1,13 +1,14 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/tags-input
-	 * @version 1.0.1
+	 * @version 1.0.0
 	 */
 	import { tick } from 'svelte';
 	import XIcon from '@lucide/svelte/icons/x';
 	import * as InputGroup from '$lib/components/ui/input-group/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { cn } from '$lib/utils.js';
+	import { focusRing } from '../../lib/focus.js';
 	import { add, split } from './tags.js';
 	import type { TagsInputProps } from './types.js';
 
@@ -39,6 +40,7 @@
 		oninput,
 		onkeydown,
 		onblur,
+		onpaste,
 		...restProps
 	}: TagsInputProps = $props();
 
@@ -136,8 +138,7 @@
 	 * The fragment after the last delimiter stays in the field: pasting `red, blue` leaves `blue`
 	 * being typed, which is also where it ends up if the paste had no trailing comma at all.
 	 */
-	function handleInput(event: Event & { currentTarget: HTMLInputElement }) {
-		const raw = event.currentTarget.value;
+	function settle(raw: string) {
 		const parts = split(raw, delimiter);
 
 		if (parts.length < 2) {
@@ -146,10 +147,36 @@
 			setDraft(parts.pop() ?? '');
 			accept(parts);
 		}
+	}
+
+	function handleInput(event: Event & { currentTarget: HTMLInputElement }) {
+		settle(event.currentTarget.value);
 
 		// The caller's handler runs last on the way in, so what it reads is the field as it settled
 		// rather than the delimiter that has already been spent.
 		oninput?.(event);
+	}
+
+	/**
+	 * A column copied out of a spreadsheet, or a list from a file. A single-line field flattens the
+	 * line breaks in what is pasted into spaces before an `input` event exists to be read, so
+	 * `one`, `two` and `three` on three lines would arrive as the one tag `one two three` - and
+	 * "a newline always separates" would be true of typing and never of the case it was written for.
+	 * Text without a line break is left to the browser: the delimiter handles it once it lands.
+	 */
+	function handlePaste(event: ClipboardEvent & { currentTarget: HTMLInputElement }) {
+		onpaste?.(event);
+		if (event.defaultPrevented || !mutable) return;
+
+		const text = event.clipboardData?.getData('text') ?? '';
+		if (!/[\r\n]/.test(text)) return;
+
+		event.preventDefault();
+		const field = event.currentTarget;
+		// Where a paste would have gone: over the selection, or at the caret.
+		const from = field.selectionStart ?? field.value.length;
+		const to = field.selectionEnd ?? from;
+		settle(field.value.slice(0, from) + text + field.value.slice(to));
 	}
 
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLInputElement }) {
@@ -229,9 +256,8 @@
 	`aria-invalid` state all come from `input-group` reacting to the field inside it, so a tags input
 	sits next to a plain input without either of them being told what a field looks like. What is
 	added here is layout only - the row wraps, and it grows with its contents instead of staying one
-	line tall.
+	line tall. The tags sit inside the box, so it pads and gaps them.
 -->
-<!-- the tags sit inside the box, so it pads and gaps them. -->
 <InputGroup.Root bind:ref={box} class={cn('h-auto min-h-8 flex-wrap gap-1 p-1', className)}>
 	{#each value as entry, index (index)}
 		<!-- Keyed by position, not by value: two tags may legitimately read the same. -->
@@ -252,7 +278,7 @@
 					data-coral-tag={index}
 					data-icon="inline-end"
 					aria-label={removeLabel(entry)}
-					class="inline-flex shrink-0 items-center justify-center outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring"
+					class={cn('inline-flex shrink-0 items-center justify-center', focusRing)}
 					onclick={() => remove(index)}
 					onkeydown={(event) => handleTagKeydown(event, index)}
 				>
@@ -268,9 +294,9 @@
 		too narrow to read what is being typed.
 
 		`required` only while the list is empty, so the browser's own validation guards the tags
-		rather than whatever happens to be half-typed in the field.
+		rather than whatever happens to be half-typed in the field. Its padding drops to sit level with
+		the tags.
 	-->
-	<!-- the field's padding drops to sit level with the tags. -->
 	<InputGroup.Input
 		bind:ref={() => ref, (node) => (ref = node as HTMLInputElement | null)}
 		value={inputValue}
@@ -280,6 +306,7 @@
 		required={required && value.length === 0}
 		oninput={handleInput}
 		onkeydown={handleKeydown}
+		onpaste={handlePaste}
 		onblur={handleBlur}
 		class={cn('h-6 w-auto min-w-24 flex-1 px-1.5', inputClass)}
 		{...restProps}

@@ -19,11 +19,11 @@
 	}: ResponsiveDialogProps = $props();
 
 	/**
-	 * Built once from the query it was given. `MediaQuery` subscribes to the one list it was created
-	 * with, so a query that changes after mount is a different component, not a prop update.
+	 * Rebuilt when the query changes. A `MediaQuery` subscribes to the one list it was created with,
+	 * so following a new query means a new instance - which is what deriving it does, and the old
+	 * one is let go with its subscription.
 	 */
-	// svelte-ignore state_referenced_locally
-	const media = new MediaQuery(query, fallback);
+	const media = $derived(new MediaQuery(query, fallback));
 
 	setResponsiveDialog({
 		get desktop() {

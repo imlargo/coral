@@ -3,6 +3,7 @@
 	 * @coral/kit/follow-scroll
 	 * @version 1.0.0
 	 */
+	import { prefersReducedMotion } from 'svelte/motion';
 	import ArrowDownIcon from '@lucide/svelte/icons/arrow-down';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { cn } from '$lib/utils.js';
@@ -59,8 +60,10 @@
 
 	function toEnd(smooth = false) {
 		if (!ref) return;
-		const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-		ref.scrollTo({ top: ref.scrollHeight, behavior: smooth && !reduced ? 'smooth' : 'instant' });
+		ref.scrollTo({
+			top: ref.scrollHeight,
+			behavior: smooth && !prefersReducedMotion.current ? 'smooth' : 'instant'
+		});
 	}
 
 	/** Goes back to the end and starts following again. */

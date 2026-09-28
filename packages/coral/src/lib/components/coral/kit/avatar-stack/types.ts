@@ -43,7 +43,7 @@ export type AvatarStackProps<T> = GroupProps & {
 	getKey?: (item: T, index: number) => unknown;
 	/** Forwarded to every avatar, and matched by the count. */
 	size?: 'default' | 'sm' | 'lg';
-	/** Names the stack as a whole - "Asignados", "Viewing this document". */
+	/** Names the stack as a whole - "Assignees", "Viewing this document". */
 	label?: string;
 	/** Accessible label for the count. Receives how many are hidden. */
 	overflowLabel?: (count: number) => string;

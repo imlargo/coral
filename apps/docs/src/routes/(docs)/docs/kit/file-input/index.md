@@ -135,37 +135,51 @@ a surrounding `Field` labels it the usual way.
 
 Everything a native file input accepts is forwarded to it. On top of that:
 
-| Prop          | Type                                      | Default                               | Description                              |
-| ------------- | ----------------------------------------- | ------------------------------------- | ---------------------------------------- |
-| `value`       | `File[]`                                  | `[]`                                  | Bindable. The selection.                 |
-| `onchange`    | `(files: File[]) => void`                 | -                                     | Pick, drop or removal. Never on mount.   |
-| `onreject`    | `(rejections: FileRejection[]) => void`   | -                                     | What was turned away, and why.           |
-| `accept`      | `string`                                  | `''`                                  | `image/*,.pdf`. Empty takes anything.    |
-| `multiple`    | `boolean`                                 | `false`                               | Allows more than one file.               |
-| `maxFiles`    | `number`                                  | unbounded                             | Only read when `multiple`.               |
-| `maxSize`     | `number`                                  | unbounded                             | Bytes, per file.                         |
-| `disabled`    | `boolean`                                 | `false`                               | Blocks the zone and the remove buttons.  |
-| `label`       | `string`                                  | `Drop files here, or click to browse` | The line inside the zone.                |
-| `hint`        | `string`                                  | from `accept` + `maxSize`             | The line under it. `''` renders none.    |
-| `removeLabel` | `string`                                  | `Remove file`                         | Accessible label for each remove button. |
-| `class`       | `string`                                  | -                                     | Merged onto the zone - height, padding.  |
-| `listClass`   | `string`                                  | -                                     | Merged onto the file list.               |
-| `zone`        | `Snippet<[{ dragging, disabled, hint }]>` | -                                     | Replaces the contents of the zone.       |
-| `file`        | `Snippet<[{ file, index, remove }]>`      | -                                     | Replaces each row. The uploader seam.    |
+| Prop          | Type                                      | Default                               | Description                             |
+| ------------- | ----------------------------------------- | ------------------------------------- | --------------------------------------- |
+| `value`       | `File[]`                                  | `[]`                                  | Bindable. The selection.                |
+| `onchange`    | `(files: File[]) => void`                 | -                                     | Pick, drop or removal. Never on mount.  |
+| `onreject`    | `(rejections: FileRejection[]) => void`   | -                                     | What was turned away, and why.          |
+| `accept`      | `string`                                  | `''`                                  | `image/*,.pdf`. Empty takes anything.   |
+| `multiple`    | `boolean`                                 | `false`                               | Allows more than one file.              |
+| `maxFiles`    | `number`                                  | unbounded                             | Only read when `multiple`.              |
+| `maxSize`     | `number`                                  | unbounded                             | Bytes, per file.                        |
+| `disabled`    | `boolean`                                 | `false`                               | Blocks the zone and the remove buttons. |
+| `label`       | `string`                                  | `Drop files here, or click to browse` | The line inside the zone.               |
+| `hint`        | `string`                                  | from `accept` + `maxSize`             | The line under it. `''` renders none.   |
+| `removeLabel` | `(file: File) => string`                  | `Remove <name>`                       | Accessible label for a remove button.   |
+| `class`       | `string`                                  | -                                     | Merged onto the zone - height, padding. |
+| `listClass`   | `string`                                  | -                                     | Merged onto the file list.              |
+| `zone`        | `Snippet<[{ dragging, disabled, hint }]>` | -                                     | Replaces the contents of the zone.      |
+| `file`        | `Snippet<[{ file, index, remove }]>`      | -                                     | Replaces each row. The uploader seam.   |
 
 `hint` defaults to a summary built from the constraints: `PDF, IMAGE · 1 MB`. It is deliberately
 wordless: extensions and categories reduce to bare tokens, so nothing in it needs translating.
 
 ## Forms
 
-There is no `name`. Files reach the server through `value`, appended to a `FormData` by the code that
-makes the request:
+The field underneath holds what has been picked, so it takes part in a form like any other: `name`
+submits the files, `required` makes the browser hold the form up until there is one, and a reset
+empties it.
+
+```svelte
+<form method="POST" enctype="multipart/form-data">
+	<FileInput name="attachments" multiple required bind:value={files} />
+</form>
+```
+
+`value` and the field are kept in step in both directions. The field's own `files` is written from
+`value` - so a removal, a rejected pick and a drop all leave it holding exactly the selection -
+and writing it fires no event, so it never reaches `onchange`. It is also why a file can be picked
+again after it was removed: the field is emptied with the selection, and a dialog that returns
+exactly what the field already holds fires no `change`.
+
+Resetting the form is the reader emptying it, so `value` is emptied and `onchange` is called with
+`[]`.
+
+Code that uploads through `fetch` can still build its own request from `value`:
 
 ```ts
 const body = new FormData();
 for (const file of files) body.append('attachments', file);
 ```
-
-Native file submission would need the hidden input's own `FileList` kept in step with `value` on
-every removal, and code that uploads files builds its own request anyway. It stays out until a real
-case needs it.

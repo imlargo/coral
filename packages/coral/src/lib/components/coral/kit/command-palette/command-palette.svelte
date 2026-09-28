@@ -3,16 +3,17 @@
 	 * @coral/kit/command-palette
 	 * @version 1.0.0
 	 */
-	import { onMount } from 'svelte';
-	import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
 	import * as Command from '$lib/components/ui/command/index.js';
+	import { Spinner } from '$lib/components/ui/spinner/index.js';
 	import { Action } from '../../lib/action.svelte.js';
 	import { debounce } from '../../lib/debounce.js';
+	import { onClose } from '../../lib/on-close.svelte.js';
 	import Shortcut from '../shortcut/shortcut.svelte';
-	import { detectPlatform, parse } from '../shortcut/keys.js';
+	import { ariaKeyshortcuts, parse } from '../shortcut/keys.js';
 	import { listen } from '../shortcut/listen.js';
-	import type { Platform } from '../shortcut/keys.js';
+	import { PlatformState } from '../shortcut/platform.svelte.js';
 	import { group, remember, searchValue } from './actions.js';
+	import { swallowsVimKey } from './bindings.js';
 	import type { CommandAction } from './actions.js';
 	import type { CommandPaletteProps } from './types.js';
 
@@ -50,30 +51,19 @@
 
 	const groups = $derived(group(actions, { recent, maxRecent, recentLabel }));
 
-	let platform = $state<Platform>('other');
-	onMount(() => {
-		platform = detectPlatform();
-	});
+	const uid = $props.id();
+	const listId = `${uid}-list`;
 
-	/** The keys the primitive reads as vim navigation while Control is held. */
-	const VIM_KEYS = ['n', 'j', 'k', 'p', 'h', 'l'];
+	const detected = new PlatformState();
+	const platform = $derived(detected.current);
 
 	/**
-	 * Whether any combo the palette binds is one the primitive's vim bindings would eat.
-	 *
-	 * Off a Mac, `mod+k` **is** `ctrl+k`, and the command primitive reads that as "previous item" -
-	 * preventing the default, which is exactly the signal `listen` treats as "something closer to
-	 * the focus has claimed this key". The palette would open on the combo and then refuse to close
-	 * on it, on every machine that is not a Mac. So the bindings give way to the combos the caller
-	 * actually asked for; `vimBindings` forces the question either way.
+	 * Whether the primitive's vim bindings would eat a combo this palette binds - see
+	 * `swallowsVimKey`. The bindings give way to the combos the caller actually asked for;
+	 * `vimBindings` forces the question either way.
 	 */
 	const swallowed = $derived(
-		[shortcut, ...actions.map((entry) => entry.shortcut)]
-			.filter((combo): combo is string => Boolean(combo))
-			.some((combo) => {
-				const parsed = parse(combo, platform);
-				return parsed.ctrl && !parsed.meta && !parsed.alt && VIM_KEYS.includes(parsed.key);
-			})
+		swallowsVimKey([shortcut, ...actions.map((entry) => entry.shortcut)], platform)
 	);
 
 	$effect(() => {
@@ -102,6 +92,20 @@
 		() => searchDebounce
 	);
 	$effect(() => () => searchLater.cancel());
+
+	/**
+	 * A term left behind would filter the list before the reader has typed anything next time.
+	 * Watched on `open`, because `run` closes the palette by assigning it, which the primitive does
+	 * not report.
+	 */
+	onClose(
+		() => open,
+		() => {
+			searchLater.cancel();
+			if (search !== '') onsearch?.('');
+			search = '';
+		}
+	);
 
 	/**
 	 * Runs an action and decides whether the palette has earned the right to close - the convention
@@ -134,7 +138,7 @@
 		type: 'button' as const,
 		'aria-haspopup': 'dialog' as const,
 		'aria-expanded': open,
-		'aria-keyshortcuts': shortcut || undefined,
+		'aria-keyshortcuts': shortcut ? ariaKeyshortcuts(parse(shortcut, platform)) : undefined,
 		onclick: () => (open = true)
 	});
 </script>
@@ -151,29 +155,24 @@
 	vimBindings={vimBindings ?? !swallowed}
 	shouldFilter={!onsearch}
 	class={className}
-	onOpenChange={(next) => {
-		// A term left behind would filter the list before the reader has typed anything next time.
-		if (next) return;
-		searchLater.cancel();
-		if (search !== '') onsearch?.('');
-		search = '';
-	}}
 	{...restProps}
 >
+	<!-- `aria-controls` by hand: see `kit/combobox`, which has the same primitive to work around. -->
 	<Command.Input
+		aria-controls={listId}
 		bind:value={search}
 		{placeholder}
 		oninput={(event) => searchLater(event.currentTarget.value)}
 	/>
 
-	<Command.List class={listClass}>
+	<Command.List id={listId} class={listClass}>
 		{#if loading}
 			<Command.Loading>
 				{#if indicator}
 					{@render indicator()}
 				{:else}
 					<div class="flex items-center justify-center py-6">
-						<LoaderCircleIcon class="size-4 animate-spin opacity-50" />
+						<Spinner class="opacity-50" />
 					</div>
 				{/if}
 			</Command.Loading>
@@ -201,7 +200,7 @@
 								</span>
 
 								{#if running === item.id}
-									<LoaderCircleIcon class="ms-auto size-4 animate-spin opacity-50" />
+									<Spinner class="ms-auto opacity-50" />
 								{:else if item.shortcut}
 									<!-- Drawn, not bound, from here: the binding above is what makes it work, and
 									     it is live whether or not this row is on screen. -->

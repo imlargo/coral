@@ -105,24 +105,26 @@ dialog, a sticky toolbar. `required` blocks submission while nothing is selected
 Everything the shadcn root accepts stays available: `open`, `onOpenChange`, `loop`,
 `scrollAlignment`, `autocomplete`. On top of that:
 
-| Prop           | Type                                             | Default               | Description                                     |
-| -------------- | ------------------------------------------------ | --------------------- | ----------------------------------------------- |
-| `options`      | `Option<T>[] \| OptionGroup<T>[]`                | -                     | The list, flat or grouped.                      |
-| `value`        | `T`                                              | -                     | Bindable. Matched with `===`.                   |
-| `onchange`     | `(option: Option<T> \| undefined) => void`       | -                     | User-driven changes only. Never on mount.       |
-| `placeholder`  | `string`                                         | `Select an option...` | Shown while nothing is selected.                |
-| `disabled`     | `boolean`                                        | `false`               | Blocks the trigger.                             |
-| `clearable`    | `boolean`                                        | `false`               | Adds a clear control; re-picking deselects.     |
-| `clearLabel`   | `string`                                         | `Clear selection`     | Accessible label for the clear control.         |
-| `name`         | `string`                                         | -                     | Submits with a surrounding form.                |
-| `form`         | `string`                                         | -                     | `id` of the form, for a select outside it.      |
-| `required`     | `boolean`                                        | `false`               | Blocks submission while nothing is selected.    |
-| `serialize`    | `(value: T) => string`                           | `String`              | What the field writes. Required for object `T`. |
-| `size`         | `'sm' \| 'default'`                              | `'default'`           | Trigger height, from the primitive.             |
-| `class`        | `string`                                         | -                     | Merged onto the trigger.                        |
-| `contentClass` | `string`                                         | -                     | Merged onto the dropdown.                       |
-| `trigger`      | `Snippet<[{ selected, placeholder, disabled }]>` | -                     | Replaces the label inside the trigger.          |
-| `option`       | `Snippet<[{ option, selected }]>`                | -                     | Replaces the body of each row. The check stays. |
+| Prop           | Type                                                    | Default               | Description                                     |
+| -------------- | ------------------------------------------------------- | --------------------- | ----------------------------------------------- |
+| `options`      | `Option<T>[] \| OptionGroup<T>[]`                       | -                     | The list, flat or grouped.                      |
+| `value`        | `T`                                                     | -                     | Bindable. Matched with `===`.                   |
+| `onchange`     | `(option: Option<T> \| undefined) => void`              | -                     | User-driven changes only. Never on mount.       |
+| `placeholder`  | `string`                                                | `Select an option...` | Shown while nothing is selected.                |
+| `disabled`     | `boolean`                                               | `false`               | Blocks the trigger.                             |
+| `clearable`    | `boolean`                                               | `false`               | Adds a clear control; re-picking deselects.     |
+| `clearLabel`   | `string`                                                | `Clear selection`     | Accessible label for the clear control.         |
+| `name`         | `string`                                                | -                     | Submits with a surrounding form.                |
+| `form`         | `string`                                                | -                     | `id` of the form, for a select outside it.      |
+| `required`     | `boolean`                                               | `false`               | Blocks submission while nothing is selected.    |
+| `serialize`    | `(value: T) => string`                                  | `String`              | What the field writes. Required for object `T`. |
+| `size`         | `'sm' \| 'default'`                                     | `'default'`           | Trigger height, from the primitive.             |
+| `id`           | `string`                                                | generated             | Put on the trigger, for a `<Label for>`.        |
+| `aria-*`       | `aria-label`, `-labelledby`, `-describedby`, `-invalid` | -                     | Put on the trigger.                             |
+| `class`        | `string`                                                | -                     | Merged onto the trigger.                        |
+| `contentClass` | `string`                                                | -                     | Merged onto the dropdown.                       |
+| `trigger`      | `Snippet<[{ selected, placeholder, disabled }]>`        | -                     | Replaces the label inside the trigger.          |
+| `option`       | `Snippet<[{ option, selected }]>`                       | -                     | Replaces the body of each row. The check stays. |
 
 ### `Option<T>`
 
@@ -138,11 +140,23 @@ Shared with the combobox, from `$lib/components/coral/lib/options.js`:
 
 ## Accessibility
 
-The primitive owns the listbox semantics, roving focus and typeahead. Coral adds two things: the
-trigger gets an `aria-label` of the placeholder while nothing is selected, so a screen reader
-announces what the control is for rather than reading the visible placeholder as if it were a
-choice; and the clear control is a real button with `clearLabel` on it, outside the trigger, so it
-is reachable by keyboard.
+The primitive owns the listbox semantics, roving focus and typeahead. Coral adds three things:
+
+- **A name, only when nothing else gives one.** While nothing is selected the trigger gets an
+  `aria-label` of the placeholder, so a screen reader announces what the control is for rather than
+  reading the visible placeholder as if it were a choice. It steps aside for an `aria-label` or
+  `aria-labelledby` of yours, and for a `<label for>` pointing at the trigger's `id` - an
+  `aria-label` written over an associated label silently replaces it, and a field labelled "Plan"
+  would be announced as "Select an option...".
+- **The combobox role.** The primitive leaves it off the trigger while setting `aria-haspopup` and
+  `aria-activedescendant` on it, and a bare button may not carry the second. The trigger is the
+  select-only combobox from the ARIA practices guide, it says which list it controls while that
+  list is open, and the list is named after the trigger.
+- **A clear control that is a real button** with `clearLabel` on it, outside the trigger, so it is
+  reachable by keyboard.
+
+`id`, `aria-label`, `aria-labelledby`, `aria-describedby` and `aria-invalid` go to the trigger, which
+is what a `<Label for>` or a form library's control hands out.
 
 The `trigger` snippet replaces the label, not the button: the chevron and the trigger element
 belong to the primitive. For a trigger that is not a button-with-a-label at all, use the combobox's

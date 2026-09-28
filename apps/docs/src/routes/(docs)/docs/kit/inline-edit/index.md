@@ -57,6 +57,7 @@ Everything the shadcn input accepts goes to the field while editing: `maxlength`
 | `value`        | `string`                            | `''`           | Bindable. Only changes once a save goes through.            |
 | `editing`      | `boolean`                           | `false`        | Bindable. Set `true` to start an edit from a menu.          |
 | `onsave`       | `(value: string) => unknown`        | -              | Async-aware. `false` or throw keeps the field open.         |
+| `onerror`      | `(error: unknown) => void`          | -              | What `onsave` threw. The field stays open, text as typed.   |
 | `oncancel`     | `() => void`                        | -              | Escape, or blur with `saveOnBlur` off.                      |
 | `validate`     | `(value: string) => boolean`        | -              | `false` refuses the text.                                   |
 | `sanitize`     | `(raw: string) => string`           | trim           | Cleans text before validating and saving.                   |

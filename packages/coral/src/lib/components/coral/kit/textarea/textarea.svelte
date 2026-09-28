@@ -3,6 +3,7 @@
 	 * @coral/kit/textarea
 	 * @version 1.0.0
 	 */
+	import { untrack } from 'svelte';
 	import { Textarea } from '$lib/components/ui/textarea/index.js';
 	import { cn } from '$lib/utils.js';
 	import LiveRegion from '../../lib/live-region.svelte';
@@ -16,6 +17,7 @@
 		maxLength,
 		showCount = false,
 		warnAt,
+		remainingLabel = (left: number) => `${left} characters left`,
 		submitOn = false,
 		onsubmit,
 		id,
@@ -39,6 +41,9 @@
 	const showCounter = $derived((showCount || counter !== undefined) && maxLength !== undefined);
 
 	let scrollable = $state(false);
+
+	/** The text the height was last measured for, so a keystroke is not measured twice. */
+	let measured: string | undefined;
 
 	/**
 	 * Sets the height to fit the text.
@@ -71,22 +76,37 @@
 		ref.style.height = `${height}px`;
 		scrollable = overflowing;
 		scroller.scrollTop = scrollTop;
+		// Untracked: read here it would make every effect that calls `resize` depend on the text.
+		measured = untrack(() => value);
 	}
 
 	/**
-	 * Re-measured whenever the text changes, and whenever the field's own width does: a narrower
-	 * field rewraps its text into more lines, which is a height change nobody typed.
+	 * Watches the field's own width, which is a height change nobody typed: a narrower field
+	 * rewraps its text into more lines. Set up once per element, not once per keystroke - the
+	 * effect that used to do both tore the observer down and rebuilt it on every character.
 	 */
 	$effect(() => {
-		void value;
-		void rows;
-		void maxRows;
 		if (!ref) return;
 
-		resize();
 		const observer = new ResizeObserver(resize);
 		observer.observe(ref);
 		return () => observer.disconnect();
+	});
+
+	/**
+	 * Re-measured when the limits change, and when the text changes some way other than typing -
+	 * a value assigned from code, a form reset. Typing has already been measured by `oninput`, in
+	 * time for the caller's own handler to read the height it will have.
+	 */
+	$effect(() => {
+		void rows;
+		void maxRows;
+		if (!ref) return;
+		resize();
+	});
+
+	$effect(() => {
+		if (ref && value !== measured) resize();
 	});
 
 	/**
@@ -170,6 +190,6 @@
 			Announced only near the limit, and only as the number left. A counter that speaks on every
 			keystroke makes the field unusable with a screen reader on.
 		-->
-		<LiveRegion message={warning ? `${left} characters left` : ''} />
+		<LiveRegion message={warning ? remainingLabel(left) : ''} />
 	{/if}
 </div>

@@ -1,7 +1,7 @@
 <script lang="ts" generics="Type extends DatePickerType = 'single'">
 	/**
 	 * @coral/kit/date-picker
-	 * @version 1.1.3
+	 * @version 1.0.0
 	 */
 	import { tick } from 'svelte';
 	import CalendarIcon from '@lucide/svelte/icons/calendar';
@@ -45,6 +45,8 @@
 		id,
 		'aria-label': ariaLabel,
 		'aria-labelledby': ariaLabelledby,
+		'aria-describedby': ariaDescribedby,
+		'aria-invalid': ariaInvalid,
 		align = 'start',
 		class: className,
 		contentClass,
@@ -55,7 +57,7 @@
 		...restProps
 	}: DatePickerProps<Type> = $props();
 
-	let triggerRef = $state<HTMLButtonElement>(null!);
+	let triggerRef = $state<HTMLButtonElement | null>(null);
 
 	const isRange = $derived(type === 'range');
 	const toText = $derived(serialize ?? ((day: DateValue) => String(day)));
@@ -152,11 +154,13 @@
 				{:else}
 					<Button
 						{...props}
-						{id}
+						id={id ?? (props.id as string | undefined)}
 						variant="outline"
 						{disabled}
 						aria-label={ariaLabel}
 						aria-labelledby={ariaLabelledby}
+						aria-describedby={ariaDescribedby}
+						aria-invalid={ariaInvalid}
 						aria-required={required ? 'true' : undefined}
 						class={cn('w-full justify-between', className)}
 					>

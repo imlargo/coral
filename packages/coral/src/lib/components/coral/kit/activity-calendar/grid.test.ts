@@ -1,10 +1,10 @@
 /**
  * @coral/kit/activity-calendar
- * @version 1.0.3
+ * @version 1.0.0
  */
 
 import { describe, expect, it } from 'vitest';
-import { buildGrid } from './grid.js';
+import { buildGrid, stepFor } from './grid.js';
 import { toKey } from './dates.js';
 
 describe('buildGrid', () => {
@@ -149,5 +149,25 @@ describe('buildGrid', () => {
 		const grid = buildGrid([{ date: '2026-01-05', count: 1 }]);
 		expect(grid.cells).toHaveLength(1);
 		expect(grid.weeks).toHaveLength(1);
+	});
+});
+
+describe('stepFor', () => {
+	it('moves a week sideways and a day up and down', () => {
+		expect(stepFor('ArrowRight')).toBe(7);
+		expect(stepFor('ArrowLeft')).toBe(-7);
+		expect(stepFor('ArrowDown')).toBe(1);
+		expect(stepFor('ArrowUp')).toBe(-1);
+	});
+
+	it('swaps the horizontal pair when the page reads right to left', () => {
+		expect(stepFor('ArrowRight', true)).toBe(-7);
+		expect(stepFor('ArrowLeft', true)).toBe(7);
+		expect(stepFor('ArrowDown', true)).toBe(1);
+	});
+
+	it('ignores every other key', () => {
+		expect(stepFor('Home')).toBeUndefined();
+		expect(stepFor('a')).toBeUndefined();
 	});
 });

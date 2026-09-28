@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/action-button
-	 * @version 1.1.0
+	 * @version 1.0.0
 	 */
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Spinner } from '$lib/components/ui/spinner/index.js';

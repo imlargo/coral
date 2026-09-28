@@ -1,6 +1,6 @@
 /**
  * @coral/kit/file-input
- * @version 1.1.2
+ * @version 1.0.0
  */
 
 import type { Snippet } from 'svelte';
@@ -67,8 +67,8 @@ export type FileInputProps = InputProps & {
 	 * Pass an empty string to render none.
 	 */
 	hint?: string;
-	/** Accessible label for each row's remove button. */
-	removeLabel?: string;
+	/** Accessible label for a row's remove button. Takes the file, because "Remove" alone names none. */
+	removeLabel?: (file: File) => string;
 	/** Merged onto the drop zone. Use it to change the height or padding. */
 	class?: string;
 	/** Merged onto the list of selected files. */

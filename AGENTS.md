@@ -22,8 +22,8 @@ activity-calendar, avatar, avatar-stack, combobox, command-palette, confirm-dial
 data-table, date-picker, file-input, follow-scroll, inline-edit, number-input, page-state,
 password-input, rating-group, relative-time, reorder-list, responsive-dialog, scrub-input,
 search-input, select, shortcut, show-more, stepper, tags-input, textarea, toc, tree-view}` and
-`blocks/{table-panel}`, over `lib/{action, announce, debounce, fold, hidden-field, live-region,
-number, options, table}`.
+`blocks/{table-panel}`, over `lib/{action, announce, debounce, focus, fold, hidden-field, intl,
+live-region, number, number-field, on-close, options, table, trigger}`.
 `packages/coral/src/lib/components/coral/coral.json` is the list that counts. Read it rather than
 this sentence, which is the kind that goes stale.
 
@@ -33,8 +33,14 @@ this sentence, which is the kind that goes stale.
   been written twice in real production work, either by the maintainer or by a contributor who can
   name the two places. If asked to add something unproven, push back: it belongs in the consuming
   project's `features/` first.
-- **No appearance.** No hardcoded colors, shadows, radii, or typography. Only layout utilities
-  (`flex`, `gap-*`, `w-full`). Appearance is the shadcn theme's job, not Coral's.
+- **No appearance.** No hardcoded colors, shadows, radii, or typography: nothing written as a
+  literal (`#fff`, `bg-blue-500`, `rounded-[7px]`, `text-[13px]`). Layout utilities (`flex`, `gap-*`,
+  `w-full`) are free. State that no shadcn primitive already draws - a focus ring, a drag target,
+  the section being read - may use the theme's own tokens and scale (`border-ring`, `bg-accent`,
+  `text-muted-foreground`, `rounded-sm`), because those resolve against whatever theme the project
+  installed and change with it. Where a primitive already draws the thing (an empty state, a
+  checkbox, a spinner), use the primitive instead of restyling. Appearance is the shadcn theme's
+  job, not Coral's.
 - **No domain knowledge.** Never reference a consuming app's entities (invoice, student,
   contract...) in `kit/`. Demos are the exception and have their own rules (see **Language and
   demos**).
@@ -78,7 +84,7 @@ packages/coral/              → the library
                └─ avatar/
 
 apps/docs/                   → the documentation site (SvelteKit, Cloudflare)
-├─ src/routes/docs/          → index.md + demos/*.svelte per component
+├─ src/routes/(docs)/docs/   → index.md + demos/*.svelte per component
 ├─ src/docs/                 → the site's own components, imported through `$docs`
 └─ static/r/                 → GENERATED registry output, gitignored, served at /r/*
 ```
@@ -121,11 +127,30 @@ every project that already copied it.
 - Never remove capability the wrapped primitive already had. Forward its props
   (`ComponentProps<typeof X>`) and keep whatever it exposes for binding (`ref`, and friends).
 - Generic types (`Option<T = string>`), never closed/string-only shapes.
+- **A handler that can fail is waited on through `lib/action`, and its component takes `onerror`.**
+  Return exactly `false`, or throw, and it stays where it is; `onerror` receives what was thrown,
+  and without it the error propagates as an unhandled rejection. Where `error` is already a prop
+  (`page-state`), it is `onretryerror`.
+- **A control whose trigger is a button takes `id` and `aria-*` on the trigger**, not on its root
+  (`lib/trigger`), so `<Label for>` and a form library's control props land where a screen reader
+  looks. Never set an `aria-label` over a label that already names the control.
+- **Every string a reader sees or hears is a prop, with an English default.** `*Message` is one
+  plain line; `*Title` and `*Description` are a heading and the line under it. `on<thing>change` is
+  the callback for a root that is an element (a `<div>` already has an `onchange` of its own).
+- **Reach for `$derived` before `$effect`.** An effect is for the DOM (an observer, a listener, a
+  measurement) and for writing a bindable output back. Something that has to happen when a popover
+  closes goes through `lib/on-close`, because the primitive only reports the closes it made itself.
+- **Formatters and collators come from `lib/intl`**, never `new Intl.*` in a component or a loop.
+- **Reduced motion is `prefersReducedMotion` from `svelte/motion`**, not a hand-rolled query.
+- **Component tests run in a real browser** (`*.svelte.test.ts`); logic worth testing on its own
+  lives in a plain module beside the component with a plain test. Every component is also listed in
+  `src/lib/a11y.svelte.test.ts`, which runs axe over it - add a new one there in its default state
+  and in each state that changes its markup (open, busy, empty).
 - Every file carries a version header, matched to an entry in `coral.json`:
   ```ts
   /**
    * @coral/kit/combobox
-   * @version 1.2.0
+   * @version 1.0.0
    */
   ```
   ```json
@@ -134,9 +159,9 @@ every project that already copied it.
   		"kit/combobox": {
   			"title": "Combobox",
   			"description": "A select with a search box, filtering the way accented text is actually typed.",
-  			"version": "1.2.0",
-  			"shadcn": ["popover", "command"],
-  			"npm": ["cmdk"]
+  			"version": "1.0.0",
+  			"shadcn": ["popover", "command", "button", "badge", "spinner"],
+  			"npm": ["@lucide/svelte"]
   		}
   	}
   }

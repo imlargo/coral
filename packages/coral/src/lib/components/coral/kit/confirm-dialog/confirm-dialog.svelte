@@ -1,11 +1,10 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/confirm-dialog
-	 * @version 1.1.0
+	 * @version 1.0.0
 	 */
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import { Spinner } from '$lib/components/ui/spinner/index.js';
-	import { cn } from '$lib/utils.js';
 	import { Action } from '../../lib/action.svelte.js';
 	import type { ConfirmDialogProps } from './types.js';
 
@@ -17,6 +16,7 @@
 		showCancel = true,
 		variant = 'default',
 		onconfirm,
+		onerror,
 		oncancel,
 		onOpenChange,
 		pending,
@@ -50,7 +50,12 @@
 			return;
 		}
 
-		if (await action.run(onconfirm)) open = false;
+		try {
+			if (await action.run(onconfirm)) open = false;
+		} catch (error) {
+			if (!onerror) throw error;
+			onerror(error);
+		}
 	}
 
 	/**
@@ -81,7 +86,7 @@
 	-->
 	<AlertDialog.Content
 		{size}
-		class={cn(className)}
+		class={className}
 		onEscapeKeydown={(event) => {
 			if (busy) event.preventDefault();
 		}}

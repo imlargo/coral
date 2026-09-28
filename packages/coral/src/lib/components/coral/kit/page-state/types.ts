@@ -1,6 +1,6 @@
 /**
  * @coral/kit/page-state
- * @version 1.0.1
+ * @version 1.0.0
  */
 
 import type { Snippet } from 'svelte';
@@ -29,6 +29,12 @@ export type PageStateProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & 
 	 * retry button is drawn.
 	 */
 	onretry?: () => unknown;
+	/**
+	 * Receives whatever `onretry` threw. The error state stays either way. Named for what failed,
+	 * because `error` is already the failure being shown. Without it the error propagates as an
+	 * unhandled rejection.
+	 */
+	onretryerror?: (error: unknown) => void;
 	/**
 	 * How long a wait has to last before anything is drawn for it, in milliseconds. Requests that
 	 * finish inside this window draw nothing at all.

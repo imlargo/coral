@@ -9,14 +9,14 @@
 	import * as InputGroup from '$lib/components/ui/input-group/index.js';
 	import { Spinner } from '$lib/components/ui/spinner/index.js';
 	import { cn } from '$lib/utils.js';
-	import { debounce as debounced } from '../../lib/debounce.js';
+	import { debounce } from '../../lib/debounce.js';
 	import { effectiveTerm, hasChanged } from './term.js';
 	import type { SearchInputProps } from './types.js';
 
 	let {
 		value = $bindable(''),
 		onsearch,
-		debounce = 300,
+		searchDebounce = 300,
 		minLength = 0,
 		loading = false,
 		clearLabel = 'Clear search',
@@ -43,7 +43,7 @@
 		onsearch?.(term);
 	}
 
-	const later = debounced(report, () => debounce);
+	const later = debounce(report, () => searchDebounce);
 
 	/**
 	 * The last value this component wrote itself, from typing or clearing. Anything else arriving in

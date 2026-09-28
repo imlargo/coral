@@ -4,6 +4,7 @@
  */
 
 import { fold } from './fold.js';
+import { collator } from './intl.js';
 
 export type SortDirection = 'asc' | 'desc';
 
@@ -46,10 +47,7 @@ export function compare(a: unknown, b: unknown, locale?: string): number {
 	if (typeof a === 'boolean' && typeof b === 'boolean') return Number(a) - Number(b);
 	if (a instanceof Date && b instanceof Date) return a.getTime() - b.getTime();
 
-	return new Intl.Collator(locale, { numeric: true, sensitivity: 'base' }).compare(
-		String(a),
-		String(b)
-	);
+	return collator(locale, { numeric: true, sensitivity: 'base' }).compare(String(a), String(b));
 }
 
 /** No value at all. An empty string counts: a blank cell is blank however it got that way. */

@@ -1,6 +1,6 @@
 /**
  * @coral/kit/rating-group
- * @version 1.0.2
+ * @version 1.0.0
  */
 
 import { describe, expect, it } from 'vitest';

@@ -17,6 +17,48 @@ async function type(text: string) {
 	await new Promise((resolve) => requestAnimationFrame(() => resolve(null)));
 }
 
+describe('measuring', () => {
+	it('builds one observer for the field, however much is typed into it', async () => {
+		const Original = window.ResizeObserver;
+		let built = 0;
+		window.ResizeObserver = class extends Original {
+			constructor(callback: ResizeObserverCallback) {
+				super(callback);
+				built += 1;
+			}
+		};
+
+		try {
+			await render(Textarea, { value: '' });
+			await userEvent.type(document.querySelector('textarea')!, 'a line of text');
+			expect(built).toBe(1);
+		} finally {
+			window.ResizeObserver = Original;
+		}
+	});
+
+	it('measures text assigned from code', async () => {
+		const props = $state({ value: '', rows: 1 });
+		await render(Textarea, props);
+		const before = document.querySelector('textarea')!.getBoundingClientRect().height;
+
+		props.value = 'one\ntwo\nthree\nfour';
+		await expect
+			.poll(() => document.querySelector('textarea')!.getBoundingClientRect().height)
+			.toBeGreaterThan(before);
+	});
+
+	it('announces the words it is given once it is near the limit', async () => {
+		await render(Textarea, {
+			value: 'abcdefghi',
+			maxLength: 10,
+			showCount: true,
+			remainingLabel: (left: number) => `${left} left, mate`
+		});
+		expect(document.querySelector('[role="status"]')?.textContent?.trim()).toBe('1 left, mate');
+	});
+});
+
 describe('growing', () => {
 	it('starts at its minimum and grows with the text', async () => {
 		await render(Textarea, { rows: 2 });

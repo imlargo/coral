@@ -1,12 +1,14 @@
 <script lang="ts" generics="T = unknown">
 	/**
 	 * @coral/kit/activity-calendar
-	 * @version 1.0.3
+	 * @version 1.0.0
 	 */
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import { cn } from '$lib/utils.js';
+	import { dateTimeFormat } from '../../lib/intl.js';
+	import { focusRingTight } from '../../lib/focus.js';
 	import { weekdayAt } from './dates.js';
-	import { buildGrid } from './grid.js';
+	import { buildGrid, stepFor } from './grid.js';
 	import type { ActivityCell } from './grid.js';
 	import type { ActivityCalendarProps } from './types.js';
 
@@ -44,11 +46,11 @@
 	const steps = $derived(Math.max(grid.thresholds.length, 1));
 
 	const dayFormat = $derived(
-		new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric' })
+		dateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric' })
 	);
-	const monthFormat = $derived(new Intl.DateTimeFormat(locale, { month: 'short' }));
-	const weekdayFormat = $derived(new Intl.DateTimeFormat(locale, { weekday: 'long' }));
-	const weekdayShortFormat = $derived(new Intl.DateTimeFormat(locale, { weekday: 'short' }));
+	const monthFormat = $derived(dateTimeFormat(locale, { month: 'short' }));
+	const weekdayFormat = $derived(dateTimeFormat(locale, { weekday: 'long' }));
+	const weekdayShortFormat = $derived(dateTimeFormat(locale, { weekday: 'short' }));
 
 	/** The seven row headings, in the order the rows are drawn. */
 	const weekdays = $derived(
@@ -128,21 +130,15 @@
 		focused = null;
 	}
 
-	const STEPS: Record<string, number> = {
-		// Columns are weeks, so sideways is seven days and up-down is one. Both reduce to a step
-		// along the chronological list, which cannot walk off the ragged first and last columns
-		// the way moving by (week, weekday) coordinates can.
-		ArrowLeft: -7,
-		ArrowRight: 7,
-		ArrowUp: -1,
-		ArrowDown: 1
-	};
-
-	function move(event: KeyboardEvent) {
+	function move(event: KeyboardEvent & { currentTarget: HTMLElement }) {
 		if (!tabbable) return;
 
+		// Read off the element, like every other component here that has a left and a right.
+		const rtl = getComputedStyle(event.currentTarget).direction === 'rtl';
+		const step = stepFor(event.key, rtl);
+
 		let to: number;
-		if (event.key in STEPS) to = tabbable.index + STEPS[event.key];
+		if (step !== undefined) to = tabbable.index + step;
 		else if (event.key === 'Home') to = 0;
 		else if (event.key === 'End') to = grid.cells.length - 1;
 		else return;
@@ -220,7 +216,7 @@
 									<th
 										colspan={month.span}
 										scope="col"
-										class="pb-1 text-left text-xs font-normal whitespace-nowrap text-muted-foreground"
+										class="pb-1 text-start text-xs font-normal whitespace-nowrap text-muted-foreground"
 									>
 										{month.span > 1 ? monthFormat.format(month.date) : ''}
 									</th>
@@ -235,7 +231,7 @@
 								{#if showWeekdays}
 									<!-- `leading-none` so the label cannot make its row taller than a square,
 									     which would space the grid unevenly every other row. -->
-									<th scope="row" class="pe-1 text-right align-middle leading-none font-normal">
+									<th scope="row" class="pe-1 text-end align-middle leading-none font-normal">
 										<!-- Every row names itself for a screen reader; only every other one
 										     says it out loud, because seven labels at this size collide. -->
 										<span class="sr-only">{weekday.long}</span>
@@ -263,7 +259,8 @@
 												aria-label={labelFor(cell)}
 												style:--coral-fill={colorFor(cell.level)}
 												class={cn(
-													'block size-(--coral-cell) rounded-sm bg-(--coral-fill) outline-offset-1 focus-visible:outline-2 focus-visible:outline-ring',
+													'block size-(--coral-cell) rounded-sm bg-(--coral-fill)',
+													focusRingTight,
 													onselect ? 'cursor-pointer' : 'cursor-default',
 													cellClass
 												)}

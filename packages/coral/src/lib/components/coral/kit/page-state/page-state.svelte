@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/page-state
-	 * @version 1.0.1
+	 * @version 1.0.0
 	 */
 	import TriangleAlertIcon from '@lucide/svelte/icons/triangle-alert';
 	import * as Empty from '$lib/components/ui/empty/index.js';
@@ -17,6 +17,7 @@
 		error = undefined,
 		empty = false,
 		onretry,
+		onretryerror,
 		delay = 200,
 		minimum = 400,
 		emptyTitle = 'Nothing here yet.',
@@ -79,9 +80,14 @@
 		if (status !== kind) status = kind;
 	});
 
-	function retry() {
+	async function retry() {
 		if (!onretry) return;
-		retrying.run(onretry);
+		try {
+			await retrying.run(onretry);
+		} catch (error) {
+			if (!onretryerror) throw error;
+			onretryerror(error);
+		}
 	}
 </script>
 
@@ -113,7 +119,9 @@
 							press while the first is still out does nothing - the same rules as anywhere else a
 							request is waited on.
 						-->
-						<ActionButton variant="outline" onclick={onretry}>{retryLabel}</ActionButton>
+						<ActionButton variant="outline" onclick={onretry} onerror={onretryerror}>
+							{retryLabel}
+						</ActionButton>
 					</Empty.Content>
 				{/if}
 			</Empty.Root>

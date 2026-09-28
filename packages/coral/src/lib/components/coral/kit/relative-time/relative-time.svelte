@@ -1,9 +1,10 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/relative-time
-	 * @version 1.0.1
+	 * @version 1.0.0
 	 */
 	import { onMount } from 'svelte';
+	import { dateTimeFormat, relativeTimeFormat } from '../../lib/intl.js';
 	import { describe, nextChange, toDate } from './relative.js';
 	import type { RelativeTimeProps } from './types.js';
 
@@ -33,8 +34,8 @@
 	const moment = $derived(toDate(date));
 	const valid = $derived(Number.isFinite(moment.getTime()));
 
-	const relativeFormat = $derived(new Intl.RelativeTimeFormat(locale, { numeric, style: format }));
-	const absoluteFormat = $derived(new Intl.DateTimeFormat(locale, titleFormat));
+	const relativeFormat = $derived(relativeTimeFormat(locale, { numeric, style: format }));
+	const absoluteFormat = $derived(dateTimeFormat(locale, titleFormat));
 
 	const absolute = $derived(valid ? absoluteFormat.format(moment) : '');
 	const pastCutoff = $derived(

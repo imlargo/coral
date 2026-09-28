@@ -1,6 +1,6 @@
 /**
  * @coral/kit/reorder-list
- * @version 1.1.1
+ * @version 1.0.0
  */
 
 import { describe, expect, it } from 'vitest';

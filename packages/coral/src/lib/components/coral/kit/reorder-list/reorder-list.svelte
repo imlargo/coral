@@ -1,15 +1,16 @@
 <script lang="ts" generics="T">
 	/**
 	 * @coral/kit/reorder-list
-	 * @version 1.1.1
+	 * @version 1.0.0
 	 */
 	import { flushSync } from 'svelte';
 	import { flip } from 'svelte/animate';
-	import { MediaQuery } from 'svelte/reactivity';
+	import { prefersReducedMotion } from 'svelte/motion';
 	import GripVerticalIcon from '@lucide/svelte/icons/grip-vertical';
 	import { cn } from '$lib/utils.js';
 	import { Announcer } from '../../lib/announce.svelte.js';
 	import LiveRegion from '../../lib/live-region.svelte';
+	import { focusRing } from '../../lib/focus.js';
 	import { keyTarget, move, targetIndex } from './reorder.js';
 	import type { HandleProps, ItemContext, ReorderListProps } from './types.js';
 
@@ -42,7 +43,6 @@
 	}: ReorderListProps<T> = $props();
 
 	const uid = $props.id();
-	const reducedMotion = new MediaQuery('(prefers-reduced-motion: reduce)');
 
 	type Drag = {
 		mode: 'pointer' | 'keyboard';
@@ -298,7 +298,8 @@
 				? `${offset}px`
 				: undefined}
 			animate:flip={{
-				duration: reducedMotion.current || (context.dragging && drag?.mode === 'pointer') ? 0 : 150
+				duration:
+					prefersReducedMotion.current || (context.dragging && drag?.mode === 'pointer') ? 0 : 150
 			}}
 		>
 			{#if rowSnippet}
@@ -307,7 +308,8 @@
 				<span
 					{...context.handle}
 					class={cn(
-						'flex shrink-0 cursor-grab items-center outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring',
+						'flex shrink-0 cursor-grab items-center',
+						focusRing,
 						context.dragging && 'cursor-grabbing',
 						disabled && 'cursor-not-allowed opacity-50'
 					)}
