@@ -1,12 +1,13 @@
 /**
  * @coral/kit/date-picker
- * @version 1.1.3
+ * @version 1.0.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
 import type { Calendar } from '$lib/components/ui/calendar/index.js';
 import type { RangeCalendar } from '$lib/components/ui/range-calendar/index.js';
 import type { PopoverContent } from '$lib/components/ui/popover/index.js';
+import type { TriggerAttributes } from '../../lib/trigger.js';
 import type { Preset } from './presets.js';
 
 /**
@@ -49,7 +50,7 @@ export type FooterContext<Type extends DatePickerType> = {
 	close: () => void;
 };
 
-type BaseProps<Type extends DatePickerType> = {
+type BaseProps<Type extends DatePickerType> = TriggerAttributes & {
 	type?: Type;
 	/** The selection. Bindable. A `DateRange` when `type="range"`. */
 	value?: DatePickerValue<Type>;
@@ -98,10 +99,6 @@ type BaseProps<Type extends DatePickerType> = {
 	required?: boolean;
 	/** Turns a day into the string a form submits. Defaults to `String`, which is ISO already. */
 	serialize?: (value: DateValue) => string;
-	/** Put on the trigger, so a `<Label for>` can point at it. */
-	id?: string;
-	'aria-label'?: string;
-	'aria-labelledby'?: string;
 	/** Which trigger edge the popover lines up with. */
 	align?: ComponentProps<typeof PopoverContent>['align'];
 	/** Merged onto the trigger button. */

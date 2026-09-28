@@ -8,12 +8,14 @@
 	import { Spinner } from '$lib/components/ui/spinner/index.js';
 	import { cn } from '$lib/utils.js';
 	import { Action } from '../../lib/action.svelte.js';
+	import { focusRing } from '../../lib/focus.js';
 	import type { InlineEditProps } from './types.js';
 
 	let {
 		value = $bindable(''),
 		editing = $bindable(false),
 		onsave,
+		onerror,
 		oncancel,
 		validate,
 		sanitize = (raw: string) => raw.trim(),
@@ -91,9 +93,14 @@
 		invalid = false;
 
 		// A throw leaves `editing` alone on its way out, which is exactly "stay open".
-		if (await action.run(() => onsave?.(next))) {
-			value = next;
-			finish();
+		try {
+			if (await action.run(() => onsave?.(next))) {
+				value = next;
+				finish();
+			}
+		} catch (error) {
+			if (!onerror) throw error;
+			onerror(error);
 		}
 	}
 
@@ -172,7 +179,8 @@
 		{disabled}
 		aria-label={editLabel(value ?? '')}
 		class={cn(
-			'inline-flex max-w-full min-w-0 cursor-text items-center text-start outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring disabled:cursor-default',
+			'inline-flex max-w-full min-w-0 cursor-text items-center text-start disabled:cursor-default',
+			focusRing,
 			className
 		)}
 		onclick={start}

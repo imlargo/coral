@@ -3,12 +3,14 @@
 	 * @coral/blocks/table-panel
 	 * @version 1.0.0
 	 */
+	import { untrack } from 'svelte';
+	import * as Empty from '$lib/components/ui/empty/index.js';
 	import * as Pagination from '$lib/components/ui/pagination/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
+	import { NativeSelect, NativeSelectOption } from '$lib/components/ui/native-select/index.js';
 	import { cn } from '$lib/utils.js';
 	import DataTable from '../../kit/data-table/data-table.svelte';
 	import SearchInput from '../../kit/search-input/search-input.svelte';
-	import { NativeSelect, NativeSelectOption } from '$lib/components/ui/native-select/index.js';
 	import { buildPanel } from './panel.js';
 	import type { TablePanelProps } from './types.js';
 
@@ -43,6 +45,25 @@
 		bulk,
 		...restProps
 	}: TablePanelProps<T, Id> = $props();
+
+	/**
+	 * What is in the search field, as typed. `search` is the term the table is filtered by - trimmed
+	 * and debounced by the field - which is not the same string: binding both to one variable writes
+	 * the trimmed term back into the field, and the space typed between two words is gone before the
+	 * second word is.
+	 *
+	 * A term set from code is the one direction that has to reach the field. It is told apart from
+	 * the field's own report by comparing against the draft, and only `search` is tracked, so typing
+	 * never re-runs this.
+	 */
+	let draft = $state(untrack(() => search));
+
+	$effect(() => {
+		const term = search;
+		untrack(() => {
+			if (term !== draft.trim()) draft = term;
+		});
+	});
 
 	/**
 	 * What a search compares against, when the caller has not said. Every column that holds a value,
@@ -103,7 +124,7 @@
 		<div class="flex flex-wrap items-center gap-2">
 			{#if searchable}
 				<SearchInput
-					bind:value={search}
+					bind:value={draft}
 					onsearch={(term) => (search = term)}
 					placeholder={searchPlaceholder}
 					aria-label={searchPlaceholder}
@@ -120,7 +141,7 @@
 			-->
 			{#if bulk && selected.length > 0}
 				<div class="ms-auto flex items-center gap-2">
-					<span class="text-sm text-muted-foreground">{selectedLabel(selected.length)}</span>
+					<span class="text-muted-foreground">{selectedLabel(selected.length)}</span>
 					{@render bulk({
 						rows: selectedRows,
 						ids: selected,
@@ -149,20 +170,22 @@
 				in it yet needs to say how something gets there, and a search that matched nothing needs
 				to say that the rows are there but the term does not fit them.
 			-->
-			<div class="py-8 text-center">
-				<p class="text-sm font-medium">{panel.searching ? noResultsTitle : emptyTitle}</p>
-				{#if panel.searching ? noResultsDescription : emptyDescription}
-					<p class="mt-1 text-sm text-muted-foreground">
-						{panel.searching ? noResultsDescription : emptyDescription}
-					</p>
-				{/if}
-			</div>
+			<Empty.Root>
+				<Empty.Header>
+					<Empty.Title>{panel.searching ? noResultsTitle : emptyTitle}</Empty.Title>
+					{#if panel.searching ? noResultsDescription : emptyDescription}
+						<Empty.Description>
+							{panel.searching ? noResultsDescription : emptyDescription}
+						</Empty.Description>
+					{/if}
+				</Empty.Header>
+			</Empty.Root>
 		{/snippet}
 
 		{#snippet footer()}
 			{#if !loading && panel.matched.length > 0}
 				<div class="flex flex-wrap items-center justify-between gap-3 pt-3">
-					<p class="text-sm text-muted-foreground">
+					<p class="text-muted-foreground">
 						{rangeLabel({
 							from: panel.from,
 							to: panel.to,
@@ -178,7 +201,7 @@
 								label has to be attached to something labelable, and the platform's own control is
 								the one every reader already knows how to work.
 							-->
-							<label class="flex items-center gap-2 text-sm text-muted-foreground">
+							<label class="flex items-center gap-2 text-muted-foreground">
 								{pageSizeLabel}
 								<NativeSelect
 									size="sm"

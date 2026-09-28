@@ -58,8 +58,10 @@ describe('following', () => {
 		await settle();
 
 		view.children = lines(30);
-		await settle();
-		expect(atEnd(viewport())).toBeLessThanOrEqual(1);
+		// The new content has to be there before "at the end" means anything: the old content was
+		// already at its end, so looking too early would pass for the wrong reason.
+		await expect.poll(() => viewport().scrollHeight).toBeGreaterThan(1000);
+		await expect.poll(() => atEnd(viewport())).toBeLessThanOrEqual(1);
 	});
 
 	it('stops following once the reader scrolls back', async () => {

@@ -1,6 +1,6 @@
 /**
  * @coral/kit/page-state
- * @version 1.0.1
+ * @version 1.0.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -24,6 +24,32 @@ const props = (extra: Partial<PageStateProps> = {}): PageStateProps => ({
 	...timing,
 	children: content,
 	...extra
+});
+
+describe('a retry that throws', () => {
+	it('stays on the error, and reports what the retry threw', async () => {
+		const failure = new Error('still down');
+		const onretryerror = vi.fn();
+		await render(
+			PageState,
+			props({
+				error: new Error('down'),
+				onretry: () => {
+					throw failure;
+				},
+				onretryerror
+			})
+		);
+
+		await userEvent.click(
+			Array.from(document.querySelectorAll('button')).find(
+				(button) => button.textContent?.trim() === 'Try again'
+			)!
+		);
+		await expect.poll(() => onretryerror.mock.calls.length).toBe(1);
+		expect(onretryerror).toHaveBeenCalledWith(failure);
+		expect(shown()).toBe('error');
+	});
 });
 
 describe('waiting', () => {

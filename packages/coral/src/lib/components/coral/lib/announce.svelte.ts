@@ -7,7 +7,7 @@
  * A zero-width space. Invisible on screen, and no screen reader says anything for it, so appending
  * one changes the text a live region holds without changing the words that come out of it.
  */
-const REPEAT = '​';
+const REPEAT = '\u200B';
 
 /**
  * What a component says out loud, for the readers who cannot see it happen.

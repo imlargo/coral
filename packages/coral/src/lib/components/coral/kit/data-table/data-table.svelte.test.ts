@@ -1,6 +1,6 @@
 /**
  * @coral/kit/data-table
- * @version 1.0.1
+ * @version 1.0.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -195,5 +195,35 @@ describe('states', () => {
 	it('spans the empty state across every column', async () => {
 		await renderTable({ ...base, rows: [], selection: 'multiple' as const });
 		expect(document.querySelector('tbody td')?.getAttribute('colspan')).toBe('3');
+	});
+});
+
+describe('selection stays in step with what is drawn', () => {
+	const flags = () => checkboxes().map((box) => box.getAttribute('aria-checked'));
+
+	it('draws every row of a Shift range as checked, including the one that was clicked', async () => {
+		const props = $state({ ...base, selection: 'multiple' as const, selected: [] as string[] });
+		await renderTable(props);
+
+		// Header checkbox first, then one per row.
+		const rowBox = (index: number) => checkboxes()[index + 1];
+		await userEvent.click(rowBox(2));
+		await userEvent.keyboard('{Shift>}');
+		await userEvent.click(rowBox(0));
+		await userEvent.keyboard('{/Shift}');
+
+		await expect.poll(() => [...props.selected].sort()).toEqual(['a', 'b', 'c']);
+		await expect.poll(flags).toEqual(['true', 'true', 'true', 'true']);
+	});
+
+	it('redraws a box that is still selected after it was clicked to clear a range', async () => {
+		const props = $state({ ...base, selection: 'multiple' as const, selected: ['a', 'b'] });
+		await renderTable(props);
+
+		// A Shift-click from an anchor on a row that is already inside the range clears the range,
+		// but only the rows between the two: the anchor row keeps its tick.
+		await userEvent.click(checkboxes()[1]);
+		await expect.poll(() => props.selected).toEqual(['b']);
+		expect(flags()).toEqual(['mixed', 'false', 'true', 'false']);
 	});
 });

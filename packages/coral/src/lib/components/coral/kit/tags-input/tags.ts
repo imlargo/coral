@@ -1,6 +1,6 @@
 /**
  * @coral/kit/tags-input
- * @version 1.0.1
+ * @version 1.0.0
  */
 
 /** Why a tag was turned away. */

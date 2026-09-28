@@ -1,6 +1,6 @@
 /**
  * @coral/kit/reorder-list
- * @version 1.1.1
+ * @version 1.0.0
  */
 
 /** A copy of `items` with the entry at `from` moved to `to`. Out-of-range indexes are clamped. */

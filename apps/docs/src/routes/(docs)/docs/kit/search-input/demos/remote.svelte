@@ -23,7 +23,7 @@
 		placeholder="Type at least 3 letters"
 		aria-label="Search the workspace"
 		minLength={3}
-		debounce={400}
+		searchDebounce={400}
 		{loading}
 		onsearch={search}
 	/>

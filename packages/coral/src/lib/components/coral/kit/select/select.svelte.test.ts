@@ -1,6 +1,6 @@
 /**
  * @coral/kit/select
- * @version 2.1.0
+ * @version 1.0.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -88,5 +88,43 @@ describe('form participation', () => {
 		render(Select, { options: fruits, name: 'fruit', required: true });
 		const trigger = document.querySelector('[data-slot="select-trigger"]');
 		expect(trigger?.getAttribute('aria-required')).toBe('true');
+	});
+});
+
+describe('naming the trigger', () => {
+	const trigger = () => document.querySelector<HTMLButtonElement>('[data-slot="select-trigger"]')!;
+
+	it('falls back on the placeholder when nothing else names it', async () => {
+		await render(Select, { options: fruits, placeholder: 'Pick a fruit' });
+		expect(trigger().getAttribute('aria-label')).toBe('Pick a fruit');
+	});
+
+	it('leaves a label that points at it in charge', async () => {
+		document.body.insertAdjacentHTML('afterbegin', '<label for="plan">Plan</label>');
+		try {
+			await render(Select, { options: fruits, id: 'plan', placeholder: 'Pick a fruit' });
+			await expect.poll(() => trigger().hasAttribute('aria-label')).toBe(false);
+			expect(trigger().id).toBe('plan');
+			expect(trigger().labels?.[0]?.textContent).toBe('Plan');
+		} finally {
+			document.querySelector('label[for="plan"]')?.remove();
+		}
+	});
+
+	it('uses the name it is given over the placeholder', async () => {
+		await render(Select, { options: fruits, 'aria-label': 'Fruit', placeholder: 'Pick a fruit' });
+		expect(trigger().getAttribute('aria-label')).toBe('Fruit');
+	});
+
+	it('hands the trigger what a field wires through it', async () => {
+		await render(Select, {
+			options: fruits,
+			id: 'fruit-field',
+			'aria-describedby': 'fruit-hint',
+			'aria-invalid': true
+		});
+		expect(trigger().id).toBe('fruit-field');
+		expect(trigger().getAttribute('aria-describedby')).toBe('fruit-hint');
+		expect(trigger().getAttribute('aria-invalid')).toBe('true');
 	});
 });

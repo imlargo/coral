@@ -1,7 +1,9 @@
 /**
  * @coral/kit/tree-view
- * @version 1.0.2
+ * @version 1.0.0
  */
+
+import { collator } from '../../lib/intl.js';
 
 export type TreeNode<T = unknown> = {
 	/** Unique across the whole tree. It keys expansion, selection and focus. */
@@ -112,7 +114,7 @@ export function typeahead<T>(
 ): number {
 	if (query === '' || rows.length === 0) return -1;
 
-	const collator = new Intl.Collator(locale, { sensitivity: 'base', usage: 'search' });
+	const compare = collator(locale, { sensitivity: 'base', usage: 'search' });
 	const chars = [...query];
 	const repeated = chars.every((char) => char === chars[0]);
 	const needle = repeated ? chars[0] : query;
@@ -122,7 +124,7 @@ export function typeahead<T>(
 	for (let offset = 0; offset < rows.length; offset++) {
 		const index = (start + offset) % rows.length;
 		const label = [...rows[index].node.label].slice(0, [...needle].length).join('');
-		if (collator.compare(label, needle) === 0) return index;
+		if (compare.compare(label, needle) === 0) return index;
 	}
 	return -1;
 }

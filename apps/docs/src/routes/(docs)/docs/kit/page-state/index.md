@@ -59,24 +59,25 @@ so the header and the column widths are already right when the rows land and not
 
 Everything a `<div>` accepts stays available on the root. On top of that:
 
-| Prop               | Type                                    | Default                 | Description                                       |
-| ------------------ | --------------------------------------- | ----------------------- | ------------------------------------------------- |
-| `loading`          | `boolean`                               | `false`                 | Something is being fetched.                       |
-| `error`            | `unknown`                               | -                       | Anything truthy counts, so pass the error itself. |
-| `empty`            | `boolean`                               | `false`                 | There is nothing to show.                         |
-| `onretry`          | `() => unknown`                         | -                       | Async-aware. Without it, no retry button.         |
-| `delay`            | `number`                                | `200`                   | Milliseconds before anything is drawn for a wait. |
-| `minimum`          | `number`                                | `400`                   | Milliseconds an indicator stays once drawn.       |
-| `emptyTitle`       | `string`                                | `Nothing here yet.`     | Heading for the empty state.                      |
-| `emptyDescription` | `string`                                | -                       | Line under it.                                    |
-| `errorTitle`       | `string`                                | `Something went wrong.` | Heading for the error state.                      |
-| `errorDescription` | `string`                                | -                       | Line under it.                                    |
-| `retryLabel`       | `string`                                | `Try again`             | Label for the retry button.                       |
-| `status`           | `PageStateKind`                         | `'idle'`                | Bindable. Which state is showing.                 |
-| `children`         | `Snippet`                               | -                       | The content. Required.                            |
-| `loadingState`     | `Snippet`                               | -                       | Replaces the loading state.                       |
-| `emptyState`       | `Snippet`                               | -                       | Replaces the empty state.                         |
-| `errorState`       | `Snippet<[{ error, retry, retrying }]>` | -                       | Replaces the error state.                         |
+| Prop               | Type                                    | Default                 | Description                                                                          |
+| ------------------ | --------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------ |
+| `loading`          | `boolean`                               | `false`                 | Something is being fetched.                                                          |
+| `error`            | `unknown`                               | -                       | Anything truthy counts, so pass the error itself.                                    |
+| `empty`            | `boolean`                               | `false`                 | There is nothing to show.                                                            |
+| `onretry`          | `() => unknown`                         | -                       | Async-aware. Without it, no retry button.                                            |
+| `onretryerror`     | `(error: unknown) => void`              | -                       | What `onretry` threw. Named for what failed, because `error` is the failure on show. |
+| `delay`            | `number`                                | `200`                   | Milliseconds before anything is drawn for a wait.                                    |
+| `minimum`          | `number`                                | `400`                   | Milliseconds an indicator stays once drawn.                                          |
+| `emptyTitle`       | `string`                                | `Nothing here yet.`     | Heading for the empty state.                                                         |
+| `emptyDescription` | `string`                                | -                       | Line under it.                                                                       |
+| `errorTitle`       | `string`                                | `Something went wrong.` | Heading for the error state.                                                         |
+| `errorDescription` | `string`                                | -                       | Line under it.                                                                       |
+| `retryLabel`       | `string`                                | `Try again`             | Label for the retry button.                                                          |
+| `status`           | `PageStateKind`                         | `'idle'`                | Bindable. Which state is showing.                                                    |
+| `children`         | `Snippet`                               | -                       | The content. Required.                                                               |
+| `loadingState`     | `Snippet`                               | -                       | Replaces the loading state.                                                          |
+| `emptyState`       | `Snippet`                               | -                       | Replaces the empty state.                                                            |
+| `errorState`       | `Snippet<[{ error, retry, retrying }]>` | -                       | Replaces the error state.                                                            |
 
 `status` is one of `idle`, `loading`, `error`, `empty` or `content`, and is also on the root as
 `data-state`. `idle` is the honest name for "waiting, but not long enough to say so yet".

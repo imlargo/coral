@@ -1,6 +1,6 @@
 /**
  * @coral/kit/activity-calendar
- * @version 1.0.3
+ * @version 1.0.0
  */
 
 import { addDays, startOfWeek, toDate, toKey } from './dates.js';
@@ -189,4 +189,30 @@ function monthsOf<T>(weeks: ActivityWeek<T>[]): MonthSpan[] {
 	}
 
 	return months;
+}
+
+/**
+ * How far a key moves along the chronological list of cells, or `undefined` for a key that does
+ * not move.
+ *
+ * Columns are weeks, so sideways is seven days and up-down is one. Both reduce to a step along the
+ * list, which cannot walk off the ragged first and last columns the way moving by (week, weekday)
+ * coordinates can. In a right-to-left page the first week is drawn at the right edge, so the
+ * horizontal pair swaps: the arrow that points towards the past is the one that points right.
+ */
+export function stepFor(key: string, rtl = false): number | undefined {
+	const sideways = rtl ? -7 : 7;
+
+	switch (key) {
+		case 'ArrowLeft':
+			return -sideways;
+		case 'ArrowRight':
+			return sideways;
+		case 'ArrowUp':
+			return -1;
+		case 'ArrowDown':
+			return 1;
+		default:
+			return undefined;
+	}
 }

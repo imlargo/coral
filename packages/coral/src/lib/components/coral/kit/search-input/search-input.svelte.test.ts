@@ -19,7 +19,7 @@ describe('reporting', () => {
 		const onsearch = vi.fn();
 		// The debounce has to outlast the gap between two simulated keystrokes, or the test is a
 		// race: at 50ms a loaded machine types slowly enough to report `ki` before `kiwi`.
-		await render(SearchInput, { onsearch, debounce: 300, 'aria-label': 'Search' });
+		await render(SearchInput, { onsearch, searchDebounce: 300, 'aria-label': 'Search' });
 
 		await userEvent.type(field(), 'kiwi');
 		await expect.poll(() => onsearch.mock.calls).toEqual([['kiwi']]);
@@ -27,7 +27,7 @@ describe('reporting', () => {
 
 	it('reports straight away on Enter', async () => {
 		const onsearch = vi.fn();
-		await render(SearchInput, { onsearch, debounce: 10_000, 'aria-label': 'Search' });
+		await render(SearchInput, { onsearch, searchDebounce: 10_000, 'aria-label': 'Search' });
 
 		await userEvent.type(field(), 'açaí{Enter}');
 		expect(onsearch).toHaveBeenCalledWith('açaí');
@@ -35,7 +35,7 @@ describe('reporting', () => {
 
 	it('does not repeat a term that only gained a trailing space', async () => {
 		const onsearch = vi.fn();
-		await render(SearchInput, { onsearch, debounce: 0, 'aria-label': 'Search' });
+		await render(SearchInput, { onsearch, searchDebounce: 0, 'aria-label': 'Search' });
 
 		await userEvent.type(field(), 'kiwi ');
 		expect(onsearch.mock.calls.map(([term]) => term)).toEqual(['k', 'ki', 'kiw', 'kiwi']);
@@ -46,7 +46,7 @@ describe('Escape', () => {
 	it('clears the field, reports the empty search, and stops there', async () => {
 		const onsearch = vi.fn();
 		const outside = vi.fn();
-		await render(SearchInput, { onsearch, debounce: 0, 'aria-label': 'Search' });
+		await render(SearchInput, { onsearch, searchDebounce: 0, 'aria-label': 'Search' });
 		document.addEventListener('keydown', outside);
 
 		await userEvent.type(field(), 'mango');

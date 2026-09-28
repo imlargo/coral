@@ -1,7 +1,16 @@
+<script lang="ts" module>
+	/** Written out in full so the class scanner can see every one of them. */
+	const align: Record<'start' | 'center' | 'end', string> = {
+		start: 'text-start',
+		center: 'text-center',
+		end: 'text-end'
+	};
+</script>
+
 <script lang="ts" generics="T, Id extends string = string">
 	/**
 	 * @coral/kit/data-table
-	 * @version 1.0.1
+	 * @version 1.0.0
 	 */
 	import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
 	import ChevronUpIcon from '@lucide/svelte/icons/chevron-up';
@@ -11,6 +20,7 @@
 	import { Checkbox } from '$lib/components/ui/checkbox/index.js';
 	import { Skeleton } from '$lib/components/ui/skeleton/index.js';
 	import { cn } from '$lib/utils.js';
+	import { focusRing } from '../../lib/focus.js';
 	import { idsBetween, nextSort, selectionState, toggleAll, toggleId } from '../../lib/table.js';
 	import type { DataTableProps } from './types.js';
 
@@ -45,12 +55,6 @@
 
 	/** Where a Shift-click draws its range from: the row picked without one. */
 	let anchor: string | null = null;
-
-	const align: Record<'start' | 'center' | 'end', string> = {
-		start: 'text-start',
-		center: 'text-center',
-		end: 'text-end'
-	};
 
 	function commit(next: string[]) {
 		selected = next;
@@ -137,13 +141,20 @@
 							<!--
 								Three states, and the middle one matters: partly selected has to read as partly
 								selected rather than as empty, or the reader cannot tell what the next press will do.
+
+								Both boxes are bound to a getter and a setter that ignores what it is given. The
+								primitive flips its own copy of `checked` on every press, and a box that is only
+								handed a value keeps that copy: a row ticked by a Shift range, or unticked by the
+								press that is not its own, is then drawn the other way round from `selected`. Here
+								the press is reported through `onclick` and `selected` is the only thing that says
+								how a box looks.
 							-->
 							<Checkbox
-								checked={headerState === 'all'}
-								indeterminate={headerState === 'some'}
+								bind:checked={() => headerState === 'all', () => {}}
+								bind:indeterminate={() => headerState === 'some', () => {}}
 								aria-label={selectAllLabel}
 								disabled={loading || rows.length === 0}
-								onCheckedChange={() => commit(toggleAll(selected, visibleIds))}
+								onclick={() => commit(toggleAll(selected, visibleIds))}
 							/>
 						{/if}
 					</Table.Head>
@@ -170,7 +181,10 @@
 							<button
 								type="button"
 								data-column={column.id}
-								class="-mx-2 inline-flex items-center gap-1 rounded-sm px-2 py-1 outline-offset-2 hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
+								class={cn(
+									'-mx-2 inline-flex items-center gap-1 rounded-sm px-2 py-1 hover:text-foreground',
+									focusRing
+								)}
 								onclick={() => headerSort(column.id)}
 							>
 								{#if typeof column.header === 'function'}
@@ -245,7 +259,7 @@
 						{#if selectable}
 							<Table.Cell>
 								<Checkbox
-									checked={isSelected}
+									bind:checked={() => isSelected, () => {}}
 									aria-label={selectRowLabel(row)}
 									onclick={(event) => pick(id, event)}
 								/>

@@ -50,16 +50,16 @@ already searched, so it is not reported back as if the reader typed it.
 Everything the shadcn input accepts stays available: `placeholder`, `disabled`, `readonly`, `name`,
 `id`, `aria-*`. On top of that:
 
-| Prop         | Type                     | Default        | Description                                         |
-| ------------ | ------------------------ | -------------- | --------------------------------------------------- |
-| `value`      | `string`                 | `''`           | Bindable. The raw field, untrimmed and undebounced. |
-| `onsearch`   | `(term: string) => void` | -              | The term to search for.                             |
-| `debounce`   | `number`                 | `300`          | Milliseconds of quiet before reporting.             |
-| `minLength`  | `number`                 | `0`            | Shorter terms are reported as `''`.                 |
-| `loading`    | `boolean`                | `false`        | Spinner in place of the icon.                       |
-| `clearLabel` | `string`                 | `Clear search` | Accessible label for the clear button.              |
-| `class`      | `string`                 | -              | Merged onto the input.                              |
-| `groupClass` | `string`                 | -              | Merged onto the bordered group.                     |
+| Prop             | Type                     | Default        | Description                                         |
+| ---------------- | ------------------------ | -------------- | --------------------------------------------------- |
+| `value`          | `string`                 | `''`           | Bindable. The raw field, untrimmed and undebounced. |
+| `onsearch`       | `(term: string) => void` | -              | The term to search for.                             |
+| `searchDebounce` | `number`                 | `300`          | Milliseconds of quiet before reporting.             |
+| `minLength`      | `number`                 | `0`            | Shorter terms are reported as `''`.                 |
+| `loading`        | `boolean`                | `false`        | Spinner in place of the icon.                       |
+| `clearLabel`     | `string`                 | `Clear search` | Accessible label for the clear button.              |
+| `class`          | `string`                 | -              | Merged onto the input.                              |
+| `groupClass`     | `string`                 | -              | Merged onto the bordered group.                     |
 
 ## Accessibility
 

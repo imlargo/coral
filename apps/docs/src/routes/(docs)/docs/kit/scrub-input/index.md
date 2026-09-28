@@ -99,7 +99,9 @@ Everything the shadcn input accepts stays available - `name`, `id`, `placeholder
 | `Escape`                | Put back the value the field already had |
 
 `←` and `→` are left alone: in a text field they move the caret, and taking that away makes the
-number awkward to edit.
+number awkward to edit. So are `Home` and `End` while there is no `min` or `max` to jump to, and
+`Escape` while there is no edit to put back - the first Escape is the field's, the second is the
+dialog's around it, the rule `search-input` and `inline-edit` follow too.
 
 ## The screen edge
 

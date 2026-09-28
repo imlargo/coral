@@ -1,11 +1,12 @@
 /**
  * @coral/kit/select
- * @version 2.1.0
+ * @version 1.0.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
 import type { Select, SelectTrigger } from '$lib/components/ui/select/index.js';
 import type { Option, Options } from '../../lib/options.js';
+import type { TriggerAttributes } from '../../lib/trigger.js';
 
 /**
  * What the shadcn root accepts, minus everything Coral takes over.
@@ -38,47 +39,48 @@ export type OptionContext<T> = {
 	selected: boolean;
 };
 
-export type SelectProps<T> = RootProps & {
-	/** The list to choose from, flat or grouped. */
-	options: Options<T>;
-	/** The selection. Bindable. Matched with `===`. */
-	value?: T;
-	/**
-	 * Called when the user picks or clears - never on mount, and never when `value` is assigned
-	 * from code. `undefined` means the selection was cleared.
-	 *
-	 * It hands over the option, not the value: `value` is already available through binding, and
-	 * `option.value` recovers it anyway, while the reverse costs the caller a lookup against the
-	 * list it just handed in.
-	 */
-	onchange?: (option: Option<T> | undefined) => void;
-	/** Shown on the trigger while nothing is selected. */
-	placeholder?: string;
-	/** Blocks the trigger. */
-	disabled?: boolean;
-	/** Adds a clear control to the trigger, and makes re-picking the selected option unset it. */
-	clearable?: boolean;
-	/** Accessible label for the clear control. */
-	clearLabel?: string;
-	/** Submits with a surrounding form, as a single field carrying the serialized value. */
-	name?: string;
-	/** `id` of the form to submit with, for a select outside it. Ignored without `name`. */
-	form?: string;
-	/** Blocks submission while nothing is selected. Needs `name`. */
-	required?: boolean;
-	/**
-	 * Turns a value into the string a form submits. Defaults to `String` - right for ids, numbers
-	 * and enum members, wrong for objects. Required when `name` is set and `T` is not a primitive.
-	 */
-	serialize?: (value: T) => string;
-	/** Trigger height, from the shadcn primitive. */
-	size?: ComponentProps<typeof SelectTrigger>['size'];
-	/** Merged onto the trigger. */
-	class?: string;
-	/** Merged onto the dropdown content. */
-	contentClass?: string;
-	/** Replaces the label inside the trigger. The chevron is the primitive's and stays. */
-	trigger?: Snippet<[TriggerContext<T>]>;
-	/** Replaces the body of each option row. The check indicator stays. */
-	option?: Snippet<[OptionContext<T>]>;
-};
+export type SelectProps<T> = RootProps &
+	TriggerAttributes & {
+		/** The list to choose from, flat or grouped. */
+		options: Options<T>;
+		/** The selection. Bindable. Matched with `===`. */
+		value?: T;
+		/**
+		 * Called when the user picks or clears - never on mount, and never when `value` is assigned
+		 * from code. `undefined` means the selection was cleared.
+		 *
+		 * It hands over the option, not the value: `value` is already available through binding, and
+		 * `option.value` recovers it anyway, while the reverse costs the caller a lookup against the
+		 * list it just handed in.
+		 */
+		onchange?: (option: Option<T> | undefined) => void;
+		/** Shown on the trigger while nothing is selected. */
+		placeholder?: string;
+		/** Blocks the trigger. */
+		disabled?: boolean;
+		/** Adds a clear control to the trigger, and makes re-picking the selected option unset it. */
+		clearable?: boolean;
+		/** Accessible label for the clear control. */
+		clearLabel?: string;
+		/** Submits with a surrounding form, as a single field carrying the serialized value. */
+		name?: string;
+		/** `id` of the form to submit with, for a select outside it. Ignored without `name`. */
+		form?: string;
+		/** Blocks submission while nothing is selected. Needs `name`. */
+		required?: boolean;
+		/**
+		 * Turns a value into the string a form submits. Defaults to `String` - right for ids, numbers
+		 * and enum members, wrong for objects. Required when `name` is set and `T` is not a primitive.
+		 */
+		serialize?: (value: T) => string;
+		/** Trigger height, from the shadcn primitive. */
+		size?: ComponentProps<typeof SelectTrigger>['size'];
+		/** Merged onto the trigger. */
+		class?: string;
+		/** Merged onto the dropdown content. */
+		contentClass?: string;
+		/** Replaces the label inside the trigger. The chevron is the primitive's and stays. */
+		trigger?: Snippet<[TriggerContext<T>]>;
+		/** Replaces the body of each option row. The check indicator stays. */
+		option?: Snippet<[OptionContext<T>]>;
+	};

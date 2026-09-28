@@ -1,7 +1,9 @@
 /**
  * @coral/kit/date-picker
- * @version 1.1.3
+ * @version 1.0.0
  */
+
+import { dateTimeFormat } from '../../lib/intl.js';
 
 /**
  * The three fields every `DateValue` carries.
@@ -24,24 +26,6 @@ export type DayRange = {
 	start: Day | undefined;
 	end: Day | undefined;
 };
-
-const formatters = new Map<string, Intl.DateTimeFormat>();
-
-/**
- * An `Intl.DateTimeFormat` per locale and option set, built once: constructing one costs about what
- * formatting a hundred dates does, and the trigger label recomputes on every keystroke in the
- * calendar. Two option objects keyed in a different order land on two entries, which is harmless -
- * the key comes from a prop, and a prop is written once per call site.
- */
-function formatter(locale: string, options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
-	const key = `${locale}|${JSON.stringify(options)}`;
-	const cached = formatters.get(key);
-	if (cached) return cached;
-
-	const built = new Intl.DateTimeFormat(locale, options);
-	formatters.set(key, built);
-	return built;
-}
 
 /**
  * A calendar day as a `Date` at **local noon**. `Intl` formats a moment and a `DateValue` is not
@@ -70,14 +54,14 @@ export function isSameRange(a: DayRange | undefined, b: DayRange | undefined): b
 
 /** One day, formatted. */
 export function formatDay(day: Day, locale: string, options: Intl.DateTimeFormatOptions): string {
-	return formatter(locale, options).format(toLocalDate(day));
+	return dateTimeFormat(locale, options).format(toLocalDate(day));
 }
 
 /**
  * A range, formatted as one string.
  *
  * `formatRange` rather than two `format` calls joined by a dash, because it folds away whatever
- * the two ends share: `5 – 9 de ene de 2026`, not `5 de ene de 2026 – 9 de ene de 2026`. It also
+ * the two ends share: `Jan 5 – 9, 2026`, not `Jan 5, 2026 – Jan 9, 2026`. It also
  * knows the locale's own range separator, which is not an en dash everywhere.
  *
  * A half-picked range formats as the end that exists, alone. Anything else - a trailing dash, an
@@ -90,7 +74,7 @@ export function formatDayRange(
 ): string {
 	const { start, end } = range;
 	if (start && end) {
-		return formatter(locale, options).formatRange(toLocalDate(start), toLocalDate(end));
+		return dateTimeFormat(locale, options).formatRange(toLocalDate(start), toLocalDate(end));
 	}
 
 	const only = start ?? end;

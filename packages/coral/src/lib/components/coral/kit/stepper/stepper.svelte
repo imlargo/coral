@@ -18,6 +18,7 @@
 		linear = true,
 		onbeforenext,
 		onfinish,
+		onerror,
 		onvaluechange,
 		orientation = 'horizontal',
 		ref = $bindable(null),
@@ -81,10 +82,17 @@
 			const leaving = current;
 			const last = index === steps.length - 1;
 
-			const done = await action.run(async () => {
-				if (onbeforenext && (await onbeforenext(leaving)) === false) return false;
-				if (last) return onfinish?.();
-			});
+			let done: boolean;
+			try {
+				done = await action.run(async () => {
+					if (onbeforenext && (await onbeforenext(leaving)) === false) return false;
+					if (last) return onfinish?.();
+				});
+			} catch (error) {
+				if (!onerror) throw error;
+				onerror(error);
+				return false;
+			}
 			if (!done) return false;
 
 			completed = complete(completed, leaving);

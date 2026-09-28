@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/file-input
-	 * @version 1.1.2
+	 * @version 1.0.0
 	 */
 	import FileIcon from '@lucide/svelte/icons/file';
 	import UploadIcon from '@lucide/svelte/icons/upload';
@@ -26,7 +26,7 @@
 		disabled = false,
 		label = 'Drop files here, or click to browse',
 		hint,
-		removeLabel = 'Remove file',
+		removeLabel = (entry: File) => `Remove ${entry.name}`,
 		class: className,
 		listClass,
 		zone,
@@ -56,6 +56,44 @@
 	);
 	const shownHint = $derived(hint ?? summary);
 
+	let input = $state<HTMLInputElement | null>(null);
+
+	/**
+	 * Puts the field's own `files` back in step with `value`.
+	 *
+	 * The field is what a form validates and submits, so it has to hold what the reader has picked
+	 * rather than what the last dialog returned. Emptied after every pick - the usual way to let the
+	 * same file be chosen twice - `required` could never be satisfied and `name` would post nothing.
+	 * A `DataTransfer` is the one way to build a `FileList` by hand. Writing `files` fires no event,
+	 * so this cannot feed back into `onchange`.
+	 *
+	 * Emptying the field when a file is removed is also what keeps the same file pickable again: a
+	 * dialog that returns exactly what the field already holds fires no `change`.
+	 */
+	function sync() {
+		if (!input) return;
+		const transfer = new DataTransfer();
+		for (const entry of value) transfer.items.add(entry);
+		input.files = transfer.files;
+	}
+
+	// `sync` reads `value` and the field, so it re-runs when either is replaced.
+	$effect(sync);
+
+	/** A reset is the reader emptying the form, which is a change like any other they make. */
+	$effect(() => {
+		const owner = input?.form;
+		if (!owner) return;
+
+		const reset = () => {
+			if (value.length === 0) return;
+			value = [];
+			onchange?.(value);
+		};
+		owner.addEventListener('reset', reset);
+		return () => owner.removeEventListener('reset', reset);
+	});
+
 	function receive(incoming: File[]) {
 		const { files, rejected } = collect(incoming, { current: value, accept, maxSize, limit });
 		if (rejected.length > 0) onreject?.(rejected);
@@ -68,13 +106,10 @@
 	}
 
 	function pick(event: Event & { currentTarget: HTMLInputElement }) {
-		const picked = Array.from(event.currentTarget.files ?? []);
-		/**
-		 * Cleared so the same file can be picked again. An input keeps what it was given, so
-		 * removing a file and re-selecting it fires no `change` at all - the value has not moved.
-		 */
-		event.currentTarget.value = '';
-		receive(picked);
+		receive(Array.from(event.currentTarget.files ?? []));
+		// The dialog replaced the field's files with only what it returned. What was turned away,
+		// or already held, must not be left standing in for the selection.
+		sync();
 	}
 
 	function remove(index: number) {
@@ -139,6 +174,7 @@
 			whole difference between a keyboard-operable picker and a mouse-only one.
 		-->
 		<input
+			bind:this={input}
 			type="file"
 			class="sr-only"
 			{accept}
@@ -186,7 +222,7 @@
 								type="button"
 								variant="ghost"
 								size="icon"
-								aria-label={removeLabel}
+								aria-label={removeLabel(file)}
 								{disabled}
 								onclick={() => remove(index)}
 							>

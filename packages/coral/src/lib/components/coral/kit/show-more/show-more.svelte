@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/show-more
-	 * @version 1.0.2
+	 * @version 1.0.0
 	 */
 	import { tick } from 'svelte';
 	import { Button } from '$lib/components/ui/button/index.js';
@@ -76,10 +76,14 @@
 	 * never ends up somewhere invisible.
 	 */
 	function handleFocusIn(event: FocusEvent) {
-		if (expanded || !overflowing || !region) return;
+		if (expanded || !overflowing || !region || !inner) return;
+
+		// Measured from the top of the content, not against the clipped box: by the time this runs
+		// the browser has usually scrolled the region to bring the focused element into view, and an
+		// element that was hidden then looks exactly like one that is showing.
 		const target = event.target as HTMLElement;
-		const bottom = region.getBoundingClientRect().bottom;
-		if (target.getBoundingClientRect().bottom > bottom) setExpanded(true);
+		const reach = target.getBoundingClientRect().bottom - inner.getBoundingClientRect().top;
+		if (reach > region.clientHeight + 1) setExpanded(true);
 	}
 
 	const toggleProps = $derived({
@@ -113,7 +117,7 @@
 		{#if toggleSnippet}
 			{@render toggleSnippet({ props: toggleProps, expanded, toggle })}
 		{:else}
-			<!-- a link, so it lines up with the text above. -->
+			<!-- A link, so it lines up with the text above. -->
 			<Button {...toggleProps} variant="link" class="h-auto px-0">
 				{expanded ? lessLabel : moreLabel}
 			</Button>

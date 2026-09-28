@@ -111,6 +111,6 @@ clamp(150, 0, 25); // 25
 stepValue({ value: undefined, delta: 1, min: 5, decimals: 0 }); // 5
 ```
 
-It used to live at `kit/number-input/step.ts`. Moving it is why this component is at `2.0.0`:
-filenames are public API here, so an import that named the old path has to be updated to the new
-one.
+They live in `lib/number.ts` rather than beside the component because [scrub input](/docs/kit/scrub-input)
+steps its value the same way, and the two cannot be allowed to drift. Both compose them through
+`lib/number-field.ts`, which also holds the commit, the typed-value read and the wheel handling.

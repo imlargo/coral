@@ -26,6 +26,11 @@ export type StepperProps<T> = Omit<HTMLAttributes<HTMLDivElement>, 'children'> &
 	onbeforenext?: (step: T) => unknown;
 	/** Runs when Next is pressed on the last step, after `onbeforenext`. Same `false` convention. */
 	onfinish?: () => unknown;
+	/**
+	 * Receives whatever `onbeforenext` or `onfinish` threw. The stepper stays on the step either
+	 * way. Without it the error propagates as an unhandled rejection.
+	 */
+	onerror?: (error: unknown) => void;
 	/** The current step changed. Never on mount, never when `value` is set from code. */
 	onvaluechange?: (step: T) => void;
 	/** Which arrow keys move between steps in the list. */
@@ -71,11 +76,17 @@ export type StepperContentProps<T> = HTMLAttributes<HTMLDivElement> & {
 type ButtonProps = Omit<ComponentProps<typeof Button>, 'href' | 'onclick' | 'children'>;
 
 export type StepperPreviousProps = ButtonProps & {
+	/** The label, when the children are left out. */
+	label?: string;
 	children?: Snippet;
 };
 
 export type StepperNextProps = ButtonProps & {
-	/** The label. Receives where the stepper is, for "Next" that turns into "Finish". */
+	/** The label on every step but the last, when the children are left out. */
+	nextLabel?: string;
+	/** The label on the last step, when the children are left out. */
+	finishLabel?: string;
+	/** Replaces the label. Receives where the stepper is, for a button that changes with the step. */
 	children?: Snippet<[{ isLast: boolean; pending: boolean }]>;
 };
 

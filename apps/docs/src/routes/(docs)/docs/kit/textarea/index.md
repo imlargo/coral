@@ -59,18 +59,19 @@ leave an empty field alone, so Enter still does what Enter does.
 Everything the shadcn textarea accepts stays available - `name`, `id`, `placeholder`, `required`,
 `disabled`, `aria-*`. On top of that:
 
-| Prop        | Type                                         | Default | Description                                            |
-| ----------- | -------------------------------------------- | ------- | ------------------------------------------------------ |
-| `value`     | `string`                                     | `''`    | Bindable.                                              |
-| `rows`      | `number`                                     | `2`     | Shortest the field gets, in lines.                     |
-| `maxRows`   | `number`                                     | -       | Tallest. Past it the field scrolls.                    |
-| `maxLength` | `number`                                     | -       | Enforced by the browser, and counted by the counter.   |
-| `showCount` | `boolean`                                    | `false` | Shows how much of the limit is used.                   |
-| `warnAt`    | `number`                                     | a tenth | How many characters from the limit the warning starts. |
-| `submitOn`  | `'mod-enter' \| 'enter' \| false`            | `false` | Which keys send.                                       |
-| `onsubmit`  | `(value: string) => void`                    | -       | Runs when they do. Never for an empty field.           |
-| `class`     | `string`                                     | -       | Merged onto the textarea.                              |
-| `counter`   | `Snippet<[{ count, left, limit, warning }]>` | -       | Replaces the counter.                                  |
+| Prop             | Type                                         | Default             | Description                                            |
+| ---------------- | -------------------------------------------- | ------------------- | ------------------------------------------------------ |
+| `value`          | `string`                                     | `''`                | Bindable.                                              |
+| `rows`           | `number`                                     | `2`                 | Shortest the field gets, in lines.                     |
+| `maxRows`        | `number`                                     | -                   | Tallest. Past it the field scrolls.                    |
+| `maxLength`      | `number`                                     | -                   | Enforced by the browser, and counted by the counter.   |
+| `showCount`      | `boolean`                                    | `false`             | Shows how much of the limit is used.                   |
+| `warnAt`         | `number`                                     | a tenth             | How many characters from the limit the warning starts. |
+| `remainingLabel` | `(left: number) => string`                   | `N characters left` | What a screen reader hears in the warning zone.        |
+| `submitOn`       | `'mod-enter' \| 'enter' \| false`            | `false`             | Which keys send.                                       |
+| `onsubmit`       | `(value: string) => void`                    | -                   | Runs when they do. Never for an empty field.           |
+| `class`          | `string`                                     | -                   | Merged onto the textarea.                              |
+| `counter`        | `Snippet<[{ count, left, limit, warning }]>` | -                   | Replaces the counter.                                  |
 
 The field carries `data-scrollable` once it is capped by `maxRows`, for a fade or a border that only
 belongs there when there is more text below.

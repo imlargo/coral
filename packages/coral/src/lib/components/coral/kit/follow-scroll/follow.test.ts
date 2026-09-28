@@ -4,7 +4,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { distanceFromEnd, isAtEnd, isScrollable, unreadSince } from './follow.js';
+import { distanceFromEnd, isAtEnd, unreadSince } from './follow.js';
 
 /** A 400px box holding 1000px of content: 600px of scrolling. */
 const box = { clientHeight: 400, scrollHeight: 1_000 };
@@ -37,13 +37,6 @@ describe('isAtEnd', () => {
 
 	it('is true for content that does not fill its box', () => {
 		expect(isAtEnd({ scrollTop: 0, clientHeight: 400, scrollHeight: 100 })).toBe(true);
-	});
-});
-
-describe('isScrollable', () => {
-	it('tells a full box from an empty one', () => {
-		expect(isScrollable({ ...box, scrollTop: 0 })).toBe(true);
-		expect(isScrollable({ scrollTop: 0, clientHeight: 400, scrollHeight: 120 })).toBe(false);
 	});
 });
 

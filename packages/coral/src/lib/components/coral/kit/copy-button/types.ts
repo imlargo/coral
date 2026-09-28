@@ -1,6 +1,6 @@
 /**
  * @coral/kit/copy-button
- * @version 1.1.0
+ * @version 1.0.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';

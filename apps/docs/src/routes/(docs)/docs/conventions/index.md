@@ -16,7 +16,9 @@ src/lib/components/coral/     ← beside shadcn's ui/
 ├─ blocks/         → compositions of the above, one per use case
 │  └─ table-panel/
 └─ lib/            → shared across components
-   └─ options.ts   → Option<T>, OptionGroup<T>, and reading either shape
+   ├─ options.ts   → Option<T>, OptionGroup<T>, and reading either shape
+   ├─ intl.ts      → collators and formatters, built once
+   └─ trigger.ts   → the id and aria-* a button trigger takes
 ```
 
 **Folders are created when something needs them, never in advance.** A util with a single consumer
@@ -24,9 +26,8 @@ stays inside its component's folder and moves to `lib/` the day a second compone
 is exactly how `lib/options.ts` came to be, when `select` became the second component to speak
 `Option<T>`.
 
-Moving a file is a breaking change: filenames are public API, so the component that gave the util up
-gets a major bump. `combobox` went to `3.0.0` for that reason and for no other. Its props did not
-change.
+Moving a file is a breaking change: filenames are public API, so the component that gave the util
+up gets a major bump, even though its props did not change.
 
 ## What a block is
 
@@ -80,6 +81,47 @@ type RootProps = ComponentProps<typeof Avatar>;
 Selectable components support two-way binding. Shared state in composed components flows through
 Svelte context, never hand-wired props.
 
+## What every component agrees on
+
+The same situation is handled the same way everywhere, so a component you have not used yet behaves
+like the ones you have.
+
+**A handler that can fail.** Anything that waits on your function - a save, a confirm, a step - goes
+through `lib/action`. Return exactly `false`, or throw, and the component stays where it is: the
+dialog open, the field editing, the stepper on its step. Anything else, including nothing, counts as
+done, so an existing handler can be passed straight in. `onerror` receives what was thrown; without
+it the error propagates as an unhandled rejection, visible in the console and to nobody using the
+page. Where `error` is already a prop, as on `page-state`, it is `onretryerror`.
+
+**A trigger that is a button.** `select`, `combobox` and `date-picker` take `id`, `aria-label`,
+`aria-labelledby`, `aria-describedby` and `aria-invalid` and put them on the trigger, because that is
+the element a reader focuses and a screen reader names. That is where a `<Label for>` points, and
+where the props a form library's control hands out belong. An `aria-label` written over a label that
+already names the control replaces it silently, so a component only supplies one of its own when
+nothing else does.
+
+**Words.** Every string a reader sees or hears is a prop with an English default. A `*Message` is a
+single plain line; a `*Title` and `*Description` are a heading and the line beneath it. Callbacks
+that report a change to a root that is an element are named `on<thing>change`, because a `<div>` has
+an `onchange` of its own and the two would merge into a handler nobody can satisfy.
+
+**Being the reader's first Escape.** A field that has something to undo - a search term, a rename,
+a number being typed - takes the first Escape and stops it there. With nothing to undo, it lets the
+key through, so a dialog around it still closes.
+
+**Closing.** Whatever has to happen when a popover closes, such as forgetting the search term, goes
+through `lib/on-close`. The primitive reports the closes it made itself - Escape, a click outside, a
+pick - and says nothing when your code assigns `open`, which is what a `close()` in a footer does.
+
+**Appearance.** No literal colours, shadows, radii or type sizes. State that no shadcn primitive
+draws - a focus ring, a drag target, the section being read - uses the theme's own tokens and scale
+(`border-ring`, `bg-accent`, `rounded-sm`), which change with whatever theme the project installed.
+Where a primitive already draws the thing, Coral uses it.
+
+**Tests.** Behaviour is tested in a real browser, next to the component. Every component is also run
+through axe in `a11y.svelte.test.ts`, in its default state and in each state that changes its
+markup.
+
 ## Types
 
 Generic, never closed:
@@ -109,7 +151,7 @@ Every file carries a header, matched to an entry in `coral.json`:
 ```ts
 /**
  * @coral/kit/combobox
- * @version 1.2.0
+ * @version 1.0.0
  */
 ```
 
@@ -119,9 +161,9 @@ Every file carries a header, matched to an entry in `coral.json`:
 		"kit/combobox": {
 			"title": "Combobox",
 			"description": "A select with a search box, filtering the way accented text is actually typed.",
-			"version": "1.2.0",
-			"shadcn": ["popover", "command"],
-			"npm": ["cmdk"]
+			"version": "1.0.0",
+			"shadcn": ["popover", "command", "button", "badge", "spinner"],
+			"npm": ["@lucide/svelte"]
 		}
 	}
 }
@@ -143,7 +185,7 @@ Docs live next to nothing in Coral itself: the site is a separate workspace, and
 gets installed stays clean. A page is one Markdown file plus its demos:
 
 ```
-apps/docs/src/routes/docs/kit/avatar/
+apps/docs/src/routes/(docs)/docs/kit/avatar/
 ├─ index.md
 └─ demos/
    ├─ basic.svelte

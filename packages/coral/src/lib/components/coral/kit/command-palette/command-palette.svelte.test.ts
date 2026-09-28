@@ -5,6 +5,7 @@
 
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
+import { createRawSnippet } from 'svelte';
 import { describe, expect, it, vi } from 'vitest';
 import CommandPalette from './command-palette.svelte';
 import type { CommandAction } from './actions.js';
@@ -103,5 +104,45 @@ describe('listing', () => {
 
 		await userEvent.keyboard('spreadsheet');
 		await expect.poll(rows).toEqual(['Import from CSV']);
+	});
+});
+
+describe('what it leaves behind', () => {
+	const input = () => document.querySelector<HTMLInputElement>('[data-slot="command-input"]')!;
+
+	it('forgets the term once an action has run and closed it', async () => {
+		const props = $state({ actions: actions(), open: true, search: '', shortcut: '' });
+		await render(CommandPalette, props);
+
+		await userEvent.fill(input(), 'settings');
+		await expect.poll(() => props.search).toBe('settings');
+		await userEvent.click(document.querySelector('[data-slot="command-item"]')!);
+
+		await expect.poll(() => props.open).toBe(false);
+		await expect.poll(() => props.search).toBe('');
+	});
+
+	it('tells the server the term is gone when it closes with one in the box', async () => {
+		const onsearch = vi.fn();
+		const props = $state({ actions: actions(), open: true, search: '', shortcut: '', onsearch });
+		await render(CommandPalette, props);
+
+		await userEvent.fill(input(), 'set');
+		await expect.poll(() => props.search).toBe('set');
+		props.open = false;
+		await expect.poll(() => onsearch.mock.lastCall?.[0]).toBe('');
+	});
+});
+
+describe('the trigger', () => {
+	it('names its shortcut the way aria-keyshortcuts spells it', async () => {
+		let triggerProps: Record<string, unknown> = {};
+		const trigger = createRawSnippet<[{ props: Record<string, unknown> }]>((context) => {
+			triggerProps = context().props;
+			return { render: () => '<button>Open</button>' };
+		});
+		await render(CommandPalette, { actions: actions(), shortcut: 'ctrl+shift+k', trigger });
+
+		expect(triggerProps['aria-keyshortcuts']).toBe('Control+Shift+K');
 	});
 });

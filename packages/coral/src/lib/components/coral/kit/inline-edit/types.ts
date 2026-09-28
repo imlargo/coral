@@ -29,6 +29,11 @@ export type InlineEditProps = InputProps & {
 	 * is only updated once it went through.
 	 */
 	onsave?: (value: string) => unknown;
+	/**
+	 * Receives whatever `onsave` threw. The field stays open with the text as typed either way.
+	 * Without it the error propagates as an unhandled rejection.
+	 */
+	onerror?: (error: unknown) => void;
 	/** The edit was abandoned - Escape, or leaving the field with `saveOnBlur` off. */
 	oncancel?: () => void;
 	/** Return `false` to refuse the text before `onsave` runs. The field is marked invalid. */

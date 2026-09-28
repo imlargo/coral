@@ -50,33 +50,35 @@ empty. That failure only ever shows up for the users whose words carry accents.
 Everything the shadcn popover root accepts stays available: `open`, `onOpenChange`,
 `onOpenChangeComplete`. On top of that:
 
-| Prop                | Type                                | Default               | Description                                                     |
-| ------------------- | ----------------------------------- | --------------------- | --------------------------------------------------------------- |
-| `options`           | `Option<T>[]` \| `OptionGroup<T>[]` | -                     | The list to choose from, flat or grouped.                       |
-| `type`              | `'single'` \| `'multiple'`          | `'single'`            | Decides the shape of `value` and `onchange`.                    |
-| `value`             | `T` \| `T[]`                        | -                     | The selection. Bindable.                                        |
-| `onchange`          | `(selection) => void`               | -                     | Fired when the user picks, toggles or clears.                   |
-| `open`              | `boolean`                           | `false`               | Popover state. Bindable.                                        |
-| `search`            | `string`                            | `''`                  | The search term. Bindable.                                      |
-| `onsearch`          | `(search: string) => void`          | -                     | Fired as the user types. For server-side search.                |
-| `searchDebounce`    | `number`                            | `0`                   | Milliseconds to wait before `onsearch` fires.                   |
-| `shouldFilter`      | `boolean`                           | `true`                | Client-side filtering. `false` when the server filtered.        |
-| `filter`            | `(option, search) => boolean`       | folded match          | Replaces the built-in matching.                                 |
-| `clearable`         | `boolean`                           | `false`               | Adds a clear control; re-picking deselects.                     |
-| `loading`           | `boolean`                           | `false`               | Swaps the list for an indicator.                                |
-| `disabled`          | `boolean`                           | `false`               | Blocks the trigger.                                             |
-| `name`              | `string`                            | -                     | Submits with a surrounding form, one field per value.           |
-| `form`              | `string`                            | -                     | `id` of the form, for a combobox outside it.                    |
-| `required`          | `boolean`                           | `false`               | Blocks submission while nothing is selected.                    |
-| `serialize`         | `(value: T) => string`              | `String`              | Turns a value into the submitted string. Object values need it. |
-| `maxDisplay`        | `number`                            | `3`                   | Badges before collapsing into a counter.                        |
-| `placeholder`       | `string`                            | `Select an option...` | Trigger text while nothing is selected.                         |
-| `searchPlaceholder` | `string`                            | `Search...`           | Placeholder for the search box.                                 |
-| `emptyMessage`      | `string`                            | `No results found.`   | Shown when the search matches nothing.                          |
-| `clearLabel`        | `string`                            | `Clear selection`     | Accessible label for the clear control.                         |
-| `class`             | `string`                            | -                     | Merged onto the trigger button.                                 |
-| `contentClass`      | `string`                            | -                     | Merged onto the popover content.                                |
-| `listClass`         | `string`                            | -                     | Merged onto the scrolling list - e.g. its max height.           |
+| Prop                | Type                                                    | Default               | Description                                                     |
+| ------------------- | ------------------------------------------------------- | --------------------- | --------------------------------------------------------------- |
+| `options`           | `Option<T>[]` \| `OptionGroup<T>[]`                     | -                     | The list to choose from, flat or grouped.                       |
+| `type`              | `'single'` \| `'multiple'`                              | `'single'`            | Decides the shape of `value` and `onchange`.                    |
+| `value`             | `T` \| `T[]`                                            | -                     | The selection. Bindable.                                        |
+| `onchange`          | `(selection) => void`                                   | -                     | Fired when the user picks, toggles or clears.                   |
+| `open`              | `boolean`                                               | `false`               | Popover state. Bindable.                                        |
+| `search`            | `string`                                                | `''`                  | The search term. Bindable.                                      |
+| `onsearch`          | `(search: string) => void`                              | -                     | Fired as the user types. For server-side search.                |
+| `searchDebounce`    | `number`                                                | `0`                   | Milliseconds to wait before `onsearch` fires.                   |
+| `shouldFilter`      | `boolean`                                               | `true`                | Client-side filtering. `false` when the server filtered.        |
+| `filter`            | `(option, search) => boolean`                           | folded match          | Replaces the built-in matching.                                 |
+| `clearable`         | `boolean`                                               | `false`               | Adds a clear control; re-picking deselects.                     |
+| `loading`           | `boolean`                                               | `false`               | Swaps the list for an indicator.                                |
+| `disabled`          | `boolean`                                               | `false`               | Blocks the trigger.                                             |
+| `name`              | `string`                                                | -                     | Submits with a surrounding form, one field per value.           |
+| `form`              | `string`                                                | -                     | `id` of the form, for a combobox outside it.                    |
+| `required`          | `boolean`                                               | `false`               | Blocks submission while nothing is selected.                    |
+| `serialize`         | `(value: T) => string`                                  | `String`              | Turns a value into the submitted string. Object values need it. |
+| `maxDisplay`        | `number`                                                | `3`                   | Badges before collapsing into a counter.                        |
+| `placeholder`       | `string`                                                | `Select an option...` | Trigger text while nothing is selected.                         |
+| `searchPlaceholder` | `string`                                                | `Search...`           | Placeholder for the search box.                                 |
+| `emptyMessage`      | `string`                                                | `No results found.`   | Shown when the search matches nothing.                          |
+| `clearLabel`        | `string`                                                | `Clear selection`     | Accessible label for the clear control.                         |
+| `id`                | `string`                                                | generated             | Put on the trigger, for a `<Label for>`.                        |
+| `aria-*`            | `aria-label`, `-labelledby`, `-describedby`, `-invalid` | -                     | Put on the trigger.                                             |
+| `class`             | `string`                                                | -                     | Merged onto the trigger button.                                 |
+| `contentClass`      | `string`                                                | -                     | Merged onto the popover content.                                |
+| `listClass`         | `string`                                                | -                     | Merged onto the scrolling list - e.g. its max height.           |
 
 ### Snippets
 
@@ -204,6 +206,10 @@ forwarded to the command item.
 `FormData.getAll(name)` already reads back as a list. `form` points those fields at a form by `id`,
 for a combobox that renders outside it. `required` blocks submission while nothing is selected.
 
+The search term is forgotten whenever the popover closes - by Escape, by a pick, and by the
+`close()` handed to a footer, which assigns `open` and is the close the primitive never reports. A
+term left behind would filter the list before anyone had typed anything the next time.
+
 Values are stringified with `String` by default, which is right for ids, numbers and enum members.
 Object values need `serialize`, or they submit as `[object Object]`:
 
@@ -255,7 +261,5 @@ fold('Piña'); // 'pina'
 fold('Café'); // 'cafe'
 ```
 
-It used to live at `kit/combobox/fold.ts`, and the page said it would move to `lib/` the day a
-second component needed it. [Data table](/docs/kit/data-table) is that second component: its search
-folds text the same way, and the two cannot be allowed to drift. Moving it is why this component is
-at `5.0.0` - filenames are public API here, so an import that named the old path has to be updated.
+It lives in `lib/fold.ts` rather than beside the combobox because [data table](/docs/kit/data-table)
+searches the same way, and the two cannot be allowed to drift.

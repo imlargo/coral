@@ -3,11 +3,10 @@
 	 * @coral/kit/shortcut
 	 * @version 1.0.0
 	 */
-	import { onMount } from 'svelte';
 	import { Kbd, KbdGroup } from '$lib/components/ui/kbd/index.js';
-	import { detectPlatform, parse, tokens } from './keys.js';
+	import { parse, tokens } from './keys.js';
 	import { listen } from './listen.js';
-	import type { Platform } from './keys.js';
+	import { PlatformState } from './platform.svelte.js';
 	import type { ShortcutProps } from './types.js';
 
 	let {
@@ -23,17 +22,12 @@
 	}: ShortcutProps = $props();
 
 	/**
-	 * `other` until mounted, then the real platform. The server cannot know it, and rendering `⌘` on
-	 * the server for a Windows reader - or `Ctrl` on the client over server markup that said `⌘` - is
-	 * a hydration mismatch. Starting from what the server drew and correcting after mount costs one
-	 * repaint on a Mac. Pass `platform` when the server does know, from a user-agent header.
+	 * The platform once mounted, `other` before - see `PlatformState`. Pass `platform` when the server
+	 * does know it, from a user-agent header, and there is nothing to correct after mount.
 	 */
-	let detected = $state<Platform>('other');
-	onMount(() => {
-		detected = detectPlatform();
-	});
+	const detected = new PlatformState();
 
-	const resolved = $derived(platform ?? detected);
+	const resolved = $derived(platform ?? detected.current);
 	const drawn = $derived(tokens(parse(keys, resolved), resolved));
 
 	$effect(() => {

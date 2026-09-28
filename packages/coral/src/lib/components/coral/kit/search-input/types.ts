@@ -23,7 +23,7 @@ export type SearchInputProps = InputProps & {
 	 */
 	onsearch?: (term: string) => void;
 	/** Milliseconds of quiet typing before `onsearch` runs. `0` reports on every change. */
-	debounce?: number;
+	searchDebounce?: number;
 	/** Shortest term worth searching for. Anything shorter is reported as an empty search. */
 	minLength?: number;
 	/** Shows a spinner in place of the search icon - a request for the current term is in flight. */

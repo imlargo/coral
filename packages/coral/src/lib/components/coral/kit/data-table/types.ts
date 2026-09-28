@@ -1,6 +1,6 @@
 /**
  * @coral/kit/data-table
- * @version 1.0.1
+ * @version 1.0.0
  */
 
 import type { Snippet } from 'svelte';

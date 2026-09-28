@@ -1,11 +1,12 @@
 <script lang="ts" generics="T = unknown">
 	/**
 	 * @coral/kit/tree-view
-	 * @version 1.0.2
+	 * @version 1.0.0
 	 */
 	import { tick } from 'svelte';
 	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
 	import { cn } from '$lib/utils.js';
+	import { focusRingInset } from '../../lib/focus.js';
 	import { ancestorsOf, expandableSiblings, typeahead, visibleRows } from './tree.js';
 	import type { TreeRow } from './tree.js';
 	import type { NodeContext, TreeViewProps } from './types.js';
@@ -184,7 +185,8 @@
 			data-disabled={row.node.disabled || undefined}
 			style:--coral-pad="calc(var(--coral-indent) * {row.level - 1})"
 			class={cn(
-				'flex cursor-default items-center gap-1 ps-(--coral-pad) -outline-offset-2 select-none focus-visible:outline-2 focus-visible:outline-ring',
+				'flex cursor-default items-center gap-1 ps-(--coral-pad) select-none',
+				focusRingInset,
 				rowClass
 			)}
 			onfocus={() => (focusedId = row.node.id)}

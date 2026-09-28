@@ -271,7 +271,7 @@ packages/coral/           → the library, and the registry built from it
             └─ …
 
 apps/docs/                → the documentation site, deployed to coral.imlargo.dev
-├─ src/routes/docs/       → one Markdown page per component, with its demos
+├─ src/routes/(docs)/docs/ → one Markdown page per component, with its demos
 ├─ src/docs/              → the site's own components, under `$docs`
 └─ static/r/              → the built registry (generated)
 ```

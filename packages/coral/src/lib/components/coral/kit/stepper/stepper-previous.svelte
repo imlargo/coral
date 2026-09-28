@@ -8,6 +8,7 @@
 	import type { StepperPreviousProps } from './types.js';
 
 	let {
+		label = 'Previous',
 		variant = 'outline',
 		disabled = false,
 		ref = $bindable(null),
@@ -26,5 +27,5 @@
 	onclick={() => stepper.previous()}
 	{...restProps}
 >
-	{#if children}{@render children()}{:else}Previous{/if}
+	{#if children}{@render children()}{:else}{label}{/if}
 </Button>

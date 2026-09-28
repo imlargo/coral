@@ -1,6 +1,6 @@
 /**
  * @coral/kit/file-input
- * @version 1.1.2
+ * @version 1.0.0
  */
 
 import { describe, expect, it } from 'vitest';
