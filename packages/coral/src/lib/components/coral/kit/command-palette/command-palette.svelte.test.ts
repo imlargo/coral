@@ -146,3 +146,35 @@ describe('the trigger', () => {
 		expect(triggerProps['aria-keyshortcuts']).toBe('Control+Shift+K');
 	});
 });
+
+describe('for a screen reader', () => {
+	const input = () => document.querySelector<HTMLInputElement>('[data-slot="command-input"]')!;
+	const active = () => {
+		const id = input().getAttribute('aria-activedescendant');
+		return id ? document.getElementById(id)?.textContent?.trim() : undefined;
+	};
+
+	it('tells it which action is highlighted, and follows the arrows', async () => {
+		await render(CommandPalette, { actions: actions(), open: true, shortcut: '' });
+
+		await expect.poll(active).toContain('New project');
+		await userEvent.keyboard('{ArrowDown}');
+		await expect.poll(active).toContain('Import from CSV');
+	});
+
+	it('ties the search box to the list it filters', async () => {
+		await render(CommandPalette, { actions: actions(), open: true, shortcut: '' });
+		const controls = input().getAttribute('aria-controls');
+		expect(document.getElementById(controls!)?.getAttribute('role')).toBe('listbox');
+	});
+
+	it('dims a disabled action', async () => {
+		const list = actions();
+		list[2].disabled = true;
+		await render(CommandPalette, { actions: list, open: true, shortcut: '' });
+		const row = Array.from(document.querySelectorAll('[data-slot="command-item"]')).find((entry) =>
+			entry.textContent?.includes('Settings')
+		)!;
+		expect(Number(getComputedStyle(row).opacity)).toBeLessThan(1);
+	});
+});

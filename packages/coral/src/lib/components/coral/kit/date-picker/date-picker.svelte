@@ -78,6 +78,7 @@
 	 */
 	const active = $derived.by(() => {
 		if (!presets?.length || empty) return undefined;
+		// Narrowed by `isRange`, which TypeScript cannot correlate with `Type` (a runtime prop).
 		return isRange
 			? activePreset(presets as unknown as Preset<DateRange>[], range, isSameRange)
 			: activePreset(presets as unknown as Preset<DateValue>[], day, isSameDay);

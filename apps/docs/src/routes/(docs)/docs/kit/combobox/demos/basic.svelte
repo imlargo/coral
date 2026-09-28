@@ -2,7 +2,7 @@
 	import Combobox from '$lib/components/coral/kit/combobox/combobox.svelte';
 
 	const fruits = [
-		{ value: 'apple', label: 'Apple' },
+		{ value: 'acai', label: 'Açaí' },
 		{ value: 'mango', label: 'Mango' },
 		{ value: 'kiwi', label: 'Kiwi' },
 		{ value: 'guava', label: 'Guava' },

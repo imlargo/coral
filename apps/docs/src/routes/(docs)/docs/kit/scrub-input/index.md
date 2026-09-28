@@ -83,6 +83,8 @@ Everything the shadcn input accepts stays available - `name`, `id`, `placeholder
 | `onscrubstart`  | `(value: number \| undefined) => void` | -           | A drag began, with the value it began at.                    |
 | `onscrubend`    | `(value: number \| undefined) => void` | -           | A drag ended or was cancelled.                               |
 | `suffix`        | `string`                               | -           | Unit shown after the number.                                 |
+| `disabled`      | `boolean`                              | `false`     | Blocks the drag and the keyboard.                            |
+| `readonly`      | `boolean`                              | `false`     | Shows the value without letting it change.                   |
 | `class`         | `string`                               | -           | Merged onto the input.                                       |
 | `groupClass`    | `string`                               | -           | Merged onto the bordered group.                              |
 | `handleClass`   | `string`                               | -           | Merged onto the handle.                                      |

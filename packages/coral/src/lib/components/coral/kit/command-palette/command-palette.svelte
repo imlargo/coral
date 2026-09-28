@@ -49,10 +49,23 @@
 	/** Which action is in flight, so only its own row reports that something is happening. */
 	let running = $state<string | null>(null);
 
-	const groups = $derived(group(actions, { recent, maxRecent, recentLabel }));
-
 	const uid = $props.id();
 	const listId = `${uid}-list`;
+
+	const groups = $derived(group(actions, { recent, maxRecent, recentLabel }));
+
+	/** Each action's position in the list as drawn, which is what its element id is built from. */
+	const positions = $derived(
+		new Map(groups.flatMap((entry) => entry.actions).map((item, position) => [item.id, position]))
+	);
+
+	/** The primitive's highlighted value is the row's search string; this turns it back into an id. */
+	let highlighted = $state('');
+	const activeId = $derived.by(() => {
+		if (loading || highlighted === '') return undefined;
+		const match = actions.find((item) => searchValue(item) === highlighted);
+		return match ? `${listId}-${positions.get(match.id)}` : undefined;
+	});
 
 	const detected = new PlatformState();
 	const platform = $derived(detected.current);
@@ -144,41 +157,39 @@
 -->
 <Command.Dialog
 	bind:open
+	bind:value={highlighted}
 	vimBindings={vimBindings ?? !swallowed}
 	shouldFilter={!onsearch}
 	class={className}
 	{...restProps}
 >
-	<!-- `aria-controls` by hand: see `kit/combobox`, which has the same primitive to work around. -->
+	<!-- `aria-controls` and `aria-activedescendant` by hand: see `kit/combobox`. -->
 	<Command.Input
 		aria-controls={listId}
+		aria-activedescendant={activeId}
 		bind:value={search}
 		{placeholder}
 		oninput={(event) => searchLater(event.currentTarget.value)}
 	/>
 
-	<Command.List id={listId} class={listClass}>
-		{#if loading}
-			<Command.Loading>
-				{#if indicator}
-					{@render indicator()}
-				{:else}
-					<div class="flex items-center justify-center py-6">
-						<Spinner class="opacity-50" />
-					</div>
-				{/if}
-			</Command.Loading>
-		{:else}
+	<!-- A listbox may only own options and groups, so it is hidden while the results are on their way. -->
+	<Command.List id={listId} class={listClass} hidden={loading}>
+		{#if !loading}
 			<Command.Empty>
-				{#if empty}{@render empty()}{:else}{emptyMessage}{/if}
+				<!-- A listbox must own options; the primitive says when it is empty, and this is what it holds. -->
+				<div role="option" aria-selected="false" aria-disabled="true">
+					{#if empty}{@render empty()}{:else}{emptyMessage}{/if}
+				</div>
 			</Command.Empty>
 
 			{#each groups as entry, index (entry.label ?? index)}
 				<Command.Group heading={entry.label}>
 					{#each entry.actions as item (item.id)}
 						<Command.Item
+							id={`${listId}-${positions.get(item.id)}`}
 							value={searchValue(item)}
 							disabled={item.disabled}
+							class="data-disabled:pointer-events-none data-disabled:opacity-50"
 							onSelect={() => run(item)}
 						>
 							{#if actionSnippet}
@@ -205,6 +216,18 @@
 			{/each}
 		{/if}
 	</Command.List>
+
+	{#if loading}
+		<Command.Loading>
+			{#if indicator}
+				{@render indicator()}
+			{:else}
+				<div class="flex items-center justify-center py-6">
+					<Spinner class="opacity-50" />
+				</div>
+			{/if}
+		</Command.Loading>
+	{/if}
 
 	{@render footer?.()}
 </Command.Dialog>
