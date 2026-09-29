@@ -48,7 +48,6 @@ import TagsInput from './components/coral/kit/tags-input/tags-input.svelte';
 import Textarea from './components/coral/kit/textarea/textarea.svelte';
 import Toc from './components/coral/kit/toc/toc.svelte';
 import TreeView from './components/coral/kit/tree-view/tree-view.svelte';
-import TablePanel from './components/coral/blocks/table-panel/table-panel.svelte';
 
 /** A snippet standing in for whatever a caller puts inside a component. */
 const html = (markup: string): Snippet => createRawSnippet(() => ({ render: () => markup }));
@@ -220,18 +219,6 @@ const cases: [string, () => unknown][] = [
 				]
 			})
 	],
-	[
-		'table-panel',
-		() =>
-			draw(TablePanel, {
-				rows,
-				columns,
-				getRowId: (row: (typeof rows)[number]) => row.id,
-				caption: 'Deploys',
-				selection: 'multiple',
-				pageSize: 1
-			})
-	],
 	// States that change the markup: a selection made, a search that found nothing, files held.
 	[
 		'select, with a selection and a clear control',
@@ -279,17 +266,6 @@ const cases: [string, () => unknown][] = [
 				selection: 'multiple',
 				selected: ['a', 'b'],
 				sort: { column: 'project', direction: 'desc' }
-			})
-	],
-	[
-		'table-panel, a search that matched nothing',
-		() =>
-			draw(TablePanel, {
-				rows,
-				columns,
-				getRowId: (row: (typeof rows)[number]) => row.id,
-				caption: 'Deploys',
-				search: 'zzz'
 			})
 	],
 	[

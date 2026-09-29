@@ -42,8 +42,8 @@ Five rules, so the layer stays a library rather than a folder of templates:
 2. **Still no appearance, still no entities.** A block is shaped by a use case, not by a domain:
    "a table with the screen around it", never "an invoices table".
 3. **It takes data and callbacks.** No fetching, no routing, no knowledge of your data layer. Where
-   a block needs to reach outside itself, it takes a snippet or a handler - `table-panel` takes its
-   rows and hands back what was selected.
+   a block needs to reach outside itself, it takes a snippet or a handler - a table-with-toolbar
+   block would take its rows and hand back what was selected, never fetch them itself.
 4. **It may carry copy, with English defaults.** A block has more to say than a control does, and a
    skeleton that has to be filled in entirely is not worth installing. Every string is a prop.
 5. **Rule of three.** A component enters `kit/` after the same pattern has been written twice; a

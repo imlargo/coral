@@ -21,9 +21,10 @@ project at `$lib/components/coral/`, beside shadcn's `ui/`. Currently: `kit/{act
 activity-calendar, avatar, avatar-stack, combobox, command-palette, confirm-dialog, copy-button,
 data-table, date-picker, file-input, follow-scroll, inline-edit, number-input, page-state,
 password-input, rating-group, relative-time, reorder-list, responsive-dialog, scrub-input,
-search-input, select, shortcut, show-more, stepper, tags-input, textarea, toc, tree-view}` and
-`blocks/{table-panel}`, over `lib/{action, announce, debounce, focus, fold, hidden-field, intl,
-live-region, number, number-field, on-close, options, table, trigger}`.
+search-input, select, shortcut, show-more, stepper, tags-input, textarea, toc, tree-view}`, over
+`lib/{action, announce, debounce, focus, fold, hidden-field, intl, live-region, number,
+number-field, on-close, options, table, trigger}`. There is no `blocks/` entry right now - the
+layer exists in the architecture below, waiting on a second use case that needs it.
 `packages/coral/src/lib/components/coral/coral.json` is the list that counts. Read it rather than
 this sentence, which is the kind that goes stale.
 

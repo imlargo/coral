@@ -51,10 +51,9 @@ export const DOCS_SIDEBAR_GROUPS: SidebarGroup[] = [
 		title: 'Kit',
 		items: kit
 	},
-	{
-		title: 'Blocks',
-		items: blocks
-	}
+	// Left out while empty, rather than a heading over nothing: there is currently no `blocks/*`
+	// page, and this section reappears on its own the day one is added.
+	...(blocks.length > 0 ? [{ title: 'Blocks', items: blocks }] : [])
 ];
 
 /** Flat, ordered list of every page - same order as the sidebar. Drives the prev/next footer. */

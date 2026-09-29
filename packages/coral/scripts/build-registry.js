@@ -9,7 +9,7 @@
  */
 
 import { execFileSync } from 'node:child_process';
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 import { SITE } from '../registry.config.js';
@@ -47,6 +47,14 @@ const manifest = JSON.parse(await readFile(path.join(CORAL, 'coral.json'), 'utf8
 const built = await registry(manifest.components);
 
 await writeFile(REGISTRY_FILE, `${JSON.stringify(built, null, '\t')}\n`, 'utf8');
+
+/**
+ * Cleared first, or a component dropped from `coral.json` leaves its old item file behind:
+ * `registry build` only ever writes and overwrites, so a removed component's stale JSON would keep
+ * being served - and counted by `smoke-install.js`, which reads every file on disk here rather than
+ * only the ones the current manifest names.
+ */
+await rm(output, { recursive: true, force: true });
 
 execFileSync(
 	path.join(PACKAGE, 'node_modules/.bin/shadcn-svelte'),
