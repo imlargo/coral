@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/file-input
-	 * @version 1.1.0
+	 * @version 1.1.1
 	 */
 	import { SvelteMap } from 'svelte/reactivity';
 	import FileIcon from '@lucide/svelte/icons/file';
@@ -220,7 +220,8 @@
 	</label>
 
 	{#if value.length > 0}
-		<ul class={cn('flex flex-col gap-2', listClass)}>
+		<!-- `role="list"` restated: Safari drops list semantics from a `<ul>` with its bullets removed. -->
+		<ul role="list" class={cn('flex flex-col gap-2', listClass)}>
 			{#each value as file, index (`${file.name}-${file.size}-${file.lastModified}`)}
 				{@const preview = previews.get(file)}
 				<li class="min-w-0">

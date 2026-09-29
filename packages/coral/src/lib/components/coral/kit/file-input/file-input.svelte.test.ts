@@ -1,6 +1,6 @@
 /**
  * @coral/kit/file-input
- * @version 1.1.0
+ * @version 1.1.1
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -119,6 +119,13 @@ describe('in a form', () => {
 		await expect.poll(() => props.value).toEqual([]);
 		expect(onchange).toHaveBeenCalledWith([]);
 		document.getElementById('reset-me')?.remove();
+	});
+});
+
+describe('list semantics', () => {
+	it('restates role="list", which Safari drops from a <ul> with its bullets removed', () => {
+		renderInput({ value: [file('a.txt'), file('b.txt')] });
+		expect(document.querySelector('ul')?.getAttribute('role')).toBe('list');
 	});
 });
 

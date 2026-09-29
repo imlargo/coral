@@ -151,7 +151,7 @@
 		"kit/file-input": {
 			"title": "File input",
 			"description": "Pick files by click or drop, validate them, show what was picked. An input, not an uploader.",
-			"version": "1.1.0",
+			"version": "1.1.1",
 			"shadcn": ["attachment", "empty"],
 			"npm": ["@lucide/svelte"]
 		},
