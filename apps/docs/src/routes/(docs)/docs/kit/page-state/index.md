@@ -28,6 +28,8 @@ read at all.
   saying what went wrong; an empty result is never announced while something is still loading.
 - **Retrying is a real request.** The retry goes through
   [action button](/docs/kit/action-button): one press, one attempt, and a failure that stays put.
+  A custom `errorState` gets the same guard through the `retrying`/`retry` it is handed, rather than
+  keeping a second one of its own.
 
 ## The three windows
 

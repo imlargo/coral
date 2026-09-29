@@ -115,11 +115,10 @@
 				{#if onretry}
 					<Empty.Content>
 						<!--
-							The retry goes through `action-button`, so a failed attempt is reported and a second
-							press while the first is still out does nothing - the same rules as anywhere else a
-							request is waited on.
+							`pending` drives the button from the same `retrying` handed to a custom `errorState`,
+							so the two paths share one guard and one report rather than each keeping their own.
 						-->
-						<ActionButton variant="outline" onclick={onretry} onerror={onretryerror}>
+						<ActionButton variant="outline" pending={retrying.running} onclick={retry}>
 							{retryLabel}
 						</ActionButton>
 					</Empty.Content>

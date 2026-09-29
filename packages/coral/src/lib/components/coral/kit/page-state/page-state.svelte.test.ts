@@ -141,3 +141,58 @@ describe('marking the region', () => {
 		expect(shown()).toBe('idle');
 	});
 });
+
+describe('replacing a state', () => {
+	it('draws loadingState instead of the default spinner', async () => {
+		const loadingState = createRawSnippet(() => ({ render: () => '<p>Fetching…</p>' }));
+		await render(PageState, props({ loading: true, loadingState }));
+		await expect.poll(shown, { timeout: 500 }).toBe('loading');
+		expect(text()).toContain('Fetching…');
+		expect(document.querySelector('svg[role="status"]')).toBeNull();
+	});
+
+	it('draws emptyState instead of the default empty view', async () => {
+		const emptyState = createRawSnippet(() => ({ render: () => '<p>Nothing to see.</p>' }));
+		await render(PageState, props({ empty: true, emptyState }));
+		expect(text()).toContain('Nothing to see.');
+		expect(text()).not.toContain('Nothing here yet.');
+	});
+
+	it('hands errorState the same guard and the same report as the default button', async () => {
+		const failure = new Error('still down');
+		const onretryerror = vi.fn();
+		let seenRetrying = false;
+		const errorState = createRawSnippet<[{ error: unknown; retry: () => void; retrying: boolean }]>(
+			(context) => ({
+				render: () => '<button type="button" data-custom-retry>Retry</button>',
+				// A single root element, so `node` is the button itself, not a wrapper around it.
+				setup: (node) =>
+					node.addEventListener('click', () => {
+						seenRetrying = context().retrying;
+						context().retry();
+					})
+			})
+		);
+		await render(
+			PageState,
+			props({
+				error: new Error('down'),
+				errorState,
+				onretry: () => {
+					throw failure;
+				},
+				onretryerror
+			})
+		);
+
+		expect(document.querySelector('[data-custom-retry]')).not.toBeNull();
+		await userEvent.click(document.querySelector('[data-custom-retry]')!);
+
+		await expect.poll(() => onretryerror.mock.calls.length).toBe(1);
+		expect(onretryerror).toHaveBeenCalledWith(failure);
+		// `retrying` was false when the snippet last rendered before the click ran, since the guard
+		// only flips once `retry()` itself starts the call it wraps.
+		expect(seenRetrying).toBe(false);
+		expect(shown()).toBe('error');
+	});
+});
