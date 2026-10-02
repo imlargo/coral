@@ -15,20 +15,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      # Pinned to what Cloudflare's build image runs (see AGENTS.md), so CI installs and builds
-      # with the same pnpm that deploys. The repo has no `packageManager` field to read it from.
+      # pnpm comes from `packageManager`, Node from `.node-version`: the versions Cloudflare's build
+      # is pinned to as well (see AGENTS.md), so CI installs and builds the way the deploy does.
       - uses: pnpm/action-setup@v4
-        with:
-          version: 10.11.1
       - uses: actions/setup-node@v5
         with:
-          node-version: 22
+          node-version-file: .node-version
           cache: pnpm
       - run: pnpm install --frozen-lockfile
 
       # Playwright drives the component tests in a real browser; `--with-deps` is what makes that
       # work on a bare runner.
-      - run: pnpm --filter coral exec playwright install --with-deps chromium
+      - run: pnpm exec playwright install --with-deps chromium
 
       - run: pnpm lint
       - run: pnpm check
@@ -39,14 +37,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      # Pinned to what Cloudflare's build image runs (see AGENTS.md), so CI installs and builds
-      # with the same pnpm that deploys. The repo has no `packageManager` field to read it from.
+      # pnpm comes from `packageManager`, Node from `.node-version`: the versions Cloudflare's build
+      # is pinned to as well (see AGENTS.md), so CI installs and builds the way the deploy does.
       - uses: pnpm/action-setup@v4
-        with:
-          version: 10.11.1
       - uses: actions/setup-node@v5
         with:
-          node-version: 22
+          node-version-file: .node-version
           cache: pnpm
       - run: pnpm install --frozen-lockfile
 
@@ -55,4 +51,4 @@ jobs:
       # change to the generator or the aliases that breaks installs fails here rather than in
       # someone else's project.
       - run: pnpm registry
-      - run: pnpm --filter coral smoke
+      - run: pnpm smoke

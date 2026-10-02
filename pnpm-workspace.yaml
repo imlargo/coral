@@ -1,10 +1,7 @@
-packages:
-  - 'apps/*'
-  - 'packages/*'
-
 allowBuilds:
   esbuild: true
   workerd: true
+  sharp: true
 
 minimumReleaseAgeExclude:
   - '@svmd/content@0.2.0'
@@ -13,7 +10,5 @@ minimumReleaseAgeExclude:
   - '@svmd/micromark-extension-svelte@0.2.0'
   - '@svmd/micromark-factory-svelte-expression@0.2.0'
   - '@svmd/vite@0.2.0'
-
-onlyBuiltDependencies:
-  - workerd
-  - esbuild
+  - '@sveltejs/adapter-cloudflare@8.0.0'
+  - '@sveltejs/kit@3.0.0'
