@@ -270,28 +270,18 @@ of known failures to read past.
 A `check` that printed no `COMPLETED` line did not type-check anything, so read the output rather
 than the exit code alone.
 
-> ⚠️ **Build output poisons both scripts, so `build` and `check` delete it first.** `vite build`
-> writes a bundled worker to `.svelte-kit/cloudflare/` plus `.svelte-kit/output/`, and that breaks
-> two things at once:
->
-> - `svelte-check` discovers files by walking the project: it ignores tsconfig `exclude`, and
->   its own `--ignore` flag refuses to run alongside `--tsconfig`, so it type-checks the generated
->   worker and reports ~900 errors nobody wrote.
-> - `wrangler types` emits a `GlobalProps.mainModule` block **only when that worker exists**, so
->   `wrangler types --check` passes on a clean tree and fails on a dirty one. Cloudflare restores a
->   build-output cache between runs, which made CI fail on every build after the first.
->
-> Consequence to respect: **run `check` before `build`, never after**. It deletes the artifact you
-> were about to deploy. And run `pnpm gen` on a clean tree, or you commit a
-> `worker-configuration.d.ts` that references build output and breaks CI.
+> ⚠️ **`check` deletes build output first.** `vite build` writes a bundled worker to
+> `.svelte-kit/cloudflare/` plus `.svelte-kit/output/`, and `svelte-check` discovers files by
+> walking the project: it ignores tsconfig `exclude`, and its own `--ignore` flag refuses to run
+> alongside `--tsconfig`, so it would type-check the generated worker and report ~900 errors nobody
+> wrote. Consequence to respect: **run `check` before `build`, never after**. It deletes the
+> artifact you were about to deploy.
 
-> ⚠️ `worker-configuration.d.ts` declares a global `Element` whose HTMLRewriter `append`/`prepend`
-> signatures merge with (and shadow) the DOM ones, and typing `App.Platform` is what pulls it into
-> the program. `src/app.d.ts` therefore leaves `Platform` undeclared - the site is
-> prerendered and never reads it - and `tsconfig.json` neither lists those types nor includes
-> `*.ts` at the app root, which would pick the file up. Declaring either
-> again brings back the shadowing, and with it shadcn's `ui/native-select` reporting an error
-> nobody can fix.
+> ⚠️ **No `wrangler types`.** It declares the Workers runtime globally, and those types redefine
+> DOM ones (`Element`, `Response`) that components rely on - shadcn's `ui/native-select` stops
+> type-checking. The site is prerendered and never reads `platform`, so `src/app.d.ts` leaves
+> `App.Platform` undeclared. A route that needs a binding declares `Platform` by hand there, with
+> its types imported from `@cloudflare/workers-types`, never as globals.
 
 > ⚠️ SvelteKit 3's `resolve()` reads a leading `/` as a route ID; a plain path has none
 > (`resolve('docs')`). The site's nav config keeps `/docs/...` because it is compared against

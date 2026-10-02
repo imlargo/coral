@@ -3,20 +3,22 @@
 	"private": true,
 	"type": "module",
 	"packageManager": "pnpm@11.10.0",
+	"engines": {
+		"node": ">=22"
+	},
 	"scripts": {
 		"dev": "vite dev",
-		"build": "pnpm registry && rm -rf .svelte-kit/cloudflare && wrangler types --check && vite build",
+		"build": "pnpm registry && vite build",
 		"preview": "wrangler dev .svelte-kit/cloudflare/_worker.js --port 4173",
 		"worker:deploy": "wrangler deploy",
 		"worker:version": "wrangler versions upload",
-		"prepare": "husky && (svelte-kit sync || echo '')",
-		"check": "rm -rf .svelte-kit/cloudflare .svelte-kit/output && wrangler types --check && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"prepare": "svelte-kit sync && husky || echo ''",
+		"check": "rm -rf .svelte-kit/cloudflare .svelte-kit/output && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"registry": "node scripts/build-registry.js",
 		"smoke": "node scripts/smoke-install.js",
 		"test": "vitest --run",
 		"test:unit": "vitest",
-		"gen": "wrangler types",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write ."
 	},
@@ -41,7 +43,6 @@
 		"vaul-svelte": "1.0.0-next.7"
 	},
 	"devDependencies": {
-		"@eslint/compat": "^2.1.0",
 		"@eslint/js": "latest",
 		"@fontsource-variable/inter": "^5.3.0",
 		"@sveltejs/adapter-cloudflare": "^8.0.0",

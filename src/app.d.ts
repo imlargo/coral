@@ -2,17 +2,10 @@
 // for information about these interfaces
 
 /*
- * `App.Platform` is deliberately not declared.
- *
- * Typing it means pulling `worker-configuration.d.ts` into the program, and that file declares a
- * global `Element` whose HTMLRewriter signatures merge with - and shadow - the DOM one. The cost
- * showed up twice: DOM code had to avoid `append`/`prepend`, and shadcn's untouchable
- * `ui/native-select` reported an error nobody could fix.
- *
- * The site is prerendered and never reads `event.platform`, so it buys nothing. A route that
- * genuinely needs the Cloudflare bindings should declare the interface here again, add
- * `"types": ["./worker-configuration.d.ts"]` back to `tsconfig.json`, and take the shadowing with
- * it.
+ * `App.Platform` is deliberately not declared: the site is prerendered and never reads
+ * `event.platform`. A route that needs a Cloudflare binding declares it here, with its types
+ * imported from `@cloudflare/workers-types` - never `wrangler types`, whose globals redefine DOM
+ * types (`Element`, `Response`) the components rely on.
  */
 declare global {
 	namespace App {
