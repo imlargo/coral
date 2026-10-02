@@ -6,14 +6,13 @@ import svelte from 'eslint-plugin-svelte';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import ts from 'typescript-eslint';
-import svelteConfig from './packages/coral/svelte.config.js';
 
 const gitignorePath = path.resolve(import.meta.dirname, '.gitignore');
 
 export default defineConfig(
 	includeIgnoreFile(gitignorePath),
 	{
-		ignores: ['**/components/ui/**', 'apps/docs/worker-configuration.d.ts']
+		ignores: ['**/components/ui/**', 'worker-configuration.d.ts']
 	},
 	js.configs.recommended,
 	ts.configs.recommended,
@@ -34,8 +33,7 @@ export default defineConfig(
 			parserOptions: {
 				projectService: true,
 				extraFileExtensions: ['.svelte'],
-				parser: ts.parser,
-				svelteConfig
+				parser: ts.parser
 			}
 		}
 	},

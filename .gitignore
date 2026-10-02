@@ -19,9 +19,12 @@ Thumbs.db
 !.env.test
 
 # Registry build output - generated from `coral.json` and the source tree by
-# `pnpm --filter coral registry`, and served by the docs site.
-packages/coral/registry.json
-apps/docs/static/r/
+# `pnpm registry`, and served by the docs site.
+/registry.json
+/static/r/
+
+# Playwright
+test-results
 
 # Vite
 vite.config.js.timestamp-*
