@@ -115,7 +115,7 @@ describe('coral.json', () => {
 
 		for (const file of owned(name, all).filter((f) => SOURCE.test(f) && !isTest(f))) {
 			const text = await readFile(path.join(CORAL, file), 'utf8');
-			for (const [, source] of text.matchAll(/from '([^'.$][^']*)'/g)) {
+			for (const [, source] of text.matchAll(/from '([^'.$#][^']*)'/g)) {
 				// `svelte` and its subpaths are the framework, not a dependency to install.
 				if (source === 'svelte' || source.startsWith('svelte/')) continue;
 				// Scoped packages keep one leading segment: `@lucide/svelte/icons/x` is `@lucide/svelte`.
