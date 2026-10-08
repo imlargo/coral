@@ -12,8 +12,8 @@ import { execFileSync } from 'node:child_process';
 import { readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
-import { SITE } from '../registry.config.js';
-import { CORAL, PACKAGE, isComponent, registry } from './registry.js';
+import { SITE, isComponent } from '../registry.config.js';
+import { CORAL, PACKAGE, registry } from './registry.js';
 
 const REGISTRY_FILE = path.join(PACKAGE, 'registry.json');
 const DEFAULT_OUTPUT = path.join(PACKAGE, 'static/r');

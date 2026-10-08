@@ -1,6 +1,6 @@
 /**
  * @coral/kit/avatar
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 import { describe, expect, it } from 'vitest';
@@ -21,6 +21,16 @@ describe('initials', () => {
 
 	it('preserves accents', () => {
 		expect(initials('Åsa Öberg')).toBe('ÅÖ');
+	});
+
+	it('keeps an accent typed as a separate mark on its letter', () => {
+		// Decomposed is what macOS and some keyboards produce: `E` followed by a combining accent.
+		expect(initials('Émile Zola'.normalize('NFD'))).toBe('ÉZ'.normalize('NFD'));
+	});
+
+	it('takes a whole emoji, not half of one', () => {
+		expect(initials('👩🏽‍💻 Studio')).toBe('👩🏽‍💻S');
+		expect(initials('🇯🇵 Team')).toBe('🇯🇵T');
 	});
 
 	it('tolerates surrounding and repeated whitespace', () => {

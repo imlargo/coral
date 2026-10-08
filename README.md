@@ -244,7 +244,7 @@ whatever locale the reader is actually in, not one chosen when the file was writ
 (`kit/avatar/initials.ts`) follows the same rule.
 
 **Accent-insensitive, both ways.** Combobox search folds accents before comparing
-(`kit/combobox/fold.ts`), so `acai` finds `Açaí` and `sao paulo` finds `São Paulo`, because that is
+(`lib/fold.ts`), so `acai` finds `Açaí` and `sao paulo` finds `São Paulo`, because that is
 how people type words their keyboard layout does not spell. The one thing that never depends on a
 locale is which of two strings match.
 
@@ -271,10 +271,12 @@ from, and Coral itself.
          └─ coral/        → 📦 the folder that gets installed, beside ui/
             ├─ coral.json → manifest: version, title, description + required primitives
             ├─ lib/       → shared across components (options.ts, hidden-field.svelte)
-            └─ kit/       → composed, generic components - the actual product
-               ├─ activity-calendar/
-               ├─ avatar/
-               └─ …
+            ├─ kit/       → composed, generic components - the actual product
+            │  ├─ activity-calendar/
+            │  ├─ avatar/
+            │  └─ …
+            ├─ blocks/    → kit/ wired together for one use case (none yet)
+            └─ product/   → components that speak one vertical: ai/, saas/, fintech/ (none yet)
 ```
 
 Every demo renders the exact file the registry ships, through the same `#lib` imports a consuming
@@ -282,9 +284,14 @@ project resolves - no copy in between, and no way for a demo to document somethi
 what gets installed. Coral itself never imports SvelteKit: its tests run on plain Svelte, so a
 component that reached for `$app/*` would fail there.
 
-Inside `coral/`, `blocks/` (app-level compositions, rule of 3) and `hooks/` appear the day a
-component actually needs them. A util with one consumer stays inside its component's folder until a second one needs it,
-which is exactly how `lib/options.ts` came to be, when `select` became the second component to speak
+Inside `coral/`, the layers above `kit/` and `hooks/` appear the day a component actually needs
+them. `blocks/` wires several `kit/` components together for one use case, once the same wiring
+has been written three times. `product/` is where Coral is allowed to know a vertical - the messages
+and models of an AI product, the plans and seats of a SaaS one, the transactions of a fintech -
+grouped as `product/<vertical>/<name>`, and published as `product-<vertical>-<name>`.
+
+A util with one consumer stays inside its component's folder until a second one needs it, which is
+exactly how `lib/options.ts` came to be, when `select` became the second component to speak
 `Option<T>`, and how `lib/hidden-field.svelte` did when a third needed to submit a value from a
 control that is not an input.
 
@@ -313,10 +320,11 @@ Need a type the headless library owns? Derive it from the shadcn component inste
 `ComponentProps<typeof Avatar>`.
 
 **No domain.** No `Invoice`, no `Student`, no `Contract`. Domain lives in your `features/`.
+`product/` knows a vertical's shared vocabulary, never one app's entities.
 
-**One-way imports.** `blocks/` composes `kit/`, `kit/` composes shadcn primitives and other `kit/`.
-Never the reverse. And nothing is duplicated: two components needing the same logic means extracting
-a third, or `lib/`.
+**One-way imports.** `product/` composes `blocks/` and `kit/`, `blocks/` composes `kit/`, `kit/`
+composes shadcn primitives and other `kit/`. Never the reverse. And nothing is duplicated: two
+components needing the same logic means extracting a third, or `lib/`.
 
 ## Scope
 
@@ -331,8 +339,8 @@ Each cut is deliberate:
 - **No syntactic sugar:** a composed component that only saves typing does not belong here. What
   Coral contributes is **resolved behavior**: filtering, keyboard navigation, shared state through
   context, accessibility, debounce, loading and empty states.
-- **No DataTable, no form-field/validation layer, yet:** prototyped and pulled back out until the
-  pattern has been written twice for real (see [Roadmap](#roadmap)).
+- **No form-field/validation layer, yet:** prototyped and pulled back out until the pattern has
+  been written twice for real (see [Roadmap](#roadmap)).
 
 The test a feature or component has to pass before it is added, applied the same way to a
 contributor's PR as to the maintainer's own idea:
@@ -352,7 +360,7 @@ One person maintains this. What bounds the risk if that changes:
 - **You already own a working copy.** Coral is installed into your project as source, not as a
   live dependency: nothing you shipped breaks if this repository or its registry disappears
   tomorrow. Forking it is copying the one folder you already have.
-- **No hidden runtime:** twenty-five components, no framework of their own underneath. shadcn-svelte
+- **No hidden runtime:** the components have no framework of their own underneath. shadcn-svelte
   and bits-ui, which this repository doesn't maintain, do the actual work.
 - **Versioned per component.** Each entry in
   [`coral.json`](./src/lib/components/coral/coral.json) carries its own semver, so a
@@ -410,13 +418,10 @@ Ordered by rewrite cost × frequency, not by what is fun to build:
 
 1. **`locale` prop on `file-input`:** `formatBytes` takes one; the component does not thread it
    through yet
-2. **Component tests:** the pure logic is well covered; the interaction layer (focus, keyboard,
-   drag) is only starting to be
-3. **DataTable:** sorting, filtering, pagination, empty state. Highest cost per project; was
-   prototyped once and pulled back out until it has been written twice for real
-4. **Form field + validation**
-5. **Empty states and skeletons:** shadcn ships the primitives; nothing in `kit/` composes them yet
-6. **App shell** and **generic CRUD page:** `blocks/`, waiting on the rule of 3
+2. **Form field + validation**
+3. **App shell** and **generic CRUD page:** `blocks/`, waiting on the rule of 3
+4. **`product/`:** components for AI, SaaS and fintech products, held to the same extraction rule
+   as everything else
 
 ## License
 

@@ -1,12 +1,13 @@
 /**
  * Sidebar structure, consumed by svdocs's own `docs-sidebar.svelte` / `docs-breadcrumbs.svelte` /
  * `docs-page-footer.svelte` unchanged. "Getting started" is hand-ordered and barely changes - three
- * items is not worth deriving. "Kit" and "Blocks" are the sections that grow, so they come from the
- * docs collection itself: add `kit/<name>/index.md` or `blocks/<name>/index.md` and it appears
- * here, titled and sorted, with no second place to update.
+ * items is not worth deriving. One section per component layer follows, built from the docs
+ * collection itself: add `kit/<name>/index.md` and it appears, titled and sorted, with no second
+ * place to update. A layer with no pages yet has no section.
  */
 
 import { getCollection, type DocsFrontmatter } from '#docs/content/docs.js';
+import { COMPONENT_LAYERS } from '#docs/registry.js';
 
 export interface SidebarLink {
 	title: string;
@@ -18,22 +19,24 @@ export interface SidebarGroup {
 	items: SidebarLink[];
 }
 
-const KIT_PREFIX = 'kit/';
-const BLOCKS_PREFIX = 'blocks/';
-
 // Plain pathnames, not run through `resolve()` here: they are compared against
 // `page.url.pathname`, and resolved at the point of use with `resolvePath()` (`#docs/resolve-path.ts`).
-function section(prefix: string): SidebarLink[] {
-	return getCollection('docs', (entry) => entry.slug.startsWith(prefix))
+// Sorted by folder, then title, which keeps a `product/` vertical's pages together.
+function section(layer: string): SidebarLink[] {
+	return getCollection('docs', (entry) => entry.slug.startsWith(layer))
 		.map((entry) => ({
+			folder: entry.slug.slice(0, entry.slug.lastIndexOf('/')),
 			title: (entry.data as unknown as DocsFrontmatter).title,
 			href: `/docs/${entry.slug}`
 		}))
-		.sort((a, b) => a.title.localeCompare(b.title));
+		.sort((a, b) => a.folder.localeCompare(b.folder) || a.title.localeCompare(b.title))
+		.map(({ title, href }) => ({ title, href }));
 }
 
-const kit = section(KIT_PREFIX);
-const blocks = section(BLOCKS_PREFIX);
+/** `kit/` is "Kit": the folder is the name. */
+const titleOf = (layer: string) => layer.charAt(0).toUpperCase() + layer.slice(1, -1);
+
+const layers = COMPONENT_LAYERS.map((layer) => ({ title: titleOf(layer), items: section(layer) }));
 
 export const DOCS_SIDEBAR_GROUPS: SidebarGroup[] = [
 	{
@@ -44,13 +47,7 @@ export const DOCS_SIDEBAR_GROUPS: SidebarGroup[] = [
 			{ title: 'Conventions', href: '/docs/conventions' }
 		]
 	},
-	{
-		title: 'Kit',
-		items: kit
-	},
-	// Left out while empty, rather than a heading over nothing: there is currently no `blocks/*`
-	// page, and this section reappears on its own the day one is added.
-	...(blocks.length > 0 ? [{ title: 'Blocks', items: blocks }] : [])
+	...layers.filter((group) => group.items.length > 0)
 ];
 
 /** Flat, ordered list of every page - same order as the sidebar. Drives the prev/next footer. */

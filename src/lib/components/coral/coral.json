@@ -60,15 +60,15 @@
 			"version": "1.0.0",
 			"shadcn": []
 		},
-		"lib/on-close": {
-			"title": "On close",
-			"description": "Runs a callback when something closes - however it closed, including by assignment.",
-			"version": "1.0.0",
-			"shadcn": []
-		},
 		"lib/options": {
 			"title": "Options",
 			"description": "The Option<T> vocabulary the selectable components share, and the helpers that flatten and group it.",
+			"version": "1.0.0",
+			"shadcn": []
+		},
+		"lib/scale": {
+			"title": "Scale",
+			"description": "How much larger an element is drawn than it is laid out, for measurements that mix rects with layout sizes.",
 			"version": "1.0.0",
 			"shadcn": []
 		},
@@ -93,13 +93,13 @@
 		"kit/activity-calendar": {
 			"title": "Activity calendar",
 			"description": "A year of daily counts as a grid of squares - the GitHub contribution graph, with the timezone and the scale done right.",
-			"version": "1.0.0",
+			"version": "1.0.1",
 			"shadcn": ["tooltip"]
 		},
 		"kit/avatar": {
 			"title": "Avatar",
 			"description": "A person's image with an initials fallback, wired in one line.",
-			"version": "1.0.0",
+			"version": "1.0.1",
 			"shadcn": ["avatar"]
 		},
 		"kit/avatar-stack": {
@@ -111,14 +111,14 @@
 		"kit/combobox": {
 			"title": "Combobox",
 			"description": "A select with a search box, filtering the way accented text is actually typed.",
-			"version": "1.0.0",
+			"version": "1.0.1",
 			"shadcn": ["popover", "command", "button", "badge", "spinner"],
 			"npm": ["@lucide/svelte"]
 		},
 		"kit/command-palette": {
 			"title": "Command palette",
 			"description": "⌘K over your own actions - with recents, per-action shortcuts, and a run that can fail.",
-			"version": "1.0.0",
+			"version": "1.0.1",
 			"shadcn": ["command", "spinner"]
 		},
 		"kit/confirm-dialog": {
@@ -244,7 +244,7 @@
 		"kit/show-more": {
 			"title": "Show more",
 			"description": "Clamps long content to a few lines, and only offers to expand what actually overflows.",
-			"version": "1.0.0",
+			"version": "1.0.1",
 			"shadcn": ["button"]
 		},
 		"kit/stepper": {

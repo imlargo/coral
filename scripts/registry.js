@@ -9,7 +9,7 @@
 
 import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
-import { SITE } from '../registry.config.js';
+import { SITE, isComponent, itemName } from '../registry.config.js';
 
 export const PACKAGE = path.resolve(import.meta.dirname, '..');
 export const CORAL = path.join(PACKAGE, 'src/lib/components/coral');
@@ -65,37 +65,8 @@ async function files() {
 }
 
 /**
- * The item name a manifest entry is published under: `kit/select` becomes `kit-select`.
- *
- * The slash cannot survive - it would write the item into a subdirectory of the registry output -
- * and the prefix cannot be dropped: the CLI merges an item's tree by name, so a Coral item called
- * `select` and shadcn's own `select` would be taken for the same thing and one of them silently
- * dropped, along with its files.
- *
- * @param {string} name
- */
-export function itemName(name) {
-	return name.replace('/', '-');
-}
-
-/**
- * The layers whose entries are folders, and which a consumer installs by name. `lib/*` entries are
- * single files pulled in as dependencies of these, never asked for directly.
- */
-export const COMPONENT_LAYERS = ['kit/', 'blocks/'];
-
-/**
- * Whether a manifest entry is one of those - a thing with a page, an install command and a folder.
- *
- * @param {string} name
- */
-export function isComponent(name) {
-	return COMPONENT_LAYERS.some((layer) => name.startsWith(layer));
-}
-
-/**
- * The files one manifest entry owns. `kit/*` and `blocks/*` entries are folders; `lib/*` entries
- * are a single file that may carry any extension.
+ * The files one manifest entry owns. Component entries are folders; `lib/*` entries are a single
+ * file that may carry any extension.
  *
  * @param {string} name
  * @param {string[]} all

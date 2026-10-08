@@ -1,12 +1,10 @@
 import { error } from '@sveltejs/kit';
 import { getCollection, getEntry, getRawSource, type DocsFrontmatter } from '#docs/content/docs.js';
 import { DOCS_PAGES } from '#docs/config/sidebar.js';
-import { itemName } from '#docs/registry.js';
+import { isComponent, itemName } from '#docs/registry.js';
 
 // The sidebar links to every page anyway, but this keeps prerendering from depending on that.
 export const entries = () => getCollection('docs').map((entry) => ({ slug: entry.slug }));
-
-const INSTALLABLE = ['kit/', 'blocks/'];
 
 export const load = async ({ params }) => {
 	const entry = getEntry('docs', params.slug);
@@ -21,9 +19,7 @@ export const load = async ({ params }) => {
 	const prev = index > 0 ? DOCS_PAGES[index - 1] : undefined;
 	const next = index !== -1 && index < DOCS_PAGES.length - 1 ? DOCS_PAGES[index + 1] : undefined;
 
-	const item = INSTALLABLE.some((layer) => params.slug.startsWith(layer))
-		? itemName(params.slug)
-		: undefined;
+	const item = isComponent(params.slug) ? itemName(params.slug) : undefined;
 
 	return { Content, title, description, raw, prev, next, item };
 };

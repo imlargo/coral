@@ -22,8 +22,8 @@ data-table, date-picker, file-input, follow-scroll, inline-edit, number-input, p
 password-input, rating-group, relative-time, reorder-list, responsive-dialog, scrub-input,
 search-input, select, shortcut, show-more, stepper, tags-input, textarea, toc, tree-view}`, over
 `lib/{action, announce, debounce, focus, fold, hidden-field, intl, live-region, number,
-number-field, on-close, options, table, trigger}`. There is no `blocks/` entry right now - the
-layer exists in the architecture below, waiting on a second use case that needs it.
+number-field, options, scale, table, trigger}`. There is no `blocks/` or `product/` entry right
+now - both layers exist in the architecture below, waiting on the first thing that needs them.
 `src/lib/components/coral/coral.json` is the list that counts. Read it rather than
 this sentence, which is the kind that goes stale.
 
@@ -42,14 +42,16 @@ this sentence, which is the kind that goes stale.
   checkbox, a spinner), use the primitive instead of restyling. Appearance is the shadcn theme's
   job, not Coral's.
 - **No domain knowledge.** Never reference a consuming app's entities (invoice, student,
-  contract...) in `kit/`. Demos are the exception and have their own rules (see **Language and
-  demos**).
+  contract...) in `kit/` or `blocks/`. `product/` may speak its vertical's shared vocabulary (a
+  message, a plan, a transaction), never one app's entities. Demos are the exception and have their
+  own rules (see **Language and demos**).
 - **`src/lib/components/ui/` is untouchable.** shadcn-managed, excluded from
   lint/format on purpose. Compose around it, never edit it. It is the one shadcn install in the
   repo, shared by Coral and the site.
-- **Import direction is one-way:** `blocks/` → `kit/` → `ui/`. `kit/` composing `kit/` is fine and
-  desirable; the reverse never is. Never a headless library directly (`bits-ui`); derive its types
-  from the shadcn component instead (`ComponentProps<typeof Avatar>`). Never project domain types.
+- **Import direction is one-way:** `product/` → `blocks/` → `kit/` → `ui/`. `kit/` composing `kit/`
+  is fine and desirable; the reverse never is. Never a headless library directly (`bits-ui`); derive
+  its types from the shadcn component instead (`ComponentProps<typeof Avatar>`). Never project
+  domain types.
 - **Nothing duplicated.** Two components needing the same logic means extracting a third, or
   `lib/`. Never copy-paste inside Coral.
 - **Every composed component exposes its pieces.** If a rare case forces someone to drop Coral and
@@ -64,7 +66,7 @@ this sentence, which is the kind that goes stale.
 ./                           → one app: site, shadcn install, Coral (SvelteKit 3, Cloudflare)
 ├─ package.json              → `imports`: #lib → src/lib, #docs → src/docs, #assets → src/assets
 ├─ vite.config.ts            → SvelteKit options live here (there is no svelte.config.js)
-├─ registry.config.js        → where the registry is published (one constant)
+├─ registry.config.js        → where the registry is published, and the layers it publishes
 ├─ registry.json             → GENERATED, gitignored. Never edit, never commit
 ├─ scripts/
 │  ├─ registry.js            → derives the registry items from coral.json + the filesystem
@@ -79,13 +81,16 @@ this sentence, which is the kind that goes stale.
       ├─ hooks/              → shadcn's own (is-mobile), not Coral's
       ├─ utils.ts            → cn (shadcn's)
       ├─ coral-manifest.test.ts → repo tooling: manifest ↔ folder ↔ registry ↔ docs pages
+      ├─ coral-props.test.ts → repo tooling: each docs page's Props tables ↔ its types.ts
       └─ components/
          ├─ ui/              → shadcn primitives (CLI-managed, untouchable)
          └─ coral/           → 📦 the folder that gets installed, beside ui/
             ├─ coral.json    → manifest: title, description, version + required primitives
             ├─ lib/          → shared across components (options.ts, hidden-field.svelte)
-            └─ kit/          → composed, generic components - the actual product
-               └─ avatar/
+            ├─ kit/          → composed, generic components - the actual product
+            │  └─ avatar/
+            ├─ blocks/       → kit/ wired together for one use case
+            └─ product/      → one vertical's components: product/<vertical>/<name>/
 ```
 
 **`#lib` is the library, `#docs` is the site.** Both are Node subpath imports declared in
@@ -116,6 +121,13 @@ may carry copy, with English defaults, because a block with every string left bl
 installing. It still takes data and callbacks - never fetching, never routing. The contract is
 written out on the Conventions page.
 
+**`product/` speaks one vertical**: AI, SaaS, fintech. It holds what every product in that vertical
+writes and no generic component can be - a streaming message, a plan picker, a transaction row - one
+folder deeper than the other layers, as `product/<vertical>/<name>/`. Like a block it takes data and
+callbacks and may carry copy; unlike one, it also takes no provider SDK: it is handed the stream,
+the plans, the handler, and the project decides what sits behind them. Admission is the block rule
+of three.
+
 **No barrels.** One component, one folder (`kit/avatar/{avatar.svelte,types.ts,initials.ts}`),
 imported by file path. Consequence to respect: filenames are public API. Renaming one breaks
 every project that already copied it.
@@ -140,8 +152,10 @@ every project that already copied it.
   line; `*Title` and `*Description` are a heading and the line under it. `on<thing>change` is the
   callback for a root that is an element, which already has an `onchange` of its own.
 - **Shared helpers first:** `lib/intl` for formatters and collators, `lib/focus` for focus rings,
-  `lib/on-close` for what must happen when a popover closes (the primitive does not report a close
-  made by assigning `open`), `prefersReducedMotion` from `svelte/motion`.
+  `lib/scale` before mixing a rect with a layout size, `prefersReducedMotion` from `svelte/motion`.
+- **What must happen when a popover closes goes in `onOpenChangeComplete`**, chained after the
+  caller's. `onOpenChange` misses a close made by assigning `open`; the complete callback hears
+  every one, after the exit animation, so a list is not reset while it is still fading out.
 - **Comment only what the code cannot say** - the why, in a line or two. No restating, no history.
 - **Tests run in a real browser** (`*.svelte.test.ts`); logic worth testing alone lives in a plain
   module with a plain test. Every component is also listed in `src/lib/a11y.svelte.test.ts`, which
@@ -202,6 +216,10 @@ The rules most often missed, because nothing in the code enforces them.
   one rendered for it.
 - **Change a demo, resync its `index.md`.** Prose quoting a demo's strings is the first thing to
   rot.
+- **A Props table is checked against `types.ts`** by `coral-props.test.ts`: every prop the
+  component declares has a row in a `Prop` or `Snippet` table (`ref` aside, which Conventions
+  covers once), every row is a prop it takes, and `Bindable` appears exactly on `$bindable` props.
+  Add a prop, add its row.
 
 ## Registry
 
@@ -212,10 +230,12 @@ installed with `pnpm dlx shadcn-svelte@latest add <url>`.
   folder; `pnpm registry` writes it and runs the CLI's `registry build` into
   `static/r/`. Both outputs are gitignored. Editing either by hand is editing a build
   artifact.
-- **Item names carry their layer** - `kit-*`, `blocks-*`, `lib-*` - the manifest name with the
-  slash swapped. `COMPONENT_LAYERS` in `scripts/registry.js` is where the layers are declared, and
-  everything downstream reads it. Never publish an item under a bare name: the CLI merges a dependency tree by name, so a Coral `select` and
-  shadcn's `select` would be taken for the same item and one of them dropped, files and all.
+- **Item names carry their layer** - `kit-*`, `blocks-*`, `product-*`, `lib-*` - the manifest name
+  with every slash swapped (`product/ai/chat` is `product-ai-chat`). `COMPONENT_LAYERS` in
+  `registry.config.js` is where the layers are declared, and the generator, the tests and the docs
+  site all read it. Never publish an item under a bare name: the CLI merges a dependency tree by
+  name, so a Coral `select` and shadcn's `select` would be taken for the same item and one of them
+  dropped, files and all.
 - **Every file is `registry:component`**, with `target` mirroring its path under `coral/`. The CLI
   resolves that type against the consumer's `components` alias, which puts Coral in
   `#lib/components/coral/` beside shadcn's `ui/` - the shape this repo keeps - and follows the
@@ -307,7 +327,8 @@ Then re-check the **Coral test**:
 
 1. **Written twice already?** → If not, it doesn't enter yet.
 2. **Does it define appearance?** → If so, it doesn't belong in Coral.
-3. **Does it know your app's domain?** → If so, it belongs in the project's `features/`.
+3. **Does it know your app's domain?** → If so, it belongs in the project's `features/`. A
+   vertical's shared vocabulary, rather than one app's, is what `product/` is for.
 4. **Does the API match the component's nature?** → Flat props only if there's a canonical case;
    otherwise composition.
 5. **Does the rare case force abandoning Coral?** → If so, expose the pieces.
