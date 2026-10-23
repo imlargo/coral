@@ -1,8 +1,8 @@
 <script lang="ts">
 	import SendIcon from '@lucide/svelte/icons/send-horizontal';
-	import Textarea from '$lib/components/coral/kit/textarea/textarea.svelte';
-	import Shortcut from '$lib/components/coral/kit/shortcut/shortcut.svelte';
-	import { Button } from '$lib/components/ui/button/index.js';
+	import Textarea from '#lib/components/coral/kit/textarea/textarea.svelte';
+	import Shortcut from '#lib/components/coral/kit/shortcut/shortcut.svelte';
+	import { Button } from '#lib/components/ui/button/index.js';
 
 	let draft = $state('');
 	let sent = $state<string[]>([]);

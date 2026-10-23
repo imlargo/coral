@@ -1,7 +1,7 @@
 <script lang="ts">
-	import RatingGroup from '$lib/components/coral/kit/rating-group/rating-group.svelte';
-	import { Button } from '$lib/components/ui/button/index.js';
-	import * as Field from '$lib/components/ui/field/index.js';
+	import RatingGroup from '#lib/components/coral/kit/rating-group/rating-group.svelte';
+	import { Button } from '#lib/components/ui/button/index.js';
+	import * as Field from '#lib/components/ui/field/index.js';
 
 	let submitted = $state<string | null>(null);
 

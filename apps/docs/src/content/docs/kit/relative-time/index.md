@@ -1,10 +1,11 @@
 ---
 title: Relative time
 description: Timestamps like 5 minutes ago that stay true, in the reader's language, without a timer per second.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 `relativeTime(date)` helpers get written once per project, and they share the same limits: the text
@@ -45,7 +46,7 @@ the date is shown in full instead, formatted with `titleFormat`, and nothing is 
 
 ```svelte
 <script lang="ts">
-	import RelativeTime from '$lib/components/coral/kit/relative-time/relative-time.svelte';
+	import RelativeTime from '#lib/components/coral/kit/relative-time/relative-time.svelte';
 </script>
 ```
 
@@ -72,7 +73,7 @@ Everything a `<time>` accepts stays available: `class`, `aria-*`, `id`. On top o
 a server-rendered feed:
 
 ```ts
-import { describe } from '$lib/components/coral/kit/relative-time/relative.js';
+import { describe } from '#lib/components/coral/kit/relative-time/relative.js';
 
 const { value, unit } = describe(new Date(comment.createdAt), new Date());
 // `undefined` is the reader's own locale; pass one to pin it.

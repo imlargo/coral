@@ -1,5 +1,5 @@
 <script lang="ts">
-	import TagsInput from '$lib/components/coral/kit/tags-input/tags-input.svelte';
+	import TagsInput from '#lib/components/coral/kit/tags-input/tags-input.svelte';
 
 	let emails = $state(['amara@example.com']);
 	let rejected = $state(0);

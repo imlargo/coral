@@ -1,10 +1,11 @@
 ---
 title: Rating group
 description: Stars you can pick and stars you can only read. Native radios underneath, so the keyboard, the form and the screen reader come for free.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 <Preview name="kit/rating-group/basic" />
@@ -125,7 +126,7 @@ is copy and copy is the project's. `label` is where that goes:
 
 ```svelte
 <script lang="ts">
-	import RatingGroup from '$lib/components/coral/kit/rating-group/rating-group.svelte';
+	import RatingGroup from '#lib/components/coral/kit/rating-group/rating-group.svelte';
 </script>
 ```
 

@@ -2,8 +2,8 @@
 	import FileIcon from '@lucide/svelte/icons/file';
 	import FolderIcon from '@lucide/svelte/icons/folder';
 	import FolderOpenIcon from '@lucide/svelte/icons/folder-open';
-	import TreeView from '$lib/components/coral/kit/tree-view/tree-view.svelte';
-	import type { TreeNode } from '$lib/components/coral/kit/tree-view/types.js';
+	import TreeView from '#lib/components/coral/kit/tree-view/tree-view.svelte';
+	import type { TreeNode } from '#lib/components/coral/kit/tree-view/types.js';
 
 	const nodes: TreeNode[] = [
 		{

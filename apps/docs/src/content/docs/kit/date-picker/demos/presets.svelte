@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { getLocalTimeZone, today } from '@internationalized/date';
-	import DatePicker from '$lib/components/coral/kit/date-picker/date-picker.svelte';
-	import type { Preset } from '$lib/components/coral/kit/date-picker/presets.js';
-	import type { DateRange } from '$lib/components/coral/kit/date-picker/types.js';
+	import DatePicker from '#lib/components/coral/kit/date-picker/date-picker.svelte';
+	import type { Preset } from '#lib/components/coral/kit/date-picker/presets.js';
+	import type { DateRange } from '#lib/components/coral/kit/date-picker/types.js';
 
 	const zone = getLocalTimeZone();
 

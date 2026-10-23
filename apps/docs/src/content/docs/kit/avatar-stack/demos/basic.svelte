@@ -1,5 +1,5 @@
 <script lang="ts">
-	import AvatarStack from '$lib/components/coral/kit/avatar-stack/avatar-stack.svelte';
+	import AvatarStack from '#lib/components/coral/kit/avatar-stack/avatar-stack.svelte';
 
 	const reviewers = [
 		{ name: 'Amara Diallo', src: 'https://github.com/shadcn.png' },

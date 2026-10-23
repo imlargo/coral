@@ -1,7 +1,7 @@
 <script lang="ts">
 	import GripVerticalIcon from '@lucide/svelte/icons/grip-vertical';
-	import ReorderList from '$lib/components/coral/kit/reorder-list/reorder-list.svelte';
-	import { Badge } from '$lib/components/ui/badge/index.js';
+	import ReorderList from '#lib/components/coral/kit/reorder-list/reorder-list.svelte';
+	import { Badge } from '#lib/components/ui/badge/index.js';
 
 	type Task = { id: number; title: string; owner: string };
 

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import DataTable from '$lib/components/coral/kit/data-table/data-table.svelte';
-	import { Button } from '$lib/components/ui/button/index.js';
-	import type { Column } from '$lib/components/coral/kit/data-table/types.js';
+	import DataTable from '#lib/components/coral/kit/data-table/data-table.svelte';
+	import { Button } from '#lib/components/ui/button/index.js';
+	import type { Column } from '#lib/components/coral/kit/data-table/types.js';
 
 	type Invite = { id: string; email: string; role: string };
 

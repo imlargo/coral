@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Select from '$lib/components/coral/kit/select/select.svelte';
+	import Select from '#lib/components/coral/kit/select/select.svelte';
 
 	// `value` is whatever the project already has - here a numeric id, not a string.
 	const owners = [

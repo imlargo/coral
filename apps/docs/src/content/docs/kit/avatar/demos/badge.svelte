@@ -1,7 +1,7 @@
 <script lang="ts">
 	import CheckIcon from '@lucide/svelte/icons/check';
-	import Avatar from '$lib/components/coral/kit/avatar/avatar.svelte';
-	import { AvatarBadge } from '$lib/components/ui/avatar/index.js';
+	import Avatar from '#lib/components/coral/kit/avatar/avatar.svelte';
+	import { AvatarBadge } from '#lib/components/ui/avatar/index.js';
 </script>
 
 <!-- `children` renders inside the root, alongside the image - the primitive stays reachable -->

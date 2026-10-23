@@ -1,10 +1,11 @@
 ---
 title: Table of contents
 description: A table of contents that highlights the section being read, including the last one.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 The hand-rolled version tracks the active heading with an `IntersectionObserver` and takes
@@ -49,7 +50,7 @@ heading under that same header.
 
 ```svelte
 <script lang="ts">
-	import Toc from '$lib/components/coral/kit/toc/toc.svelte';
+	import Toc from '#lib/components/coral/kit/toc/toc.svelte';
 </script>
 ```
 
@@ -90,7 +91,7 @@ section and writes the hash, which is exactly the behaviour to fall back to.
 scroll-spy rule, and it is a pure function over numbers:
 
 ```ts
-import { pickActive } from '$lib/components/coral/kit/toc/headings.js';
+import { pickActive } from '#lib/components/coral/kit/toc/headings.js';
 
 pickActive([-260, 40, 540], 80); // 1 - the last heading above the boundary
 pickActive([-900, -600, -100], 80, true); // 2 - at the end of the page, the last one

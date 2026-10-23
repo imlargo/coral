@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Shortcut from '$lib/components/coral/kit/shortcut/shortcut.svelte';
+	import Shortcut from '#lib/components/coral/kit/shortcut/shortcut.svelte';
 
 	let presses = $state(0);
 </script>

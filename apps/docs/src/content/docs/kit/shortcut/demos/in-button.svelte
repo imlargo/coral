@@ -1,6 +1,6 @@
 <script lang="ts">
-	import SearchInput from '$lib/components/coral/kit/search-input/search-input.svelte';
-	import Shortcut from '$lib/components/coral/kit/shortcut/shortcut.svelte';
+	import SearchInput from '#lib/components/coral/kit/search-input/search-input.svelte';
+	import Shortcut from '#lib/components/coral/kit/shortcut/shortcut.svelte';
 
 	let field = $state<HTMLInputElement | null>(null);
 </script>

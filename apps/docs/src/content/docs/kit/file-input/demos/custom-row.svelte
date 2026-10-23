@@ -1,10 +1,10 @@
 <script lang="ts">
 	import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
 	import XIcon from '@lucide/svelte/icons/x';
-	import FileInput from '$lib/components/coral/kit/file-input/file-input.svelte';
-	import { formatBytes } from '$lib/components/coral/kit/file-input/format-bytes.js';
-	import * as Attachment from '$lib/components/ui/attachment/index.js';
-	import { Spinner } from '$lib/components/ui/spinner/index.js';
+	import FileInput from '#lib/components/coral/kit/file-input/file-input.svelte';
+	import { formatBytes } from '#lib/components/coral/kit/file-input/format-bytes.js';
+	import * as Attachment from '#lib/components/ui/attachment/index.js';
+	import { Spinner } from '#lib/components/ui/spinner/index.js';
 
 	let files = $state<File[]>([]);
 

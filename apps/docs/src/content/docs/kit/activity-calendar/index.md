@@ -1,10 +1,11 @@
 ---
 title: Activity calendar
 description: A year of daily counts as a grid of squares - the GitHub contribution graph, with the timezone and the scale done right.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 Counts per day, one square each, weeks as columns. Coral draws the calendar, buckets the counts and
@@ -161,11 +162,11 @@ than the only way to read a value.
 
 ```svelte
 <script lang="ts">
-	import ActivityCalendar from '$lib/components/coral/kit/activity-calendar/activity-calendar.svelte';
+	import ActivityCalendar from '#lib/components/coral/kit/activity-calendar/activity-calendar.svelte';
 	import type {
 		ActivityCell,
 		ActivityDay
-	} from '$lib/components/coral/kit/activity-calendar/types.js';
+	} from '#lib/components/coral/kit/activity-calendar/types.js';
 </script>
 ```
 

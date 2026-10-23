@@ -1,7 +1,7 @@
 <script lang="ts">
-	import AvatarStack from '$lib/components/coral/kit/avatar-stack/avatar-stack.svelte';
-	import { AvatarGroupCount } from '$lib/components/ui/avatar/index.js';
-	import * as Popover from '$lib/components/ui/popover/index.js';
+	import AvatarStack from '#lib/components/coral/kit/avatar-stack/avatar-stack.svelte';
+	import { AvatarGroupCount } from '#lib/components/ui/avatar/index.js';
+	import * as Popover from '#lib/components/ui/popover/index.js';
 
 	type Member = { id: number; fullName: string; photo?: string };
 

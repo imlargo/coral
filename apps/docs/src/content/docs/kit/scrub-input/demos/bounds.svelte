@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ScrubInput from '$lib/components/coral/kit/scrub-input/scrub-input.svelte';
+	import ScrubInput from '#lib/components/coral/kit/scrub-input/scrub-input.svelte';
 
 	let timeout = $state(1500);
 	let rate = $state(60);

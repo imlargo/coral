@@ -1,7 +1,7 @@
 <script lang="ts">
-	import CommandPalette from '$lib/components/coral/kit/command-palette/command-palette.svelte';
-	import { Button } from '$lib/components/ui/button/index.js';
-	import type { CommandAction } from '$lib/components/coral/kit/command-palette/types.js';
+	import CommandPalette from '#lib/components/coral/kit/command-palette/command-palette.svelte';
+	import { Button } from '#lib/components/ui/button/index.js';
+	import type { CommandAction } from '#lib/components/coral/kit/command-palette/types.js';
 
 	let open = $state(false);
 	let message = $state('');

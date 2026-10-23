@@ -1,10 +1,11 @@
 ---
 title: Textarea
 description: A textarea that grows with its text, up to a line count you set, with a counter that agrees with the limit.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 A comment box that does not grow makes people write into a two-line window with a scrollbar, and a
@@ -50,7 +51,7 @@ leave an empty field alone, so Enter still does what Enter does.
 
 ```svelte
 <script lang="ts">
-	import Textarea from '$lib/components/coral/kit/textarea/textarea.svelte';
+	import Textarea from '#lib/components/coral/kit/textarea/textarea.svelte';
 </script>
 ```
 
@@ -94,7 +95,7 @@ on.
 The arithmetic is exported on its own, so anything else that has to size a field the same way can:
 
 ```ts
-import { countOf, heightFor } from '$lib/components/coral/kit/textarea/measure.js';
+import { countOf, heightFor } from '#lib/components/coral/kit/textarea/measure.js';
 
 countOf('🚀'); // 2 - what `maxlength` spends on it
 heightFor({

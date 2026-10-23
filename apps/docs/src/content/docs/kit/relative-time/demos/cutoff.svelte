@@ -1,5 +1,5 @@
 <script lang="ts">
-	import RelativeTime from '$lib/components/coral/kit/relative-time/relative-time.svelte';
+	import RelativeTime from '#lib/components/coral/kit/relative-time/relative-time.svelte';
 
 	const day = 24 * 60 * 60 * 1000;
 	const week = 7 * day;

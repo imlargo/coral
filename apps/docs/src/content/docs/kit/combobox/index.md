@@ -1,10 +1,11 @@
 ---
 title: Combobox
 description: A select with a search box, filtering the way accented text is actually typed.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 shadcn builds the combobox out of a popover and a command menu, and its docs are explicit that this
@@ -41,7 +42,7 @@ empty. That failure only ever shows up for the users whose words carry accents.
 
 ```svelte
 <script lang="ts">
-	import Combobox from '$lib/components/coral/kit/combobox/combobox.svelte';
+	import Combobox from '#lib/components/coral/kit/combobox/combobox.svelte';
 </script>
 ```
 
@@ -258,7 +259,7 @@ The search folding lives in `lib/fold.ts` and is exported on its own, so the sam
 used anywhere the same question is asked:
 
 ```ts
-import { fold } from '$lib/components/coral/lib/fold.js';
+import { fold } from '#lib/components/coral/lib/fold.js';
 
 fold('Açaí'); // 'acai'
 fold('Piña'); // 'pina'

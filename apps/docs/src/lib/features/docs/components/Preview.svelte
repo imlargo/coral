@@ -1,8 +1,8 @@
 <script lang="ts">
-	import CodeBlock from './code-block.svelte';
-	import { getDemo } from './demos.js';
-	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$lib/components/ui/tabs/index.js';
-	import { cn } from '$lib/utils.js';
+	import CodeBlock from '#lib/features/docs/components/CodeBlock.svelte';
+	import { getDemo } from '#lib/features/docs/demos.js';
+	import { Tabs, TabsContent, TabsList, TabsTrigger } from '#lib/components/ui/tabs/index.js';
+	import { cn } from '#lib/utils.js';
 
 	let {
 		/** Demo name, e.g. `kit/avatar/basic`. Unknown names fail the build. */

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Select from '$lib/components/coral/kit/select/select.svelte';
+	import Select from '#lib/components/coral/kit/select/select.svelte';
 
 	const priorities = [
 		{ value: 'low', label: 'Low', description: 'Whenever there is room' },

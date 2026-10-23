@@ -1,6 +1,6 @@
 <script lang="ts">
 	import UserIcon from '@lucide/svelte/icons/user';
-	import Avatar from '$lib/components/coral/kit/avatar/avatar.svelte';
+	import Avatar from '#lib/components/coral/kit/avatar/avatar.svelte';
 </script>
 
 <Avatar>

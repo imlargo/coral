@@ -1,10 +1,11 @@
 ---
 title: Data table
 description: Rows with sortable headers, selection that survives a sort, and its own loading and empty states.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 `ui/table` is markup: eight elements that draw a grid and know nothing. Everything that makes a
@@ -40,7 +41,7 @@ sorting: one passes the rows through `sortRows`, the other puts the sort in a qu
 
 ```svelte
 <script lang="ts">
-	import { sortRows } from '$lib/components/coral/lib/table.js';
+	import { sortRows } from '#lib/components/coral/lib/table.js';
 
 	let sort = $state({ column: 'project', direction: 'asc' });
 	const rows = $derived(sortRows(deploys, sort, { value: (row, column) => row[column] }));
@@ -84,7 +85,7 @@ render it - because a `Date` printed as text is nobody's idea of a date.
 
 ```svelte
 <script lang="ts">
-	import DataTable from '$lib/components/coral/kit/data-table/data-table.svelte';
+	import DataTable from '#lib/components/coral/kit/data-table/data-table.svelte';
 </script>
 ```
 
@@ -134,7 +135,7 @@ Every rule above is a plain function, exported on its own and tested as such - s
 a table can sort and filter exactly the way the table does:
 
 ```ts
-import { filterRows, nextSort, paginate, sortRows } from '$lib/components/coral/lib/table.js';
+import { filterRows, nextSort, paginate, sortRows } from '#lib/components/coral/lib/table.js';
 
 nextSort({ column: 'name', direction: 'desc' }, 'name'); // undefined - back to no sort
 sortRows(rows, sort, { value }); // stable, blanks last in both directions

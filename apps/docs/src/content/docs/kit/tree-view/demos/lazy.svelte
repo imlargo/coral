@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { SvelteSet } from 'svelte/reactivity';
 	import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle';
-	import TreeView from '$lib/components/coral/kit/tree-view/tree-view.svelte';
-	import type { TreeNode } from '$lib/components/coral/kit/tree-view/types.js';
+	import TreeView from '#lib/components/coral/kit/tree-view/tree-view.svelte';
+	import type { TreeNode } from '#lib/components/coral/kit/tree-view/types.js';
 
 	let nodes = $state<TreeNode[]>([
 		{ id: 'web-app', label: 'web-app', children: [] },

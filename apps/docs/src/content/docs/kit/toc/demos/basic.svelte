@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Toc from '$lib/components/coral/kit/toc/toc.svelte';
+	import Toc from '#lib/components/coral/kit/toc/toc.svelte';
 
 	// The article scrolls inside its own box here, so the demo does not hijack the page. In a normal
 	// page you leave `root` out and the table of contents follows the window.

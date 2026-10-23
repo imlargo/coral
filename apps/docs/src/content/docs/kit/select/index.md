@@ -1,10 +1,11 @@
 ---
 title: Select
 description: A short list of known options, with the trigger label, the value mapping and the change signal already wired.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 Wrapping a select is the first thing most projects do with the primitive and the last thing any of
@@ -95,8 +96,8 @@ dialog, a sticky toolbar. `required` blocks submission while nothing is selected
 
 ```svelte
 <script lang="ts">
-	import Select from '$lib/components/coral/kit/select/select.svelte';
-	import type { Option } from '$lib/components/coral/lib/options.js';
+	import Select from '#lib/components/coral/kit/select/select.svelte';
+	import type { Option } from '#lib/components/coral/lib/options.js';
 </script>
 ```
 
@@ -128,7 +129,7 @@ Everything the shadcn root accepts stays available: `open`, `onOpenChange`, `loo
 
 ### `Option<T>`
 
-Shared with the combobox, from `$lib/components/coral/lib/options.js`:
+Shared with the combobox, from `#lib/components/coral/lib/options.js`:
 
 | Field         | Type       | Description                                                   |
 | ------------- | ---------- | ------------------------------------------------------------- |

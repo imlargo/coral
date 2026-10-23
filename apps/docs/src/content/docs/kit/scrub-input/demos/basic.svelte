@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ScrubInput from '$lib/components/coral/kit/scrub-input/scrub-input.svelte';
+	import ScrubInput from '#lib/components/coral/kit/scrub-input/scrub-input.svelte';
 
 	let width = $state(320);
 	let height = $state(180);

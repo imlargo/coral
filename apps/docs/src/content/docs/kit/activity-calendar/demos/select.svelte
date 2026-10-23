@@ -1,6 +1,6 @@
 <script lang="ts">
-	import ActivityCalendar from '$lib/components/coral/kit/activity-calendar/activity-calendar.svelte';
-	import type { ActivityCell } from '$lib/components/coral/kit/activity-calendar/types.js';
+	import ActivityCalendar from '#lib/components/coral/kit/activity-calendar/activity-calendar.svelte';
+	import type { ActivityCell } from '#lib/components/coral/kit/activity-calendar/types.js';
 	import { END, START, sample } from '../sample.js';
 
 	let picked = $state<ActivityCell | null>(null);

@@ -1,10 +1,11 @@
 ---
 title: Shortcut
 description: Draws a keyboard shortcut the way the reader's platform prints it, and binds it.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 `<Kbd>⌘</Kbd><Kbd>K</Kbd>` is right for half the readers, and the `keydown` listener next to it usually
@@ -50,7 +51,7 @@ Put `aria-keyshortcuts` on the control the shortcut activates, so assistive tech
 
 ```svelte
 <script lang="ts">
-	import { listen } from '$lib/components/coral/kit/shortcut/listen.js';
+	import { listen } from '#lib/components/coral/kit/shortcut/listen.js';
 
 	let open = $state(false);
 
@@ -62,7 +63,7 @@ Put `aria-keyshortcuts` on the control the shortcut activates, so assistive tech
 
 ```svelte
 <script lang="ts">
-	import Shortcut from '$lib/components/coral/kit/shortcut/shortcut.svelte';
+	import Shortcut from '#lib/components/coral/kit/shortcut/shortcut.svelte';
 </script>
 ```
 

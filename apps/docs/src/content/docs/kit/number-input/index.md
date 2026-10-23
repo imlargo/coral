@@ -1,10 +1,11 @@
 ---
 title: Number input
 description: A number field with steppers, bounds that hold, and arithmetic that stays exact.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 A hand-rolled stepper field clamps in one direction and forgets the other: the buttons stop at the
@@ -60,7 +61,7 @@ The first press lands on the first allowed value: with `min={5}`, `+` gives `5`,
 
 ```svelte
 <script lang="ts">
-	import NumberInput from '$lib/components/coral/kit/number-input/number-input.svelte';
+	import NumberInput from '#lib/components/coral/kit/number-input/number-input.svelte';
 </script>
 ```
 
@@ -103,7 +104,7 @@ moved by either field lands on the same number. It is exported on its own, so th
 rounding can be reused where there is no input at all: validating a payload, totalling a column.
 
 ```ts
-import { clamp, decimalsOf, round, stepValue } from '$lib/components/coral/lib/number.js';
+import { clamp, decimalsOf, round, stepValue } from '#lib/components/coral/lib/number.js';
 
 decimalsOf(0.05); // 2
 round(0.1 + 0.2, 1); // 0.3

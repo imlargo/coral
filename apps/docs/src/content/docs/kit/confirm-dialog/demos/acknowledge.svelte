@@ -1,6 +1,6 @@
 <script lang="ts">
-	import ConfirmDialog from '$lib/components/coral/kit/confirm-dialog/confirm-dialog.svelte';
-	import { Button } from '$lib/components/ui/button/index.js';
+	import ConfirmDialog from '#lib/components/coral/kit/confirm-dialog/confirm-dialog.svelte';
+	import { Button } from '#lib/components/ui/button/index.js';
 </script>
 
 <ConfirmDialog

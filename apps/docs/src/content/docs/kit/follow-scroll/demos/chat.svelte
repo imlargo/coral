@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Textarea from '$lib/components/coral/kit/textarea/textarea.svelte';
-	import FollowScroll from '$lib/components/coral/kit/follow-scroll/follow-scroll.svelte';
-	import Avatar from '$lib/components/coral/kit/avatar/avatar.svelte';
+	import Textarea from '#lib/components/coral/kit/textarea/textarea.svelte';
+	import FollowScroll from '#lib/components/coral/kit/follow-scroll/follow-scroll.svelte';
+	import Avatar from '#lib/components/coral/kit/avatar/avatar.svelte';
 
 	type Message = { id: number; from: string; body: string };
 

@@ -1,10 +1,11 @@
 ---
 title: Avatar stack
 description: Overlapping avatars with a count for the rest - and a list a screen reader can read.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 shadcn ships the overlap, `AvatarGroup` and `AvatarGroupCount`. What it leaves to each call site is
@@ -39,7 +40,7 @@ Composes [`kit/avatar`](/docs/kit/avatar), which the install brings with it.
 
 ```svelte
 <script lang="ts">
-	import AvatarStack from '$lib/components/coral/kit/avatar-stack/avatar-stack.svelte';
+	import AvatarStack from '#lib/components/coral/kit/avatar-stack/avatar-stack.svelte';
 </script>
 ```
 
@@ -63,7 +64,7 @@ that:
 ## overflow.ts
 
 ```ts
-import { split } from '$lib/components/coral/kit/avatar-stack/overflow.js';
+import { split } from '#lib/components/coral/kit/avatar-stack/overflow.js';
 
 split(['Amara', 'Wei', 'Sofia', 'Liam', 'Priya'], 4);
 // { visible: ['Amara', 'Wei', 'Sofia'], hidden: ['Liam', 'Priya'] }

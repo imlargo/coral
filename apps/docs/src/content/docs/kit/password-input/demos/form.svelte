@@ -1,7 +1,7 @@
 <script lang="ts">
-	import PasswordInput from '$lib/components/coral/kit/password-input/password-input.svelte';
-	import { Button } from '$lib/components/ui/button/index.js';
-	import * as Field from '$lib/components/ui/field/index.js';
+	import PasswordInput from '#lib/components/coral/kit/password-input/password-input.svelte';
+	import { Button } from '#lib/components/ui/button/index.js';
+	import * as Field from '#lib/components/ui/field/index.js';
 
 	let visible = $state(false);
 	let submittedAs = $state('');

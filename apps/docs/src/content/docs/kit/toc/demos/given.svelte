@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Toc from '$lib/components/coral/kit/toc/toc.svelte';
-	import type { TocHeading } from '$lib/components/coral/kit/toc/types.js';
+	import Toc from '#lib/components/coral/kit/toc/toc.svelte';
+	import type { TocHeading } from '#lib/components/coral/kit/toc/types.js';
 
 	// Headings the page already knows about - from a CMS payload, or a markdown pipeline - so
 	// nothing is read back out of the DOM, and the ids are its doing rather than Coral's.

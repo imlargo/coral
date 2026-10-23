@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { Button } from '$lib/components/ui/button/index.js';
-	import DatePicker from '$lib/components/coral/kit/date-picker/date-picker.svelte';
-	import type { DateRange } from '$lib/components/coral/kit/date-picker/types.js';
+	import { Button } from '#lib/components/ui/button/index.js';
+	import DatePicker from '#lib/components/coral/kit/date-picker/date-picker.svelte';
+	import type { DateRange } from '#lib/components/coral/kit/date-picker/types.js';
 
 	let value = $state<DateRange>();
 	let submitted = $state<string[]>([]);

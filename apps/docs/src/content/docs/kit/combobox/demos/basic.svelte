@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Combobox from '$lib/components/coral/kit/combobox/combobox.svelte';
+	import Combobox from '#lib/components/coral/kit/combobox/combobox.svelte';
 
 	const fruits = [
 		{ value: 'acai', label: 'Açaí' },

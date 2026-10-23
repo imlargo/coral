@@ -1,10 +1,11 @@
 ---
 title: Show more
 description: Clamps long content to a few lines, and only offers to expand what actually overflows.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 A description, an incident note, release notes: clamp it with `line-clamp-3` and add a "Show more"
@@ -36,7 +37,7 @@ the click handler), plus `expanded` and `toggle`.
 
 ```svelte
 <script lang="ts">
-	import ShowMore from '$lib/components/coral/kit/show-more/show-more.svelte';
+	import ShowMore from '#lib/components/coral/kit/show-more/show-more.svelte';
 </script>
 ```
 

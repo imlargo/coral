@@ -1,11 +1,11 @@
 <script lang="ts">
 	import Trash2Icon from '@lucide/svelte/icons/trash-2';
-	import ConfirmDialog from '$lib/components/coral/kit/confirm-dialog/confirm-dialog.svelte';
-	import DataTable from '$lib/components/coral/kit/data-table/data-table.svelte';
-	import SearchInput from '$lib/components/coral/kit/search-input/search-input.svelte';
-	import { filterRows } from '$lib/components/coral/lib/table.js';
-	import { Button } from '$lib/components/ui/button/index.js';
-	import type { Column } from '$lib/components/coral/kit/data-table/types.js';
+	import ConfirmDialog from '#lib/components/coral/kit/confirm-dialog/confirm-dialog.svelte';
+	import DataTable from '#lib/components/coral/kit/data-table/data-table.svelte';
+	import SearchInput from '#lib/components/coral/kit/search-input/search-input.svelte';
+	import { filterRows } from '#lib/components/coral/lib/table.js';
+	import { Button } from '#lib/components/ui/button/index.js';
+	import type { Column } from '#lib/components/coral/kit/data-table/types.js';
 
 	type Key = { id: string; label: string; project: string; scope: string; owner: string };
 

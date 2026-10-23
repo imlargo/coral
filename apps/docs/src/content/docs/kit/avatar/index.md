@@ -1,10 +1,11 @@
 ---
 title: Avatar
 description: A person's image with an initials fallback, wired in one line.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 Raw shadcn asks for three components and a hand-written fallback every single time:
@@ -36,7 +37,7 @@ That last line is the problem. It is rewritten in every project, and it is wrong
 
 ```svelte
 <script lang="ts">
-	import Avatar from '$lib/components/coral/kit/avatar/avatar.svelte';
+	import Avatar from '#lib/components/coral/kit/avatar/avatar.svelte';
 </script>
 ```
 
@@ -125,7 +126,7 @@ needs the same initials somewhere else (a mention chip, an export, a PDF) does n
 it.
 
 ```ts
-import { initials } from '$lib/components/coral/kit/avatar/initials.js';
+import { initials } from '#lib/components/coral/kit/avatar/initials.js';
 
 initials('Elena van der Meer'); // 'EM'
 initials('Kenji'); // 'K'

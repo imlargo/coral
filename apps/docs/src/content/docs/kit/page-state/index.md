@@ -1,10 +1,11 @@
 ---
 title: Page state
 description: The states a screen goes through - waiting, failed, empty, content - and a wait that does not flash.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 Every screen that fetches something has four states and usually ships with two. The version that
@@ -53,7 +54,7 @@ so the header and the column widths are already right when the rows land and not
 
 ```svelte
 <script lang="ts">
-	import PageState from '$lib/components/coral/kit/page-state/page-state.svelte';
+	import PageState from '#lib/components/coral/kit/page-state/page-state.svelte';
 </script>
 ```
 
@@ -101,7 +102,7 @@ The rules are plain functions, so the same timing can drive something that is no
 button's own spinner, an inline field:
 
 ```ts
-import { shownFrom, stateOf, waitUntil } from '$lib/components/coral/kit/page-state/delay.js';
+import { shownFrom, stateOf, waitUntil } from '#lib/components/coral/kit/page-state/delay.js';
 
 shownFrom(started, { delay: 200, minimum: 400 }); // when an indicator may appear
 waitUntil(moment, Date.now()); // never negative

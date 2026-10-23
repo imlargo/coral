@@ -1,6 +1,6 @@
 <script lang="ts">
-	import ShowMore from '$lib/components/coral/kit/show-more/show-more.svelte';
-	import { Button } from '$lib/components/ui/button/index.js';
+	import ShowMore from '#lib/components/coral/kit/show-more/show-more.svelte';
+	import { Button } from '#lib/components/ui/button/index.js';
 
 	let expanded = $state(false);
 </script>

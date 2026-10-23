@@ -1,15 +1,15 @@
 <script lang="ts">
-	import ResponsiveDialog from '$lib/components/coral/kit/responsive-dialog/responsive-dialog.svelte';
-	import ResponsiveDialogClose from '$lib/components/coral/kit/responsive-dialog/responsive-dialog-close.svelte';
-	import ResponsiveDialogContent from '$lib/components/coral/kit/responsive-dialog/responsive-dialog-content.svelte';
-	import ResponsiveDialogDescription from '$lib/components/coral/kit/responsive-dialog/responsive-dialog-description.svelte';
-	import ResponsiveDialogFooter from '$lib/components/coral/kit/responsive-dialog/responsive-dialog-footer.svelte';
-	import ResponsiveDialogHeader from '$lib/components/coral/kit/responsive-dialog/responsive-dialog-header.svelte';
-	import ResponsiveDialogTitle from '$lib/components/coral/kit/responsive-dialog/responsive-dialog-title.svelte';
-	import ResponsiveDialogTrigger from '$lib/components/coral/kit/responsive-dialog/responsive-dialog-trigger.svelte';
-	import { Button, buttonVariants } from '$lib/components/ui/button/index.js';
-	import { Input } from '$lib/components/ui/input/index.js';
-	import { Label } from '$lib/components/ui/label/index.js';
+	import ResponsiveDialog from '#lib/components/coral/kit/responsive-dialog/responsive-dialog.svelte';
+	import ResponsiveDialogClose from '#lib/components/coral/kit/responsive-dialog/responsive-dialog-close.svelte';
+	import ResponsiveDialogContent from '#lib/components/coral/kit/responsive-dialog/responsive-dialog-content.svelte';
+	import ResponsiveDialogDescription from '#lib/components/coral/kit/responsive-dialog/responsive-dialog-description.svelte';
+	import ResponsiveDialogFooter from '#lib/components/coral/kit/responsive-dialog/responsive-dialog-footer.svelte';
+	import ResponsiveDialogHeader from '#lib/components/coral/kit/responsive-dialog/responsive-dialog-header.svelte';
+	import ResponsiveDialogTitle from '#lib/components/coral/kit/responsive-dialog/responsive-dialog-title.svelte';
+	import ResponsiveDialogTrigger from '#lib/components/coral/kit/responsive-dialog/responsive-dialog-trigger.svelte';
+	import { Button, buttonVariants } from '#lib/components/ui/button/index.js';
+	import { Input } from '#lib/components/ui/input/index.js';
+	import { Label } from '#lib/components/ui/label/index.js';
 
 	let open = $state(false);
 	let email = $state('');

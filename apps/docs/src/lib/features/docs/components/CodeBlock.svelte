@@ -1,9 +1,9 @@
 <script lang="ts">
-	import CopyButton from './copy-button.svelte';
-	import { cn } from '$lib/utils.js';
+	import CopyButton from '#lib/features/docs/components/CopyButton.svelte';
+	import { cn } from '#lib/utils.js';
 
 	let {
-		/** Highlighted HTML produced at build time by `shiki.js`. */
+		/** Highlighted HTML produced at build time by `code-highlighter.ts`. */
 		html,
 		/** The same code as plain text - what the copy button puts on the clipboard. */
 		text,

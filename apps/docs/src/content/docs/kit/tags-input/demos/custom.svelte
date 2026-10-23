@@ -1,6 +1,6 @@
 <script lang="ts">
 	import HashIcon from '@lucide/svelte/icons/hash';
-	import TagsInput from '$lib/components/coral/kit/tags-input/tags-input.svelte';
+	import TagsInput from '#lib/components/coral/kit/tags-input/tags-input.svelte';
 
 	let tags = $state(['reef', 'coral']);
 </script>

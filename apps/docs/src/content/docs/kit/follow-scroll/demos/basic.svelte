@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-	import FollowScroll from '$lib/components/coral/kit/follow-scroll/follow-scroll.svelte';
-	import { Button } from '$lib/components/ui/button/index.js';
+	import FollowScroll from '#lib/components/coral/kit/follow-scroll/follow-scroll.svelte';
+	import { Button } from '#lib/components/ui/button/index.js';
 
 	const steps = [
 		'Restoring cache',

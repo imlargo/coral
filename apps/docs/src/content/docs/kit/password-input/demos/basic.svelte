@@ -1,6 +1,6 @@
 <script lang="ts">
-	import PasswordInput from '$lib/components/coral/kit/password-input/password-input.svelte';
-	import * as Field from '$lib/components/ui/field/index.js';
+	import PasswordInput from '#lib/components/coral/kit/password-input/password-input.svelte';
+	import * as Field from '#lib/components/ui/field/index.js';
 
 	let password = $state('');
 	let capsLock = $state(false);

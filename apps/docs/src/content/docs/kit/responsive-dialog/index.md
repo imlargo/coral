@@ -1,10 +1,11 @@
 ---
 title: Responsive dialog
 description: A dialog on wide screens and a drawer on narrow ones, written once.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 shadcn's own docs show how to do this, and the way it is done is by writing the dialog twice (once
@@ -49,8 +50,8 @@ demo does, or whatever matches your `query`.
 
 ```svelte
 <script lang="ts">
-	import ResponsiveDialog from '$lib/components/coral/kit/responsive-dialog/responsive-dialog.svelte';
-	import ResponsiveDialogContent from '$lib/components/coral/kit/responsive-dialog/responsive-dialog-content.svelte';
+	import ResponsiveDialog from '#lib/components/coral/kit/responsive-dialog/responsive-dialog.svelte';
+	import ResponsiveDialogContent from '#lib/components/coral/kit/responsive-dialog/responsive-dialog-content.svelte';
 	// ...one import per piece you use
 </script>
 ```

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import SearchInput from '$lib/components/coral/kit/search-input/search-input.svelte';
+	import SearchInput from '#lib/components/coral/kit/search-input/search-input.svelte';
 
 	const fruits = ['Açaí', 'Guava', 'Kiwi', 'Lychee', 'Mango', 'Papaya', 'Passionfruit'];
 

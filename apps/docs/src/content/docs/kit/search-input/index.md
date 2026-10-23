@@ -1,10 +1,11 @@
 ---
 title: Search input
 description: A search field that debounces, deduplicates, clears with Escape, and leaves dialogs open.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 A search box is an input with an icon until it drives a request. Then it needs a debounce, a way to
@@ -41,7 +42,7 @@ already searched, so it is not reported back as if the reader typed it.
 
 ```svelte
 <script lang="ts">
-	import SearchInput from '$lib/components/coral/kit/search-input/search-input.svelte';
+	import SearchInput from '#lib/components/coral/kit/search-input/search-input.svelte';
 </script>
 ```
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import SearchInput from '$lib/components/coral/kit/search-input/search-input.svelte';
+	import SearchInput from '#lib/components/coral/kit/search-input/search-input.svelte';
 
 	let loading = $state(false);
 	let requests = $state(0);

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import FileInput from '$lib/components/coral/kit/file-input/file-input.svelte';
-	import type { FileRejection } from '$lib/components/coral/kit/file-input/types.js';
+	import FileInput from '#lib/components/coral/kit/file-input/file-input.svelte';
+	import type { FileRejection } from '#lib/components/coral/kit/file-input/types.js';
 
 	let files = $state<File[]>([]);
 	let problems = $state<string[]>([]);

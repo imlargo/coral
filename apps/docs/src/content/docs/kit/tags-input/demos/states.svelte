@@ -1,5 +1,5 @@
 <script lang="ts">
-	import TagsInput from '$lib/components/coral/kit/tags-input/tags-input.svelte';
+	import TagsInput from '#lib/components/coral/kit/tags-input/tags-input.svelte';
 
 	let clearable = $state(['one', 'two', 'three']);
 </script>

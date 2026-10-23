@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ShowMore from '$lib/components/coral/kit/show-more/show-more.svelte';
+	import ShowMore from '#lib/components/coral/kit/show-more/show-more.svelte';
 </script>
 
 <div class="flex w-96 flex-col gap-6 text-sm">

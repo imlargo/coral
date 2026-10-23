@@ -1,5 +1,5 @@
 <script lang="ts">
-	import RatingGroup from '$lib/components/coral/kit/rating-group/rating-group.svelte';
+	import RatingGroup from '#lib/components/coral/kit/rating-group/rating-group.svelte';
 
 	let value = $state(3);
 </script>

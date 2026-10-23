@@ -1,10 +1,11 @@
 ---
 title: Confirm dialog
 description: Are you sure? - with the request it guards, and what happens when that request fails.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 Written by hand, this is an `AlertDialog`, a `Spinner`, an `isSaving` flag and a `try/catch` at
@@ -86,7 +87,7 @@ a nudge and not a trap.
 
 ```svelte
 <script lang="ts">
-	import ConfirmDialog from '$lib/components/coral/kit/confirm-dialog/confirm-dialog.svelte';
+	import ConfirmDialog from '#lib/components/coral/kit/confirm-dialog/confirm-dialog.svelte';
 </script>
 ```
 

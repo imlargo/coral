@@ -1,7 +1,7 @@
 <script lang="ts">
 	import BoneIcon from '@lucide/svelte/icons/bone';
 	import SkullIcon from '@lucide/svelte/icons/skull';
-	import RatingGroup from '$lib/components/coral/kit/rating-group/rating-group.svelte';
+	import RatingGroup from '#lib/components/coral/kit/rating-group/rating-group.svelte';
 
 	let value = $state(2);
 </script>

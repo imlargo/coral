@@ -1,8 +1,8 @@
 <script lang="ts">
-	import DataTable from '$lib/components/coral/kit/data-table/data-table.svelte';
-	import PageState from '$lib/components/coral/kit/page-state/page-state.svelte';
-	import { Button } from '$lib/components/ui/button/index.js';
-	import type { Column } from '$lib/components/coral/kit/data-table/types.js';
+	import DataTable from '#lib/components/coral/kit/data-table/data-table.svelte';
+	import PageState from '#lib/components/coral/kit/page-state/page-state.svelte';
+	import { Button } from '#lib/components/ui/button/index.js';
+	import type { Column } from '#lib/components/coral/kit/data-table/types.js';
 
 	type Member = { id: string; name: string; role: string };
 

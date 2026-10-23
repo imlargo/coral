@@ -1,10 +1,11 @@
 ---
 title: Follow scroll
 description: A scroller that stays at the end while new content arrives - and stops the moment the reader scrolls away.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 Logs, build output, chat threads: anything that grows from the bottom needs the same rule, and
@@ -40,7 +41,7 @@ message and the view returns to the end. Start it at `false` for a view that ope
 
 ```svelte
 <script lang="ts">
-	import FollowScroll from '$lib/components/coral/kit/follow-scroll/follow-scroll.svelte';
+	import FollowScroll from '#lib/components/coral/kit/follow-scroll/follow-scroll.svelte';
 </script>
 ```
 
@@ -84,7 +85,7 @@ given, and a list long enough to need windowing needs it whether or not it follo
 The rules are plain functions over a viewport, so the same decision can drive something else:
 
 ```ts
-import { isAtEnd, unreadSince } from '$lib/components/coral/kit/follow-scroll/follow.js';
+import { isAtEnd, unreadSince } from '#lib/components/coral/kit/follow-scroll/follow.js';
 
 isAtEnd({ scrollTop: 590, clientHeight: 400, scrollHeight: 1000 }); // true - within the tolerance
 unreadSince(12, 5); // 7

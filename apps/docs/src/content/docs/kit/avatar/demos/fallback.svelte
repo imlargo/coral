@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Avatar from '$lib/components/coral/kit/avatar/avatar.svelte';
+	import Avatar from '#lib/components/coral/kit/avatar/avatar.svelte';
 </script>
 
 <!-- No image at all -->

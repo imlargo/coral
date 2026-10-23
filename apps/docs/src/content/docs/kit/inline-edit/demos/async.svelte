@@ -1,5 +1,5 @@
 <script lang="ts">
-	import InlineEdit from '$lib/components/coral/kit/inline-edit/inline-edit.svelte';
+	import InlineEdit from '#lib/components/coral/kit/inline-edit/inline-edit.svelte';
 
 	const taken = ['api-gateway', 'design-tokens'];
 

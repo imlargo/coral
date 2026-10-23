@@ -1,10 +1,11 @@
 ---
 title: Password input
 description: A password field with a visibility toggle that does not break password managers.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 Switching `type` between `password` and `text` is one line, and it is the line that goes wrong: the
@@ -40,7 +41,7 @@ forms, which is what tells a password manager to offer a generated one.
 
 ```svelte
 <script lang="ts">
-	import PasswordInput from '$lib/components/coral/kit/password-input/password-input.svelte';
+	import PasswordInput from '#lib/components/coral/kit/password-input/password-input.svelte';
 </script>
 ```
 

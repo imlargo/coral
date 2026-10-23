@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ReorderList from '$lib/components/coral/kit/reorder-list/reorder-list.svelte';
+	import ReorderList from '#lib/components/coral/kit/reorder-list/reorder-list.svelte';
 
 	let stages = $state(['Install', 'Lint', 'Test', 'Build', 'Deploy']);
 	let saves = $state(0);

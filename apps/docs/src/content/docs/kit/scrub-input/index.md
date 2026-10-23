@@ -1,10 +1,11 @@
 ---
 title: Scrub input
 description: A number field whose label is a drag handle - drag it, type it, or step it with the arrow keys.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 Inspector panels are made of number fields, and reaching for a stepper twenty times to find the
@@ -60,7 +61,7 @@ moved by one behaves exactly as it would in the other.
 
 ```svelte
 <script lang="ts">
-	import ScrubInput from '$lib/components/coral/kit/scrub-input/scrub-input.svelte';
+	import ScrubInput from '#lib/components/coral/kit/scrub-input/scrub-input.svelte';
 </script>
 ```
 
@@ -133,7 +134,7 @@ The drag arithmetic is exported on its own, so the same sweep can drive somethin
 field - a canvas handle, a zoom control:
 
 ```ts
-import { consume } from '$lib/components/coral/kit/scrub-input/scrub.js';
+import { consume } from '#lib/components/coral/kit/scrub-input/scrub.js';
 
 let rest = 0;
 const taken = consume(rest + event.movementX, 2);

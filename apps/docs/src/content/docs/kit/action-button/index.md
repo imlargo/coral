@@ -1,10 +1,11 @@
 ---
 title: Action button
 description: A button that waits on its own request, blocks the second click, and keeps focus.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 `let saving = $state(false)`, a `try/finally`, `disabled={saving}` and a spinner: short enough to
@@ -39,7 +40,7 @@ For a form submitted with SvelteKit's `enhance`, the form is what is pending, no
 
 ```svelte
 <script lang="ts">
-	import ActionButton from '$lib/components/coral/kit/action-button/action-button.svelte';
+	import ActionButton from '#lib/components/coral/kit/action-button/action-button.svelte';
 </script>
 ```
 

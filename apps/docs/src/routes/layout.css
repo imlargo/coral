@@ -24,21 +24,10 @@
 }
 
 @layer components {
-	/* Permalink revealed on hover, and always reachable by keyboard through the heading itself.
-	   `docs-prose.svelte` uses Tailwind Typography's own `.prose`/`dark:prose-invert` for
-	   everything else - this repo does not maintain a second, bespoke set of heading/paragraph
-	   rules on top of it. */
+	/* Headings carry ids from `rehype-heading-ids.ts`; this keeps a jump to one clear of the navbar.
+	   Everything else in the body is Tailwind Typography's own `.prose`/`dark:prose-invert`. */
 	.prose :is(h2, h3) {
-		@apply relative scroll-mt-20;
-	}
-
-	.docs-anchor {
-		@apply ml-2 inline-flex align-middle text-muted-foreground no-underline opacity-0 transition-opacity;
-	}
-
-	.prose :is(h2, h3):hover .docs-anchor,
-	.docs-anchor:focus-visible {
-		@apply opacity-100;
+		@apply scroll-mt-20;
 	}
 
 	/*
@@ -76,7 +65,7 @@
 
 	/*
 	 * Dimmed rather than hidden: a hover-gated control is unreachable on touch and invisible to
-	 * anyone tabbing through. Matches `copy-button.svelte`, which is the same control in Svelte.
+	 * anyone tabbing through. Matches `CopyButton.svelte`, which is the same control in Svelte.
 	 */
 	.docs-copy {
 		@apply absolute top-2 right-2 z-10 inline-flex size-6 items-center justify-center rounded-md text-muted-foreground opacity-60 transition hover:bg-accent hover:text-foreground hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-2 focus-visible:outline-ring;
@@ -88,7 +77,7 @@
 }
 
 /*
- * Shiki emits both themes as CSS variables (`defaultColor: false`) and writes no inline colors,
+ * Shiki emits both themes (`code-highlighter.ts`) as CSS variables (`defaultColor: false`) and writes no inline colors,
  * so the theme switch costs nothing at runtime and needs no `!important` to win.
  */
 .shiki,

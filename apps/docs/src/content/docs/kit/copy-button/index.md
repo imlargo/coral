@@ -1,10 +1,11 @@
 ---
 title: Copy button
 description: Copies text to the clipboard, says so out loud, and says so when it could not.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 The five-line version (`navigator.clipboard.writeText`, a `copied` flag, a `setTimeout`) is the
@@ -45,7 +46,7 @@ ignores further clicks.
 
 ```svelte
 <script lang="ts">
-	import CopyButton from '$lib/components/coral/kit/copy-button/copy-button.svelte';
+	import CopyButton from '#lib/components/coral/kit/copy-button/copy-button.svelte';
 </script>
 ```
 
@@ -79,7 +80,7 @@ through `role="status"`, placed outside the button so it is not also read as par
 button: a keyboard shortcut, a context menu item.
 
 ```ts
-import { writeText } from '$lib/components/coral/kit/copy-button/clipboard.js';
+import { writeText } from '#lib/components/coral/kit/copy-button/clipboard.js';
 
 await writeText(deployment.url); // rejects when the text did not reach the clipboard
 ```

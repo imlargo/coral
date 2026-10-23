@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ActivityCalendar from '$lib/components/coral/kit/activity-calendar/activity-calendar.svelte';
+	import ActivityCalendar from '#lib/components/coral/kit/activity-calendar/activity-calendar.svelte';
 	import { END, START, sample } from '../sample.js';
 
 	const format = new Intl.DateTimeFormat('en-US', {

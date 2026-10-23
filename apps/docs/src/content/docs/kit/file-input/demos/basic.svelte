@@ -1,5 +1,5 @@
 <script lang="ts">
-	import FileInput from '$lib/components/coral/kit/file-input/file-input.svelte';
+	import FileInput from '#lib/components/coral/kit/file-input/file-input.svelte';
 
 	let files = $state<File[]>([]);
 </script>

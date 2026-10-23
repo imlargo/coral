@@ -14,9 +14,9 @@
 	 * The tabs are the reader's package manager, not a preference we have. pnpm goes first because
 	 * it is what the repo uses.
 	 */
-	import CopyButton from './copy-button.svelte';
-	import { itemUrl } from 'coral/registry-config';
-	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$lib/components/ui/tabs/index.js';
+	import CopyButton from '#lib/features/docs/components/CopyButton.svelte';
+	import { itemUrl } from 'coral/registry.config.js';
+	import { Tabs, TabsContent, TabsList, TabsTrigger } from '#lib/components/ui/tabs/index.js';
 
 	let {
 		/** Registry item name, e.g. `kit-select`. */

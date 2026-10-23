@@ -1,7 +1,7 @@
 <script lang="ts">
-	import PageState from '$lib/components/coral/kit/page-state/page-state.svelte';
-	import { Button } from '$lib/components/ui/button/index.js';
-	import type { PageStateKind } from '$lib/components/coral/kit/page-state/types.js';
+	import PageState from '#lib/components/coral/kit/page-state/page-state.svelte';
+	import { Button } from '#lib/components/ui/button/index.js';
+	import type { PageStateKind } from '#lib/components/coral/kit/page-state/types.js';
 
 	type Environment = { id: string; name: string; region: string };
 

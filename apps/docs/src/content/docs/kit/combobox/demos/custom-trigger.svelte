@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Combobox from '$lib/components/coral/kit/combobox/combobox.svelte';
-	import { Button } from '$lib/components/ui/button/index.js';
+	import Combobox from '#lib/components/coral/kit/combobox/combobox.svelte';
+	import { Button } from '#lib/components/ui/button/index.js';
 	import CircleDashedIcon from '@lucide/svelte/icons/circle-dashed';
 	import CircleDotIcon from '@lucide/svelte/icons/circle-dot';
 	import CircleCheckIcon from '@lucide/svelte/icons/circle-check';

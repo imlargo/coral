@@ -1,10 +1,11 @@
 ---
 title: Inline edit
 description: Text that turns into a field in place - rename a project, a column, a file.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 Rename-in-place has more states than it looks: showing, editing, saving, rejected. The usual version
@@ -43,7 +44,7 @@ about it is copy, and copy is the project's. Render the message next to the comp
 
 ```svelte
 <script lang="ts">
-	import InlineEdit from '$lib/components/coral/kit/inline-edit/inline-edit.svelte';
+	import InlineEdit from '#lib/components/coral/kit/inline-edit/inline-edit.svelte';
 </script>
 ```
 

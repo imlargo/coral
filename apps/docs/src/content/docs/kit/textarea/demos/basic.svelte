@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Textarea from '$lib/components/coral/kit/textarea/textarea.svelte';
-	import * as Field from '$lib/components/ui/field/index.js';
+	import Textarea from '#lib/components/coral/kit/textarea/textarea.svelte';
+	import * as Field from '#lib/components/ui/field/index.js';
 
 	let value = $state(
 		'The deploy failed on the build step.\nIt looks like the lockfile is out of date.'

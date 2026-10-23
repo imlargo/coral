@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Combobox from '$lib/components/coral/kit/combobox/combobox.svelte';
+	import Combobox from '#lib/components/coral/kit/combobox/combobox.svelte';
 
 	// `value` is whatever the project already has - here a numeric id, not a string.
 	const projects = [

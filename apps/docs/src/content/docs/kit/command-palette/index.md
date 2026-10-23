@@ -1,10 +1,11 @@
 ---
 title: Command palette
 description: ⌘K over your own actions - with recents, per-action shortcuts, and a run that can fail.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 shadcn's `command` gives the list, the filtering and the arrow keys. What every project then writes
@@ -57,7 +58,7 @@ Composes [`kit/shortcut`](/docs/kit/shortcut), which the install brings with it.
 
 ```svelte
 <script lang="ts">
-	import CommandPalette from '$lib/components/coral/kit/command-palette/command-palette.svelte';
+	import CommandPalette from '#lib/components/coral/kit/command-palette/command-palette.svelte';
 </script>
 ```
 
@@ -124,7 +125,7 @@ rather than that they cannot use it right now.
 different surface (a menu, a toolbar, a mobile sheet):
 
 ```ts
-import { group, remember } from '$lib/components/coral/kit/command-palette/actions.js';
+import { group, remember } from '#lib/components/coral/kit/command-palette/actions.js';
 
 group(actions, { recent: ['settings'], maxRecent: 3 });
 remember(['a', 'b'], 'b'); // ['b', 'a'] - moved, not duplicated

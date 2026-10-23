@@ -1,9 +1,9 @@
 <script lang="ts">
-	import DataTable from '$lib/components/coral/kit/data-table/data-table.svelte';
-	import RelativeTime from '$lib/components/coral/kit/relative-time/relative-time.svelte';
-	import { sortRows } from '$lib/components/coral/lib/table.js';
-	import { Badge } from '$lib/components/ui/badge/index.js';
-	import type { Column, Sort } from '$lib/components/coral/kit/data-table/types.js';
+	import DataTable from '#lib/components/coral/kit/data-table/data-table.svelte';
+	import RelativeTime from '#lib/components/coral/kit/relative-time/relative-time.svelte';
+	import { sortRows } from '#lib/components/coral/lib/table.js';
+	import { Badge } from '#lib/components/ui/badge/index.js';
+	import type { Column, Sort } from '#lib/components/coral/kit/data-table/types.js';
 
 	type Deploy = {
 		id: string;

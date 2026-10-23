@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Shortcut from '$lib/components/coral/kit/shortcut/shortcut.svelte';
+	import Shortcut from '#lib/components/coral/kit/shortcut/shortcut.svelte';
 
 	const combos = ['mod+shift+p', 'alt+enter', 'ctrl+alt+delete', 'shift+?'];
 </script>

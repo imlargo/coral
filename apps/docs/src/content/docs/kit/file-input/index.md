@@ -1,10 +1,11 @@
 ---
 title: File input
 description: Pick files by click or drop, validate them, show what was picked. An input, not an uploader.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 Almost every app grows one, and it is almost always the same hand-rolled shape: a `<div>` with an
@@ -143,8 +144,8 @@ repeating it makes a screen reader say it twice.
 
 ```svelte
 <script lang="ts">
-	import FileInput from '$lib/components/coral/kit/file-input/file-input.svelte';
-	import type { FileRejection } from '$lib/components/coral/kit/file-input/types.js';
+	import FileInput from '#lib/components/coral/kit/file-input/file-input.svelte';
+	import type { FileRejection } from '#lib/components/coral/kit/file-input/types.js';
 </script>
 ```
 

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import CopyButton from '$lib/components/coral/kit/copy-button/copy-button.svelte';
-	import type { CopyStatus } from '$lib/components/coral/kit/copy-button/types.js';
+	import CopyButton from '#lib/components/coral/kit/copy-button/copy-button.svelte';
+	import type { CopyStatus } from '#lib/components/coral/kit/copy-button/types.js';
 
 	let status = $state<CopyStatus>('idle');
 

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import TagsInput from '$lib/components/coral/kit/tags-input/tags-input.svelte';
-	import type { TagRejection } from '$lib/components/coral/kit/tags-input/tags.js';
+	import TagsInput from '#lib/components/coral/kit/tags-input/tags-input.svelte';
+	import type { TagRejection } from '#lib/components/coral/kit/tags-input/tags.js';
 
 	let tags = $state(['mango', 'papaya']);
 	let notice = $state('');

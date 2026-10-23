@@ -1,12 +1,12 @@
 <script lang="ts">
 	import CheckIcon from '@lucide/svelte/icons/check';
-	import Stepper from '$lib/components/coral/kit/stepper/stepper.svelte';
-	import StepperContent from '$lib/components/coral/kit/stepper/stepper-content.svelte';
-	import StepperItem from '$lib/components/coral/kit/stepper/stepper-item.svelte';
-	import StepperList from '$lib/components/coral/kit/stepper/stepper-list.svelte';
-	import StepperNext from '$lib/components/coral/kit/stepper/stepper-next.svelte';
-	import StepperPrevious from '$lib/components/coral/kit/stepper/stepper-previous.svelte';
-	import { Badge } from '$lib/components/ui/badge/index.js';
+	import Stepper from '#lib/components/coral/kit/stepper/stepper.svelte';
+	import StepperContent from '#lib/components/coral/kit/stepper/stepper-content.svelte';
+	import StepperItem from '#lib/components/coral/kit/stepper/stepper-item.svelte';
+	import StepperList from '#lib/components/coral/kit/stepper/stepper-list.svelte';
+	import StepperNext from '#lib/components/coral/kit/stepper/stepper-next.svelte';
+	import StepperPrevious from '#lib/components/coral/kit/stepper/stepper-previous.svelte';
+	import { Badge } from '#lib/components/ui/badge/index.js';
 
 	const steps = ['repository', 'build', 'deploy'];
 	const titles: Record<string, string> = {

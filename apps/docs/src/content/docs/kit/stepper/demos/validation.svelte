@@ -1,12 +1,12 @@
 <script lang="ts">
-	import Stepper from '$lib/components/coral/kit/stepper/stepper.svelte';
-	import StepperContent from '$lib/components/coral/kit/stepper/stepper-content.svelte';
-	import StepperItem from '$lib/components/coral/kit/stepper/stepper-item.svelte';
-	import StepperList from '$lib/components/coral/kit/stepper/stepper-list.svelte';
-	import StepperNext from '$lib/components/coral/kit/stepper/stepper-next.svelte';
-	import StepperPrevious from '$lib/components/coral/kit/stepper/stepper-previous.svelte';
-	import { Input } from '$lib/components/ui/input/index.js';
-	import { Label } from '$lib/components/ui/label/index.js';
+	import Stepper from '#lib/components/coral/kit/stepper/stepper.svelte';
+	import StepperContent from '#lib/components/coral/kit/stepper/stepper-content.svelte';
+	import StepperItem from '#lib/components/coral/kit/stepper/stepper-item.svelte';
+	import StepperList from '#lib/components/coral/kit/stepper/stepper-list.svelte';
+	import StepperNext from '#lib/components/coral/kit/stepper/stepper-next.svelte';
+	import StepperPrevious from '#lib/components/coral/kit/stepper/stepper-previous.svelte';
+	import { Input } from '#lib/components/ui/input/index.js';
+	import { Label } from '#lib/components/ui/label/index.js';
 
 	const steps = ['project', 'environment', 'review'] as const;
 	type Step = (typeof steps)[number];

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import ScrubInput from '$lib/components/coral/kit/scrub-input/scrub-input.svelte';
-	import { Button } from '$lib/components/ui/button/index.js';
+	import ScrubInput from '#lib/components/coral/kit/scrub-input/scrub-input.svelte';
+	import { Button } from '#lib/components/ui/button/index.js';
 
 	let padding = $state(16);
 	let history = $state<number[]>([]);

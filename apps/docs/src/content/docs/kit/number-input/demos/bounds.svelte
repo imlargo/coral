@@ -1,5 +1,5 @@
 <script lang="ts">
-	import NumberInput from '$lib/components/coral/kit/number-input/number-input.svelte';
+	import NumberInput from '#lib/components/coral/kit/number-input/number-input.svelte';
 
 	let replicas = $state(20);
 </script>

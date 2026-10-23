@@ -1,10 +1,11 @@
 ---
 title: Reorder list
 description: Drag to reorder with a mouse, a finger or the keyboard - and persist once per drop.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 HTML5 `draggable` gets a sortable list working on a desktop in an afternoon, and then it does not work
@@ -42,7 +43,7 @@ recreated between renders, and never return the index, since the index is what c
 
 ```svelte
 <script lang="ts">
-	import ReorderList from '$lib/components/coral/kit/reorder-list/reorder-list.svelte';
+	import ReorderList from '#lib/components/coral/kit/reorder-list/reorder-list.svelte';
 </script>
 ```
 

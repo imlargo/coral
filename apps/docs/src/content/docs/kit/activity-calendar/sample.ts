@@ -1,6 +1,6 @@
 /** Deterministic sample activity, so a prerendered docs page renders the same grid every build. */
 
-import type { ActivityDay } from '$lib/components/coral/kit/activity-calendar/types.js';
+import type { ActivityDay } from '#lib/components/coral/kit/activity-calendar/types.js';
 
 function random(seed: number): () => number {
 	let state = seed;

@@ -1,6 +1,7 @@
 ---
 title: Introduction
 description: An ergonomics layer on top of shadcn-svelte, installed into the project as source it owns.
+group: Getting started
 ---
 
 Coral is an open-source ergonomics layer on top of shadcn-svelte. It does one thing: remove the

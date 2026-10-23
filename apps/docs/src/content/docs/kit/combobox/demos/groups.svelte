@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Combobox from '$lib/components/coral/kit/combobox/combobox.svelte';
+	import Combobox from '#lib/components/coral/kit/combobox/combobox.svelte';
 
 	// Grouped, with descriptions and hidden keywords. `berry` finds Açaí; `4` finds Mango.
 	const fruits = [

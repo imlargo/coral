@@ -1,10 +1,11 @@
 ---
 title: Date picker
 description: A popover, a calendar and a formatted trigger. One day or two, with shortcuts.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 The shadcn docs are honest about this one: there is no date picker component, there is a recipe.
@@ -133,7 +134,7 @@ delete.
 
 ```svelte
 <script lang="ts">
-	import DatePicker from '$lib/components/coral/kit/date-picker/date-picker.svelte';
+	import DatePicker from '#lib/components/coral/kit/date-picker/date-picker.svelte';
 </script>
 ```
 

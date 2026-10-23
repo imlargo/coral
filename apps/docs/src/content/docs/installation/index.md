@@ -1,6 +1,7 @@
 ---
 title: Installation
 description: One command per component. It lands in your project as source you own, with its primitives already resolved.
+group: Getting started
 ---
 
 Coral is not an npm package. Every component is installed as source, straight into your
@@ -12,7 +13,7 @@ What does the installing is the shadcn-svelte CLI you already have, pointed at C
 ## Requirements
 
 A SvelteKit project already initialized with shadcn-svelte, meaning it has a `components.json`,
-a `$lib/components/ui/` folder and `$lib/utils.ts` exporting `cn`:
+a `src/lib/components/ui/` folder and `src/lib/utils.ts` exporting `cn`:
 
 ```bash
 pnpm dlx shadcn-svelte@latest init
@@ -37,8 +38,8 @@ That one line does four things that the copy-the-folder install left to you:
 - **Installs the shared modules it depends on.** `lib/options` is the `Option<T>` vocabulary,
   `lib/hidden-field` the input that lets a select take part in a form; you never ask for them by
   name.
-- **Rewrites the imports to your aliases.** Coral is written against `$lib/components/ui/*` and
-  `$lib/utils.js`; what lands in your project is written against whatever your `components.json`
+- **Rewrites the imports to your aliases.** Coral is written against `#lib/components/ui/*` and
+  `#lib/utils.js`; what lands in your project is written against whatever your `components.json`
   says instead.
 - **Maps the icons to your icon library.** A project on `@tabler/icons-svelte` gets Tabler icons,
   not a broken import - which is exactly the failure the copied folder used to hand you.
@@ -70,7 +71,7 @@ There are no barrels. One component, one folder, imported directly:
 
 ```svelte
 <script lang="ts">
-	import Select from '$lib/components/coral/kit/select/select.svelte';
+	import Select from '#lib/components/coral/kit/select/select.svelte';
 </script>
 ```
 

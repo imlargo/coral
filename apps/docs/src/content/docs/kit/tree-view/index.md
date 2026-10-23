@@ -1,10 +1,11 @@
 ---
 title: Tree view
 description: A hierarchy the keyboard can walk - the WAI-ARIA tree pattern, from a plain array.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 Nested `<ul>`s with a chevron that toggles a boolean is a tree for the mouse. The keyboard gets
@@ -48,7 +49,7 @@ type TreeNode<T = unknown> = {
 
 ```svelte
 <script lang="ts">
-	import TreeView from '$lib/components/coral/kit/tree-view/tree-view.svelte';
+	import TreeView from '#lib/components/coral/kit/tree-view/tree-view.svelte';
 </script>
 ```
 

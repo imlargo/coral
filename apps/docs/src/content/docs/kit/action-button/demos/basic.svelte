@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ActionButton from '$lib/components/coral/kit/action-button/action-button.svelte';
+	import ActionButton from '#lib/components/coral/kit/action-button/action-button.svelte';
 
 	let deploys = $state(0);
 

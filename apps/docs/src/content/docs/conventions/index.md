@@ -1,6 +1,7 @@
 ---
 title: Conventions
 description: The rules every Coral component follows, and the reason each one exists.
+group: Getting started
 ---
 
 ## Folder layout
@@ -59,7 +60,7 @@ Every component accepts and merges a `class` prop, so overrides never require a 
 
 ```svelte
 <script lang="ts">
-	import { cn } from '$lib/utils.js';
+	import { cn } from '#lib/utils.js';
 
 	let { class: className, ...restProps } = $props();
 </script>
@@ -73,7 +74,7 @@ friends. Derive types from the shadcn component, never from `bits-ui` directly:
 
 ```ts
 import type { ComponentProps } from 'svelte';
-import type { Avatar } from '$lib/components/ui/avatar/index.js';
+import type { Avatar } from '#lib/components/ui/avatar/index.js';
 
 type RootProps = ComponentProps<typeof Avatar>;
 ```
@@ -127,7 +128,7 @@ markup.
 Generic, never closed:
 
 ```ts
-// $lib/components/coral/lib/options.js
+// #lib/components/coral/lib/options.js
 export type Option<T = string> = {
 	value: T;
 	label: string;

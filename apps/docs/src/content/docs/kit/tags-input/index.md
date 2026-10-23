@@ -1,10 +1,11 @@
 ---
 title: Tags input
 description: A field that turns typed and pasted text into tags, with one rule for both.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 A tags field is an input, a row of badges and about eighty lines of keyboard handling nobody enjoys
@@ -123,7 +124,7 @@ Arrow directions are read off the element, so they reverse inside an RTL subtree
 
 ```svelte
 <script lang="ts">
-	import TagsInput from '$lib/components/coral/kit/tags-input/tags-input.svelte';
+	import TagsInput from '#lib/components/coral/kit/tags-input/tags-input.svelte';
 </script>
 ```
 
@@ -184,7 +185,7 @@ The rules live in `kit/tags-input/tags.ts` and are exported on their own, so the
 validation can run where there is no field: normalising a payload, importing a CSV column.
 
 ```ts
-import { add, split } from '$lib/components/coral/kit/tags-input/tags.js';
+import { add, split } from '#lib/components/coral/kit/tags-input/tags.js';
 
 split('a, b\nc'); // ['a', ' b', 'c']
 split('a;b', /[;,]/); // ['a', 'b']

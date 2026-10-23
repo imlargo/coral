@@ -1,9 +1,9 @@
 <script lang="ts">
 	import FilePlusIcon from '@lucide/svelte/icons/file-plus';
 	import SearchIcon from '@lucide/svelte/icons/search';
-	import CommandPalette from '$lib/components/coral/kit/command-palette/command-palette.svelte';
-	import Shortcut from '$lib/components/coral/kit/shortcut/shortcut.svelte';
-	import type { CommandAction } from '$lib/components/coral/kit/command-palette/types.js';
+	import CommandPalette from '#lib/components/coral/kit/command-palette/command-palette.svelte';
+	import Shortcut from '#lib/components/coral/kit/shortcut/shortcut.svelte';
+	import type { CommandAction } from '#lib/components/coral/kit/command-palette/types.js';
 
 	let recent = $state<string[]>([]);
 	let last = $state('');

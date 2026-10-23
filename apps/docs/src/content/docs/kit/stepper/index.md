@@ -1,10 +1,11 @@
 ---
 title: Stepper
 description: Multi-step flows with validation that waits, steps that cannot be skipped, and focus that follows.
+group: Kit
 ---
 
 <script lang="ts">
-	import Preview from '$docs/preview.svelte';
+	import Preview from '#lib/features/docs/components/Preview.svelte';
 </script>
 
 A wizard is a `currentStep` number until it has to validate. Then Next needs to wait on a request
@@ -60,8 +61,8 @@ inside a hidden panel to report it.
 
 ```svelte
 <script lang="ts">
-	import Stepper from '$lib/components/coral/kit/stepper/stepper.svelte';
-	import StepperItem from '$lib/components/coral/kit/stepper/stepper-item.svelte';
+	import Stepper from '#lib/components/coral/kit/stepper/stepper.svelte';
+	import StepperItem from '#lib/components/coral/kit/stepper/stepper-item.svelte';
 	// ...one import per piece you use
 </script>
 ```
