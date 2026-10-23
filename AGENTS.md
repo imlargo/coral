@@ -64,9 +64,9 @@ this sentence, which is the kind that goes stale.
 
 ```
 ./                           → pnpm workspace root: lint, format, CI and the deploy scripts
-packages/coral/              → the library: SvelteKit 3 with no routes
+packages/coral/              → the library: plain Svelte + Vite, no SvelteKit
 ├─ package.json              → `imports`: #lib → src/lib. `exports`: what the docs site may read
-├─ vite.config.ts            → SvelteKit options live here (there is no svelte.config.js)
+├─ svelte.config.js          → Svelte options (runes); there is no SvelteKit to read anything else
 ├─ registry.config.js        → where the registry is published, and the names it publishes
 ├─ registry.json             → GENERATED, gitignored. Never edit, never commit
 ├─ dist/r/                   → GENERATED registry output, gitignored
@@ -76,7 +76,6 @@ packages/coral/              → the library: SvelteKit 3 with no routes
 │  └─ smoke-install.js       → installs the built registry into a throwaway project, type-checks it
 └─ src/
    ├─ app.css                → the shadcn baseline (theme vars). Not shipped; Coral has no appearance
-   ├─ app.html               → only because `svelte-kit sync` requires one; nothing is served
    └─ lib/
       ├─ hooks/              → shadcn's own (is-mobile), not Coral's
       ├─ utils.ts            → cn (shadcn's)
@@ -106,9 +105,8 @@ Consequence to respect: the site has no `ui/` of its own and no `utils.ts`; a pr
 added to the library.
 
 **Coral never imports SvelteKit.** Nothing from `$app/*` or `$env/*` inside `coral/`: a consumer
-may be a plain Svelte + Vite project. The tests enforce it - the library's `vite.config.ts` swaps
-`sveltekit()` for plain `svelte()` under Vitest, so a component that reached for SvelteKit fails
-there.
+may be a plain Svelte + Vite project. The library enforces it by being one: SvelteKit is not
+installed in `packages/coral`, so such an import fails `check` and the tests alike.
 
 Outside its own folder, Coral may reach for exactly three things: `#lib/components/ui/*`,
 `#lib/utils` (`cn`), and `@lucide/svelte` for icons. All three are guaranteed by a shadcn-svelte

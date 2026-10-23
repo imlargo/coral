@@ -255,7 +255,7 @@ in this repo travels.
 The repo is two workspaces, so the library is not entangled with the site that documents it:
 
 ```
-packages/coral/           → the library, and the registry built from it (SvelteKit 3, no routes)
+packages/coral/           → the library, and the registry built from it (plain Svelte + Vite)
 ├─ registry.config.js     → where the registry is published, and the names it publishes
 ├─ scripts/               → derives registry.json from coral.json, and smoke-installs the result
 ├─ dist/r/                → the built registry (generated)
