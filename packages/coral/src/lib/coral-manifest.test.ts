@@ -1,6 +1,6 @@
 /**
- * Checks `coral/coral.json` against the folder it describes, the registry it produces and the
- * pages that document it.
+ * Checks `coral/coral.json` against the folder it describes and the registry it produces. The docs
+ * site checks its own pages against the manifest; the library knows nothing about it.
  *
  * The manifest is what everything else is derived from - the registry items a project installs,
  * the versions they carry, the primitives they pull in - and it is kept by hand, so every claim in
@@ -17,11 +17,10 @@ import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import manifest from './components/coral/coral.json' with { type: 'json' };
-import { COMPONENT_LAYERS, isComponent, itemName, registry } from '../../scripts/registry.js';
+import { COMPONENT_LAYERS, itemName } from '../../registry.config.js';
+import { registry } from '../../scripts/registry.js';
 
 const CORAL = path.join(import.meta.dirname, 'components/coral');
-/** The docs site, which is a sibling workspace - see the note above about repo tooling. */
-const DOCS = path.resolve(import.meta.dirname, '../../../../apps/docs/src/routes/(docs)/docs');
 
 type Entry = {
 	title: string;
@@ -100,7 +99,7 @@ describe('coral.json', () => {
 		for (const file of owned(name, all).filter((f) => SOURCE.test(f) && !isTest(f))) {
 			const text = await readFile(path.join(CORAL, file), 'utf8');
 			for (const [, primitive] of text.matchAll(
-				/from '\$lib\/components\/ui\/([^/']+)(?:\/[^']*)?'/g
+				/from '#lib\/components\/ui\/([^/']+)(?:\/[^']*)?'/g
 			)) {
 				imported.add(primitive);
 			}
@@ -115,7 +114,7 @@ describe('coral.json', () => {
 
 		for (const file of owned(name, all).filter((f) => SOURCE.test(f) && !isTest(f))) {
 			const text = await readFile(path.join(CORAL, file), 'utf8');
-			for (const [, source] of text.matchAll(/from '([^'.$][^']*)'/g)) {
+			for (const [, source] of text.matchAll(/from '([^'.#][^']*)'/g)) {
 				// `svelte` and its subpaths are the framework, not a dependency to install.
 				if (source === 'svelte' || source.startsWith('svelte/')) continue;
 				// Scoped packages keep one leading segment: `@lucide/svelte/icons/x` is `@lucide/svelte`.
@@ -126,23 +125,6 @@ describe('coral.json', () => {
 
 		expect([...imported].sort()).toEqual([...(entry.npm ?? [])].sort());
 	});
-});
-
-describe('docs pages', () => {
-	/** `lib/*` is installed as a dependency of the layers above it, so it has no page of its own. */
-	const documented = entries.filter(([name]) => isComponent(name));
-
-	it.each(documented)(
-		'%s is documented, with the title and description the manifest states',
-		async (name, entry) => {
-			const page = await readFile(path.join(DOCS, name, 'index.md'), 'utf8');
-			const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---/.exec(page)?.[1];
-
-			expect(frontmatter, `${name}/index.md has no frontmatter`).toBeDefined();
-			expect(frontmatter).toContain(`title: ${entry.title}`);
-			expect(frontmatter).toContain(`description: ${entry.description}`);
-		}
-	);
 });
 
 /**

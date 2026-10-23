@@ -2,6 +2,10 @@
 	"name": "coral-workspace",
 	"private": true,
 	"type": "module",
+	"packageManager": "pnpm@11.10.0",
+	"engines": {
+		"node": ">=22.17"
+	},
 	"scripts": {
 		"dev": "pnpm --filter coral-docs dev",
 		"build": "pnpm --filter coral-docs build",
@@ -9,32 +13,32 @@
 		"worker:deploy": "pnpm --filter coral-docs exec wrangler deploy",
 		"worker:version": "pnpm --filter coral-docs exec wrangler versions upload",
 		"registry": "pnpm --filter coral registry",
+		"smoke": "pnpm --filter coral smoke",
 		"check": "pnpm -r check",
 		"test": "pnpm -r test",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
-		"prepare": "husky"
+		"prepare": "husky || echo ''"
 	},
 	"devDependencies": {
-		"@eslint/compat": "^2.1.0",
-		"@eslint/js": "latest",
+		"@eslint/js": "^10.0.1",
 		"eslint": "^10.4.1",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.19.0",
 		"globals": "^17.6.0",
 		"husky": "^9.1.7",
-		"lint-staged": "^17.3.0",
+		"lint-staged": "^17.6.0",
 		"prettier": "^3.8.3",
 		"prettier-plugin-svelte": "^4.1.0",
 		"prettier-plugin-tailwindcss": "^0.8.0",
-		"svelte": "^5.56.1",
+		"svelte": "^5.57.2",
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.60.1"
 	},
 	"lint-staged": {
 		"*.{js,ts,svelte}": [
-			"eslint --fix --no-warn-ignored",
-			"prettier --write"
+			"prettier --write",
+			"eslint --fix --no-warn-ignored"
 		],
 		"*.{json,css,md}": "prettier --write"
 	}

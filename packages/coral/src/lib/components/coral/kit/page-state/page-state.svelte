@@ -4,9 +4,9 @@
 	 * @version 1.0.0
 	 */
 	import TriangleAlertIcon from '@lucide/svelte/icons/triangle-alert';
-	import * as Empty from '$lib/components/ui/empty/index.js';
-	import { Spinner } from '$lib/components/ui/spinner/index.js';
-	import { cn } from '$lib/utils.js';
+	import * as Empty from '#lib/components/ui/empty/index.js';
+	import { Spinner } from '#lib/components/ui/spinner/index.js';
+	import { cn } from '#lib/utils.js';
 	import { Action } from '../../lib/action.svelte.js';
 	import ActionButton from '../action-button/action-button.svelte';
 	import { hiddenFrom, shownFrom, stateOf, waitUntil } from './delay.js';

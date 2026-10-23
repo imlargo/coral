@@ -9,7 +9,7 @@
 
 import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
-import { SITE } from '../registry.config.js';
+import { SITE, isComponent, itemName } from '../registry.config.js';
 
 export const PACKAGE = path.resolve(import.meta.dirname, '..');
 export const CORAL = path.join(PACKAGE, 'src/lib/components/coral');
@@ -20,7 +20,7 @@ export const CORAL = path.join(PACKAGE, 'src/lib/components/coral');
  * `registry build` replaces these strings with placeholders (`$UI$`, `$UTILS$`, `$LIB$`), and the
  * CLI swaps each placeholder for the consumer's alias on install. Order matters inside the CLI:
  * `components` is substituted before `ui`, so it is pointed at a path Coral never imports -
- * otherwise `$lib/components/ui/button` would be claimed by the components alias and land wherever
+ * otherwise `#lib/components/ui/button` would be claimed by the components alias and land wherever
  * the consumer keeps plain components rather than in their `ui/` folder.
  *
  * That is about import strings only. Where Coral's own files land is decided by their type and
@@ -28,16 +28,16 @@ export const CORAL = path.join(PACKAGE, 'src/lib/components/coral');
  * alias: its files reach each other by relative path.
  */
 const ALIASES = {
-	components: '$lib/__coral_never_imports_this__',
-	hooks: '$lib/__coral_never_imports_this_either__',
-	ui: '$lib/components/ui',
-	utils: '$lib/utils',
-	lib: '$lib'
+	components: '#lib/__coral_never_imports_this__',
+	hooks: '#lib/__coral_never_imports_this_either__',
+	ui: '#lib/components/ui',
+	utils: '#lib/utils',
+	lib: '#lib'
 };
 
 /**
  * Where Coral lands in a consuming project: `coral/` under its `components` alias, next to the
- * `ui/` folder shadcn keeps there - `$lib/components/coral/...` in a default setup, the same shape
+ * `ui/` folder shadcn keeps there - `#lib/components/coral/...` in a default setup, the same shape
  * this repo keeps it in.
  *
  * Every file is `registry:component`, which is the type the CLI resolves against that alias, so a
@@ -62,35 +62,6 @@ async function files() {
 		.map((entry) => path.relative(CORAL, path.join(entry.parentPath, entry.name)))
 		.map((file) => file.split(path.sep).join('/'))
 		.sort();
-}
-
-/**
- * The item name a manifest entry is published under: `kit/select` becomes `kit-select`.
- *
- * The slash cannot survive - it would write the item into a subdirectory of the registry output -
- * and the prefix cannot be dropped: the CLI merges an item's tree by name, so a Coral item called
- * `select` and shadcn's own `select` would be taken for the same thing and one of them silently
- * dropped, along with its files.
- *
- * @param {string} name
- */
-export function itemName(name) {
-	return name.replace('/', '-');
-}
-
-/**
- * The layers whose entries are folders, and which a consumer installs by name. `lib/*` entries are
- * single files pulled in as dependencies of these, never asked for directly.
- */
-export const COMPONENT_LAYERS = ['kit/', 'blocks/'];
-
-/**
- * Whether a manifest entry is one of those - a thing with a page, an install command and a folder.
- *
- * @param {string} name
- */
-export function isComponent(name) {
-	return COMPONENT_LAYERS.some((layer) => name.startsWith(layer));
 }
 
 /**
