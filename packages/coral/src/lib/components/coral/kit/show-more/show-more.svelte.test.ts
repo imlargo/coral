@@ -1,6 +1,6 @@
 /**
  * @coral/kit/show-more
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -94,6 +94,21 @@ describe('the keyboard', () => {
 		await expect.poll(toggle).not.toBeNull();
 
 		document.getElementById('last-link')!.focus();
+		await expect.poll(() => props.expanded).toBe(true);
+	});
+
+	it('measures in layout pixels inside a scaled container', async () => {
+		// The link ends 100px down: past a 60px clamp, though drawn only 50px down at half size.
+		const fourth = createRawSnippet(() => ({
+			render: () =>
+				'<div><p>a</p><p>b</p><p>c</p><p>d</p><a href="#end" id="scaled-link">End</a></div>'
+		}));
+		const props = $state({ ...base, children: fourth, expanded: false });
+		const { container } = await render(ShowMore, props);
+		container.style.transform = 'scale(0.5)';
+		await expect.poll(toggle).not.toBeNull();
+
+		document.getElementById('scaled-link')!.focus();
 		await expect.poll(() => props.expanded).toBe(true);
 	});
 

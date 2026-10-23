@@ -1,6 +1,6 @@
 /**
  * @coral/kit/activity-calendar
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -139,6 +139,19 @@ describe('the tooltip', () => {
 		} finally {
 			document.body.dir = '';
 		}
+	});
+
+	it('stays parked over the square inside a scaled container', async () => {
+		const { container } = await render(ActivityCalendar, { data: days, ...range });
+		container.style.transform = 'scale(0.5)';
+		container.style.transformOrigin = 'top left';
+
+		hover('2026-01-14');
+		await expect.poll(() => anchor().style.getPropertyValue('--coral-width')).not.toBe('0px');
+		const parked = anchor().getBoundingClientRect();
+		const target = square('2026-01-14').getBoundingClientRect();
+		expect(apart(parked, target)).toBeLessThan(1);
+		expect(Math.abs(parked.width - target.width)).toBeLessThan(1);
 	});
 
 	it('stays parked over the square once the scroller has been scrolled, in either direction', async () => {

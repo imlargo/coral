@@ -77,6 +77,7 @@ Everything a `<div>` accepts stays available on the root. On top of that:
 | `errorDescription` | `string`                                | -                       | Line under it.                                                                       |
 | `retryLabel`       | `string`                                | `Try again`             | Label for the retry button.                                                          |
 | `status`           | `PageStateKind`                         | `'idle'`                | Bindable. Which state is showing.                                                    |
+| `class`            | `string`                                | -                       | Merged onto the root.                                                                |
 | `children`         | `Snippet`                               | -                       | The content. Required.                                                               |
 | `loadingState`     | `Snippet`                               | -                       | Replaces the loading state.                                                          |
 | `emptyState`       | `Snippet`                               | -                       | Replaces the empty state.                                                            |

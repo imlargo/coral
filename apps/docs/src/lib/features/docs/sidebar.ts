@@ -11,19 +11,21 @@ const GETTING_STARTED: SidebarGroup = {
 	]
 };
 
-// Every other page is listed under the `group` in its frontmatter, sorted by title: add
-// `kit/<name>/index.md` and it appears, with no second place to register it.
+// Every other page is listed under the `group` in its frontmatter: add `kit/<name>/index.md` and
+// it appears, with no second place to register it. Sorted by folder, then title, which keeps a
+// `product/` vertical's pages together.
 const others = getCollection('docs')
 	.map((entry) => {
 		const data = entry.data as unknown as DocsFrontmatter;
 		return {
 			title: data.title,
 			group: data.group,
+			folder: entry.slug.slice(0, entry.slug.lastIndexOf('/')),
 			href: entry.slug ? `/docs/${entry.slug}` : '/docs'
 		};
 	})
 	.filter((page) => page.group !== GETTING_STARTED.title)
-	.sort((a, b) => a.title.localeCompare(b.title));
+	.sort((a, b) => a.folder.localeCompare(b.folder) || a.title.localeCompare(b.title));
 
 const groupTitles = [...new Set(others.map((page) => page.group))];
 

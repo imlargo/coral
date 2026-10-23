@@ -65,8 +65,8 @@ async function files() {
 }
 
 /**
- * The files one manifest entry owns. `kit/*` and `blocks/*` entries are folders; `lib/*` entries
- * are a single file that may carry any extension.
+ * The files one manifest entry owns. Component entries are folders; `lib/*` entries are a single
+ * file that may carry any extension.
  *
  * @param {string} name
  * @param {string[]} all

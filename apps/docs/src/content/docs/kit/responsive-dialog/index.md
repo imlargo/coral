@@ -65,6 +65,7 @@ demo does, or whatever matches your `query`.
 | `open`     | `boolean` | `false`              | Bindable. Shared by both primitives.                 |
 | `query`    | `string`  | `(min-width: 768px)` | Matches: dialog. Otherwise: drawer. Read once.       |
 | `fallback` | `boolean` | `false`              | Whether the query is assumed to match on the server. |
+| `children` | `Snippet` | -                    | The trigger and the content.                         |
 
 `ResponsiveDialogContent` accepts the dialog content's props; `showCloseButton` applies to the dialog
 only. The trigger, title, description and close forward everything to their primitive.

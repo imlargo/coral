@@ -14,37 +14,48 @@ export const SITE = 'https://coral.imlargo.dev';
 export const REGISTRY_PATH = '/r';
 
 /**
+ * The layers a consumer installs from by name, each with a docs page per entry. `lib/` is not one:
+ * its files arrive as dependencies of these. A `product/` entry sits one folder deeper, under the
+ * vertical it speaks: `product/ai/<name>`.
+ */
+export const COMPONENT_LAYERS = ['kit/', 'blocks/', 'product/'];
+
+/** @param {string} layer */
+const depthOf = (layer) => (layer === 'product/' ? 3 : 2);
+
+/**
+ * Whether a manifest entry belongs to one of those layers.
+ *
+ * @param {string} name
+ */
+export const isComponent = (name) => COMPONENT_LAYERS.some((layer) => name.startsWith(layer));
+
+/**
+ * The entry a file under `coral/` belongs to: `kit/select/select.svelte` is `kit/select`, and
+ * `product/ai/chat/chat.svelte` is `product/ai/chat`. `undefined` for `lib/` and for loose files.
+ *
+ * @param {string} file
+ */
+export function componentOf(file) {
+	const layer = COMPONENT_LAYERS.find((prefix) => file.startsWith(prefix));
+	if (!layer) return undefined;
+
+	const segments = file.split('/');
+	const depth = depthOf(layer);
+	return segments.length > depth ? segments.slice(0, depth).join('/') : undefined;
+}
+
+/**
+ * The item an entry is published as: `kit/select` becomes `kit-select`. The layer stays in the name
+ * because the CLI merges a dependency tree by name, and a bare `select` would be taken for shadcn's.
+ *
+ * @param {string} name
+ */
+export const itemName = (name) => name.replaceAll('/', '-');
+
+/**
  * The URL a registry item is installed from.
  *
  * @param {string} item the item name, e.g. `kit-select`
  */
 export const itemUrl = (item) => `${SITE}${REGISTRY_PATH}/${item}.json`;
-
-/**
- * The item name a manifest entry is published under: `kit/select` becomes `kit-select`.
- *
- * The slash cannot survive - it would write the item into a subdirectory of the registry output -
- * and the prefix cannot be dropped: the CLI merges an item's tree by name, so a Coral item called
- * `select` and shadcn's own `select` would be taken for the same thing and one of them silently
- * dropped, along with its files.
- *
- * @param {string} name
- */
-export function itemName(name) {
-	return name.replace('/', '-');
-}
-
-/**
- * The layers whose entries are folders, and which a consumer installs by name. `lib/*` entries are
- * single files pulled in as dependencies of these, never asked for directly.
- */
-export const COMPONENT_LAYERS = ['kit/', 'blocks/'];
-
-/**
- * Whether a manifest entry is one of those - a thing with a page, an install command and a folder.
- *
- * @param {string} name
- */
-export function isComponent(name) {
-	return COMPONENT_LAYERS.some((layer) => name.startsWith(layer));
-}

@@ -101,5 +101,19 @@ inside a hidden panel to report it.
 | `step`        | `T`       | -       | Which step. Required.                        |
 | `keepMounted` | `boolean` | `false` | Keeps inactive panels in the page, `hidden`. |
 
-`StepperPrevious` and `StepperNext` accept the shadcn button's props. Their words are props too:
-`label` on Previous, and `nextLabel` and `finishLabel` on Next, for when the children are left out.
+### StepperPrevious
+
+| Prop       | Type      | Default    | Description                                |
+| ---------- | --------- | ---------- | ------------------------------------------ |
+| `label`    | `string`  | `Previous` | The label, when the children are left out. |
+| `children` | `Snippet` | -          | Replaces the label.                        |
+
+### StepperNext
+
+| Prop          | Type                             | Default  | Description                                        |
+| ------------- | -------------------------------- | -------- | -------------------------------------------------- |
+| `nextLabel`   | `string`                         | `Next`   | The label on every step but the last.              |
+| `finishLabel` | `string`                         | `Finish` | The label on the last step.                        |
+| `children`    | `Snippet<[{ isLast, pending }]>` | -        | Replaces the label. Receives where the stepper is. |
+
+Both accept the shadcn button's props as well.

@@ -63,6 +63,7 @@ Everything the shadcn input accepts goes to the field while editing: `maxlength`
 | `validate`     | `(value: string) => boolean`        | -              | `false` refuses the text.                                   |
 | `sanitize`     | `(raw: string) => string`           | trim           | Cleans text before validating and saving.                   |
 | `required`     | `boolean`                           | `false`        | Refuses empty text.                                         |
+| `disabled`     | `boolean`                           | `false`        | The value still shows; the button no longer starts an edit. |
 | `saveOnBlur`   | `boolean`                           | `true`         | Leaving the field saves. Off, it cancels.                   |
 | `selectOnEdit` | `boolean`                           | `true`         | Selects the text when editing starts.                       |
 | `placeholder`  | `string`                            | `''`           | Shown while empty, in both modes.                           |

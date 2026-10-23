@@ -17,7 +17,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import manifest from './components/coral/coral.json' with { type: 'json' };
-import { COMPONENT_LAYERS, itemName } from '../../registry.config.js';
+import { COMPONENT_LAYERS, componentOf, isComponent, itemName } from '../../registry.config.js';
 import { registry } from '../../scripts/registry.js';
 
 const CORAL = path.join(import.meta.dirname, 'components/coral');
@@ -43,7 +43,7 @@ async function files(): Promise<string[]> {
 /**
  * The files belonging to one manifest entry.
  *
- * `kit/*` entries are folders; `lib/*` entries are a single file that may carry any extension,
+ * Component entries are folders; `lib/*` entries are a single file that may carry any extension,
  * which is what `lib/options.ts` and `lib/hidden-field.svelte` respectively are.
  */
 function owned(name: string, all: string[]): string[] {
@@ -62,14 +62,32 @@ const SOURCE = /\.(ts|svelte)$/;
 const MODULE_EXTENSION = /(\.svelte)?\.[^./]+$/;
 const isTest = (file: string) => /\.(test|spec)\.[^./]+$/.test(file);
 
+// No `product/` entry exists yet, so these are what holds the layer to its shape until one does.
+describe('layers', () => {
+	it('finds the entry a file belongs to, one folder deeper under a product vertical', () => {
+		expect(componentOf('kit/select/select.svelte')).toBe('kit/select');
+		expect(componentOf('blocks/table-panel/panel.ts')).toBe('blocks/table-panel');
+		expect(componentOf('product/ai/chat/chat.svelte')).toBe('product/ai/chat');
+	});
+
+	it('claims no entry for shared modules or loose files', () => {
+		expect(componentOf('lib/options.ts')).toBeUndefined();
+		expect(componentOf('kit/README.md')).toBeUndefined();
+		expect(componentOf('product/ai/chat.svelte')).toBeUndefined();
+	});
+
+	it('keeps every folder in the item name', () => {
+		expect(itemName('kit/select')).toBe('kit-select');
+		expect(itemName('product/ai/chat')).toBe('product-ai-chat');
+		expect(isComponent('product/ai/chat')).toBe(true);
+		expect(isComponent('lib/options')).toBe(false);
+	});
+});
+
 describe('coral.json', () => {
 	it('describes every component in the folder, and only those', async () => {
 		const all = await files();
-		const folders = new Set(
-			all
-				.filter((file) => COMPONENT_LAYERS.some((layer: string) => file.startsWith(layer)))
-				.map((file) => file.split('/').slice(0, 2).join('/'))
-		);
+		const folders = new Set(all.map(componentOf).filter((name) => name !== undefined));
 		const singles = new Set(
 			all
 				.filter((file) => file.startsWith('lib/') && !isTest(file))
@@ -165,7 +183,7 @@ describe('registry', () => {
 		expect(new Set(names).size).toBe(names.length);
 		// Derived from the layers rather than spelled out again: a new layer has one place to be
 		// declared, and this test then holds it to the same rule as the others.
-		const prefixes = [...COMPONENT_LAYERS, 'lib/'].map((layer) => layer.replace('/', '-'));
+		const prefixes = [...COMPONENT_LAYERS, 'lib/'].map(itemName);
 
 		for (const name of names) {
 			if (name === 'coral') continue;

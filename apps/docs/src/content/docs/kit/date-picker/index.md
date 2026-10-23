@@ -148,6 +148,7 @@ Everything the wrapped calendar accepts stays available. On top of that:
 | `value`        | `DateValue` \| `DateRange`                              | -                         | The selection. Bindable.                                |
 | `onchange`     | `(value) => void`                                       | -                         | Fired when the user picks a day, a preset, or clears.   |
 | `open`         | `boolean`                                               | `false`                   | Popover state. Bindable.                                |
+| `onOpenChange` | `(open: boolean) => void`                               | -                         | The reader opened or closed it. Not when `open` is set. |
 | `month`        | `DateValue`                                             | today                     | The month on screen. Bindable. Follows the selection.   |
 | `presets`      | `Preset<Value>[]`                                       | -                         | Shortcuts beside the calendar.                          |
 | `placeholder`  | `string`                                                | `Select a date...`        | Trigger text while nothing is selected.                 |

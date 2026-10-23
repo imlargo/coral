@@ -15,7 +15,8 @@ src/lib/components/coral/     ← beside shadcn's ui/
 │     ├─ types.ts
 │     └─ initials.ts
 ├─ blocks/         → compositions of the above, one per use case
-│  └─ table-panel/
+├─ product/        → components that speak one vertical
+│  └─ <vertical>/<name>/
 └─ lib/            → shared across components
    ├─ options.ts   → Option<T>, OptionGroup<T>, and reading either shape
    ├─ intl.ts      → collators and formatters, built once
@@ -53,6 +54,29 @@ Five rules, so the layer stays a library rather than a folder of templates:
 Blocks are published like anything else: `blocks/<name>/`, an entry in `coral.json`, a page under
 `docs/blocks/`, and a registry item named `blocks-<name>` that pulls in the `kit/` items it
 composes.
+
+## What a product component is
+
+`kit/` and `blocks/` know no domain. `product/` is the one layer that does: it holds what every
+product in a vertical writes - an AI product's streaming message and model picker, a SaaS product's
+plan and seat controls, a fintech's amount and transaction rows - and that no generic component can
+be, because it speaks that vertical's vocabulary.
+
+Five rules, close to the block ones:
+
+1. **It speaks a vertical, never an app.** The vocabulary is the one every product in the vertical
+   shares: a message, a model, a plan, a seat, a transaction. One company's entities, ids and
+   business rules still belong in that company's `features/`.
+2. **Still no appearance.**
+3. **It takes data and callbacks.** No fetching, no routing, and no provider SDK: an AI component
+   takes the stream it renders, a billing one takes the plans and the handler that changes them. The
+   project decides which provider sits behind it.
+4. **It may carry copy, with English defaults**, every string a prop.
+5. **Rule of three**, as for blocks.
+
+Entries are grouped by vertical, one folder deeper: `product/<vertical>/<name>/`, a page under
+`docs/product/<vertical>/`, and a registry item named `product-<vertical>-<name>`. It may build on
+`blocks/`, `kit/` and the shadcn primitives; nothing below it imports it.
 
 ## Props
 
@@ -111,8 +135,11 @@ a number being typed - takes the first Escape and stops it there. With nothing t
 key through, so a dialog around it still closes.
 
 **Closing.** Whatever has to happen when a popover closes, such as forgetting the search term, goes
-through `lib/on-close`. The primitive reports the closes it made itself - Escape, a click outside, a
-pick - and says nothing when your code assigns `open`, which is what a `close()` in a footer does.
+in the primitive's `onOpenChangeComplete`, chained after the caller's own. `onOpenChange` reports
+only the closes the primitive made itself - Escape, a click outside, a pick - and says nothing when
+your code assigns `open`, which is what a `close()` in a footer does. `onOpenChangeComplete` hears
+every close, once the exit animation is over: reset a list any sooner and it refills while it is
+still fading out.
 
 **Appearance.** No literal colours, shadows, radii or type sizes. State that no shadcn primitive
 draws - a focus ring, a drag target, the section being read - uses the theme's own tokens and scale
@@ -186,7 +213,7 @@ Docs live next to nothing in Coral itself: the site is a separate workspace, and
 gets installed stays clean. A page is one Markdown file plus its demos:
 
 ```
-apps/docs/src/routes/(docs)/docs/kit/avatar/
+apps/docs/src/content/docs/kit/avatar/
 ├─ index.md
 └─ demos/
    ├─ basic.svelte
@@ -203,6 +230,11 @@ The Code tab shows that file's actual source, read at build time. There is no se
 snippet to keep in sync, and a demo that does not exist fails the build instead of rendering an
 empty box.
 
-The sidebar and the install command come for free: `kit/*` pages are collected from the folder
-itself, and each one prints the `shadcn-svelte add` line for its registry item. Neither is a list
-to update.
+The sidebar and the install command come for free: the pages of every layer - `kit/`, `blocks/`,
+`product/` - are collected from the folder itself and listed under the `group` in their
+frontmatter, and each one prints the `shadcn-svelte add` line for its registry item. Neither is a
+list to update.
+
+The Props tables are the one part written by hand, so a test holds them to the source: every prop
+the component's `types.ts` declares needs a row, every row has to be a prop it takes, and
+"Bindable" goes on exactly the props that are. A new prop without a row fails the suite.
