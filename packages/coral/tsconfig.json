@@ -16,11 +16,7 @@
 		"sourceMap": true,
 		"strict": true,
 		"noEmit": true,
-		"types": ["node", "vite/client"],
-		"paths": {
-			"$lib": ["./src/lib"],
-			"$lib/*": ["./src/lib/*"]
-		}
+		"types": ["node", "vite/client"]
 	},
 	"include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte", "scripts/**/*.js", "*.ts", "*.js"]
 }

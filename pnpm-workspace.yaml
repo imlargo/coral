@@ -5,15 +5,8 @@ packages:
 allowBuilds:
   esbuild: true
   workerd: true
+  sharp: true
 
 minimumReleaseAgeExclude:
-  - '@svmd/content@0.2.0'
-  - '@svmd/core@0.2.0'
-  - '@svmd/mdast-util-svelte@0.2.0'
-  - '@svmd/micromark-extension-svelte@0.2.0'
-  - '@svmd/micromark-factory-svelte-expression@0.2.0'
-  - '@svmd/vite@0.2.0'
-
-onlyBuiltDependencies:
-  - workerd
-  - esbuild
+  - bits-ui@2.20.2
+  - shadcn-svelte@1.7.1

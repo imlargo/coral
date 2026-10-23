@@ -1,5 +1,7 @@
 /**
- * Builds the registry Coral is installed from, into the docs site's static assets.
+ * Builds the registry Coral is installed from, into `dist/r/`. The docs site copies that folder into
+ * its static assets and serves it; the library does not know where it is served from beyond the
+ * URL in `registry.config.js`.
  *
  * The item list comes from `registry.js`, which derives it from `coral.json`; this file writes
  * that out and hands it to `shadcn-svelte registry build`, which reads every source file, rewrites
@@ -12,11 +14,11 @@ import { execFileSync } from 'node:child_process';
 import { readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
-import { SITE } from '../registry.config.js';
-import { CORAL, PACKAGE, isComponent, registry } from './registry.js';
+import { SITE, isComponent } from '../registry.config.js';
+import { CORAL, PACKAGE, registry } from './registry.js';
 
 const REGISTRY_FILE = path.join(PACKAGE, 'registry.json');
-const DEFAULT_OUTPUT = path.resolve(PACKAGE, '../../apps/docs/static/r');
+const DEFAULT_OUTPUT = path.join(PACKAGE, 'dist/r');
 
 /**
  * Writes the `docs` line back onto each built item, for the components that have a page.

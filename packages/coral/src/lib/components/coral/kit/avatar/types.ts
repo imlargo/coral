@@ -1,10 +1,10 @@
 /**
  * @coral/kit/avatar
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
-import type { Avatar } from '$lib/components/ui/avatar/index.js';
+import type { Avatar } from '#lib/components/ui/avatar/index.js';
 
 /**
  * Everything the shadcn root accepts - `size`, `class`, `delayMs`, `loadingStatus`, `ref` and

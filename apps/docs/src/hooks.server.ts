@@ -1,8 +1,12 @@
-import type { HandleServerError } from '@sveltejs/kit';
-import { logger } from '$docs/core/logger.js';
+import type { HandleServerError } from '@sveltejs/kit/hooks';
+import { logger } from '#lib/core/logger.js';
 
-export const handleError: HandleServerError = ({ error, status }) => {
-	// 404s are noise: they say more about crawlers than about the app.
-	if (status === 404) return { message: 'Not found.' };
-	return { message: logger.error('server', error) };
+// Only unexpected errors are logged: `error(404, ...)` and framework 404s already carry a safe
+// message, and they say more about crawlers than about the app. The visitor gets a safe message and
+// an id; the log gets the same id with the rest.
+export const handleError: HandleServerError = ({ kind, error }) => {
+	if (kind !== 'unknown') return;
+
+	const errorId = crypto.randomUUID();
+	return { message: logger.error('server', error, { errorId }), errorId };
 };

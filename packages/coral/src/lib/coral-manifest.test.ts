@@ -1,6 +1,6 @@
 /**
- * Checks `coral/coral.json` against the folder it describes, the registry it produces and the
- * pages that document it.
+ * Checks `coral/coral.json` against the folder it describes and the registry it produces. The docs
+ * site checks its own pages against the manifest; the library knows nothing about it.
  *
  * The manifest is what everything else is derived from - the registry items a project installs,
  * the versions they carry, the primitives they pull in - and it is kept by hand, so every claim in
@@ -17,11 +17,10 @@ import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import manifest from './components/coral/coral.json' with { type: 'json' };
-import { COMPONENT_LAYERS, isComponent, itemName, registry } from '../../scripts/registry.js';
+import { COMPONENT_LAYERS, componentOf, isComponent, itemName } from '../../registry.config.js';
+import { registry } from '../../scripts/registry.js';
 
 const CORAL = path.join(import.meta.dirname, 'components/coral');
-/** The docs site, which is a sibling workspace - see the note above about repo tooling. */
-const DOCS = path.resolve(import.meta.dirname, '../../../../apps/docs/src/routes/(docs)/docs');
 
 type Entry = {
 	title: string;
@@ -44,7 +43,7 @@ async function files(): Promise<string[]> {
 /**
  * The files belonging to one manifest entry.
  *
- * `kit/*` entries are folders; `lib/*` entries are a single file that may carry any extension,
+ * Component entries are folders; `lib/*` entries are a single file that may carry any extension,
  * which is what `lib/options.ts` and `lib/hidden-field.svelte` respectively are.
  */
 function owned(name: string, all: string[]): string[] {
@@ -63,14 +62,32 @@ const SOURCE = /\.(ts|svelte)$/;
 const MODULE_EXTENSION = /(\.svelte)?\.[^./]+$/;
 const isTest = (file: string) => /\.(test|spec)\.[^./]+$/.test(file);
 
+// No `product/` entry exists yet, so these are what holds the layer to its shape until one does.
+describe('layers', () => {
+	it('finds the entry a file belongs to, one folder deeper under a product vertical', () => {
+		expect(componentOf('kit/select/select.svelte')).toBe('kit/select');
+		expect(componentOf('blocks/table-panel/panel.ts')).toBe('blocks/table-panel');
+		expect(componentOf('product/ai/chat/chat.svelte')).toBe('product/ai/chat');
+	});
+
+	it('claims no entry for shared modules or loose files', () => {
+		expect(componentOf('lib/options.ts')).toBeUndefined();
+		expect(componentOf('kit/README.md')).toBeUndefined();
+		expect(componentOf('product/ai/chat.svelte')).toBeUndefined();
+	});
+
+	it('keeps every folder in the item name', () => {
+		expect(itemName('kit/select')).toBe('kit-select');
+		expect(itemName('product/ai/chat')).toBe('product-ai-chat');
+		expect(isComponent('product/ai/chat')).toBe(true);
+		expect(isComponent('lib/options')).toBe(false);
+	});
+});
+
 describe('coral.json', () => {
 	it('describes every component in the folder, and only those', async () => {
 		const all = await files();
-		const folders = new Set(
-			all
-				.filter((file) => COMPONENT_LAYERS.some((layer: string) => file.startsWith(layer)))
-				.map((file) => file.split('/').slice(0, 2).join('/'))
-		);
+		const folders = new Set(all.map(componentOf).filter((name) => name !== undefined));
 		const singles = new Set(
 			all
 				.filter((file) => file.startsWith('lib/') && !isTest(file))
@@ -100,7 +117,7 @@ describe('coral.json', () => {
 		for (const file of owned(name, all).filter((f) => SOURCE.test(f) && !isTest(f))) {
 			const text = await readFile(path.join(CORAL, file), 'utf8');
 			for (const [, primitive] of text.matchAll(
-				/from '\$lib\/components\/ui\/([^/']+)(?:\/[^']*)?'/g
+				/from '#lib\/components\/ui\/([^/']+)(?:\/[^']*)?'/g
 			)) {
 				imported.add(primitive);
 			}
@@ -115,7 +132,7 @@ describe('coral.json', () => {
 
 		for (const file of owned(name, all).filter((f) => SOURCE.test(f) && !isTest(f))) {
 			const text = await readFile(path.join(CORAL, file), 'utf8');
-			for (const [, source] of text.matchAll(/from '([^'.$][^']*)'/g)) {
+			for (const [, source] of text.matchAll(/from '([^'.#][^']*)'/g)) {
 				// `svelte` and its subpaths are the framework, not a dependency to install.
 				if (source === 'svelte' || source.startsWith('svelte/')) continue;
 				// Scoped packages keep one leading segment: `@lucide/svelte/icons/x` is `@lucide/svelte`.
@@ -126,23 +143,6 @@ describe('coral.json', () => {
 
 		expect([...imported].sort()).toEqual([...(entry.npm ?? [])].sort());
 	});
-});
-
-describe('docs pages', () => {
-	/** `lib/*` is installed as a dependency of the layers above it, so it has no page of its own. */
-	const documented = entries.filter(([name]) => isComponent(name));
-
-	it.each(documented)(
-		'%s is documented, with the title and description the manifest states',
-		async (name, entry) => {
-			const page = await readFile(path.join(DOCS, name, 'index.md'), 'utf8');
-			const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---/.exec(page)?.[1];
-
-			expect(frontmatter, `${name}/index.md has no frontmatter`).toBeDefined();
-			expect(frontmatter).toContain(`title: ${entry.title}`);
-			expect(frontmatter).toContain(`description: ${entry.description}`);
-		}
-	);
 });
 
 /**
@@ -183,7 +183,7 @@ describe('registry', () => {
 		expect(new Set(names).size).toBe(names.length);
 		// Derived from the layers rather than spelled out again: a new layer has one place to be
 		// declared, and this test then holds it to the same rule as the others.
-		const prefixes = [...COMPONENT_LAYERS, 'lib/'].map((layer) => layer.replace('/', '-'));
+		const prefixes = [...COMPONENT_LAYERS, 'lib/'].map(itemName);
 
 		for (const name of names) {
 			if (name === 'coral') continue;

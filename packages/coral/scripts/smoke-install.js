@@ -23,7 +23,8 @@ import path from 'node:path';
 import process from 'node:process';
 import { PACKAGE } from './registry.js';
 
-const REGISTRY = path.resolve(PACKAGE, '../../apps/docs/static/r');
+/** What `build-registry.js` writes by default: run `pnpm --filter coral registry` first. */
+const REGISTRY = path.join(PACKAGE, 'dist/r');
 const keep = process.argv.includes('--keep');
 
 /**
@@ -136,11 +137,11 @@ async function scaffold(cwd) {
 				$schema: 'https://shadcn-svelte.com/schema.json',
 				tailwind: { css: 'src/app.css', baseColor: 'neutral' },
 				aliases: {
-					components: '$lib/components',
-					utils: '$lib/utils',
-					ui: '$lib/components/ui',
-					hooks: '$lib/hooks',
-					lib: '$lib'
+					components: '#lib/components',
+					utils: '#lib/utils',
+					ui: '#lib/components/ui',
+					hooks: '#lib/hooks',
+					lib: '#lib'
 				},
 				typescript: true,
 				registry: 'https://shadcn-svelte.com/registry',

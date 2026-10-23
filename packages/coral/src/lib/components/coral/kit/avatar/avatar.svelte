@@ -1,9 +1,9 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/avatar
-	 * @version 1.0.0
+	 * @version 1.0.1
 	 */
-	import { Avatar as Root, AvatarFallback, AvatarImage } from '$lib/components/ui/avatar/index.js';
+	import { Avatar as Root, AvatarFallback, AvatarImage } from '#lib/components/ui/avatar/index.js';
 	import { initials } from './initials.js';
 	import type { AvatarProps } from './types.js';
 

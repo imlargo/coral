@@ -17,14 +17,15 @@ philosophy but is deliberately untracked, so don't assume a reader has it.)
 The repo is a pnpm workspace with two members: **`packages/coral`**, the library, and
 **`apps/docs`**, the site that documents it. Coral itself lives in
 **`packages/coral/src/lib/components/coral/`**, one self-contained folder that lands in the target
-project at `$lib/components/coral/`, beside shadcn's `ui/`. Currently: `kit/{action-button,
-activity-calendar, avatar, avatar-stack, combobox, command-palette, confirm-dialog, copy-button,
-data-table, date-picker, file-input, follow-scroll, inline-edit, number-input, page-state,
-password-input, rating-group, relative-time, reorder-list, responsive-dialog, scrub-input,
-search-input, select, shortcut, show-more, stepper, tags-input, textarea, toc, tree-view}`, over
-`lib/{action, announce, debounce, focus, fold, hidden-field, intl, live-region, number,
-number-field, on-close, options, table, trigger}`. There is no `blocks/` entry right now - the
-layer exists in the architecture below, waiting on a second use case that needs it.
+project at `#lib/components/coral/` (`$lib/...` on SvelteKit 2), beside shadcn's `ui/`.
+Currently: `kit/{action-button, activity-calendar, avatar, avatar-stack, combobox, command-palette,
+confirm-dialog, copy-button, data-table, date-picker, file-input, follow-scroll, inline-edit,
+number-input, page-state, password-input, rating-group, relative-time, reorder-list,
+responsive-dialog, scrub-input, search-input, select, shortcut, show-more, stepper, tags-input,
+textarea, toc, tree-view}`, over `lib/{action, announce, debounce, focus, fold, hidden-field, intl,
+live-region, number, number-field, options, scale, table, trigger}`. There is no `blocks/` or
+`product/` entry right now - both layers exist in the architecture below, waiting on the first thing
+that needs them.
 `packages/coral/src/lib/components/coral/coral.json` is the list that counts. Read it rather than
 this sentence, which is the kind that goes stale.
 
@@ -43,14 +44,16 @@ this sentence, which is the kind that goes stale.
   checkbox, a spinner), use the primitive instead of restyling. Appearance is the shadcn theme's
   job, not Coral's.
 - **No domain knowledge.** Never reference a consuming app's entities (invoice, student,
-  contract...) in `kit/`. Demos are the exception and have their own rules (see **Language and
-  demos**).
+  contract...) in `kit/` or `blocks/`. `product/` may speak its vertical's shared vocabulary (a
+  message, a plan, a transaction), never one app's entities. Demos are the exception and have their
+  own rules (see **Language and demos**).
 - **`packages/coral/src/lib/components/ui/` is untouchable.** shadcn-managed, excluded from
   lint/format on purpose. Compose around it, never edit it. It is the one shadcn install in the
-  repo: the docs site resolves `$lib/components/ui/*` to it rather than keeping a second copy.
-- **Import direction is one-way:** `blocks/` → `kit/` → `ui/`. `kit/` composing `kit/` is fine and
-  desirable; the reverse never is. Never a headless library directly (`bits-ui`); derive its types
-  from the shadcn component instead (`ComponentProps<typeof Avatar>`). Never project domain types.
+  repo: the docs site resolves `#lib/components/ui/*` to it rather than keeping a second copy.
+- **Import direction is one-way:** `product/` → `blocks/` → `kit/` → `ui/`. `kit/` composing `kit/`
+  is fine and desirable; the reverse never is. Never a headless library directly (`bits-ui`); derive
+  its types from the shadcn component instead (`ComponentProps<typeof Avatar>`). Never project
+  domain types.
 - **Nothing duplicated.** Two components needing the same logic means extracting a third, or
   `lib/`. Never copy-paste inside Coral.
 - **Every composed component exposes its pieces.** If a rare case forces someone to drop Coral and
@@ -62,10 +65,13 @@ this sentence, which is the kind that goes stale.
 ## Architecture
 
 ```
-packages/coral/              → the library
-├─ coral.json is inside src/lib/components/coral/ - see below
-├─ registry.config.js        → where the registry is published (one constant, both workspaces)
+./                           → pnpm workspace root: lint, format, CI and the deploy scripts
+packages/coral/              → the library: plain Svelte + Vite, no SvelteKit
+├─ package.json              → `imports`: #lib → src/lib. `exports`: what the docs site may read
+├─ svelte.config.js          → Svelte options (runes); there is no SvelteKit to read anything else
+├─ registry.config.js        → where the registry is published, and the names it publishes
 ├─ registry.json             → GENERATED, gitignored. Never edit, never commit
+├─ dist/r/                   → GENERATED registry output, gitignored
 ├─ scripts/
 │  ├─ registry.js            → derives the registry items from coral.json + the filesystem
 │  ├─ build-registry.js      → writes registry.json and runs `shadcn-svelte registry build`
@@ -75,32 +81,43 @@ packages/coral/              → the library
    └─ lib/
       ├─ hooks/              → shadcn's own (is-mobile), not Coral's
       ├─ utils.ts            → cn (shadcn's)
-      ├─ coral-manifest.test.ts → repo tooling: manifest ↔ folder ↔ registry ↔ docs pages
+      ├─ coral-manifest.test.ts → repo tooling: manifest ↔ folder ↔ registry
       └─ components/
          ├─ ui/              → shadcn primitives (CLI-managed, untouchable)
          └─ coral/           → 📦 the folder that gets installed, beside ui/
             ├─ coral.json    → manifest: title, description, version + required primitives
             ├─ lib/          → shared across components (options.ts, hidden-field.svelte)
-            └─ kit/          → composed, generic components - the actual product
-               └─ avatar/
+            ├─ kit/          → composed, generic components - the actual product
+            │  └─ avatar/
+            ├─ blocks/       → kit/ wired together for one use case
+            └─ product/      → one vertical's components: product/<vertical>/<name>/
 
-apps/docs/                   → the documentation site (SvelteKit, Cloudflare)
-├─ src/routes/(docs)/docs/   → index.md + demos/*.svelte per component
-├─ src/docs/                 → the site's own components, imported through `$docs`
-└─ static/r/                 → GENERATED registry output, gitignored, served at /r/*
+apps/docs/                   → the documentation site (SvelteKit 3, Cloudflare), built on svdocs
+├─ package.json              → `imports`: its own #lib, plus Coral's folders mapped to the library
+├─ src/content/docs/         → index.md + demos/*.svelte per component
+├─ src/lib/features/docs/    → the site's own pieces: preview, install, search, sidebar, highlighting,
+│                              and the checks of its pages against the library (coral-pages, coral-props)
+└─ static/r/                 → GENERATED: dist/r copied in by `build`, gitignored, served at /r/*
 ```
 
-**The site's `$lib` is the library.** `apps/docs/svelte.config.js` sets `kit.files.lib` to
-`packages/coral/src/lib`, so a demo renders the exact file the registry ships, through the same
-import paths a consuming project resolves. Consequences to respect: the docs app's own code lives
-under `$docs`, never `$lib`; and `$lib` cannot be redirected per subpath, because SvelteKit puts
-its own `$lib` alias first and Vite takes the first match.
+**The library knows nothing about the site.** Nothing under `packages/coral` imports, reads or
+writes anything in `apps/docs`; the site depends on the library, never the reverse. The docs app's
+`package.json` maps `#lib/components/coral/*`, `#lib/components/ui/*` and `#lib/utils.js` to the
+`coral` workspace package, and keeps `#lib/*` for its own code. Node and Vite resolve a `#` import
+against the importer's own `package.json`, so a demo imports Coral through the exact path a
+consuming project writes, and Coral's own `#lib` imports keep resolving inside the library.
+Consequence to respect: the site has no `ui/` of its own and no `utils.ts`; a primitive it needs is
+added to the library.
 
-Outside its own folder, Coral may reach for exactly three things: `$lib/components/ui/*`,
-`$lib/utils` (`cn`), and `@lucide/svelte` for icons. All three are guaranteed by a shadcn-svelte
-project's `components.json` - the first two by its aliases, the third by `iconLibrary`, which is
-why an icon import must stay `@lucide/svelte` and must be declared under `npm` in `coral.json`.
-Reach for as few as the component actually needs: `kit/avatar` uses only the first.
+**Coral never imports SvelteKit.** Nothing from `$app/*` or `$env/*` inside `coral/`: a consumer
+may be a plain Svelte + Vite project. The library enforces it by being one: SvelteKit is not
+installed in `packages/coral`, so such an import fails `check` and the tests alike.
+
+Outside its own folder, Coral may reach for exactly three things: `#lib/components/ui/*`,
+`#lib/utils` (`cn`), and `@lucide/svelte` for icons. All three are guaranteed by a shadcn-svelte
+project's `components.json` - the first two by its aliases (the CLI rewrites them to whatever the
+consumer uses, `$lib` included), the third by `iconLibrary`, which is why an icon import must
+stay `@lucide/svelte` and must be declared under `npm` in `coral.json`. Reach for as few as the component actually needs: `kit/avatar` uses only the first.
 
 **Folders are created when something needs them, never in advance.** `hooks/` doesn't exist yet
 because nothing lives in it. A util with one consumer stays inside its component's folder
@@ -112,6 +129,13 @@ than their looks: the order things happen in, the state they share, the pipeline
 may carry copy, with English defaults, because a block with every string left blank is not worth
 installing. It still takes data and callbacks - never fetching, never routing. The contract is
 written out on the Conventions page.
+
+**`product/` speaks one vertical**: AI, SaaS, fintech. It holds what every product in that vertical
+writes and no generic component can be - a streaming message, a plan picker, a transaction row - one
+folder deeper than the other layers, as `product/<vertical>/<name>/`. Like a block it takes data and
+callbacks and may carry copy; unlike one, it also takes no provider SDK: it is handed the stream,
+the plans, the handler, and the project decides what sits behind them. Admission is the block rule
+of three.
 
 **No barrels.** One component, one folder (`kit/avatar/{avatar.svelte,types.ts,initials.ts}`),
 imported by file path. Consequence to respect: filenames are public API. Renaming one breaks
@@ -137,8 +161,10 @@ every project that already copied it.
   line; `*Title` and `*Description` are a heading and the line under it. `on<thing>change` is the
   callback for a root that is an element, which already has an `onchange` of its own.
 - **Shared helpers first:** `lib/intl` for formatters and collators, `lib/focus` for focus rings,
-  `lib/on-close` for what must happen when a popover closes (the primitive does not report a close
-  made by assigning `open`), `prefersReducedMotion` from `svelte/motion`.
+  `lib/scale` before mixing a rect with a layout size, `prefersReducedMotion` from `svelte/motion`.
+- **What must happen when a popover closes goes in `onOpenChangeComplete`**, chained after the
+  caller's. `onOpenChange` misses a close made by assigning `open`; the complete callback hears
+  every one, after the exit animation, so a list is not reset while it is still fading out.
 - **Comment only what the code cannot say** - the why, in a line or two. No restating, no history.
 - **Tests run in a real browser** (`*.svelte.test.ts`); logic worth testing alone lives in a plain
   module with a plain test. Every component is also listed in `src/lib/a11y.svelte.test.ts`, which
@@ -195,10 +221,15 @@ The rules most often missed, because nothing in the code enforces them.
 - **A docs page is `index.md` plus `demos/*.svelte`**, found by glob; there is no index to
   update. `<Preview name="kit/<component>/<demo>" />` embeds one. Frontmatter `title` is what the
   sidebar shows, spelled out in sentence case ("Table of contents", not "Toc"), and it has to
-  match `coral.json`. The install command is not written into the page - every `kit/*` page gets
-  one rendered for it.
+  match `coral.json` (`coral-pages.test.ts` in the docs app checks it). `group` is the sidebar
+  section and search group: `Kit` for a component page. The install command is not written into
+  the page - every `kit/*` page gets one rendered for it.
 - **Change a demo, resync its `index.md`.** Prose quoting a demo's strings is the first thing to
   rot.
+- **A Props table is checked against `types.ts`** by `coral-props.test.ts`: every prop the
+  component declares has a row in a `Prop` or `Snippet` table (`ref` aside, which Conventions
+  covers once), every row is a prop it takes, and `Bindable` appears exactly on `$bindable` props.
+  Add a prop, add its row.
 
 ## Registry
 
@@ -206,27 +237,41 @@ Coral is published as a shadcn-svelte registry, served by the docs site at `/r/*
 installed with `pnpm dlx shadcn-svelte@latest add <url>`.
 
 - **`registry.json` is generated.** `scripts/registry.js` derives it from `coral.json` and the
-  folder; `pnpm --filter coral registry` writes it and runs the CLI's `registry build` into
-  `apps/docs/static/r/`. Both outputs are gitignored. Editing either by hand is editing a build
-  artifact.
-- **Item names carry their layer** - `kit-*`, `blocks-*`, `lib-*` - the manifest name with the
-  slash swapped. `COMPONENT_LAYERS` in `scripts/registry.js` is where the layers are declared, and
-  everything downstream reads it. Never publish an item under a bare name: the CLI merges a dependency tree by name, so a Coral `select` and
-  shadcn's `select` would be taken for the same item and one of them dropped, files and all.
+  folder; `pnpm registry` writes it and runs the CLI's `registry build` into
+  `packages/coral/dist/r/`, which the docs `build` copies into `apps/docs/static/r/`. All of it is
+  gitignored. Editing any of it by hand is editing a build artifact.
+- **Item names carry their layer** - `kit-*`, `blocks-*`, `product-*`, `lib-*` - the manifest name
+  with every slash swapped (`product/ai/chat` is `product-ai-chat`). `COMPONENT_LAYERS` and
+  `itemName` in `registry.config.js` are where the layers and the rule are declared, and the
+  generator, the tests and the docs site all read them. Never publish an item under a bare name:
+  the CLI merges a dependency tree by name, so a Coral `select` and shadcn's `select` would be
+  taken for the same item and one of them dropped, files and all.
 - **Every file is `registry:component`**, with `target` mirroring its path under `coral/`. The CLI
   resolves that type against the consumer's `components` alias, which puts Coral in
-  `$lib/components/coral/` beside shadcn's `ui/` - the shape this repo keeps - and follows the
+  `#lib/components/coral/` beside shadcn's `ui/` - the shape this repo keeps - and follows the
   alias if a project moved it.
 - **Tests are not published.** They are written against this workspace's setup.
-- **Imports between Coral files stay relative.** The CLI rewrites `$lib/*` to the consumer's
+- **Imports between Coral files stay relative.** The CLI rewrites `#lib/*` to the consumer's
   aliases but leaves relative paths alone, which is what lets the installed folder work whatever
   those aliases are.
 - **The publish URL lives in `registry.config.js`**, read by the generator and by the docs site's
   install block. Changing where Coral is served is changing that one constant.
-- **`pnpm --filter coral smoke`** is the end-to-end proof: it serves the built registry, installs
+- **`pnpm smoke`**, after `pnpm registry`, is the end-to-end proof: it serves the built registry, installs
   every item into a throwaway SvelteKit project and type-checks the result. Run it when anything
   in `scripts/`, the aliases or the manifest shape changes. It takes a few minutes and needs the
   network.
+
+## Docs site
+
+`apps/docs` is built from [svdocs](https://github.com/imlargo/svdocs) and keeps its conventions,
+which come from [svelte-template](https://github.com/imlargo/svelte-template): imports by real path
+through `#lib/...` with an explicit extension, no barrels of our own, components in PascalCase
+(`DocsSidebar.svelte`) and other modules in kebab-case, every native `<button>` with a `type`, the
+logger (`#lib/core/logger.ts`) as the only exit for logs, and `$effect` only to sync with
+something outside Svelte. Coral's own filenames stay kebab-case: they are public API. The
+build-time pieces under `src/lib/features/docs/` (highlighting, heading ids, search index, demo
+sources) are loaded by `vite.config.ts` in Node, so they import each other by relative path with a
+`.ts` extension and never touch the DOM.
 
 ## Formatting
 
@@ -240,15 +285,16 @@ From the repo root, which delegates to the workspace that owns the task:
 ```sh
 pnpm dev        # docs site
 pnpm check      # type-check both workspaces
-pnpm lint       # prettier --check + eslint, whole repo, one config
+pnpm lint       # prettier --check + eslint, whole repo, one config (ignores every ui/)
 pnpm format     # prettier --write
-pnpm test       # vitest in every workspace that has tests
-pnpm registry   # rebuild the registry into apps/docs/static/r
-pnpm build      # production build of the site (runs the registry build first)
+pnpm test       # vitest in both workspaces
+pnpm registry   # rebuild the registry into packages/coral/dist/r
+pnpm smoke      # install the built registry into a throwaway project (slow, needs network)
+pnpm build      # production build of the site (builds and copies the registry first)
 ```
 
 Per workspace when that is what you mean: `pnpm --filter coral test`,
-`pnpm --filter coral smoke`, `pnpm --filter coral-docs dev`.
+`pnpm --filter coral-docs check`, `pnpm --filter coral-docs dev`.
 
 `pnpm dlx shadcn-svelte@latest add <component>` **from `packages/coral`** to add a new shadcn
 primitive - that is where `components.json` and the one `ui/` folder live.
@@ -269,27 +315,23 @@ of known failures to read past.
 A `check` that printed no `COMPLETED` line did not type-check anything, so read the output rather
 than the exit code alone.
 
-> ⚠️ **Build output poisons both scripts, so `build` and `check` delete it first.** `vite build`
-> writes a bundled worker to `.svelte-kit/cloudflare/` plus `.svelte-kit/output/`, and that breaks
-> two things at once:
->
-> - `svelte-check` discovers files by walking the workspace: it ignores tsconfig `exclude`, and
->   its own `--ignore` flag refuses to run alongside `--tsconfig`, so it type-checks the generated
->   worker and reports ~900 errors nobody wrote.
-> - `wrangler types` emits a `GlobalProps.mainModule` block **only when that worker exists**, so
->   `wrangler types --check` passes on a clean tree and fails on a dirty one. Cloudflare restores a
->   build-output cache between runs, which made CI fail on every build after the first.
->
-> Consequence to respect: **run `check` before `build`, never after**. It deletes the artifact you
-> were about to deploy. And run `pnpm gen` on a clean tree, or you commit a
-> `worker-configuration.d.ts` that references build output and breaks CI.
+> ⚠️ **`check` deletes build output first.** `vite build` writes a bundled worker to
+> `apps/docs/.svelte-kit/cloudflare/` plus `.svelte-kit/output/`, and `svelte-check` discovers
+> files by walking the project: it ignores tsconfig `exclude`, and its own `--ignore` flag refuses
+> to run alongside `--tsconfig`, so it would type-check the generated worker and report ~900 errors
+> nobody wrote. Consequence to respect: **run `check` before `build`, never after**. It deletes the
+> artifact you were about to deploy.
 
-> ⚠️ `worker-configuration.d.ts` declares a global `Element` whose HTMLRewriter `append`/`prepend`
-> signatures merge with (and shadow) the DOM ones, and typing `App.Platform` is what pulls it into
-> the program. `apps/docs/src/app.d.ts` therefore leaves `Platform` undeclared - the site is
-> prerendered and never reads it - and `tsconfig.json` does not list those types. Declaring either
-> again brings back the shadowing, and with it shadcn's `ui/native-select` reporting an error
-> nobody can fix.
+> ⚠️ **No `wrangler types`**, unlike the svelte-template and svdocs it would otherwise follow. It
+> declares the Workers runtime globally, and its `Element` carries HTMLRewriter `append`/`prepend`
+> signatures that merge with (and shadow) the DOM one the components rely on. The site is
+> prerendered and never reads `platform`, so `apps/docs/src/app.d.ts` leaves `App.Platform`
+> undeclared. A route that needs a binding declares `Platform` by hand there, with its types
+> imported from `@cloudflare/workers-types`, never as globals.
+
+> ⚠️ SvelteKit 3's `resolve()` reads a leading `/` as a route ID; a plain path has none
+> (`resolve('docs')`). The site's sidebar and nav keep `/docs/...` because they are compared
+> against `page.url.pathname`, and go through `resolvePathname()` in `#lib/utils/paths.ts`.
 
 > ⚠️ `mod` in a `kit/shortcut` combo resolves to Cmd on a Mac and Ctrl everywhere else, from the
 > real browser via `detectPlatform()`. A test that presses Control against a `mod+k` binding passes
@@ -301,18 +343,20 @@ than the exit code alone.
 > workspace's own wrangler from `apps/docs`, where `wrangler.jsonc` lives - a bare
 > `npx wrangler deploy` from the root finds no config. Keeping the dashboard pointed at root
 > scripts means a move of the docs app is a change to `package.json`, not to the dashboard.
-> The build image defaults to **pnpm 10.11.1** and does not read `packageManager`; the override
-> is a `PNPM_VERSION` build variable.
+> The build image does not read `packageManager`: pnpm is pinned by a `PNPM_VERSION` build
+> variable, which has to match `packageManager` (CI reads that field). Node comes from
+> `.node-version`; SvelteKit 3 needs 22.17 or later.
 
-> ⚠️ The registry the site serves is **built, not committed**: `apps/docs/static/r/` is generated by
-> `apps/docs`'s `build` script before `vite build`. A deploy that skips that script deploys a site
+> ⚠️ The registry the site serves is **built, not committed**: `apps/docs/static/r/` is copied in
+> by `apps/docs`'s `build` script before `vite build`. A deploy that skips that script deploys a site
 > whose install commands 404.
 
 Then re-check the **Coral test**:
 
 1. **Written twice already?** → If not, it doesn't enter yet.
 2. **Does it define appearance?** → If so, it doesn't belong in Coral.
-3. **Does it know your app's domain?** → If so, it belongs in the project's `features/`.
+3. **Does it know your app's domain?** → If so, it belongs in the project's `features/`. A
+   vertical's shared vocabulary, rather than one app's, is what `product/` is for.
 4. **Does the API match the component's nature?** → Flat props only if there's a canonical case;
    otherwise composition.
 5. **Does the rare case force abandoning Coral?** → If so, expose the pieces.

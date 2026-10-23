@@ -1,10 +1,10 @@
 /**
  * @coral/kit/combobox
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 import { render } from 'vitest-browser-svelte';
-import { createRawSnippet } from 'svelte';
+import { createRawSnippet, flushSync } from 'svelte';
 import type { ComponentProps } from 'svelte';
 import { userEvent } from 'vitest/browser';
 import { describe, expect, it, vi } from 'vitest';
@@ -205,6 +205,22 @@ describe('searching', () => {
 		await expect.poll(() => props.search).toBe('gua');
 		await userEvent.click(button('Done')!);
 		await expect.poll(() => props.search).toBe('');
+	});
+
+	it('keeps the term until the popover has finished closing, so the list does not refill as it fades', async () => {
+		const onOpenChangeComplete = vi.fn();
+		const props = $state({ options: fruits, open: true, search: '', onOpenChangeComplete });
+		await draw(props);
+
+		await userEvent.fill(search(), 'gua');
+		await expect.poll(() => props.search).toBe('gua');
+
+		props.open = false;
+		flushSync();
+		expect(props.search).toBe('gua');
+		await expect.poll(() => props.search).toBe('');
+		// Chained, not replaced: the caller's own handler still hears the close.
+		expect(onOpenChangeComplete).toHaveBeenLastCalledWith(false);
 	});
 
 	it('shows a loading row in place of the list', async () => {

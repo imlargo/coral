@@ -1,6 +1,6 @@
 <script lang="ts">
-	import DocsProse from '$docs/components/layout/docs/docs-prose.svelte';
-	import Install from '$docs/install.svelte';
+	import DocsProse from '#lib/features/docs/components/DocsProse.svelte';
+	import Install from '#lib/features/docs/components/Install.svelte';
 
 	let { data } = $props();
 	// The component is data, so it has to be a `$derived` local before it can be used as a tag.
@@ -11,6 +11,7 @@
 	title={data.title}
 	description={data.description}
 	raw={data.raw}
+	updated={data.updated}
 	prev={data.prev}
 	next={data.next}
 >

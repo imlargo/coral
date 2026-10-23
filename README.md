@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="apps/docs/src/assets/logo.svg" alt="Coral" width="64" height="64" />
+  <img src="apps/docs/src/lib/assets/logo.svg" alt="Coral" width="64" height="64" />
 
 # Coral
 
@@ -95,7 +95,7 @@ There are no barrels. One component, one folder, imported directly:
 
 ```svelte
 <script lang="ts">
-	import Combobox from '$lib/components/coral/kit/combobox/combobox.svelte';
+	import Combobox from '#lib/components/coral/kit/combobox/combobox.svelte';
 
 	const fruits = [
 		{ value: 1, label: 'Açaí' },
@@ -243,7 +243,7 @@ whatever locale the reader is actually in, not one chosen when the file was writ
 (`kit/avatar/initials.ts`) follows the same rule.
 
 **Accent-insensitive, both ways.** Combobox search folds accents before comparing
-(`kit/combobox/fold.ts`), so `acai` finds `Açaí` and `sao paulo` finds `São Paulo`, because that is
+(`lib/fold.ts`), so `acai` finds `Açaí` and `sao paulo` finds `São Paulo`, because that is
 how people type words their keyboard layout does not spell. The one thing that never depends on a
 locale is which of two strings match.
 
@@ -255,9 +255,10 @@ in this repo travels.
 The repo is two workspaces, so the library is not entangled with the site that documents it:
 
 ```
-packages/coral/           → the library, and the registry built from it
-├─ registry.config.js     → where the registry is published
+packages/coral/           → the library, and the registry built from it (plain Svelte + Vite)
+├─ registry.config.js     → where the registry is published, and the names it publishes
 ├─ scripts/               → derives registry.json from coral.json, and smoke-installs the result
+├─ dist/r/                → the built registry (generated)
 └─ src/lib/
    ├─ utils.ts            → cn (shadcn's)
    └─ components/
@@ -265,24 +266,33 @@ packages/coral/           → the library, and the registry built from it
       └─ coral/           → 📦 the folder that gets installed, beside ui/
          ├─ coral.json    → manifest: version, title, description + required primitives
          ├─ lib/          → shared across components (options.ts, hidden-field.svelte)
-         └─ kit/          → composed, generic components - the actual product
-            ├─ activity-calendar/
-            ├─ avatar/
-            └─ …
+         ├─ kit/          → composed, generic components - the actual product
+         │  ├─ activity-calendar/
+         │  ├─ avatar/
+         │  └─ …
+         ├─ blocks/       → kit/ wired together for one use case (none yet)
+         └─ product/      → components that speak one vertical: ai/, saas/, fintech/ (none yet)
 
-apps/docs/                → the documentation site, deployed to coral.imlargo.dev
-├─ src/routes/(docs)/docs/ → one Markdown page per component, with its demos
-├─ src/docs/              → the site's own components, under `$docs`
-└─ static/r/              → the built registry (generated)
+apps/docs/                → the documentation site, built on svdocs, deployed to coral.imlargo.dev
+├─ src/content/docs/      → one Markdown page per component, with its demos
+├─ src/lib/features/docs/ → the site's own pieces: preview, install command, search, sidebar
+└─ static/r/              → the built registry, copied in at build time (generated)
 ```
 
-The site's `$lib` points at `packages/coral/src/lib`, so every demo renders the exact file the
-registry ships - no copy in between, and no way for a demo to document something that is not what
-gets installed.
+The library knows nothing about the site. The site reads the library through `package.json`
+imports: `#lib/components/coral/*`, `#lib/components/ui/*` and `#lib/utils.js` resolve to
+`packages/coral`, so every demo renders the exact file the registry ships, through the import a
+consuming project writes - no copy in between, and no way for a demo to document something that
+is not what gets installed.
 
-Inside `coral/`, `blocks/` (app-level compositions, rule of 3) and `hooks/` appear the day a
-component actually needs them. A util with one consumer stays inside its component's folder until a second one needs it,
-which is exactly how `lib/options.ts` came to be, when `select` became the second component to speak
+Inside `coral/`, the layers above `kit/` and `hooks/` appear the day a component actually needs
+them. `blocks/` wires several `kit/` components together for one use case, once the same wiring
+has been written three times. `product/` is where Coral is allowed to know a vertical - the messages
+and models of an AI product, the plans and seats of a SaaS one, the transactions of a fintech -
+grouped as `product/<vertical>/<name>`, and published as `product-<vertical>-<name>`.
+
+A util with one consumer stays inside its component's folder until a second one needs it, which is
+exactly how `lib/options.ts` came to be, when `select` became the second component to speak
 `Option<T>`, and how `lib/hidden-field.svelte` did when a third needed to submit a value from a
 control that is not an input.
 
@@ -291,30 +301,31 @@ Three rules keep that folder worth copying into anything:
 **No appearance.** No colors, typography, shadows or radii, only layout utilities (`flex`, `gap-*`,
 `w-full`). Everything visual comes from _your_ shadcn theme, which is why Coral drops into any
 project without bringing a look with it. A component that hardcodes a size or a color has failed.
-Enforced at the import level: Coral only ever imports from `$lib/components/ui/*`, `$lib/utils`
+Enforced at the import level: Coral only ever imports from `#lib/components/ui/*`, `#lib/utils`
 (`cn`), `@lucide/svelte`, and other Coral files, never a headless library directly and never your
 project's own domain types.
 
 ```ts
 // ✅ inside Coral
-import { Avatar } from '$lib/components/ui/avatar/index.js';
+import { Avatar } from '#lib/components/ui/avatar/index.js';
 
 // ✅ from your project, consuming Coral - by file path, no barrels
-import Avatar from '$lib/components/coral/kit/avatar/avatar.svelte';
+import Avatar from '#lib/components/coral/kit/avatar/avatar.svelte';
 
 // ❌
 import { Avatar } from 'bits-ui';
-import type { Invoice } from '$lib/types';
+import type { Invoice } from '#lib/types';
 ```
 
 Need a type the headless library owns? Derive it from the shadcn component instead:
 `ComponentProps<typeof Avatar>`.
 
 **No domain.** No `Invoice`, no `Student`, no `Contract`. Domain lives in your `features/`.
+`product/` knows a vertical's shared vocabulary, never one app's entities.
 
-**One-way imports.** `blocks/` composes `kit/`, `kit/` composes shadcn primitives and other `kit/`.
-Never the reverse. And nothing is duplicated: two components needing the same logic means extracting
-a third, or `lib/`.
+**One-way imports.** `product/` composes `blocks/` and `kit/`, `blocks/` composes `kit/`, `kit/`
+composes shadcn primitives and other `kit/`. Never the reverse. And nothing is duplicated: two
+components needing the same logic means extracting a third, or `lib/`.
 
 ## Scope
 
@@ -329,8 +340,8 @@ Each cut is deliberate:
 - **No syntactic sugar:** a composed component that only saves typing does not belong here. What
   Coral contributes is **resolved behavior**: filtering, keyboard navigation, shared state through
   context, accessibility, debounce, loading and empty states.
-- **No DataTable, no form-field/validation layer, yet:** prototyped and pulled back out until the
-  pattern has been written twice for real (see [Roadmap](#roadmap)).
+- **No form-field/validation layer, yet:** prototyped and pulled back out until the pattern has
+  been written twice for real (see [Roadmap](#roadmap)).
 
 The test a feature or component has to pass before it is added, applied the same way to a
 contributor's PR as to the maintainer's own idea:
@@ -350,7 +361,7 @@ One person maintains this. What bounds the risk if that changes:
 - **You already own a working copy.** Coral is installed into your project as source, not as a
   live dependency: nothing you shipped breaks if this repository or its registry disappears
   tomorrow. Forking it is copying the one folder you already have.
-- **No hidden runtime:** twenty-five components, no framework of their own underneath. shadcn-svelte
+- **No hidden runtime:** the components have no framework of their own underneath. shadcn-svelte
   and bits-ui, which this repository doesn't maintain, do the actual work.
 - **Versioned per component.** Each entry in
   [`coral.json`](./packages/coral/src/lib/components/coral/coral.json) carries its own semver, so a
@@ -365,7 +376,7 @@ pnpm install
 pnpm dev        # docs site + live demos at /docs
 pnpm test       # vitest across both workspaces, run once
 pnpm format     # prettier --write
-pnpm registry   # rebuild the registry into apps/docs/static/r
+pnpm registry   # rebuild the registry into packages/coral/dist/r
 pnpm build      # production build - run `pnpm check` FIRST, build deletes its own output
 ```
 
@@ -375,7 +386,7 @@ from what is actually running. Search and a "Copy Page" button (raw Markdown, fo
 LLM) come with it. Each component page prints its own install command, built from the same
 constant the registry is published under.
 
-`pnpm --filter coral smoke` is the end-to-end check: it serves the built registry, installs every
+`pnpm smoke` (after `pnpm registry`) is the end-to-end check: it serves the built registry, installs every
 item into a throwaway SvelteKit project and type-checks what lands there.
 
 To add a shadcn primitive: `pnpm dlx shadcn-svelte@latest add <component>` from `packages/coral`.
@@ -408,13 +419,10 @@ Ordered by rewrite cost × frequency, not by what is fun to build:
 
 1. **`locale` prop on `file-input`:** `formatBytes` takes one; the component does not thread it
    through yet
-2. **Component tests:** the pure logic is well covered; the interaction layer (focus, keyboard,
-   drag) is only starting to be
-3. **DataTable:** sorting, filtering, pagination, empty state. Highest cost per project; was
-   prototyped once and pulled back out until it has been written twice for real
-4. **Form field + validation**
-5. **Empty states and skeletons:** shadcn ships the primitives; nothing in `kit/` composes them yet
-6. **App shell** and **generic CRUD page:** `blocks/`, waiting on the rule of 3
+2. **Form field + validation**
+3. **App shell** and **generic CRUD page:** `blocks/`, waiting on the rule of 3
+4. **`product/`:** components for AI, SaaS and fintech products, held to the same extraction rule
+   as everything else
 
 ## License
 

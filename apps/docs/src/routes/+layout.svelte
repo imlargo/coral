@@ -1,11 +1,12 @@
 <script lang="ts">
 	import './layout.css';
-	import { Toaster } from '$lib/components/ui/sonner/index.js';
+	import { Toaster } from '#lib/components/ui/sonner/index.js';
 	import { ModeWatcher } from 'mode-watcher';
-	import { config } from '$docs/config/app.js';
-	import Navbar from '$docs/components/layout/navigation/navbar.svelte';
+	import { config } from '#lib/config/app.js';
+	import type { LayoutProps } from './$types';
+	import Navbar from '#lib/components/layout/navigation/Navbar.svelte';
 
-	let { children } = $props();
+	let { children }: LayoutProps = $props();
 </script>
 
 <svelte:head>
@@ -25,8 +26,8 @@
 <div>
 	<Navbar></Navbar>
 
-	<!-- Skip-link target only, not the `main` landmark: nested layouts (e.g. the docs sidebar's
-	     `Sidebar.Inset`) render their own `<main>`, and HTML forbids nesting two. -->
+	<!-- Skip-link target only, not the `main` landmark: nested layouts (e.g. the docs
+	     sidebar's Sidebar.Inset) render their own `<main>`, and HTML forbids nesting two. -->
 	<div id="main-content" tabindex="-1">
 		{@render children?.()}
 	</div>

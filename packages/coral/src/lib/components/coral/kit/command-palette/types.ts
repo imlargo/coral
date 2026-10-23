@@ -1,10 +1,10 @@
 /**
  * @coral/kit/command-palette
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
-import type { CommandDialog } from '$lib/components/ui/command/index.js';
+import type { CommandDialog } from '#lib/components/ui/command/index.js';
 import type { CommandAction } from './actions.js';
 
 /** What the `action` snippet receives. */

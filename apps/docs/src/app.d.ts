@@ -1,22 +1,22 @@
+/// <reference types="@svmd/vite/client" />
+
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
 
 /*
- * `App.Platform` is deliberately not declared.
- *
- * Typing it means pulling `worker-configuration.d.ts` into the program, and that file declares a
- * global `Element` whose HTMLRewriter signatures merge with - and shadow - the DOM one. The cost
- * showed up twice: DOM code had to avoid `append`/`prepend`, and shadcn's untouchable
- * `ui/native-select` reported an error nobody could fix.
- *
- * The site is prerendered and never reads `event.platform`, so it buys nothing. A route that
- * genuinely needs the Cloudflare bindings should declare the interface here again, add
- * `"types": ["./worker-configuration.d.ts"]` back to `tsconfig.json`, and take the shadowing with
- * it.
+ * `App.Platform` is deliberately not declared. Typing it means `wrangler types`, whose globals
+ * declare an `Element` with HTMLRewriter `append`/`prepend` signatures that merge with - and shadow -
+ * the DOM one, which the components rendered here rely on. The site is prerendered and never reads
+ * `event.platform`; a route that needs a binding declares `Platform` here with its types imported
+ * from `@cloudflare/workers-types`, never as globals.
  */
 declare global {
 	namespace App {
-		// interface Error {}
+		interface Error {
+			/** Set by `handleError` for unexpected errors, and logged alongside them. */
+			errorId?: string;
+		}
+
 		// interface Locals {}
 		// interface PageData {}
 		// interface PageState {}

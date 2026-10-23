@@ -1,0 +1,28 @@
+# Shared by every CI job: the same toolchain and a clean install from the
+# lockfile, so jobs differ only in the one check they run.
+name: Setup
+description: Install pnpm, Node and the workspace's dependencies
+
+inputs:
+  browsers:
+    description: Also install Chromium, for the component tests (Vitest browser mode)
+    default: 'false'
+
+runs:
+  using: composite
+  steps:
+    # pnpm comes from `packageManager`, Node from `.node-version`: the versions Cloudflare's build
+    # is pinned to as well (see AGENTS.md), so CI installs and builds the way the deploy does.
+    - uses: pnpm/action-setup@v4
+
+    - uses: actions/setup-node@v5
+      with:
+        node-version-file: .node-version
+        cache: pnpm
+
+    - run: pnpm install --frozen-lockfile
+      shell: bash
+
+    - if: inputs.browsers == 'true'
+      run: pnpm --filter coral exec playwright install --with-deps chromium
+      shell: bash
