@@ -87,8 +87,9 @@
 }
 
 /*
- * Shiki emits both themes (`code-highlighter.ts`) as CSS variables (`defaultColor: false`) and writes no inline colors,
- * so the theme switch costs nothing at runtime and needs no `!important` to win.
+ * Shiki emits both themes as CSS variables (`defaultColor: false`, in `code-highlighter.ts`) and
+ * writes no inline colors, so the theme switch costs nothing at runtime and needs no `!important`
+ * to win.
  */
 .shiki,
 .shiki span {
