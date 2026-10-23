@@ -1,3 +1,5 @@
+# The checks AGENTS.md asks for before calling anything done, one job each, so a pull request shows
+# which one failed and a lint error does not hide a failing test.
 name: CI
 
 on:
@@ -5,54 +7,67 @@ on:
     branches: [main]
   pull_request:
 
+# Read-only: the workflow checks code, it never writes to the repository.
+permissions:
+  contents: read
+
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  check:
-    name: lint, check, test
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
-      # Pinned to what Cloudflare's build image runs (see AGENTS.md), so CI installs and builds
-      # with the same pnpm that deploys. The repo has no `packageManager` field to read it from.
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.11.1
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-
-      # Playwright drives the component tests in a real browser; `--with-deps` is what makes that
-      # work on a bare runner.
-      - run: pnpm --filter coral exec playwright install --with-deps chromium
-
+      - uses: ./.github/actions/setup
       - run: pnpm lint
+
+  typecheck:
+    # svelte-check in both workspaces: TypeScript over .ts files and .svelte components alike.
+    name: Typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup
       - run: pnpm check
+
+  test:
+    # Unit tests in Node, component tests in Chromium.
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup
+        with:
+          browsers: 'true'
       - run: pnpm test
 
-  registry:
-    name: registry installs
+  build:
+    # The site the deploy builds: the registry, then every docs page prerendered. A page or a
+    # `<Preview>` that breaks fails here rather than in the Cloudflare build.
+    name: Build
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
-      # Pinned to what Cloudflare's build image runs (see AGENTS.md), so CI installs and builds
-      # with the same pnpm that deploys. The repo has no `packageManager` field to read it from.
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.11.1
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
+      - uses: ./.github/actions/setup
+      - run: pnpm build
 
-      # Builds the registry, then installs it into a throwaway SvelteKit project and type-checks
-      # what lands there. This is the only job that exercises what a reader actually runs, so a
-      # change to the generator or the aliases that breaks installs fails here rather than in
-      # someone else's project.
+  registry:
+    # Builds the registry, then installs it into a throwaway SvelteKit project and type-checks
+    # what lands there. This is the only job that exercises what a reader actually runs, so a
+    # change to the generator or the aliases that breaks installs fails here rather than in
+    # someone else's project.
+    name: Registry installs
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup
       - run: pnpm registry
-      - run: pnpm --filter coral smoke
+      - run: pnpm smoke

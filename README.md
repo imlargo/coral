@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="apps/docs/src/assets/logo.svg" alt="Coral" width="64" height="64" />
+  <img src="apps/docs/src/lib/assets/logo.svg" alt="Coral" width="64" height="64" />
 
 # Coral
 
@@ -95,7 +95,7 @@ There are no barrels. One component, one folder, imported directly:
 
 ```svelte
 <script lang="ts">
-	import Combobox from '$lib/components/coral/kit/combobox/combobox.svelte';
+	import Combobox from '#lib/components/coral/kit/combobox/combobox.svelte';
 
 	const fruits = [
 		{ value: 1, label: 'Açaí' },
@@ -255,9 +255,10 @@ in this repo travels.
 The repo is two workspaces, so the library is not entangled with the site that documents it:
 
 ```
-packages/coral/           → the library, and the registry built from it
-├─ registry.config.js     → where the registry is published
+packages/coral/           → the library, and the registry built from it (SvelteKit 3, no routes)
+├─ registry.config.js     → where the registry is published, and the names it publishes
 ├─ scripts/               → derives registry.json from coral.json, and smoke-installs the result
+├─ dist/r/                → the built registry (generated)
 └─ src/lib/
    ├─ utils.ts            → cn (shadcn's)
    └─ components/
@@ -270,15 +271,17 @@ packages/coral/           → the library, and the registry built from it
             ├─ avatar/
             └─ …
 
-apps/docs/                → the documentation site, deployed to coral.imlargo.dev
-├─ src/routes/(docs)/docs/ → one Markdown page per component, with its demos
-├─ src/docs/              → the site's own components, under `$docs`
-└─ static/r/              → the built registry (generated)
+apps/docs/                → the documentation site, built on svdocs, deployed to coral.imlargo.dev
+├─ src/content/docs/      → one Markdown page per component, with its demos
+├─ src/lib/features/docs/ → the site's own pieces: preview, install command, search, sidebar
+└─ static/r/              → the built registry, copied in at build time (generated)
 ```
 
-The site's `$lib` points at `packages/coral/src/lib`, so every demo renders the exact file the
-registry ships - no copy in between, and no way for a demo to document something that is not what
-gets installed.
+The library knows nothing about the site. The site reads the library through `package.json`
+imports: `#lib/components/coral/*`, `#lib/components/ui/*` and `#lib/utils.js` resolve to
+`packages/coral`, so every demo renders the exact file the registry ships, through the import a
+consuming project writes - no copy in between, and no way for a demo to document something that
+is not what gets installed.
 
 Inside `coral/`, `blocks/` (app-level compositions, rule of 3) and `hooks/` appear the day a
 component actually needs them. A util with one consumer stays inside its component's folder until a second one needs it,
@@ -291,20 +294,20 @@ Three rules keep that folder worth copying into anything:
 **No appearance.** No colors, typography, shadows or radii, only layout utilities (`flex`, `gap-*`,
 `w-full`). Everything visual comes from _your_ shadcn theme, which is why Coral drops into any
 project without bringing a look with it. A component that hardcodes a size or a color has failed.
-Enforced at the import level: Coral only ever imports from `$lib/components/ui/*`, `$lib/utils`
+Enforced at the import level: Coral only ever imports from `#lib/components/ui/*`, `#lib/utils`
 (`cn`), `@lucide/svelte`, and other Coral files, never a headless library directly and never your
 project's own domain types.
 
 ```ts
 // ✅ inside Coral
-import { Avatar } from '$lib/components/ui/avatar/index.js';
+import { Avatar } from '#lib/components/ui/avatar/index.js';
 
 // ✅ from your project, consuming Coral - by file path, no barrels
-import Avatar from '$lib/components/coral/kit/avatar/avatar.svelte';
+import Avatar from '#lib/components/coral/kit/avatar/avatar.svelte';
 
 // ❌
 import { Avatar } from 'bits-ui';
-import type { Invoice } from '$lib/types';
+import type { Invoice } from '#lib/types';
 ```
 
 Need a type the headless library owns? Derive it from the shadcn component instead:
@@ -365,7 +368,7 @@ pnpm install
 pnpm dev        # docs site + live demos at /docs
 pnpm test       # vitest across both workspaces, run once
 pnpm format     # prettier --write
-pnpm registry   # rebuild the registry into apps/docs/static/r
+pnpm registry   # rebuild the registry into packages/coral/dist/r
 pnpm build      # production build - run `pnpm check` FIRST, build deletes its own output
 ```
 
@@ -375,7 +378,7 @@ from what is actually running. Search and a "Copy Page" button (raw Markdown, fo
 LLM) come with it. Each component page prints its own install command, built from the same
 constant the registry is published under.
 
-`pnpm --filter coral smoke` is the end-to-end check: it serves the built registry, installs every
+`pnpm smoke` (after `pnpm registry`) is the end-to-end check: it serves the built registry, installs every
 item into a throwaway SvelteKit project and type-checks what lands there.
 
 To add a shadcn primitive: `pnpm dlx shadcn-svelte@latest add <component>` from `packages/coral`.
