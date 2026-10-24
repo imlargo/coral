@@ -8,7 +8,6 @@
 	import Select from '../kit/select/select.svelte';
 	import { untrack } from 'svelte';
 	import { setCoralDefaults } from './defaults.js';
-	import type { CoralDefaults } from './defaults.js';
 
 	let { defaults, placeholder }: { defaults?: CoralDefaults; placeholder?: string } = $props();
 

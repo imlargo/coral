@@ -24,8 +24,6 @@ declare global {
 	}
 }
 
-export type { CoralDefaults };
-
 /** The manifest name of every component that declared defaults. */
 export type ComponentName = Exclude<keyof CoralDefaults, 'locale'>;
 
