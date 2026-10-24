@@ -1,6 +1,6 @@
 <script lang="ts">
 	import FormDialog from '#lib/components/coral/blocks/form-dialog/form-dialog.svelte';
-	import { Draft } from '#lib/components/coral/lib/draft.svelte.js';
+	import { createDraft } from '#lib/components/coral/lib/draft.svelte.js';
 	import { Button } from '#lib/components/ui/button/index.js';
 	import { Input } from '#lib/components/ui/input/index.js';
 	import { Label } from '#lib/components/ui/label/index.js';
@@ -16,7 +16,7 @@
 	// One dialog for both: `editing` points the draft at the record being edited, or at the blank one.
 	let editing = $state<Environment | undefined>();
 	let open = $state(false);
-	const draft = new Draft(() => editing ?? blank);
+	const draft = createDraft(() => editing ?? blank);
 
 	function start(environment?: Environment) {
 		editing = environment;

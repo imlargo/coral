@@ -61,7 +61,7 @@ export type FollowScrollDefaults = Partial<
 	Pick<FollowScrollProps, 'jumpLabel' | 'unreadLabel' | 'threshold'>
 >;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/follow-scroll'?: FollowScrollDefaults;
 	}

@@ -72,7 +72,7 @@ export type FileUploadDefaults = Partial<
 	>
 >;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/file-upload'?: FileUploadDefaults;
 	}

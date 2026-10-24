@@ -4,7 +4,7 @@
 	 * @version 1.0.0
 	 */
 	import SettingsForm from './settings-form.svelte';
-	import { Draft } from '../../lib/draft.svelte.js';
+	import { createDraft } from '../../lib/draft.svelte.js';
 
 	type Settings = { name: string; seats: number };
 
@@ -20,7 +20,7 @@
 		shortcut?: string;
 	} = $props();
 
-	const draft = new Draft(() => saved);
+	const draft = createDraft(() => saved);
 </script>
 
 <SettingsForm {draft} {onsave} {onerror} {shortcut} statusTimeout={100}>

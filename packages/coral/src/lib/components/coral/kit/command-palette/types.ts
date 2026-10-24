@@ -101,7 +101,7 @@ export type CommandPaletteDefaults = Partial<
 	>
 >;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/command-palette'?: CommandPaletteDefaults;
 	}

@@ -54,7 +54,7 @@ export type CopyButtonDefaults = Partial<
 	Pick<CopyButtonProps, 'label' | 'copiedLabel' | 'failedLabel' | 'timeout'>
 >;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/copy-button'?: CopyButtonDefaults;
 	}

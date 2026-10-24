@@ -88,7 +88,7 @@ export type FileInputProps = InputProps & {
 /** What a project can state once for every file input - see `lib/defaults`. */
 export type FileInputDefaults = Partial<Pick<FileInputProps, 'label' | 'removeLabel'>>;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/file-input'?: FileInputDefaults;
 	}

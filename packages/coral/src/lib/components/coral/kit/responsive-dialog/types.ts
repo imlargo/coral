@@ -47,7 +47,7 @@ export type ResponsiveDialogSectionProps = HTMLAttributes<HTMLDivElement> & {
 /** What a project can state once for every responsive dialog - see `lib/defaults`. */
 export type ResponsiveDialogDefaults = Partial<Pick<ResponsiveDialogProps, 'query'>>;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/responsive-dialog'?: ResponsiveDialogDefaults;
 	}

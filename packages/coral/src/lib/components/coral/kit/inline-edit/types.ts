@@ -64,7 +64,7 @@ export type InlineEditProps = InputProps & {
 /** What a project can state once for every inline edit - see `lib/defaults`. */
 export type InlineEditDefaults = Partial<Pick<InlineEditProps, 'editLabel'>>;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/inline-edit'?: InlineEditDefaults;
 	}

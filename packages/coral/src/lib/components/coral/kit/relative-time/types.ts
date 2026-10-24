@@ -51,7 +51,7 @@ export type RelativeTimeDefaults = Partial<
 	Pick<RelativeTimeProps, 'numeric' | 'format' | 'precision' | 'cutoff' | 'titleFormat'>
 >;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/relative-time'?: RelativeTimeDefaults;
 	}

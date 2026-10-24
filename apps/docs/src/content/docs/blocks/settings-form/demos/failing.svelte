@@ -1,13 +1,13 @@
 <script lang="ts">
 	import SettingsForm from '#lib/components/coral/blocks/settings-form/settings-form.svelte';
-	import { Draft } from '#lib/components/coral/lib/draft.svelte.js';
+	import { createDraft } from '#lib/components/coral/lib/draft.svelte.js';
 	import { Input } from '#lib/components/ui/input/index.js';
 	import { Label } from '#lib/components/ui/label/index.js';
 
 	type Webhook = { url: string };
 
 	let webhook = $state<Webhook>({ url: 'https://example.com/hooks/deploys' });
-	const draft = new Draft(() => webhook);
+	const draft = createDraft(() => webhook);
 	let attempts = 0;
 
 	// Fails the first time, lands the second: the shape of a real request.

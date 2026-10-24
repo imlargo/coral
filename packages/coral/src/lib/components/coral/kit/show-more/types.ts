@@ -39,7 +39,7 @@ export type ShowMoreProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
 /** What a project can state once for every show more - see `lib/defaults`. */
 export type ShowMoreDefaults = Partial<Pick<ShowMoreProps, 'moreLabel' | 'lessLabel'>>;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/show-more'?: ShowMoreDefaults;
 	}

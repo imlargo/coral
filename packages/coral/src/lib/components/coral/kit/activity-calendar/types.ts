@@ -93,7 +93,7 @@ export type ActivityCalendarDefaults = Partial<
 	Pick<ActivityCalendarProps<unknown>, 'weekStart' | 'label'>
 >;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/activity-calendar'?: ActivityCalendarDefaults;
 	}

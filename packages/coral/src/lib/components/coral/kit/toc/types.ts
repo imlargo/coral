@@ -67,7 +67,7 @@ export type TocProps = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
 /** What a project can state once for every toc - see `lib/defaults`. */
 export type TocDefaults = Partial<Pick<TocProps, 'label'>>;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/toc'?: TocDefaults;
 	}

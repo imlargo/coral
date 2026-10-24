@@ -40,7 +40,7 @@ export type ActionButtonProps = ButtonProps & {
 /** What a project can state once for every action button - see `lib/defaults`. */
 export type ActionButtonDefaults = Partial<Pick<ActionButtonProps, 'pendingLabel'>>;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/action-button'?: ActionButtonDefaults;
 	}

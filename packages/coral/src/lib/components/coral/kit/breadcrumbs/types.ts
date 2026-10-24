@@ -39,7 +39,7 @@ export type BreadcrumbsProps = RootProps & {
 /** What a project can state once for every trail - see `lib/defaults`. */
 export type BreadcrumbsDefaults = Partial<Pick<BreadcrumbsProps, 'foldedLabel'>>;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/breadcrumbs'?: BreadcrumbsDefaults;
 	}

@@ -103,7 +103,7 @@ export type TagsInputDefaults = Partial<
 	Pick<TagsInputProps, 'clearLabel' | 'removeLabel' | 'delimiter'>
 >;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/tags-input'?: TagsInputDefaults;
 	}

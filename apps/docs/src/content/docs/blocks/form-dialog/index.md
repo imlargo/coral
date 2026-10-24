@@ -1,6 +1,6 @@
 ---
 title: Form dialog
-description: A dialog that creates or edits a record: sends once, keeps the input until the reader lets go of it, shows what went wrong beside the fields, and opens on the right values.
+description: A dialog that creates or edits a record, sending once, keeping the input until the reader lets go of it, showing what went wrong beside the fields, and opening on the right values.
 group: Blocks
 ---
 
@@ -46,7 +46,7 @@ or a throw keeps the dialog open.
 ```svelte
 <script lang="ts">
 	import FormDialog from '#lib/components/coral/blocks/form-dialog/form-dialog.svelte';
-	import { Draft } from '#lib/components/coral/lib/draft.svelte.js';
+	import { createDraft } from '#lib/components/coral/lib/draft.svelte.js';
 </script>
 ```
 

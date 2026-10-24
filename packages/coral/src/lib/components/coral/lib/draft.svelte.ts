@@ -47,63 +47,68 @@ export type DraftOptions<T> = {
  * same three answers: what the copy holds, whether it differs from what is saved, and how to throw
  * it away. The copy is deep state, so fields bind to it directly; `dirty` is read against the
  * saved value as it stands, so a save that lands turns it false on its own, with nothing to call.
- *
- * Built during a component's initialization, like any state that owns an effect.
  */
-export class Draft<T> {
-	#saved: () => T;
-	#equals: (current: T, saved: T) => boolean;
-	#current = $state() as T;
-	/** What the copy was last seeded from, to tell an untouched copy from a touched one. */
-	#seeded: T;
-
-	constructor(saved: () => T, { equals = sameData, guardUnload = true }: DraftOptions<T> = {}) {
-		this.#saved = saved;
-		this.#equals = equals;
-		this.#seeded = untrack(saved);
-		this.#current = structuredClone($state.snapshot(this.#seeded)) as T;
-
-		// A saved record that changes under an untouched copy - reloaded, or saved from elsewhere -
-		// reseeds it. A copy the reader has already edited keeps their edits.
-		$effect(() => {
-			const next = saved();
-			if (untrack(() => this.#equals(this.#current, this.#seeded))) this.seed(next);
-		});
-
-		$effect(() => {
-			if (!guardUnload || !this.dirty) return;
-			const warn = (event: BeforeUnloadEvent) => event.preventDefault();
-			window.addEventListener('beforeunload', warn);
-			return () => window.removeEventListener('beforeunload', warn);
-		});
-	}
-
+export type Draft<T> = {
 	/** The editable copy. Deep state: bind fields to its properties. */
-	get current(): T {
-		return this.#current;
-	}
-
-	set current(value: T) {
-		this.#current = value;
-	}
-
+	current: T;
 	/** What is saved, as it stands. */
-	get saved(): T {
-		return this.#saved();
-	}
-
+	readonly saved: T;
 	/** Whether the copy differs from what is saved. */
-	get dirty(): boolean {
-		return !this.#equals($state.snapshot(this.#current) as T, this.#saved());
-	}
-
+	readonly dirty: boolean;
 	/** Throws the edits away: the copy becomes what is saved. */
-	reset(): void {
-		this.seed(this.#saved());
+	reset(): void;
+};
+
+/**
+ * Builds a draft of `saved`. Call it during a component's initialization, like any state that owns
+ * an effect. A plain object with getters rather than a class: the type stays structural, so a draft
+ * built in one copy of this file is accepted by a component that read another - a workspace link,
+ * a test harness - where a class with private fields would not be.
+ */
+export function createDraft<T>(
+	saved: () => T,
+	{ equals = sameData, guardUnload = true }: DraftOptions<T> = {}
+): Draft<T> {
+	/** What the copy was last seeded from, to tell an untouched copy from a touched one. */
+	let seeded = $state.snapshot(untrack(saved)) as T;
+	let current = $state(structuredClone(seeded)) as T;
+
+	function seed(value: T) {
+		seeded = $state.snapshot(value) as T;
+		current = structuredClone(seeded);
 	}
 
-	private seed(value: T) {
-		this.#seeded = $state.snapshot(value) as T;
-		this.#current = structuredClone(this.#seeded) as T;
-	}
+	const dirty = () => !equals($state.snapshot(current) as T, saved());
+
+	// A saved record that changes under an untouched copy - reloaded, or saved from elsewhere -
+	// reseeds it. A copy the reader has already edited keeps their edits.
+	$effect(() => {
+		const next = saved();
+		if (untrack(() => equals($state.snapshot(current) as T, seeded))) seed(next);
+	});
+
+	$effect(() => {
+		if (!guardUnload || !dirty()) return;
+		const warn = (event: BeforeUnloadEvent) => event.preventDefault();
+		window.addEventListener('beforeunload', warn);
+		return () => window.removeEventListener('beforeunload', warn);
+	});
+
+	return {
+		get current() {
+			return current;
+		},
+		set current(value: T) {
+			current = value;
+		},
+		get saved() {
+			return saved();
+		},
+		get dirty() {
+			return dirty();
+		},
+		reset() {
+			seed(saved());
+		}
+	};
 }

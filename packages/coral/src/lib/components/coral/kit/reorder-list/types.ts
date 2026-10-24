@@ -73,7 +73,7 @@ export type ReorderListDefaults = Partial<
 	>
 >;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/reorder-list'?: ReorderListDefaults;
 	}

@@ -59,7 +59,7 @@ export type AvatarStackProps<T> = GroupProps & {
 /** What a project can state once for every avatar stack - see `lib/defaults`. */
 export type AvatarStackDefaults = Partial<Pick<AvatarStackProps<unknown>, 'overflowLabel'>>;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/avatar-stack'?: AvatarStackDefaults;
 	}

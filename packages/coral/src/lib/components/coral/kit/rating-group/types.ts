@@ -69,7 +69,7 @@ export type RatingGroupProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> 
 /** What a project can state once for every rating group - see `lib/defaults`. */
 export type RatingGroupDefaults = Partial<Pick<RatingGroupProps, 'label'>>;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/rating-group'?: RatingGroupDefaults;
 	}

@@ -304,13 +304,13 @@
 		},
 		"blocks/form-dialog": {
 			"title": "Form dialog",
-			"description": "A dialog that creates or edits a record: sends once, keeps the input until the reader lets go of it, shows what went wrong beside the fields, and opens on the right values.",
+			"description": "A dialog that creates or edits a record, sending once, keeping the input until the reader lets go of it, showing what went wrong beside the fields, and opening on the right values.",
 			"version": "1.0.0",
 			"shadcn": ["alert", "button"]
 		},
 		"blocks/settings-form": {
 			"title": "Settings form",
-			"description": "A form that edits a saved copy: says when there are unsaved changes, saves once, announces how it went, and warns before the tab closes on them.",
+			"description": "A form that edits a saved copy, saying when there are unsaved changes, saving once, announcing how it went, and warning before the tab closes on them.",
 			"version": "1.0.0",
 			"shadcn": ["button"]
 		}

@@ -159,7 +159,7 @@ export type DatePickerDefaults = Partial<
 	Pick<BaseProps<'single'>, 'placeholder' | 'clearLabel' | 'format'>
 >;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/date-picker'?: DatePickerDefaults;
 	}

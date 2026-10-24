@@ -99,7 +99,7 @@ export type SelectDefaults = Partial<
 	Pick<SelectProps<unknown>, 'placeholder' | 'emptyMessage' | 'loadingMessage' | 'clearLabel'>
 >;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/select'?: SelectDefaults;
 	}

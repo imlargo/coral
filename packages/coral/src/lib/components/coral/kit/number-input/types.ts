@@ -62,7 +62,7 @@ export type NumberInputDefaults = Partial<
 	Pick<NumberInputProps, 'decrementLabel' | 'incrementLabel'>
 >;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/number-input'?: NumberInputDefaults;
 	}

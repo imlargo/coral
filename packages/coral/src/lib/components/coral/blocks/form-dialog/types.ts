@@ -30,7 +30,7 @@ type RootProps = Omit<ResponsiveDialogProps, 'open' | 'children'>;
 
 export type FormDialogProps<T> = RootProps & {
 	/**
-	 * The copy being edited. Build it with `new Draft(() => record)` - see `lib/draft`. It is
+	 * The copy being edited. Build it with `createDraft(() => record)` - see `lib/draft`. It is
 	 * reseeded from the record every time the dialog opens, so an edit dialog reused for another
 	 * record always opens on that record's values.
 	 */
@@ -89,7 +89,7 @@ export type FormDialogDefaults = Partial<
 	>
 >;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'blocks/form-dialog'?: FormDialogDefaults;
 	}

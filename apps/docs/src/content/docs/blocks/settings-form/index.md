@@ -1,6 +1,6 @@
 ---
 title: Settings form
-description: A form that edits a saved copy: says when there are unsaved changes, saves once, announces how it went, and warns before the tab closes on them.
+description: A form that edits a saved copy, saying when there are unsaved changes, saving once, announcing how it went, and warning before the tab closes on them.
 group: Blocks
 ---
 
@@ -32,12 +32,12 @@ second save starts while the first is still out; closing the tab loses the edits
 ```svelte
 <script lang="ts">
 	import SettingsForm from '#lib/components/coral/blocks/settings-form/settings-form.svelte';
-	import { Draft } from '#lib/components/coral/lib/draft.svelte.js';
+	import { createDraft } from '#lib/components/coral/lib/draft.svelte.js';
 
 	let { data } = $props();
 
 	// The saved record is the project's; the draft is a copy of it that the fields edit.
-	const draft = new Draft(() => data.project);
+	const draft = createDraft(() => data.project);
 </script>
 
 <SettingsForm {draft} onsave={(value) => projects.save(value)}>
@@ -80,7 +80,7 @@ beforeNavigate((navigation) => {
 ```svelte
 <script lang="ts">
 	import SettingsForm from '#lib/components/coral/blocks/settings-form/settings-form.svelte';
-	import { Draft } from '#lib/components/coral/lib/draft.svelte.js';
+	import { createDraft } from '#lib/components/coral/lib/draft.svelte.js';
 </script>
 ```
 
@@ -117,9 +117,9 @@ Everything a `<form>` accepts stays available. On top of that:
 stands on its own for a form that is neither:
 
 ```ts
-import { Draft } from '#lib/components/coral/lib/draft.svelte.js';
+import { createDraft } from '#lib/components/coral/lib/draft.svelte.js';
 
-const draft = new Draft(() => saved); // built where a component's state is
+const draft = createDraft(() => saved); // built where a component's state is
 draft.current.name = 'gateway'; // deep state: bind fields to it
 draft.dirty; // true until `saved` holds the same data
 draft.reset(); // the copy becomes `saved` again

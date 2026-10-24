@@ -34,7 +34,7 @@ export type BarContext<T> = FieldsContext<T> & {
 type FormProps = Omit<HTMLFormAttributes, 'onsubmit' | 'children'>;
 
 export type SettingsFormProps<T> = FormProps & {
-	/** The copy being edited. Build it with `new Draft(() => settings)` - see `lib/draft`. */
+	/** The copy being edited. Build it with `createDraft(() => settings)` - see `lib/draft`. */
 	draft: Draft<T>;
 	/**
 	 * Saves the draft. Return a promise and the form waits; return exactly `false`, or throw, and
@@ -91,7 +91,7 @@ export type SettingsFormDefaults = Partial<
 	>
 >;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'blocks/settings-form'?: SettingsFormDefaults;
 	}

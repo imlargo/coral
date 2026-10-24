@@ -72,7 +72,7 @@ export type ConfirmDialogDefaults = Partial<
 	Pick<ConfirmDialogProps, 'confirmLabel' | 'cancelLabel'>
 >;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/confirm-dialog'?: ConfirmDialogDefaults;
 	}

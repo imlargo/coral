@@ -89,7 +89,7 @@ export type TimelineDefaults = Partial<
 	>
 >;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/timeline'?: TimelineDefaults;
 	}

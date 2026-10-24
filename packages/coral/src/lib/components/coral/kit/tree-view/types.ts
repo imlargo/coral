@@ -59,7 +59,7 @@ export type TreeViewProps<T> = Omit<HTMLAttributes<HTMLDivElement>, 'children' |
 /** What a project can state once for every tree - see `lib/defaults`. */
 export type TreeViewDefaults = Partial<Pick<TreeViewProps<unknown>, 'toggleLabel'>>;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/tree-view'?: TreeViewDefaults;
 	}

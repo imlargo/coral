@@ -96,7 +96,7 @@ export type StepperDefaults = Partial<Pick<StepperNextProps, 'nextLabel' | 'fini
 	previousLabel?: StepperPreviousProps['label'];
 };
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/stepper'?: StepperDefaults;
 	}

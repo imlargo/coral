@@ -60,7 +60,7 @@ export type LightboxDefaults = Partial<
 	Pick<LightboxProps<unknown>, 'label' | 'positionLabel' | 'previousLabel' | 'nextLabel'>
 >;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/lightbox'?: LightboxDefaults;
 	}

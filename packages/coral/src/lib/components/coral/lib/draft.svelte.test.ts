@@ -5,7 +5,8 @@
 
 import { flushSync } from 'svelte';
 import { describe, expect, it } from 'vitest';
-import { Draft, sameData } from './draft.svelte.js';
+import { createDraft, sameData } from './draft.svelte.js';
+import type { Draft } from './draft.svelte.js';
 
 type Settings = { name: string; seats: number; tags: string[] };
 
@@ -14,7 +15,7 @@ function build(initial: Settings) {
 	let saved = $state(initial);
 	let draft!: Draft<Settings>;
 	const stop = $effect.root(() => {
-		draft = new Draft(() => saved);
+		draft = createDraft(() => saved);
 	});
 	flushSync();
 	return {
@@ -103,7 +104,7 @@ describe('Draft', () => {
 		const saved = $state({ name: 'A', seats: 1, tags: [] as string[] });
 		let draft!: Draft<Settings>;
 		const stop = $effect.root(() => {
-			draft = new Draft(() => saved, {
+			draft = createDraft(() => saved, {
 				equals: (a, b) => a.name.toLowerCase() === b.name.toLowerCase()
 			});
 		});

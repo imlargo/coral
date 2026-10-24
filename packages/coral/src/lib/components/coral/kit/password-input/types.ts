@@ -50,7 +50,7 @@ export type PasswordInputDefaults = Partial<
 	Pick<PasswordInputProps, 'toggleLabel' | 'capsLockLabel'>
 >;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/password-input'?: PasswordInputDefaults;
 	}

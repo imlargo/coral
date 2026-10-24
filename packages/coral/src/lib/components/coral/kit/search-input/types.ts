@@ -39,7 +39,7 @@ export type SearchInputProps = InputProps & {
 /** What a project can state once for every search input - see `lib/defaults`. */
 export type SearchInputDefaults = Partial<Pick<SearchInputProps, 'clearLabel' | 'searchDebounce'>>;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/search-input'?: SearchInputDefaults;
 	}

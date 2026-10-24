@@ -4,7 +4,7 @@
 	 * @version 1.0.0
 	 */
 	import FormDialog from './form-dialog.svelte';
-	import { Draft } from '../../lib/draft.svelte.js';
+	import { createDraft } from '../../lib/draft.svelte.js';
 
 	type Member = { email: string; role: string };
 
@@ -24,7 +24,7 @@
 		query?: string;
 	} = $props();
 
-	const draft = new Draft(() => record);
+	const draft = createDraft(() => record);
 </script>
 
 <FormDialog

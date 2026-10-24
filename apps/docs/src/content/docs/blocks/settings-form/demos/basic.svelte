@@ -1,7 +1,7 @@
 <script lang="ts">
 	import SettingsForm from '#lib/components/coral/blocks/settings-form/settings-form.svelte';
 	import NumberInput from '#lib/components/coral/kit/number-input/number-input.svelte';
-	import { Draft } from '#lib/components/coral/lib/draft.svelte.js';
+	import { createDraft } from '#lib/components/coral/lib/draft.svelte.js';
 	import { Input } from '#lib/components/ui/input/index.js';
 	import { Label } from '#lib/components/ui/label/index.js';
 
@@ -9,7 +9,7 @@
 
 	// Stands in for the record a page loads and the API that writes it back.
 	let project = $state<Project>({ name: 'api-gateway', seats: 5 });
-	const draft = new Draft(() => project);
+	const draft = createDraft(() => project);
 
 	async function save(value: Project) {
 		await new Promise((resolve) => setTimeout(resolve, 800));

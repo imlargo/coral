@@ -5,19 +5,26 @@
 
 import { getContext, hasContext, setContext } from 'svelte';
 
-/**
- * What a project states once, for every Coral component rendered under it: the locale its
- * formatting follows, and the copy and policy values it would otherwise repeat at every call site.
- *
- * Only `locale` is declared here. Each component adds its own entry from its `types.ts`, as a
- * module augmentation keyed by its manifest name, so the shape a project can set is exactly the
- * set of components it installed - and a prop that does not exist on the component cannot be set
- * as a default for it either.
- */
-export interface CoralDefaults {
-	/** The locale every component formats and sorts in, unless a call site passes its own. */
-	locale?: string;
+declare global {
+	/**
+	 * What a project states once, for every Coral component rendered under it: the locale its
+	 * formatting follows, and the copy and policy values it would otherwise repeat at every call
+	 * site.
+	 *
+	 * Only `locale` is declared here. Each component adds its own entry from its `types.ts`, keyed
+	 * by its manifest name, so the shape a project can set is exactly the set of components it
+	 * installed - and a prop that does not exist on the component cannot be set as a default for
+	 * it either. The interface is global because the components reach each other by relative path,
+	 * and a relative module augmentation does not survive being installed, or read through a
+	 * workspace link, the way a global one does.
+	 */
+	interface CoralDefaults {
+		/** The locale every component formats and sorts in, unless a call site passes its own. */
+		locale?: string;
+	}
 }
+
+export type { CoralDefaults };
 
 /** The manifest name of every component that declared defaults. */
 export type ComponentName = Exclude<keyof CoralDefaults, 'locale'>;

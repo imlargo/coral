@@ -67,7 +67,7 @@ export type TextareaProps = BaseProps & {
 /** What a project can state once for every textarea - see `lib/defaults`. */
 export type TextareaDefaults = Partial<Pick<TextareaProps, 'remainingLabel'>>;
 
-declare module '../../lib/defaults.js' {
+declare global {
 	interface CoralDefaults {
 		'kit/textarea'?: TextareaDefaults;
 	}
