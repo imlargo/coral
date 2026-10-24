@@ -1,7 +1,7 @@
 <script lang="ts" generics="T, Type extends ComboboxType = 'single'">
 	/**
 	 * @coral/kit/combobox
-	 * @version 1.0.1
+	 * @version 1.1.0
 	 */
 	import { tick } from 'svelte';
 	import ChevronsUpDownIcon from '@lucide/svelte/icons/chevrons-up-down';

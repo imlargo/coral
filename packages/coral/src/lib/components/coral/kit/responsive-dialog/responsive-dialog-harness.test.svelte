@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/responsive-dialog
-	 * @version 1.0.0
+	 * @version 1.1.0
 	 */
 	import ResponsiveDialog from './responsive-dialog.svelte';
 	import ResponsiveDialogBody from './responsive-dialog-body.svelte';

@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/command-palette
-	 * @version 1.0.1
+	 * @version 1.1.0
 	 */
 	import * as Command from '#lib/components/ui/command/index.js';
 	import { Spinner } from '#lib/components/ui/spinner/index.js';

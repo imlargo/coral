@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/responsive-dialog
-	 * @version 1.0.0
+	 * @version 1.1.0
 	 */
 	import { MediaQuery } from 'svelte/reactivity';
 	import * as Dialog from '#lib/components/ui/dialog/index.js';

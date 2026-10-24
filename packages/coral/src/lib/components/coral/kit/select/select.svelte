@@ -1,7 +1,7 @@
 <script lang="ts" generics="T">
 	/**
 	 * @coral/kit/select
-	 * @version 1.0.0
+	 * @version 1.1.0
 	 */
 	import XIcon from '@lucide/svelte/icons/x';
 	import * as Select from '#lib/components/ui/select/index.js';

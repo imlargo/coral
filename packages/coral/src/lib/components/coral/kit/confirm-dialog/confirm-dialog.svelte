@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/confirm-dialog
-	 * @version 1.0.0
+	 * @version 1.1.0
 	 */
 	import * as AlertDialog from '#lib/components/ui/alert-dialog/index.js';
 	import { Spinner } from '#lib/components/ui/spinner/index.js';

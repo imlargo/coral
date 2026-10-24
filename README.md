@@ -27,6 +27,9 @@
 - Every component's version and required shadcn primitives are recorded in
   [`coral.json`](./packages/coral/src/lib/components/coral/coral.json), and follow semver
   independently.
+- **Your language, stated once.** Every string a reader sees is a prop with an English default, and
+  a project in another language sets its copy and its locale once with `setCoralDefaults`; every
+  component under it follows.
 
 ## Behavior
 

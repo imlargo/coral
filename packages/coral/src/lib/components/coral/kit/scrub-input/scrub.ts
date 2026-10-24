@@ -1,6 +1,6 @@
 /**
  * @coral/kit/scrub-input
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 /** Whole steps taken out of a drag, and the distance left over for the next move event. */

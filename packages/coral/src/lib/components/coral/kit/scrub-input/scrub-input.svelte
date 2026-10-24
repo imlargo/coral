@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/scrub-input
-	 * @version 1.0.0
+	 * @version 1.1.0
 	 */
 	import * as InputGroup from '#lib/components/ui/input-group/index.js';
 	import { cn } from '#lib/utils.js';
