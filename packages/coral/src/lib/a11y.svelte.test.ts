@@ -148,6 +148,11 @@ const cases: [string, () => unknown][] = [
 	['search-input', () => draw(SearchInput, { 'aria-label': 'Search', value: 'ki' })],
 	['select', () => draw(Select, { options: fruits, 'aria-label': 'Fruit' })],
 	['select, open', () => draw(Select, { options: fruits, open: true, 'aria-label': 'Fruit' })],
+	[
+		'select, loading, open',
+		() => draw(Select, { options: fruits, open: true, loading: true, 'aria-label': 'Fruit' })
+	],
+	['select, empty, open', () => draw(Select, { options: [], open: true, 'aria-label': 'Fruit' })],
 	['shortcut', () => draw(Shortcut, { keys: 'mod+k' })],
 	['show-more', () => draw(ShowMore, { children: html('<p>Some text that may be long.</p>') })],
 	['stepper', () => draw(StepperHarness, { steps: ['account', 'plan', 'review'] })],
@@ -258,6 +263,19 @@ const cases: [string, () => unknown][] = [
 				selected: 'app',
 				nodes: [{ id: 'src', label: 'src', children: [{ id: 'app', label: 'app.ts' }] }]
 			})
+	],
+	[
+		'tree-view, with row actions',
+		() =>
+			draw(TreeView, {
+				label: 'Files',
+				nodes: [{ id: 'readme', label: 'README.md' }],
+				actions: html('<button type="button" aria-label="Rename README.md">Rename</button>')
+			})
+	],
+	[
+		'confirm-dialog, confirm held back',
+		() => draw(ConfirmDialog, { open: true, title: 'Delete', confirmDisabled: true })
 	],
 	[
 		'combobox, loading',

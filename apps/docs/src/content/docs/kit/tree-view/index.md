@@ -26,6 +26,26 @@ get past it. A screen reader hears a list of lists with no idea what is open.
 - **Disabled nodes stay reachable.** They cannot be selected, but can still be read and expanded.
 - **Right-to-left aware.** Left and Right swap, and the chevron flips.
 
+## Row actions
+
+<Preview name="kit/tree-view/actions" />
+
+File trees and navigation trees usually need rename, add or delete on a row, and a button inside a
+`treeitem` is what breaks the tree's single tab stop. The `actions` snippet keeps the model whole:
+its controls are taken out of the tab order, and Tab from a focused row steps into the first of them,
+Tab again to the next, and past the last one out of the tree. Shift+Tab walks back, and Escape
+returns to the row. A click on an action is the action's, not a selection.
+
+Reveal them on hover and focus with `rowClass="group"` and `group-hover:` or `group-focus-within:`
+on the controls, as the demo does. Keep them reachable: an action that only appears on hover still
+exists for the keyboard, because Tab reaches it whether or not it is drawn.
+
+## Indentation
+
+Each level is indented by `--coral-indent`, set on the root through `class`. The indent is its own
+element inside the row rather than padding on it, so a `rowClass` with `px-2` pads the row without
+erasing the levels.
+
 ## Loading children on demand
 
 <Preview name="kit/tree-view/lazy" />
@@ -68,9 +88,10 @@ Everything a `<div>` accepts stays available on the root. On top of that:
 | `locale`           | `string`                       | -       | Typeahead's case- and accent-insensitive matching. |
 | `toggleLabel`      | `(node, expanded) => string`   | -       | Tooltip on the chevron.                            |
 | `class`            | `string`                       | -       | Merged onto the root. `[--coral-indent:1.5rem]`.   |
-| `rowClass`         | `string`                       | -       | Merged onto every row.                             |
+| `rowClass`         | `string`                       | -       | Merged onto every row. Padding is safe.            |
 | `node`             | `Snippet<[NodeContext<T>]>`    | -       | Replaces the row body.                             |
 | `icon`             | `Snippet<[NodeContext<T>]>`    | -       | Replaces the chevron.                              |
+| `actions`          | `Snippet<[NodeContext<T>]>`    | -       | Controls at the end of each row.                   |
 
 Rows expose `data-state="open|closed"`, `data-selected` and `data-disabled` for styling.
 
@@ -81,3 +102,7 @@ Rows are rendered flat, each carrying its level, position and set size, rather t
 lets the focus ring sit on one row instead of ringing everything below it. The chevron is a mouse
 target hidden from assistive tech: a second focusable control inside a tree item would break the
 one-tab-stop model the pattern depends on.
+
+Row actions are the one exception, and they are made to fit: their controls carry `tabindex="-1"`,
+so sequential focus never visits them, and the row hands focus to them on Tab and takes it back on
+Shift+Tab and Escape. A screen reader still finds them as buttons inside the row.
