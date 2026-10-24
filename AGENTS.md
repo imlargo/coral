@@ -18,14 +18,14 @@ The repo is a pnpm workspace with two members: **`packages/coral`**, the library
 **`apps/docs`**, the site that documents it. Coral itself lives in
 **`packages/coral/src/lib/components/coral/`**, one self-contained folder that lands in the target
 project at `#lib/components/coral/` (`$lib/...` on SvelteKit 2), beside shadcn's `ui/`.
-Currently: `kit/{action-button, activity-calendar, avatar, avatar-stack, combobox, command-palette,
-confirm-dialog, copy-button, date-picker, file-input, follow-scroll, inline-edit,
-number-input, password-input, rating-group, relative-time, reorder-list,
+Currently: `kit/{action-button, activity-calendar, avatar, avatar-stack, breadcrumbs, combobox,
+command-palette, confirm-dialog, copy-button, date-picker, file-input, file-upload, follow-scroll,
+inline-edit, lightbox, number-input, password-input, rating-group, relative-time, reorder-list,
 responsive-dialog, scrub-input, search-input, select, shortcut, show-more, stepper, tags-input,
-textarea, toc, tree-view}`, over `lib/{action, announce, debounce, focus, fold, hidden-field, intl,
-live-region, number, number-field, options, scale, trigger}`. There is no `blocks/` or
-`product/` entry right now - both layers exist in the architecture below, waiting on the first thing
-that needs them.
+textarea, timeline, toc, tree-view}`, `blocks/{form-dialog, settings-form}`, over `lib/{action,
+announce, debounce, defaults, draft, focus, fold, hidden-field, intl, list-status, live-region,
+number, number-field, options, scale, trigger}`. There is no `product/` entry right now - the layer
+exists in the architecture below, waiting on the first thing that needs it.
 `packages/coral/src/lib/components/coral/coral.json` is the list that counts. Read it rather than
 this sentence, which is the kind that goes stale.
 
@@ -160,6 +160,14 @@ every project that already copied it.
 - **Every string a reader sees or hears is a prop with an English default.** `*Message` is one
   line; `*Title` and `*Description` are a heading and the line under it. `on<thing>change` is the
   callback for a root that is an element, which already has an `onchange` of its own.
+- **Copy, `locale` and project-wide policy values read `lib/defaults` first.** A component declares
+  which of its props a project can state once (`XDefaults`, a `Partial<Pick<...>>` of its own props)
+  and augments `CoralDefaults` from its `types.ts` under its manifest name; the component reads them
+  with `getCoralDefaults('kit/x')` and falls back to its English default. A prop at the call site
+  still wins. `locale` is shared and never per component.
+- **A list with nothing to pick says so inside itself** with `lib/list-status`: an option nothing
+  can select, for a loading or an empty list, with the words announced from the component's own
+  live region. `loading` adds to what is listed; it never replaces it.
 - **Shared helpers first:** `lib/intl` for formatters and collators, `lib/focus` for focus rings,
   `lib/scale` before mixing a rect with a layout size, `prefersReducedMotion` from `svelte/motion`.
 - **What must happen when a popover closes goes in `onOpenChangeComplete`**, chained after the
