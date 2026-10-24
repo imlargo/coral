@@ -1,6 +1,6 @@
 /**
  * @coral/kit/command-palette
- * @version 1.0.1
+ * @version 1.1.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -51,8 +51,13 @@ export type CommandPaletteProps = DialogProps & {
 	onsearch?: (term: string) => void;
 	/** Milliseconds of quiet typing before `onsearch` runs. */
 	searchDebounce?: number;
-	/** Renders a loading row in place of the list. Pair with `onsearch`. */
+	/**
+	 * Renders a loading row below the actions, or in place of the list while there are none yet.
+	 * Pair with `onsearch`; local actions stay on screen while the remote ones are on their way.
+	 */
 	loading?: boolean;
+	/** What the loading row is called, for a screen reader. */
+	loadingLabel?: string;
 	/** An action ran and did not refuse. */
 	onrun?: (action: CommandAction) => void;
 	/** Receives whatever an action threw. Without it the error becomes an unhandled rejection. */
@@ -83,3 +88,13 @@ export type CommandPaletteProps = DialogProps & {
 };
 
 export type { CommandAction, CommandGroup } from './actions.js';
+
+declare module '../../lib/defaults.js' {
+	interface Defaults {
+		/** Set once for every command palette, through `setDefaults`. */
+		'kit/command-palette'?: Pick<
+			CommandPaletteProps,
+			'recentLabel' | 'placeholder' | 'emptyMessage' | 'loadingLabel'
+		>;
+	}
+}

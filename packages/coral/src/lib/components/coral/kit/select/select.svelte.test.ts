@@ -1,6 +1,6 @@
 /**
  * @coral/kit/select
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -126,5 +126,25 @@ describe('naming the trigger', () => {
 		expect(trigger().id).toBe('fruit-field');
 		expect(trigger().getAttribute('aria-describedby')).toBe('fruit-hint');
 		expect(trigger().getAttribute('aria-invalid')).toBe('true');
+	});
+});
+
+describe('loading', () => {
+	const options = () => Array.from(document.querySelectorAll('[role="option"]'));
+
+	it('shows one named, unpickable row in place of the options', async () => {
+		await render(Select, { options: fruits, open: true, loading: true, loadingLabel: 'Fetching' });
+		await expect.poll(() => options()).toHaveLength(1);
+		expect(options()[0].getAttribute('aria-label')).toBe('Fetching');
+		expect(options()[0].getAttribute('aria-disabled')).toBe('true');
+	});
+
+	it('brings the options back once loaded', async () => {
+		const props = $state({ options: fruits, open: true, loading: true });
+		await render(Select, props);
+		props.loading = false;
+		await expect
+			.poll(() => options().map((entry) => entry.textContent?.trim()))
+			.toEqual(['Açaí', 'Guava']);
 	});
 });

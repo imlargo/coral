@@ -43,6 +43,13 @@ Pass `onsearch` and the primitive's own filtering is switched off, because the l
 server's answer and filtering it again locally would hide rows it meant to return. Debounce it with
 `searchDebounce`, and show `loading` while the request is out.
 
+<Preview name="kit/command-palette/remote" class="min-h-64" />
+
+`loading` adds a row below whatever the palette already has, so local actions mixed with remote
+results stay on screen and can be run while the request is out. Only with no actions at all does the
+row stand in for the list. Since the primitive no longer filters, the local actions are filtered by
+the caller, with the same `fold` the rest of Coral searches with.
+
 ## One thing to know about `mod+k`
 
 Off a Mac, `mod+k` is `Ctrl+K`, and the command primitive reads Ctrl+K as "previous item" in its vim
@@ -94,7 +101,8 @@ On top of that:
 | `search`                       | `string`                          | `''`                          | Bindable.                                         |
 | `onsearch`                     | `(term: string) => void`          | -                             | Server-side search. Switches off local filtering. |
 | `searchDebounce`               | `number`                          | `0`                           | Milliseconds of quiet typing before `onsearch`.   |
-| `loading`                      | `boolean`                         | `false`                       | A loading row in place of the list.               |
+| `loading`                      | `boolean`                         | `false`                       | A loading row below the actions.                  |
+| `loadingLabel`                 | `string`                          | `Loading`                     | What a screen reader calls the loading row.       |
 | `onrun`                        | `(action: CommandAction) => void` | -                             | An action ran and did not refuse.                 |
 | `onerror`                      | `(error, action) => void`         | -                             | Receives what an action threw.                    |
 | `vimBindings`                  | `boolean`                         | unless a combo clashes        | The primitive's Ctrl+N/P/J/K navigation.          |
@@ -113,8 +121,9 @@ the visually hidden title and description every dialog needs. What is added here
 name rather than as "place of interest sign." See [shortcut](/docs/kit/shortcut).
 
 The search box also carries `aria-controls` and `aria-activedescendant`, which the primitive cannot
-derive here, so the highlighted action is announced. While results load the list is hidden and the
-indicator sits beside it, since a listbox may only own options, and a disabled action is dimmed.
+derive here, so the highlighted action is announced. While results load with no actions to show,
+the list is hidden and the indicator sits beside it, since a listbox may only own options, and a
+disabled action is dimmed.
 
 A disabled action stays in the list. Hiding it is how a reader concludes the feature does not exist,
 rather than that they cannot use it right now.

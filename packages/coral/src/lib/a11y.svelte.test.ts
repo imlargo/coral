@@ -41,6 +41,7 @@ import SearchInput from './components/coral/kit/search-input/search-input.svelte
 import Select from './components/coral/kit/select/select.svelte';
 import Shortcut from './components/coral/kit/shortcut/shortcut.svelte';
 import ShowMore from './components/coral/kit/show-more/show-more.svelte';
+import ResponsiveDialogHarness from './components/coral/kit/responsive-dialog/responsive-dialog-harness.test.svelte';
 import StepperHarness from './components/coral/kit/stepper/stepper-harness.test.svelte';
 import TagsInput from './components/coral/kit/tags-input/tags-input.svelte';
 import Textarea from './components/coral/kit/textarea/textarea.svelte';
@@ -143,6 +144,14 @@ const cases: [string, () => unknown][] = [
 	[
 		'reorder-list',
 		() => draw(ReorderList, { items: ['Build', 'Test', 'Deploy'], 'aria-label': 'Pipeline' })
+	],
+	[
+		'responsive-dialog, open as a dialog',
+		() => draw(ResponsiveDialogHarness, { open: true, query: '(min-width: 1px)' })
+	],
+	[
+		'responsive-dialog, open as a drawer',
+		() => draw(ResponsiveDialogHarness, { open: true, query: '(min-width: 100000px)' })
 	],
 	['scrub-input', () => draw(ScrubInput, { label: 'Width', value: 12 })],
 	['search-input', () => draw(SearchInput, { 'aria-label': 'Search', value: 'ki' })],
@@ -281,6 +290,14 @@ const cases: [string, () => unknown][] = [
 				loading: true,
 				actions: [{ id: 'new', label: 'New project', run: () => {} }]
 			})
+	],
+	[
+		'command-palette, loading with nothing to show yet',
+		() => draw(CommandPalette, { open: true, loading: true, actions: [] })
+	],
+	[
+		'select, loading, open',
+		() => draw(Select, { options: [], open: true, loading: true, 'aria-label': 'Fruit' })
 	],
 	[
 		'select, grouped, open',

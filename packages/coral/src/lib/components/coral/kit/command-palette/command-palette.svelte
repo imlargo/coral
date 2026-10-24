@@ -1,12 +1,14 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/command-palette
-	 * @version 1.0.1
+	 * @version 1.1.0
 	 */
 	import * as Command from '#lib/components/ui/command/index.js';
 	import { Spinner } from '#lib/components/ui/spinner/index.js';
 	import { Action } from '../../lib/action.svelte.js';
 	import { debounce } from '../../lib/debounce.js';
+	import { defaultsFor } from '../../lib/defaults.js';
+	import LoadingRow from '../../lib/loading-row.svelte';
 	import Shortcut from '../shortcut/shortcut.svelte';
 	import { ariaKeyshortcuts, parse } from '../shortcut/keys.js';
 	import { listen } from '../shortcut/listen.js';
@@ -16,6 +18,13 @@
 	import type { CommandAction } from './actions.js';
 	import type { CommandPaletteProps } from './types.js';
 
+	const defaults = defaultsFor('kit/command-palette', {
+		recentLabel: 'Recent',
+		placeholder: 'Type a command or search...',
+		emptyMessage: 'No results found.',
+		loadingLabel: 'Loading'
+	});
+
 	let {
 		actions,
 		open = $bindable(false),
@@ -23,15 +32,16 @@
 		bindActionShortcuts = true,
 		recent = $bindable([]),
 		maxRecent = 5,
-		recentLabel = 'Recent',
+		recentLabel = defaults.recentLabel,
 		search = $bindable(''),
 		onsearch,
 		searchDebounce = 0,
 		loading = false,
+		loadingLabel = defaults.loadingLabel,
 		onrun,
 		onerror,
-		placeholder = 'Type a command or search...',
-		emptyMessage = 'No results found.',
+		placeholder = defaults.placeholder,
+		emptyMessage = defaults.emptyMessage,
 		vimBindings,
 		onOpenChangeComplete,
 		class: className,
@@ -54,6 +64,13 @@
 
 	const groups = $derived(group(actions, { recent, maxRecent, recentLabel }));
 
+	/**
+	 * Loading with nothing to show yet. Loading alongside actions - local ones, or the last answer -
+	 * keeps them on screen: blanking them on every keystroke while a remote search runs would hide
+	 * the very rows that need no waiting.
+	 */
+	const waiting = $derived(loading && actions.length === 0);
+
 	/** Each action's position in the list as drawn, which is what its element id is built from. */
 	const positions = $derived(
 		new Map(groups.flatMap((entry) => entry.actions).map((item, position) => [item.id, position]))
@@ -62,7 +79,7 @@
 	/** The primitive's highlighted value is the row's search string; this turns it back into an id. */
 	let highlighted = $state('');
 	const activeId = $derived.by(() => {
-		if (loading || highlighted === '') return undefined;
+		if (waiting || highlighted === '') return undefined;
 		const match = actions.find((item) => searchValue(item) === highlighted);
 		return match ? `${listId}-${positions.get(match.id)}` : undefined;
 	});
@@ -176,8 +193,8 @@
 		oninput={(event) => searchLater(event.currentTarget.value)}
 	/>
 
-	<!-- A listbox may only own options and groups, so it is hidden while the results are on their way. -->
-	<Command.List id={listId} class={listClass} hidden={loading}>
+	<!-- A listbox may only own options and groups, so it is hidden until there is something to own. -->
+	<Command.List id={listId} class={listClass} hidden={waiting}>
 		{#if !loading}
 			<Command.Empty>
 				<!-- A listbox must own options; the primitive says when it is empty, and this is what it holds. -->
@@ -185,51 +202,47 @@
 					{#if empty}{@render empty()}{:else}{emptyMessage}{/if}
 				</div>
 			</Command.Empty>
-
-			{#each groups as entry, index (entry.label ?? index)}
-				<Command.Group heading={entry.label}>
-					{#each entry.actions as item (item.id)}
-						<Command.Item
-							id={`${listId}-${positions.get(item.id)}`}
-							value={searchValue(item)}
-							disabled={item.disabled}
-							class="data-disabled:pointer-events-none data-disabled:opacity-50"
-							onSelect={() => run(item)}
-						>
-							{#if actionSnippet}
-								{@render actionSnippet({ action: item, pending: running === item.id })}
-							{:else}
-								<span class="flex min-w-0 flex-col">
-									<span class="truncate">{item.label}</span>
-									{#if item.description}
-										<span class="truncate text-xs text-muted-foreground">{item.description}</span>
-									{/if}
-								</span>
-
-								{#if running === item.id}
-									<Spinner class="ms-auto opacity-50" />
-								{:else if item.shortcut}
-									<!-- Drawn, not bound, from here: the binding above is what makes it work, and
-									     it is live whether or not this row is on screen. -->
-									<Shortcut keys={item.shortcut} class="ms-auto" />
-								{/if}
-							{/if}
-						</Command.Item>
-					{/each}
-				</Command.Group>
-			{/each}
 		{/if}
+
+		{#each groups as entry, index (entry.label ?? index)}
+			<Command.Group heading={entry.label}>
+				{#each entry.actions as item (item.id)}
+					<Command.Item
+						id={`${listId}-${positions.get(item.id)}`}
+						value={searchValue(item)}
+						disabled={item.disabled}
+						class="data-disabled:pointer-events-none data-disabled:opacity-50"
+						onSelect={() => run(item)}
+					>
+						{#if actionSnippet}
+							{@render actionSnippet({ action: item, pending: running === item.id })}
+						{:else}
+							<span class="flex min-w-0 flex-col">
+								<span class="truncate">{item.label}</span>
+								{#if item.description}
+									<span class="truncate text-xs text-muted-foreground">{item.description}</span>
+								{/if}
+							</span>
+
+							{#if running === item.id}
+								<Spinner class="ms-auto opacity-50" />
+							{:else if item.shortcut}
+								<!-- Drawn, not bound, from here: the binding above is what makes it work, and
+								     it is live whether or not this row is on screen. -->
+								<Shortcut keys={item.shortcut} class="ms-auto" />
+							{/if}
+						{/if}
+					</Command.Item>
+				{/each}
+			</Command.Group>
+		{/each}
 	</Command.List>
 
 	{#if loading}
 		<Command.Loading>
-			{#if indicator}
-				{@render indicator()}
-			{:else}
-				<div class="flex items-center justify-center py-6">
-					<Spinner class="opacity-50" />
-				</div>
-			{/if}
+			{#snippet child({ props })}
+				<LoadingRow {...props} label={loadingLabel} {indicator} />
+			{/snippet}
 		</Command.Loading>
 	{/if}
 

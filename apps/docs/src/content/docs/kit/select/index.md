@@ -75,6 +75,14 @@ that reports one when nothing is selected pushes the check onto every caller.
 The clear control sits beside the trigger rather than inside it. The trigger is a `<button>`, and a
 button nested in a button is invalid HTML that browsers recover from by dropping one of the two.
 
+## Loading
+
+<Preview name="kit/select/loading" />
+
+`loading` puts a row in place of the options while they are on their way, so a select opened
+early says something is coming instead of showing an empty list. It is the same row the combobox
+shows, named by `loadingLabel` for a screen reader, and `indicator` replaces what it draws.
+
 ## Forms
 
 <Preview name="kit/select/form" />
@@ -115,6 +123,8 @@ Everything the shadcn root accepts stays available: `open`, `onOpenChange`, `loo
 | `disabled`     | `boolean`                                               | `false`               | Blocks the trigger.                             |
 | `clearable`    | `boolean`                                               | `false`               | Adds a clear control; re-picking deselects.     |
 | `clearLabel`   | `string`                                                | `Clear selection`     | Accessible label for the clear control.         |
+| `loading`      | `boolean`                                               | `false`               | Swaps the options for a loading row.            |
+| `loadingLabel` | `string`                                                | `Loading`             | What a screen reader calls the loading row.     |
 | `name`         | `string`                                                | -                     | Submits with a surrounding form.                |
 | `form`         | `string`                                                | -                     | `id` of the form, for a select outside it.      |
 | `required`     | `boolean`                                               | `false`               | Blocks submission while nothing is selected.    |
@@ -126,6 +136,7 @@ Everything the shadcn root accepts stays available: `open`, `onOpenChange`, `loo
 | `contentClass` | `string`                                                | -                     | Merged onto the dropdown.                       |
 | `trigger`      | `Snippet<[{ selected, placeholder, disabled }]>`        | -                     | Replaces the label inside the trigger.          |
 | `option`       | `Snippet<[{ option, selected }]>`                       | -                     | Replaces the body of each row. The check stays. |
+| `indicator`    | `Snippet`                                               | -                     | Replaces the loading row's spinner.             |
 
 ### `Option<T>`
 

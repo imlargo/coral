@@ -1,7 +1,7 @@
 <script lang="ts" generics="T, Type extends ComboboxType = 'single'">
 	/**
 	 * @coral/kit/combobox
-	 * @version 1.0.1
+	 * @version 1.1.0
 	 */
 	import { tick } from 'svelte';
 	import ChevronsUpDownIcon from '@lucide/svelte/icons/chevrons-up-down';
@@ -10,16 +10,25 @@
 	import * as Popover from '#lib/components/ui/popover/index.js';
 	import { Badge } from '#lib/components/ui/badge/index.js';
 	import { Button } from '#lib/components/ui/button/index.js';
-	import { Spinner } from '#lib/components/ui/spinner/index.js';
 	import { cn } from '#lib/utils.js';
+	import { defaultsFor } from '../../lib/defaults.js';
 	import HiddenField from '../../lib/hidden-field.svelte';
 	import LiveRegion from '../../lib/live-region.svelte';
+	import LoadingRow from '../../lib/loading-row.svelte';
 	import { debounce } from '../../lib/debounce.js';
 	import { flatten, toGroups } from '../../lib/options.js';
 	import { includesValue, matches } from './matching.js';
 	import { selectAllVisible } from './selection.js';
 	import type { Option } from '../../lib/options.js';
 	import type { ComboboxProps, ComboboxType } from './types.js';
+
+	const defaults = defaultsFor('kit/combobox', {
+		placeholder: 'Select an option...',
+		searchPlaceholder: 'Search...',
+		emptyMessage: 'No results found.',
+		clearLabel: 'Clear selection',
+		loadingLabel: 'Loading'
+	});
 
 	let {
 		options,
@@ -30,10 +39,10 @@
 		value = $bindable(),
 		open = $bindable(false),
 		search = $bindable(''),
-		placeholder = 'Select an option...',
-		searchPlaceholder = 'Search...',
-		emptyMessage = 'No results found.',
-		clearLabel = 'Clear selection',
+		placeholder = defaults.placeholder,
+		searchPlaceholder = defaults.searchPlaceholder,
+		emptyMessage = defaults.emptyMessage,
+		clearLabel = defaults.clearLabel,
 		onchange,
 		onsearch,
 		searchDebounce = 0,
@@ -44,6 +53,8 @@
 		disabled = false,
 		clearable = false,
 		loading = false,
+		loadingLabel = defaults.loadingLabel,
+		align = 'start',
 		id,
 		'aria-label': ariaLabel,
 		'aria-labelledby': ariaLabelledby,
@@ -104,12 +115,28 @@
 	const values = $derived<T[]>(
 		multiple ? ((value as T[] | undefined) ?? []) : value === undefined ? [] : [value as T]
 	);
-	/** The options carrying these values, in list order. */
+
+	/**
+	 * The selected options, by value, as last seen. With `onsearch`, `options` holds only the latest
+	 * results, and a value picked from an earlier answer would otherwise lose its label on the
+	 * trigger while still being submitted. Rebuilt with every selection, so it never outgrows it.
+	 */
+	let remembered = new Map<T, Option<T>>();
+
+	/** The options carrying these values: in list order, then those the list no longer carries. */
 	function hydrate(entries: T[]): Option<T>[] {
-		return all.filter((option) => includesValue(entries, option.value));
+		const listed = all.filter((option) => includesValue(entries, option.value));
+		const gone = entries
+			.filter((entry) => !listed.some((option) => option.value === entry))
+			.flatMap((entry) => remembered.get(entry) ?? []);
+		return [...listed, ...gone];
 	}
 
-	const selected = $derived(hydrate(values));
+	const selected = $derived.by(() => {
+		const found = hydrate(values);
+		remembered = new Map(found.map((option) => [option.value, option]));
+		return found;
+	});
 	const shown = $derived(selected.slice(0, maxDisplay));
 	const showClear = $derived(clearable && !trigger && selected.length > 0 && !disabled);
 	const overflow = $derived(Math.max(0, selected.length - maxDisplay));
@@ -288,7 +315,7 @@
 		{/if}
 	</div>
 
-	<Popover.Content class={cn('w-(--bits-popover-anchor-width) p-0', contentClass)}>
+	<Popover.Content {align} class={cn('w-(--bits-popover-anchor-width) p-0', contentClass)}>
 		<Command.Root shouldFilter={false} bind:value={highlighted}>
 			<!--
 				`aria-controls` and `aria-activedescendant` by hand: the primitive derives both from a
@@ -343,13 +370,9 @@
 
 			{#if loading}
 				<Command.Loading>
-					{#if indicator}
-						{@render indicator()}
-					{:else}
-						<div class="flex items-center justify-center py-6">
-							<Spinner class="opacity-50" />
-						</div>
-					{/if}
+					{#snippet child({ props })}
+						<LoadingRow {...props} label={loadingLabel} {indicator} />
+					{/snippet}
 				</Command.Loading>
 			{/if}
 

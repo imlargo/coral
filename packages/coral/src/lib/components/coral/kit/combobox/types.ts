@@ -1,10 +1,10 @@
 /**
  * @coral/kit/combobox
- * @version 1.0.1
+ * @version 1.1.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
-import type { Popover } from '#lib/components/ui/popover/index.js';
+import type { Popover, PopoverContent } from '#lib/components/ui/popover/index.js';
 import type { Option, Options } from '../../lib/options.js';
 import type { TriggerAttributes } from '../../lib/trigger.js';
 
@@ -59,6 +59,8 @@ type BaseProps<T> = RootProps &
 		clearLabel?: string;
 		/** Renders a loading row in place of the list. Pair with `onsearch` for server-side search. */
 		loading?: boolean;
+		/** What the loading row is called, for a screen reader. */
+		loadingLabel?: string;
 		/**
 		 * Submits with a surrounding form, as one field per selected value - so `type="multiple"`
 		 * posts the shape a server already reads as a list.
@@ -96,7 +98,12 @@ type BaseProps<T> = RootProps &
 		maxDisplay?: number;
 		/** Merged onto the trigger button. */
 		class?: string;
-		/** Merged onto the popover content. */
+		/** Which trigger edge the popover lines up with. */
+		align?: ComponentProps<typeof PopoverContent>['align'];
+		/**
+		 * Merged onto the popover content. It matches the trigger's width by default; `w-auto` with a
+		 * `min-w-(--bits-popover-anchor-width)` lets it grow past a narrow trigger instead.
+		 */
 		contentClass?: string;
 		/** Merged onto the scrolling list. Use it to change the max height. */
 		listClass?: string;
@@ -124,8 +131,8 @@ export type ComboboxValue<T, Type extends ComboboxType> = Type extends 'multiple
  * The shape of what `onchange` receives: the same shape as `value`, hydrated into options.
  *
  * Single hands over the option that was picked, or `undefined` when the selection was cleared.
- * Multiple hands over every selected option, in list order - which is also what makes a bulk
- * change legible: `clear` reports `[]` and `selectAll` reports the whole resulting selection,
+ * Multiple hands over every selected option, in list order, followed by any the current `options`
+ * no longer carry - which is also what makes a bulk change legible: `clear` reports `[]` and `selectAll` reports the whole resulting selection,
  * where a single changed row could only have reported nothing.
  */
 export type ComboboxSelection<T, Type extends ComboboxType> = Type extends 'multiple'
@@ -155,3 +162,13 @@ export type ComboboxProps<T, Type extends ComboboxType = 'single'> = BaseProps<T
 	 */
 	onchange?: (selection: ComboboxSelection<T, Type>) => void;
 };
+
+declare module '../../lib/defaults.js' {
+	interface Defaults {
+		/** Set once for every combobox, through `setDefaults`. */
+		'kit/combobox'?: Pick<
+			ComboboxProps<unknown>,
+			'placeholder' | 'searchPlaceholder' | 'emptyMessage' | 'clearLabel' | 'loadingLabel'
+		>;
+	}
+}

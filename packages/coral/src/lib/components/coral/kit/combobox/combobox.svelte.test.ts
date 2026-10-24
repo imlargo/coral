@@ -1,6 +1,6 @@
 /**
  * @coral/kit/combobox
- * @version 1.0.1
+ * @version 1.1.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -223,11 +223,76 @@ describe('searching', () => {
 		expect(onOpenChangeComplete).toHaveBeenLastCalledWith(false);
 	});
 
-	it('shows a loading row in place of the list', async () => {
-		await draw({ options: fruits, open: true, loading: true });
+	it("shows a loading row in place of the list, named in the caller's words", async () => {
+		await draw({ options: fruits, open: true, loading: true, loadingLabel: 'Fetching fruit' });
 		expect(options()).toHaveLength(0);
-		expect(document.querySelector('[role="progressbar"]')).not.toBeNull();
+		const row = document.querySelector('[role="progressbar"]');
+		expect(row?.getAttribute('aria-label')).toBe('Fetching fruit');
 		expect(document.querySelector<HTMLElement>('[role="listbox"]')?.hidden).toBe(true);
+	});
+});
+
+describe('when the server owns the list', () => {
+	it('keeps the picked label after the results stop including it', async () => {
+		const props = $state({
+			options: fruits,
+			value: undefined as number | undefined,
+			shouldFilter: false
+		});
+		await draw(props);
+
+		await userEvent.click(trigger());
+		await userEvent.click(option('Guava'));
+		await expect.poll(() => trigger().textContent?.trim()).toBe('Guava');
+
+		props.options = [fruits[3]];
+		await expect.poll(() => trigger().textContent?.trim()).toBe('Guava');
+	});
+
+	it('remembers a saved value seen in the first options, and still reports it', async () => {
+		const onchange = vi.fn();
+		const props = $state({
+			options: [fruits[1]],
+			type: 'multiple' as const,
+			value: [2] as number[],
+			shouldFilter: false,
+			open: true,
+			onchange
+		});
+		await draw(props);
+
+		props.options = [fruits[3]];
+		await userEvent.click(option('Mango'));
+
+		await expect.poll(() => props.value).toEqual([2, 4]);
+		expect(onchange.mock.lastCall![0].map((entry: Option<number>) => entry.label)).toEqual([
+			'Mango',
+			'Guava'
+		]);
+	});
+
+	it('forgets a label once its value is no longer selected', async () => {
+		const props = $state({
+			options: [fruits[1]],
+			value: 2 as number | undefined,
+			shouldFilter: false,
+			placeholder: 'Pick a fruit'
+		});
+		await draw(props);
+
+		props.value = undefined;
+		props.options = [fruits[3]];
+		await expect.poll(() => trigger().textContent?.trim()).toBe('Pick a fruit');
+		props.value = 2;
+		await expect.poll(() => trigger().textContent?.trim()).toBe('Pick a fruit');
+	});
+});
+
+describe('the popover', () => {
+	it('lines up with the trigger edge it is told to', async () => {
+		await draw({ options: fruits, open: true, align: 'end' });
+		const content = () => document.querySelector('[data-slot="popover-content"]');
+		await expect.poll(() => content()?.getAttribute('data-align')).toBe('end');
 	});
 });
 

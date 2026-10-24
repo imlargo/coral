@@ -1,6 +1,6 @@
 /**
  * @coral/kit/select
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -62,6 +62,10 @@ export type SelectProps<T> = RootProps &
 		clearable?: boolean;
 		/** Accessible label for the clear control. */
 		clearLabel?: string;
+		/** Renders a loading row in place of the options, for a list that is still on its way. */
+		loading?: boolean;
+		/** What the loading row is called, for a screen reader. */
+		loadingLabel?: string;
 		/** Submits with a surrounding form, as a single field carrying the serialized value. */
 		name?: string;
 		/** `id` of the form to submit with, for a select outside it. Ignored without `name`. */
@@ -83,4 +87,13 @@ export type SelectProps<T> = RootProps &
 		trigger?: Snippet<[TriggerContext<T>]>;
 		/** Replaces the body of each option row. The check indicator stays. */
 		option?: Snippet<[OptionContext<T>]>;
+		/** Replaces the loading row. */
+		indicator?: Snippet;
 	};
+
+declare module '../../lib/defaults.js' {
+	interface Defaults {
+		/** Set once for every select, through `setDefaults`. */
+		'kit/select'?: Pick<SelectProps<unknown>, 'placeholder' | 'clearLabel' | 'loadingLabel'>;
+	}
+}

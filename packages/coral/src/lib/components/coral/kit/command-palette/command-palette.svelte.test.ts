@@ -1,6 +1,6 @@
 /**
  * @coral/kit/command-palette
- * @version 1.0.1
+ * @version 1.1.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -178,5 +178,35 @@ describe('for a screen reader', () => {
 			entry.textContent?.includes('Settings')
 		)!;
 		expect(Number(getComputedStyle(row).opacity)).toBeLessThan(1);
+	});
+});
+
+describe('loading', () => {
+	const progress = () => document.querySelector('[role="progressbar"]');
+	const list = () => document.querySelector<HTMLElement>('[role="listbox"]');
+
+	it('keeps the actions it has on screen, with the loading row below them', async () => {
+		await render(CommandPalette, {
+			actions: actions(),
+			open: true,
+			loading: true,
+			onsearch: vi.fn()
+		});
+		await expect.poll(progress).not.toBeNull();
+		expect(rows()).toHaveLength(3);
+		expect(list()?.hidden).toBe(false);
+	});
+
+	it('hides the list while there is nothing to show yet, and names the row', async () => {
+		await render(CommandPalette, {
+			actions: [],
+			open: true,
+			loading: true,
+			onsearch: vi.fn(),
+			loadingLabel: 'Searching projects'
+		});
+		await expect.poll(() => progress()?.getAttribute('aria-label')).toBe('Searching projects');
+		expect(list()?.hidden).toBe(true);
+		expect(document.body.textContent).not.toContain('No results found.');
 	});
 });

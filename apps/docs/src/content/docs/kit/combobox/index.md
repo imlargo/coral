@@ -65,6 +65,7 @@ Everything the shadcn popover root accepts stays available: `open`, `onOpenChang
 | `filter`            | `(option, search) => boolean`                           | folded match          | Replaces the built-in matching.                                 |
 | `clearable`         | `boolean`                                               | `false`               | Adds a clear control; re-picking deselects.                     |
 | `loading`           | `boolean`                                               | `false`               | Swaps the list for an indicator.                                |
+| `loadingLabel`      | `string`                                                | `Loading`             | What a screen reader calls the loading row.                     |
 | `disabled`          | `boolean`                                               | `false`               | Blocks the trigger.                                             |
 | `name`              | `string`                                                | -                     | Submits with a surrounding form, one field per value.           |
 | `form`              | `string`                                                | -                     | `id` of the form, for a combobox outside it.                    |
@@ -78,6 +79,7 @@ Everything the shadcn popover root accepts stays available: `open`, `onOpenChang
 | `id`                | `string`                                                | generated             | Put on the trigger, for a `<Label for>`.                        |
 | `aria-*`            | `aria-label`, `-labelledby`, `-describedby`, `-invalid` | -                     | Put on the trigger.                                             |
 | `class`             | `string`                                                | -                     | Merged onto the trigger button.                                 |
+| `align`             | `'start'` \| `'center'` \| `'end'`                      | `'start'`             | Which trigger edge the popover lines up with.                   |
 | `contentClass`      | `string`                                                | -                     | Merged onto the popover content.                                |
 | `listClass`         | `string`                                                | -                     | Merged onto the scrolling list - e.g. its max height.           |
 
@@ -101,8 +103,9 @@ Everything the shadcn popover root accepts stays available: `open`, `onOpenChang
 | `keywords`    | `string[]` | Searched, never shown.                          |
 | `disabled`    | `boolean`  | Blocks selection; stays visible and searchable. |
 
-The defaults are English because Coral is written in English. Every consuming project passes its
-own copy. These exist so the component renders during a spike, not as a translation layer.
+The defaults are English because Coral is written in English. A project in another language sets
+its own once, with [`setDefaults`](/docs/installation#set-copy-and-locale-once), rather than at
+every call site.
 
 ## Reacting to a selection
 
@@ -180,6 +183,11 @@ filtered twice.
 `loading` swaps the list for an indicator. The search term is cleared when the popover closes, so
 the next open starts from the full list rather than from whatever was typed last time.
 
+The trigger keeps the label of whatever was picked even after the results stop including it: search
+for something else and the selection still reads as itself. An edit form whose saved value is not in
+the first page of results only has to put that option in `options` until the first answer arrives,
+as the demo does with `repo-250`; from then on its label is remembered.
+
 ## Custom trigger and options
 
 <Preview name="kit/combobox/custom-trigger" />
@@ -190,6 +198,10 @@ theme's check indicator stays.
 
 Between those two, `footer`, `empty` and `indicator`, every visible part is replaceable without
 dropping Coral and rebuilding from raw shadcn.
+
+The popover matches the trigger's width. For a compact trigger, such as a filter in a toolbar, let
+it grow with `contentClass="w-auto min-w-(--bits-popover-anchor-width)"`, and `align="end"` keeps
+it inside the screen when the trigger sits at the right edge.
 
 ## Typed values
 

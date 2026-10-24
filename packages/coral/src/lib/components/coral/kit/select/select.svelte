@@ -1,25 +1,35 @@
 <script lang="ts" generics="T">
 	/**
 	 * @coral/kit/select
-	 * @version 1.0.0
+	 * @version 1.1.0
 	 */
 	import XIcon from '@lucide/svelte/icons/x';
 	import * as Select from '#lib/components/ui/select/index.js';
 	import { Button } from '#lib/components/ui/button/index.js';
 	import { cn } from '#lib/utils.js';
+	import { defaultsFor } from '../../lib/defaults.js';
 	import HiddenField from '../../lib/hidden-field.svelte';
+	import LoadingRow from '../../lib/loading-row.svelte';
 	import { flatten, toGroups } from '../../lib/options.js';
 	import type { SelectProps } from './types.js';
+
+	const defaults = defaultsFor('kit/select', {
+		placeholder: 'Select an option...',
+		clearLabel: 'Clear selection',
+		loadingLabel: 'Loading'
+	});
 
 	let {
 		options,
 		value = $bindable(),
 		open = $bindable(false),
-		placeholder = 'Select an option...',
-		clearLabel = 'Clear selection',
+		placeholder = defaults.placeholder,
+		clearLabel = defaults.clearLabel,
 		onchange,
 		disabled = false,
 		clearable = false,
+		loading = false,
+		loadingLabel = defaults.loadingLabel,
 		id,
 		'aria-label': ariaLabel,
 		'aria-labelledby': ariaLabelledby,
@@ -34,6 +44,7 @@
 		contentClass,
 		trigger,
 		option: optionSnippet,
+		indicator,
 		...restProps
 	}: SelectProps<T> = $props();
 
@@ -152,32 +163,44 @@
 		</Select.Trigger>
 
 		<Select.Content id={listId} aria-labelledby={triggerId} class={contentClass}>
-			{#each indexed as group, groupIndex (groupIndex)}
-				<Select.Group>
-					{#if group.label}
-						<Select.GroupHeading>{group.label}</Select.GroupHeading>
-					{/if}
-					{#each group.entries as entry (entry.index)}
-						{@const isSelected = entry.index === selectedIndex}
-						<Select.Item
-							value={String(entry.index)}
-							label={entry.option.label}
-							disabled={entry.option.disabled}
-						>
-							{#if optionSnippet}
-								{@render optionSnippet({ option: entry.option, selected: isSelected })}
-							{:else if entry.option.description}
-								<span class="flex min-w-0 flex-col">
-									<span class="truncate">{entry.option.label}</span>
-									<span class="truncate text-muted-foreground">{entry.option.description}</span>
-								</span>
-							{:else}
-								{entry.option.label}
-							{/if}
-						</Select.Item>
-					{/each}
-				</Select.Group>
-			{/each}
+			<!-- The content is the listbox itself, and a listbox may only own options: the row is one,
+			     disabled, and not an item the primitive knows, so nothing can pick it. -->
+			{#if loading}
+				<LoadingRow
+					role="option"
+					aria-selected="false"
+					aria-disabled="true"
+					label={loadingLabel}
+					{indicator}
+				/>
+			{:else}
+				{#each indexed as group, groupIndex (groupIndex)}
+					<Select.Group>
+						{#if group.label}
+							<Select.GroupHeading>{group.label}</Select.GroupHeading>
+						{/if}
+						{#each group.entries as entry (entry.index)}
+							{@const isSelected = entry.index === selectedIndex}
+							<Select.Item
+								value={String(entry.index)}
+								label={entry.option.label}
+								disabled={entry.option.disabled}
+							>
+								{#if optionSnippet}
+									{@render optionSnippet({ option: entry.option, selected: isSelected })}
+								{:else if entry.option.description}
+									<span class="flex min-w-0 flex-col">
+										<span class="truncate">{entry.option.label}</span>
+										<span class="truncate text-muted-foreground">{entry.option.description}</span>
+									</span>
+								{:else}
+									{entry.option.label}
+								{/if}
+							</Select.Item>
+						{/each}
+					</Select.Group>
+				{/each}
+			{/if}
 		</Select.Content>
 	</Select.Root>
 
