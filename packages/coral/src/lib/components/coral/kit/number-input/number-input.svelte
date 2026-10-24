@@ -1,27 +1,39 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/number-input
-	 * @version 1.0.0
+	 * @version 2.0.0
 	 */
 	import MinusIcon from '@lucide/svelte/icons/minus';
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import * as InputGroup from '#lib/components/ui/input-group/index.js';
 	import { cn } from '#lib/utils.js';
+	import { defaultsFor } from '../../lib/defaults.js';
+	import HiddenField from '../../lib/hidden-field.svelte';
 	import { decimalsOf } from '../../lib/number.js';
 	import { numberField, numberFieldClass } from '../../lib/number-field.js';
 	import type { NumberInputProps } from './types.js';
+
+	const defaults = defaultsFor('kit/number-input', {
+		decrementLabel: 'Decrease',
+		incrementLabel: 'Increase',
+		locale: 'en-US'
+	});
 
 	let {
 		value = $bindable(),
 		min,
 		max,
 		step = 1,
+		largeStep,
 		decimals,
+		locale = defaults.locale,
 		onchange,
-		decrementLabel = 'Decrease',
-		incrementLabel = 'Increase',
+		decrementLabel = defaults.decrementLabel,
+		incrementLabel = defaults.incrementLabel,
 		disabled = false,
 		readonly = false,
+		name,
+		form,
 		class: className,
 		groupClass,
 		ref = $bindable(null),
@@ -42,7 +54,10 @@
 		set: (next) => (value = next),
 		min: () => min,
 		max: () => max,
+		step: () => step,
+		largeStep: () => largeStep ?? step * 10,
 		decimals: () => places,
+		locale: () => locale,
 		editable: () => !disabled && !readonly,
 		onchange: () => onchange
 	});
@@ -60,24 +75,15 @@
 		</InputGroup.Button>
 	</InputGroup.Addon>
 
-	<!--
-		`type="number"` for the keyboard and the semantics the browser already gives: arrow keys step,
-		mobile shows a numeric keypad, and assistive tech reads it as a spinbutton. The native
-		spinners are removed because this component draws its own, and two sets of steppers on one
-		field is one set too many.
-	-->
+	<!-- A text field announced as a spinbutton, so it reads `1,5` the way `locale` writes it: see
+	     `lib/number-field`. -->
 	<InputGroup.Input
 		bind:ref
-		type="number"
-		inputmode={places > 0 ? 'decimal' : 'numeric'}
-		{value}
-		{min}
-		{max}
-		{step}
+		{...field.attributes()}
 		{disabled}
 		{readonly}
 		onchange={field.change}
-		onwheel={field.wheel}
+		onkeydown={field.keydown}
 		class={cn(numberFieldClass, className)}
 		{...restProps}
 	/>
@@ -93,3 +99,8 @@
 		</InputGroup.Button>
 	</InputGroup.Addon>
 </InputGroup.Root>
+
+<!-- What a form submits is the number, `1.5`, not the text the reader sees, which may be `1,5`. -->
+{#if name}
+	<HiddenField {name} {form} value={value === undefined ? '' : String(value)} />
+{/if}

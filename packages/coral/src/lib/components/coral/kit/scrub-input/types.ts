@@ -1,20 +1,21 @@
 /**
  * @coral/kit/scrub-input
- * @version 1.0.0
+ * @version 2.0.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
 import type { InputGroupInput } from '#lib/components/ui/input-group/index.js';
 
 /**
- * Everything the shadcn input accepts - `name`, `id`, `placeholder`, `aria-*`, `ref` - stays
+ * Everything the shadcn input accepts - `id`, `placeholder`, `required`, `aria-*` - stays
  * available. `value` and `type` are Coral's: the value is a number rather than a string, and the
- * type is always `number`. `files` goes with them, since a number field can never carry a `FileList`,
- * and so does `onchange`, which reports the value rather than the DOM event.
+ * field is a text one announced as a spinbutton. `files` goes with them, since a number field can
+ * never carry a `FileList`, and so does `onchange`, which reports the value rather than the DOM
+ * event. `min`, `max` and `step` are Coral's numbers, not the attributes of a text field.
  */
 type InputProps = Omit<
 	ComponentProps<typeof InputGroupInput>,
-	'value' | 'type' | 'files' | 'ref' | 'onchange'
+	'value' | 'type' | 'files' | 'ref' | 'onchange' | 'min' | 'max' | 'step' | 'name' | 'form'
 >;
 
 export type ScrubInputProps = InputProps & {
@@ -44,6 +45,15 @@ export type ScrubInputProps = InputProps & {
 	 */
 	decimals?: number;
 	/**
+	 * How the number is written and read: `1,5` in `de-DE`, `1.5` in `en-US`, where a comma groups
+	 * thousands instead.
+	 */
+	locale?: string;
+	/** Submits with a surrounding form, as the number itself (`1.5`) whatever the field shows. */
+	name?: string;
+	/** `id` of the form to submit with, for a field outside it. Ignored without `name`. */
+	form?: string;
+	/**
 	 * How far the pointer travels per step. Lower is faster: at `1` the value follows the pointer
 	 * pixel for pixel, which is what a field measured in pixels usually wants.
 	 */
@@ -72,3 +82,10 @@ export type ScrubInputProps = InputProps & {
 };
 
 export type { Consumed } from './scrub.js';
+
+declare module '../../lib/defaults.js' {
+	interface Defaults {
+		/** Set once for every scrub input, through `setDefaults`. */
+		'kit/scrub-input'?: Pick<ScrubInputProps, 'locale'>;
+	}
+}

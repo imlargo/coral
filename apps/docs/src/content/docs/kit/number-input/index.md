@@ -21,8 +21,9 @@ that hole by taking typing away, which turns a jump from `1` to `40` into thirty
 - **The field never lies.** Clamping `150` to `10` also rewrites what is on screen, so the number you
   read is the number that is stored.
 - **The arithmetic stays exact.** Stepping by `0.1` gives `0.3`, not `0.30000000000000004`.
-- **Scrolling does not edit.** A focused `type="number"` steps on wheel in Chromium; a page scrolled
-  past one would change silently.
+- **Any locale's decimals.** `1,5` is one and a half in `de-DE` and `es-CO`, and the field shows
+  the value the same way. A `type="number"` field reads through the engine's own rules instead,
+  and Chromium drops `1,5` as empty.
 - **Empty means empty.** Clearing the field gives `undefined`, not the minimum.
 
 Everything else is the primitive's: `input-group` puts the steppers inside the field, so it reads as
@@ -50,6 +51,17 @@ and it quietly makes a temperature or a balance field impossible to express.
 `step` sets the precision as well as the jump, so `step={0.1}` rounds to one decimal. When the two
 genuinely differ (money that steps by whole units but stores cents), set `decimals` on its own.
 
+## Locale
+
+<Preview name="kit/number-input/locale" />
+
+`locale` decides how the number is written and read: the decimal separator, the digits, the minus
+sign. Typed text is read the way the locale writes it, so in `de-DE` the comma is the decimal point
+and a `.` groups thousands, while in `en-US` it is the other way round. The value itself is always
+a plain number, and a form with `name` submits it as `2.5`, whatever the field shows.
+
+Set it once for the whole app with [`setDefaults`](/docs/installation#set-copy-and-locale-once).
+
 ## Empty, readonly, disabled
 
 <Preview name="kit/number-input/states" />
@@ -67,16 +79,20 @@ The first press lands on the first allowed value: with `min={5}`, `+` gives `5`,
 
 ## Props
 
-Everything the shadcn input accepts stays available: `placeholder`, `disabled`, `readonly`, `name`,
-`id`, `aria-*`, `ref`. On top of that:
+Everything the shadcn input accepts stays available: `placeholder`, `disabled`, `readonly`,
+`required`, `id`, `aria-*`, `ref`. On top of that:
 
 | Prop             | Type                                   | Default     | Description                                                  |
 | ---------------- | -------------------------------------- | ----------- | ------------------------------------------------------------ |
 | `value`          | `number`                               | -           | Bindable. `undefined` means empty.                           |
 | `min`            | `number`                               | -           | Lowest allowed. Omitted means unbounded, negatives included. |
 | `max`            | `number`                               | -           | Highest allowed. Omitted means unbounded.                    |
-| `step`           | `number`                               | `1`         | Jump per press. Also sets the rounding precision.            |
+| `step`           | `number`                               | `1`         | Jump per press or arrow key. Also sets the precision.        |
+| `largeStep`      | `number`                               | `step * 10` | Page Up and Page Down, and the arrows with Shift.            |
 | `decimals`       | `number`                               | from `step` | Rounding precision, when it differs from the step.           |
+| `locale`         | `string`                               | `en-US`     | How the number is written and read: `1,5` or `1.5`.          |
+| `name`           | `string`                               | -           | Submits with a form, as the number itself.                   |
+| `form`           | `string`                               | -           | `id` of the form, for a field outside it.                    |
 | `onchange`       | `(value: number \| undefined) => void` | -           | Fired on a stepper or a committed edit. Never on mount.      |
 | `decrementLabel` | `string`                               | `Decrease`  | Accessible label for the `−` button.                         |
 | `incrementLabel` | `string`                               | `Increase`  | Accessible label for the `+` button.                         |
@@ -85,17 +101,15 @@ Everything the shadcn input accepts stays available: `placeholder`, `disabled`, 
 
 ## Accessibility
 
-The field stays a native `input type="number"`, so it keeps what the browser already gives: arrow
-keys step, mobile shows a numeric keypad, and assistive tech reads it as a spinbutton with its
-`min`, `max` and `step`. The two stepper buttons carry labels and are `type="button"`, so neither
-submits a surrounding form.
+The field is a text input with `role="spinbutton"`, carrying `aria-valuenow`, `aria-valuemin`,
+`aria-valuemax` and the value as the reader sees it in `aria-valuetext`. It keeps the spinbutton
+keys: Up and Down step, Shift or Page Up and Page Down step by `largeStep`, Home and End go to the
+bounds, and the first Escape puts back an edit still being typed. Mobile shows a numeric keypad,
+a decimal one when the step needs it. The two stepper buttons carry labels and are `type="button"`,
+so neither submits a surrounding form.
 
-The native spinner arrows are hidden, because the component draws its own and two sets of steppers on
-one field is one too many.
-
-> **One thing to know about locale.** `type="number"` parses through the browser, which in a
-> Spanish locale may accept `1,5` and in another only `1.5`. If a field must accept a decimal comma
-> everywhere, that is a text field with its own parsing, not this component.
+It is not `type="number"` because that hands the reading to the engine, and Chromium reads `1,5` as
+empty, which no reader of a decimal-comma locale can work around.
 
 ## lib/number
 
@@ -104,14 +118,23 @@ moved by either field lands on the same number. It is exported on its own, so th
 rounding can be reused where there is no input at all: validating a payload, totalling a column.
 
 ```ts
-import { clamp, decimalsOf, round, stepValue } from '#lib/components/coral/lib/number.js';
+import {
+	clamp,
+	decimalsOf,
+	format,
+	parse,
+	round,
+	stepValue
+} from '#lib/components/coral/lib/number.js';
 
 decimalsOf(0.05); // 2
 round(0.1 + 0.2, 1); // 0.3
 clamp(150, 0, 25); // 25
 stepValue({ value: undefined, delta: 1, min: 5, decimals: 0 }); // 5
+parse('1.500,5', undefined, undefined, 1, 'de-DE'); // 1500.5
+format(1500.5, 1, 'de-DE'); // '1500,5'
 ```
 
 They live in `lib/number.ts` rather than beside the component because [scrub input](/docs/kit/scrub-input)
 steps its value the same way, and the two cannot be allowed to drift. Both compose them through
-`lib/number-field.ts`, which also holds the commit, the typed-value read and the wheel handling.
+`lib/number-field.ts`, which also holds the commit, the typed-value read and the spinbutton keys.

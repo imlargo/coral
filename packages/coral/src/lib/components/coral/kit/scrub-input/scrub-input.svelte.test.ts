@@ -1,6 +1,6 @@
 /**
  * @coral/kit/scrub-input
- * @version 1.0.0
+ * @version 2.0.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -8,7 +8,7 @@ import { userEvent } from 'vitest/browser';
 import { describe, expect, it, vi } from 'vitest';
 import ScrubInput from './scrub-input.svelte';
 
-const field = () => document.querySelector<HTMLInputElement>('input[type="number"]')!;
+const field = () => document.querySelector<HTMLInputElement>('input[role="spinbutton"]')!;
 const handle = () => document.querySelector<HTMLLabelElement>('label')!;
 
 /**
@@ -190,6 +190,27 @@ describe('typing', () => {
 
 		await expect.poll(() => props.value).toBe(64);
 		expect(field().value).toBe('64');
+	});
+
+	it('reads and writes the number the way the locale does', async () => {
+		const props = $state({ label: 'Opacity', value: 0.5, step: 0.1, locale: 'de-DE' });
+		await render(ScrubInput, props);
+		expect(field().value).toBe('0,5');
+
+		await userEvent.fill(field(), '0,8');
+		field().blur();
+		await expect.poll(() => props.value).toBe(0.8);
+	});
+
+	it('submits the number, not the text the reader sees', async () => {
+		await render(ScrubInput, {
+			label: 'Opacity',
+			value: 0.5,
+			step: 0.1,
+			name: 'opacity',
+			locale: 'de-DE'
+		});
+		expect(document.querySelector<HTMLInputElement>('input[name="opacity"]')?.value).toBe('0.5');
 	});
 
 	it('is named by its own label', async () => {

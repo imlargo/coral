@@ -67,7 +67,7 @@ moved by one behaves exactly as it would in the other.
 
 ## Props
 
-Everything the shadcn input accepts stays available - `name`, `id`, `placeholder`, `required`,
+Everything the shadcn input accepts stays available - `id`, `placeholder`, `required`,
 `aria-*`, `ref`. On top of that:
 
 | Prop            | Type                                   | Default     | Description                                                  |
@@ -79,6 +79,7 @@ Everything the shadcn input accepts stays available - `name`, `id`, `placeholder
 | `step`          | `number`                               | `1`         | Jump per step. Also sets the rounding precision.             |
 | `largeStep`     | `number`                               | `step * 10` | Jump per step while Shift is held.                           |
 | `decimals`      | `number`                               | from `step` | Rounding precision, when it differs from the step.           |
+| `locale`        | `string`                               | `en-US`     | How the number is written and read: `1,5` or `1.5`.          |
 | `pixelsPerStep` | `number`                               | `2`         | Pointer travel per step. Lower is faster.                    |
 | `onchange`      | `(value: number \| undefined) => void` | -           | A drag, an arrow key or a committed edit. Never on mount.    |
 | `onscrubstart`  | `(value: number \| undefined) => void` | -           | A drag began, with the value it began at.                    |
@@ -86,6 +87,8 @@ Everything the shadcn input accepts stays available - `name`, `id`, `placeholder
 | `suffix`        | `string`                               | -           | Unit shown after the number.                                 |
 | `disabled`      | `boolean`                              | `false`     | Blocks the drag and the keyboard.                            |
 | `readonly`      | `boolean`                              | `false`     | Shows the value without letting it change.                   |
+| `name`          | `string`                               | -           | Submits with a form, as the number itself.                   |
+| `form`          | `string`                               | -           | `id` of the form, for a field outside it.                    |
 | `class`         | `string`                               | -           | Merged onto the input.                                       |
 | `groupClass`    | `string`                               | -           | Merged onto the bordered group.                              |
 | `handleClass`   | `string`                               | -           | Merged onto the handle.                                      |
@@ -118,15 +121,17 @@ For a longer sweep: hold Shift, lower `pixelsPerStep`, or type the number.
 
 ## Accessibility
 
-The field is a native `input type="number"`, announced as a spinbutton with its `min`, `max` and
-`step`, and named by the handle through a real `<label for>`. The handle is not focusable and
+The field is a text input with `role="spinbutton"`, carrying its value and bounds, and named by the
+handle through a real `<label for>`. It reads and writes the number in `locale`, like
+[number input](/docs/kit/number-input): `type="number"` would hand the reading to the engine, which
+in Chromium drops a decimal comma as empty. The handle is not focusable and
 carries no role of its own: the keyboard already steps the field, and a second control for the same
 number would be a second tab stop that adds nothing. Pointer dragging is an extra the pointer gets,
 not the only way in.
 
-Stepping is handled rather than left to the browser, because engines disagree on what Shift and the
-paging keys do to a number input, and the coarse modifier has to mean the same thing as it does on
-the handle.
+The keys come from `lib/number-field`, shared with number input, so Shift and the paging keys mean
+the same thing on both fields and the coarse modifier means the same thing as it does on the
+handle.
 
 ## scrub.ts
 

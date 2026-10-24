@@ -1,6 +1,6 @@
 /**
  * @coral/kit/number-input
- * @version 1.0.0
+ * @version 2.0.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -8,7 +8,7 @@ import { userEvent } from 'vitest/browser';
 import { describe, expect, it, vi } from 'vitest';
 import NumberInput from './number-input.svelte';
 
-const field = () => document.querySelector<HTMLInputElement>('input[type="number"]')!;
+const field = () => document.querySelector<HTMLInputElement>('input[role="spinbutton"]')!;
 const decrease = () => document.querySelector<HTMLButtonElement>('button[aria-label="Decrease"]')!;
 const increase = () => document.querySelector<HTMLButtonElement>('button[aria-label="Increase"]')!;
 
@@ -126,23 +126,69 @@ describe('reporting', () => {
 	});
 });
 
-describe('the wheel', () => {
-	it('does not edit a focused field', async () => {
-		const props = $state({ value: 5 as number | undefined });
+describe('the keyboard', () => {
+	it('steps with the arrows, coarsely with Shift and with Page Up and Down', async () => {
+		const props = $state({ value: 0 as number | undefined, step: 1, largeStep: 5 });
 		await render(NumberInput, props);
-
 		field().focus();
-		const event = new WheelEvent('wheel', { deltaY: -100, bubbles: true, cancelable: true });
-		field().dispatchEvent(event);
-		expect(event.defaultPrevented).toBe(true);
-		expect(props.value).toBe(5);
+
+		await userEvent.keyboard('{ArrowUp}');
+		expect(props.value).toBe(1);
+		await userEvent.keyboard('{Shift>}{ArrowUp}{/Shift}');
+		expect(props.value).toBe(6);
+		await userEvent.keyboard('{PageDown}');
+		expect(props.value).toBe(1);
 	});
 
-	it('leaves the page scrollable over a field that is not focused', async () => {
-		await render(NumberInput, { value: 5 });
-		const event = new WheelEvent('wheel', { deltaY: -100, bubbles: true, cancelable: true });
-		field().dispatchEvent(event);
-		expect(event.defaultPrevented).toBe(false);
+	it('goes to the bounds with Home and End', async () => {
+		const props = $state({ value: 4 as number | undefined, min: 1, max: 9 });
+		await render(NumberInput, props);
+		field().focus();
+
+		await userEvent.keyboard('{End}');
+		expect(props.value).toBe(9);
+		await userEvent.keyboard('{Home}');
+		expect(props.value).toBe(1);
+	});
+
+	it('takes the first Escape to undo what is being typed', async () => {
+		const props = $state({ value: 4 as number | undefined });
+		await render(NumberInput, props);
+
+		await userEvent.fill(field(), '47');
+		await userEvent.keyboard('{Escape}');
+		expect(field().value).toBe('4');
+		expect(props.value).toBe(4);
+	});
+});
+
+describe('the locale', () => {
+	it('reads a decimal comma where the locale writes one, and shows the value that way', async () => {
+		const props = $state({ value: 1 as number | undefined, step: 0.1, locale: 'de-DE' });
+		await render(NumberInput, props);
+		expect(field().value).toBe('1');
+
+		await userEvent.fill(field(), '2,5');
+		await userEvent.tab();
+		expect(props.value).toBe(2.5);
+		expect(field().value).toBe('2,5');
+	});
+
+	it('steps in the locale too', async () => {
+		const props = $state({ value: 1.5 as number | undefined, step: 0.5, locale: 'fr-FR' });
+		await render(NumberInput, props);
+		await userEvent.click(increase());
+		await expect.poll(() => field().value).toBe('2');
+		await userEvent.click(increase());
+		await expect.poll(() => field().value).toBe('2,5');
+	});
+
+	it('is announced as a spinbutton, with the value as the reader sees it', async () => {
+		await render(NumberInput, { value: 2.5, step: 0.5, min: 0, max: 10, locale: 'de-DE' });
+		expect(field().getAttribute('aria-valuenow')).toBe('2.5');
+		expect(field().getAttribute('aria-valuetext')).toBe('2,5');
+		expect(field().getAttribute('aria-valuemin')).toBe('0');
+		expect(field().getAttribute('aria-valuemax')).toBe('10');
 	});
 });
 
@@ -163,9 +209,15 @@ describe('the field', () => {
 	});
 
 	it('forwards what the input takes', async () => {
-		await render(NumberInput, { value: 1, name: 'seats', id: 'seats', 'aria-label': 'Seats' });
-		expect(field().name).toBe('seats');
+		await render(NumberInput, { value: 1, id: 'seats', 'aria-label': 'Seats', required: true });
 		expect(field().id).toBe('seats');
 		expect(field().getAttribute('aria-label')).toBe('Seats');
+		expect(field().required).toBe(true);
+	});
+
+	it('submits the number, not the text the reader sees', async () => {
+		await render(NumberInput, { value: 2.5, step: 0.5, name: 'price', locale: 'de-DE' });
+		expect(field().name).toBe('');
+		expect(document.querySelector<HTMLInputElement>('input[name="price"]')?.value).toBe('2.5');
 	});
 });

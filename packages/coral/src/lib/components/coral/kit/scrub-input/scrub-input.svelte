@@ -1,14 +1,20 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/scrub-input
-	 * @version 1.0.0
+	 * @version 2.0.0
 	 */
 	import * as InputGroup from '#lib/components/ui/input-group/index.js';
 	import { cn } from '#lib/utils.js';
+	import { defaultsFor } from '../../lib/defaults.js';
+	import HiddenField from '../../lib/hidden-field.svelte';
 	import { decimalsOf } from '../../lib/number.js';
 	import { numberField, numberFieldClass } from '../../lib/number-field.js';
 	import { amountFor, consume } from './scrub.js';
 	import type { ScrubInputProps } from './types.js';
+
+	const defaults = defaultsFor('kit/scrub-input', {
+		locale: 'en-US'
+	});
 
 	let {
 		label,
@@ -18,6 +24,7 @@
 		step = 1,
 		largeStep,
 		decimals,
+		locale = defaults.locale,
 		pixelsPerStep = 2,
 		onchange,
 		onscrubstart,
@@ -25,6 +32,8 @@
 		suffix,
 		disabled = false,
 		readonly = false,
+		name,
+		form,
 		id,
 		class: className,
 		groupClass,
@@ -57,7 +66,10 @@
 		set: (next) => (value = next),
 		min: () => min,
 		max: () => max,
+		step: () => step,
+		largeStep: () => coarse,
 		decimals: () => places,
+		locale: () => locale,
 		editable: () => mutable,
 		onchange: () => onchange
 	});
@@ -153,41 +165,6 @@
 		window.addEventListener('keydown', onKeydown);
 		return () => window.removeEventListener('keydown', onKeydown);
 	});
-
-	/**
-	 * Up and Down step, the way a spinbutton does, and Shift makes them coarse. Left and Right are
-	 * left alone: in a text field they move the caret, and taking that away makes the number
-	 * impossible to edit. Handled here rather than by the browser so that the coarse modifier and
-	 * the bounds behave identically everywhere - engines disagree on all of it.
-	 */
-	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLInputElement }) {
-		if (!mutable) return;
-
-		const amount = amountFor(step, coarse, event.shiftKey);
-		const text = event.currentTarget;
-
-		/** Each key returns whether it acted; one that did not is left to the caret or a dialog above. */
-		const keys: Record<string, () => boolean> = {
-			ArrowUp: () => (field.nudge(amount), true),
-			ArrowDown: () => (field.nudge(-amount), true),
-			PageUp: () => (field.nudge(coarse), true),
-			PageDown: () => (field.nudge(-coarse), true),
-			Home: () => min !== undefined && (field.commit(min), true),
-			End: () => max !== undefined && (field.commit(max), true),
-			// Puts back what the field held before the edit that is still being typed.
-			Escape: () => {
-				const held = value === undefined ? '' : String(value);
-				if (text.value === held) return false;
-				text.value = held;
-				// The first Escape is the field's, the second is the dialog's - the rule search-input
-				// and inline-edit follow.
-				event.stopPropagation();
-				return true;
-			}
-		};
-
-		if (keys[event.key]?.()) event.preventDefault();
-	}
 </script>
 
 <InputGroup.Root class={cn('max-w-max', groupClass)}>
@@ -216,25 +193,16 @@
 		</label>
 	</InputGroup.Addon>
 
-	<!--
-		`type="number"` for what the platform already gives: a spinbutton to assistive tech, with its
-		`min`, `max` and `step` announced, and a numeric keypad on a phone. The native spinner arrows
-		are hidden, because this field is driven by the handle and the keyboard.
-	-->
+	<!-- A text field announced as a spinbutton, so it reads `1,5` the way `locale` writes it: see
+	     `lib/number-field`, which also holds the keys that step it. -->
 	<InputGroup.Input
 		bind:ref={() => ref, (node) => (ref = node as HTMLInputElement | null)}
 		id={fieldId}
-		type="number"
-		inputmode={places > 0 ? 'decimal' : 'numeric'}
-		{value}
-		{min}
-		{max}
-		{step}
+		{...field.attributes()}
 		{disabled}
 		{readonly}
 		onchange={field.change}
-		onkeydown={handleKeydown}
-		onwheel={field.wheel}
+		onkeydown={field.keydown}
 		class={cn(numberFieldClass, className)}
 		{...restProps}
 	/>
@@ -245,3 +213,8 @@
 		</InputGroup.Addon>
 	{/if}
 </InputGroup.Root>
+
+<!-- What a form submits is the number, `1.5`, not the text the reader sees, which may be `1,5`. -->
+{#if name}
+	<HiddenField {name} {form} value={value === undefined ? '' : String(value)} />
+{/if}

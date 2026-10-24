@@ -1,10 +1,10 @@
 /**
  * @coral/lib/number
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import { describe, expect, it } from 'vitest';
-import { clamp, decimalsOf, parse, round, stepValue } from './number.js';
+import { clamp, decimalsOf, format, parse, round, stepValue } from './number.js';
 
 describe('decimalsOf', () => {
 	it('counts the decimals of a fractional step', () => {
@@ -124,5 +124,45 @@ describe('parse', () => {
 
 	it('keeps a negative when the range allows it', () => {
 		expect(parse('-40', -100, 100, 0)).toBe(-40);
+	});
+
+	it('reads the decimal comma where the locale writes one', () => {
+		expect(parse('1,5', undefined, undefined, 1, 'de-DE')).toBe(1.5);
+		expect(parse('1,5', undefined, undefined, 1, 'es-CO')).toBe(1.5);
+		expect(parse('-0,25', undefined, undefined, 2, 'fr-FR')).toBe(-0.25);
+	});
+
+	it("drops the locale's group separator", () => {
+		expect(parse('1,500', undefined, undefined, 0, 'en-US')).toBe(1500);
+		expect(parse('1.500,5', undefined, undefined, 1, 'de-DE')).toBe(1500.5);
+		expect(parse('1 500,5', undefined, undefined, 1, 'fr-FR')).toBe(1500.5);
+	});
+
+	it('reads the digits and the minus sign a locale writes', () => {
+		expect(parse('٤٢', undefined, undefined, 0, 'ar-EG')).toBe(42);
+		expect(parse('\u221240', -100, 100, 0, 'en-US')).toBe(-40);
+	});
+});
+
+describe('format', () => {
+	it("writes the value with the locale's decimal separator", () => {
+		expect(format(1.5, 1, 'de-DE')).toBe('1,5');
+		expect(format(1.5, 1, 'en-US')).toBe('1.5');
+	});
+
+	it('never groups, and never pads the decimals', () => {
+		expect(format(1500.5, 2, 'de-DE')).toBe('1500,5');
+		expect(format(3, 2, 'en-US')).toBe('3');
+	});
+
+	it('writes nothing for an empty value, and no sign on a zero', () => {
+		expect(format(undefined, 0, 'en-US')).toBe('');
+		expect(format(-0, 1, 'en-US')).toBe('0');
+	});
+
+	it('reads back as the same number', () => {
+		for (const locale of ['en-US', 'de-DE', 'fr-FR', 'es-CO', 'ar-EG']) {
+			expect(parse(format(-1234.56, 2, locale), undefined, undefined, 2, locale)).toBe(-1234.56);
+		}
 	});
 });

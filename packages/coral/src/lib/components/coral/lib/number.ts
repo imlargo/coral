@@ -1,7 +1,9 @@
 /**
  * @coral/lib/number
- * @version 1.0.0
+ * @version 1.1.0
  */
+
+import { numberFormat } from './intl.js';
 
 /**
  * How many decimals a step implies: `0.1` gives 1, `0.05` gives 2, `1` gives 0. Exponent notation
@@ -55,21 +57,87 @@ export function stepValue({ value, delta, min, max, decimals }: StepOptions): nu
 	return clamp(round((value ?? 0) + delta, decimals), min, max);
 }
 
+type Symbols = { group: string; decimal: string; minus: string; digits: Map<string, string> };
+
+const symbols = new Map<string, Symbols>();
+
+/** The direction marks some locales wrap a minus sign in, which say nothing about the number. */
+const MARKS = /[\u061c\u200e\u200f]/g;
+
+/** How a locale writes a number, read off `Intl` rather than kept in a table that goes stale. */
+function symbolsOf(locale: string | undefined): Symbols {
+	const key = locale ?? '';
+	const known = symbols.get(key);
+	if (known) return known;
+
+	const parts = numberFormat(locale).formatToParts(-12345.6);
+	const part = (type: Intl.NumberFormatPartTypes) =>
+		parts.find((entry) => entry.type === type)?.value ?? '';
+	// Some locales write their own digits: `٩٨٧٦٥٤٣٢١٠` in Arabic is still 9876543210.
+	const native = [...numberFormat(locale, { useGrouping: false }).format(9876543210)];
+
+	const found = {
+		group: part('group'),
+		decimal: part('decimal'),
+		minus: part('minusSign').replace(MARKS, ''),
+		digits: new Map(native.map((digit, index) => [digit, String(9 - index)]))
+	};
+	symbols.set(key, found);
+	return found;
+}
+
 /**
- * Reads what someone typed, on commit rather than per keystroke. `undefined` for an empty field:
- * clearing means "no value", not "the smallest allowed one". Browsers hand back an empty string for
- * anything they cannot parse, so unparseable input arrives here as empty too.
+ * Rewrites typed text into the form `Number` reads: the locale's digits, decimal separator and
+ * minus sign swapped for ASCII ones, its group separator dropped. A locale whose groups are spaces
+ * writes a narrow no-break space that no keyboard types, so any space counts as one there.
+ */
+function delocalize(raw: string, locale: string | undefined): string {
+	const { group, decimal, minus, digits } = symbolsOf(locale);
+	const spaced = /\s/.test(group);
+
+	let text = '';
+	for (const char of raw.replace(MARKS, '').trim()) {
+		if (char === group || (spaced && /\s/.test(char))) continue;
+		if (char === decimal) text += '.';
+		else if (char === minus || char === '\u2212') text += '-';
+		else text += digits.get(char) ?? char;
+	}
+	return text;
+}
+
+/**
+ * Reads what someone typed, on commit rather than per keystroke, the way `locale` writes numbers:
+ * `1,5` is one and a half in `de-DE`, and fifteen in `en-US`, where the comma groups. `undefined`
+ * for an empty field, because clearing means "no value", not "the smallest allowed one", and for
+ * anything that is not a number at all. A `locale` left out follows the reader's own.
  */
 export function parse(
 	raw: string,
 	min: number | undefined,
 	max: number | undefined,
-	decimals: number
+	decimals: number,
+	locale?: string
 ): number | undefined {
 	if (raw.trim() === '') return undefined;
 
-	const parsed = Number(raw);
+	const parsed = Number(delocalize(raw, locale));
 	if (Number.isNaN(parsed)) return undefined;
 
 	return clamp(round(parsed, decimals), min, max);
+}
+
+/**
+ * The text a field shows for a value, written the way `parse` reads it back. Never grouped:
+ * separators that appear as the reader types are a caret moving on its own, and `1.500` is
+ * ambiguous to a reader of the other convention.
+ */
+export function format(value: number | undefined, decimals: number, locale?: string): string {
+	if (value === undefined) return '';
+
+	return numberFormat(locale, {
+		maximumFractionDigits: Math.min(Math.max(decimals, 0), 20),
+		useGrouping: false,
+		// A value rounded towards zero from below is `-0`, which would otherwise print as `-0`.
+		signDisplay: 'negative'
+	}).format(value);
 }
