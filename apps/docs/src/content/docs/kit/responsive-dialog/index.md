@@ -33,6 +33,7 @@ ResponsiveDialog
     ├── ResponsiveDialogHeader
     │   ├── ResponsiveDialogTitle
     │   └── ResponsiveDialogDescription
+    ├── ResponsiveDialogBody
     └── ResponsiveDialogFooter
         └── ResponsiveDialogClose
 ```
@@ -40,11 +41,19 @@ ResponsiveDialog
 One file per piece, imported by path. Trigger and Close accept a `child` snippet exactly as the
 primitives do, since under both primitives they are the same bits-ui parts.
 
-## Spacing
+## The body
 
-The dialog pads its content; the drawer pads its header and footer and leaves the body to you. That is
-the primitives' own layout and Coral does not paper over it: give the body `px-4 md:px-0`, as the
-demo does, or whatever matches your `query`.
+The dialog pads its whole content. The drawer pads only its header and footer, and caps its own
+height, so anything placed between them touches the screen edges, and a form taller than the cap
+cannot scroll. `ResponsiveDialogBody` is that middle region: in the drawer it takes the header's
+padding and scrolls between a header and footer that stay put; in the dialog it is a plain
+wrapper. It reads which primitive is showing, so nothing in it has to repeat your `query` as a
+breakpoint class.
+
+<Preview name="kit/responsive-dialog/form" />
+
+A form whose submit button sits in the footer points that button at it with `form`, since the
+footer is outside the body.
 
 ## Import
 
@@ -55,6 +64,9 @@ demo does, or whatever matches your `query`.
 	// ...one import per piece you use
 </script>
 ```
+
+There is no `index.js` to import as `* as ResponsiveDialog`, the way shadcn's own parts are. Coral
+has no barrels: every file is imported by its path, so a project only carries what it uses.
 
 ## Props
 
@@ -68,7 +80,8 @@ demo does, or whatever matches your `query`.
 | `children` | `Snippet` | -                    | The trigger and the content.                         |
 
 `ResponsiveDialogContent` accepts the dialog content's props; `showCloseButton` applies to the dialog
-only. The trigger, title, description and close forward everything to their primitive.
+only. The header, body and footer take a `<div>`'s attributes, `class` merged. The trigger, title,
+description and close forward everything to their primitive.
 
 ## Accessibility
 

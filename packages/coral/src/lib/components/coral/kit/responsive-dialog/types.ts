@@ -1,6 +1,6 @@
 /**
  * @coral/kit/responsive-dialog
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -39,6 +39,7 @@ export type ResponsiveDialogCloseProps = ComponentProps<typeof DialogClose>;
  */
 export type ResponsiveDialogContentProps = ComponentProps<typeof DialogContent>;
 
+/** The header, the body and the footer: a `<div>` each, drawn by whichever primitive is showing. */
 export type ResponsiveDialogSectionProps = HTMLAttributes<HTMLDivElement> & {
 	ref?: HTMLElement | null;
 };

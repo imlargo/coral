@@ -1,6 +1,6 @@
 /**
  * @coral/kit/responsive-dialog
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -129,6 +129,21 @@ describe('the pieces', () => {
 			);
 			view.unmount();
 		}
+	});
+
+	it('pad and scroll the body in the drawer, and leave it to the dialog otherwise', async () => {
+		const body = () => document.querySelector<HTMLElement>('[data-slot="responsive-dialog-body"]');
+
+		const narrow = await render(Harness, draw({ open: true, query: NARROW }));
+		await expect.poll(body).not.toBeNull();
+		expect(getComputedStyle(body()!).overflowY).toBe('auto');
+		expect(parseFloat(getComputedStyle(body()!).paddingInlineStart)).toBeGreaterThan(0);
+		narrow.unmount();
+
+		await render(Harness, draw({ open: true, query: WIDE }));
+		await expect.poll(body).not.toBeNull();
+		expect(getComputedStyle(body()!).overflowY).toBe('visible');
+		expect(getComputedStyle(body()!).paddingInlineStart).toBe('0px');
 	});
 
 	it('refuse to render outside the root, and say what to do', async () => {
