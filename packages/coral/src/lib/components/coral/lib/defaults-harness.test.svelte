@@ -13,11 +13,11 @@
 	let {
 		layers,
 		component: Target,
-		props = {}
+		values = {}
 	}: {
 		layers: Defaults[];
 		component: Component<Record<string, unknown>>;
-		props?: Record<string, unknown>;
+		values?: Record<string, unknown>;
 	} = $props();
 
 	const [layer, ...rest] = untrack(() => layers);
@@ -25,7 +25,7 @@
 </script>
 
 {#if rest.length > 0}
-	<Self layers={rest} component={Target} {props} />
+	<Self layers={rest} component={Target} {values} />
 {:else}
-	<Target {...props} />
+	<Target {...values} />
 {/if}

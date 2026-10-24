@@ -134,10 +134,9 @@ export function parse(
 export function format(value: number | undefined, decimals: number, locale?: string): string {
 	if (value === undefined) return '';
 
+	// A value rounded towards zero from below is `-0`, which `Intl` prints with its sign.
 	return numberFormat(locale, {
 		maximumFractionDigits: Math.min(Math.max(decimals, 0), 20),
-		useGrouping: false,
-		// A value rounded towards zero from below is `-0`, which would otherwise print as `-0`.
-		signDisplay: 'negative'
-	}).format(value);
+		useGrouping: false
+	}).format(value === 0 ? 0 : value);
 }

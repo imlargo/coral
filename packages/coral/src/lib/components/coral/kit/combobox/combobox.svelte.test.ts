@@ -262,6 +262,7 @@ describe('when the server owns the list', () => {
 		await draw(props);
 
 		props.options = [fruits[3]];
+		await expect.poll(labels).toEqual(['Mango']);
 		await userEvent.click(option('Mango'));
 
 		await expect.poll(() => props.value).toEqual([2, 4]);

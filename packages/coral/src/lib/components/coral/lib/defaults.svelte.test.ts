@@ -22,7 +22,7 @@ const trigger = () => document.querySelector<HTMLButtonElement>('button[role="co
 const time = () => document.querySelector('time')!.textContent?.trim();
 
 const combobox = (layers: Defaults[], props: Record<string, unknown> = {}) =>
-	render(Harness, { layers, component: untyped(Combobox), props: { options: fruits, ...props } });
+	render(Harness, { layers, component: untyped(Combobox), values: { options: fruits, ...props } });
 
 describe('setDefaults', () => {
 	it("replaces a component's English default", async () => {
@@ -46,7 +46,7 @@ describe('setDefaults', () => {
 		await render(Harness, {
 			layers: [{ locale: 'fr-FR' }],
 			component: untyped(RelativeTime),
-			props: { date: fiveMinutesAgo, now }
+			values: { date: fiveMinutesAgo, now }
 		});
 		expect(time()).toBe('il y a 5 minutes');
 	});
@@ -55,7 +55,7 @@ describe('setDefaults', () => {
 		await render(Harness, {
 			layers: [{ locale: 'fr-FR', 'kit/relative-time': { locale: 'de-DE' } }],
 			component: untyped(RelativeTime),
-			props: { date: fiveMinutesAgo, now }
+			values: { date: fiveMinutesAgo, now }
 		});
 		expect(time()).toBe('vor 5 Minuten');
 	});
