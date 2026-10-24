@@ -28,11 +28,3 @@ export function consume(distance: number, pixelsPerStep: number): Consumed {
 	const steps = Math.trunc(distance / pixelsPerStep) + 0;
 	return { steps, rest: distance - steps * pixelsPerStep };
 }
-
-/**
- * How much one step is worth right now. Shift is the coarse modifier everywhere a number can be
- * dragged or nudged, so it means the same on the handle and on the arrow keys.
- */
-export function amountFor(step: number, largeStep: number, coarse: boolean): number {
-	return coarse ? largeStep : step;
-}

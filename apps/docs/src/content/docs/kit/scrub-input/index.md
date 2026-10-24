@@ -79,6 +79,7 @@ Everything the shadcn input accepts stays available - `name`, `id`, `placeholder
 | `step`          | `number`                               | `1`         | Jump per step. Also sets the rounding precision.             |
 | `largeStep`     | `number`                               | `step * 10` | Jump per step while Shift is held.                           |
 | `decimals`      | `number`                               | from `step` | Rounding precision, when it differs from the step.           |
+| `locale`        | `string`                               | `en-US`     | How the number is typed and shown - see number input.        |
 | `pixelsPerStep` | `number`                               | `2`         | Pointer travel per step. Lower is faster.                    |
 | `onchange`      | `(value: number \| undefined) => void` | -           | A drag, an arrow key or a committed edit. Never on mount.    |
 | `onscrubstart`  | `(value: number \| undefined) => void` | -           | A drag began, with the value it began at.                    |
@@ -118,15 +119,17 @@ For a longer sweep: hold Shift, lower `pixelsPerStep`, or type the number.
 
 ## Accessibility
 
-The field is a native `input type="number"`, announced as a spinbutton with its `min`, `max` and
-`step`, and named by the handle through a real `<label for>`. The handle is not focusable and
-carries no role of its own: the keyboard already steps the field, and a second control for the same
-number would be a second tab stop that adds nothing. Pointer dragging is an extra the pointer gets,
-not the only way in.
+The field is a text input with `role="spinbutton"`, announcing its value and bounds through the
+`aria-value*` attributes, and named by the handle through a real `<label for>`. It is a text field
+for the reason [number input](/docs/kit/number-input#locale) gives: a `type="number"` field drops a
+decimal comma, and most of the world writes one. The handle is not focusable and carries no role of
+its own: the keyboard already steps the field, and a second control for the same number would be a
+second tab stop that adds nothing. Pointer dragging is an extra the pointer gets, not the only way
+in.
 
 Stepping is handled rather than left to the browser, because engines disagree on what Shift and the
 paging keys do to a number input, and the coarse modifier has to mean the same thing as it does on
-the handle.
+the handle. The handler is the one number input uses, in `lib/number-field.ts`.
 
 ## scrub.ts
 

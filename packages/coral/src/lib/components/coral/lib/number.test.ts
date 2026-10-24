@@ -4,7 +4,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { clamp, decimalsOf, parse, round, stepValue } from './number.js';
+import { clamp, decimalsOf, format, parse, round, separators, stepValue } from './number.js';
 
 describe('decimalsOf', () => {
 	it('counts the decimals of a fractional step', () => {
@@ -99,30 +99,82 @@ describe('stepValue', () => {
 	});
 });
 
+describe('separators', () => {
+	it('reads the decimal and group separators off the locale', () => {
+		expect(separators('en-US')).toEqual({ decimal: '.', group: ',' });
+		expect(separators('de-DE')).toEqual({ decimal: ',', group: '.' });
+		expect(separators('fr-FR').decimal).toBe(',');
+	});
+});
+
 describe('parse', () => {
+	const en = { locale: 'en-US', decimals: 0 };
+
 	it('reads a plain number', () => {
-		expect(parse('42', undefined, undefined, 0)).toBe(42);
+		expect(parse('42', en)).toBe(42);
 	});
 
 	it('clamps a typed value that is out of range', () => {
-		expect(parse('150', 0, 100, 0)).toBe(100);
-		expect(parse('-4', 0, 100, 0)).toBe(0);
+		expect(parse('150', { ...en, min: 0, max: 100 })).toBe(100);
+		expect(parse('-4', { ...en, min: 0, max: 100 })).toBe(0);
 	});
 
 	it('rounds to the step precision', () => {
-		expect(parse('1.239', 0, 10, 2)).toBe(1.24);
+		expect(parse('1.239', { ...en, decimals: 2, min: 0, max: 10 })).toBe(1.24);
 	});
 
 	it('treats an empty field as no value, not as the minimum', () => {
-		expect(parse('', 5, 10, 0)).toBeUndefined();
-		expect(parse('   ', 5, 10, 0)).toBeUndefined();
+		expect(parse('', { ...en, min: 5, max: 10 })).toBeUndefined();
+		expect(parse('   ', { ...en, min: 5, max: 10 })).toBeUndefined();
 	});
 
 	it('treats unparseable input as empty', () => {
-		expect(parse('abc', 0, 10, 0)).toBeUndefined();
+		expect(parse('abc', { ...en, min: 0, max: 10 })).toBeUndefined();
 	});
 
 	it('keeps a negative when the range allows it', () => {
-		expect(parse('-40', -100, 100, 0)).toBe(-40);
+		expect(parse('-40', { ...en, min: -100, max: 100 })).toBe(-40);
+	});
+
+	it('reads a decimal comma where the locale writes one', () => {
+		expect(parse('1,5', { locale: 'de-DE', decimals: 1 })).toBe(1.5);
+		expect(parse('1,5', { locale: 'es-CO', decimals: 1 })).toBe(1.5);
+		expect(parse('0,25', { locale: 'fr-FR', decimals: 2 })).toBe(0.25);
+	});
+
+	it("reads the locale's own grouping, so 1.234 is a thousand in Germany", () => {
+		expect(parse('1.234,5', { locale: 'de-DE', decimals: 1 })).toBe(1234.5);
+		expect(parse('1,234.5', { locale: 'en-US', decimals: 1 })).toBe(1234.5);
+		expect(parse('1.5', { locale: 'de-DE', decimals: 1 })).toBe(15);
+	});
+
+	it('accepts a plain space for a locale that groups with a narrow one', () => {
+		expect(parse('1 234,5', { locale: 'fr-FR', decimals: 1 })).toBe(1234.5);
+	});
+
+	it('reads the minus Intl prints as well as the one a keyboard types', () => {
+		expect(parse('\u22125', { locale: 'sv-SE', decimals: 0 })).toBe(-5);
+		expect(parse('-5', { locale: 'sv-SE', decimals: 0 })).toBe(-5);
+	});
+
+	it("follows the reader's own locale when none is given", () => {
+		expect(parse('42', { decimals: 0 })).toBe(42);
+	});
+});
+
+describe('format', () => {
+	it('writes the decimal the way the locale does, without grouping', () => {
+		expect(format(1234.5, 1, 'en-US')).toBe('1234.5');
+		expect(format(1234.5, 1, 'de-DE')).toBe('1234,5');
+	});
+
+	it('shows at most the precision asked for, and no trailing zeros', () => {
+		expect(format(0.5, 2, 'en-US')).toBe('0.5');
+		expect(format(1.239, 2, 'en-US')).toBe('1.24');
+	});
+
+	it('round-trips through parse', () => {
+		const text = format(0.3, 1, 'de-DE');
+		expect(parse(text, { locale: 'de-DE', decimals: 1 })).toBe(0.3);
 	});
 });

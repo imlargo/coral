@@ -15,7 +15,10 @@ function build(initial: number | undefined, overrides: Partial<NumberFieldConfig
 		set: (next) => (state.value = next),
 		min: () => 0,
 		max: () => 10,
+		step: () => 1,
+		largeStep: () => 5,
 		decimals: () => 0,
+		locale: () => 'en-US',
 		editable: () => true,
 		onchange: () => onchange,
 		...overrides
@@ -27,6 +30,22 @@ function build(initial: number | undefined, overrides: Partial<NumberFieldConfig
 function typed(text: string) {
 	const input = { value: text } as HTMLInputElement;
 	return { input, event: { currentTarget: input } as Event & { currentTarget: HTMLInputElement } };
+}
+
+/** A key press on a field holding `text`, with what the handler reads off the event. */
+function pressed(key: string, text: string, extra: Partial<KeyboardEvent> = {}) {
+	const input = { value: text } as HTMLInputElement;
+	const event = {
+		key,
+		currentTarget: input,
+		shiftKey: false,
+		defaultPrevented: false,
+		isComposing: false,
+		preventDefault: vi.fn(),
+		stopPropagation: vi.fn(),
+		...extra
+	} as unknown as KeyboardEvent & { currentTarget: HTMLInputElement };
+	return { input, event };
 }
 
 describe('nudge', () => {
@@ -78,6 +97,71 @@ describe('change', () => {
 		expect(state.value).toBeUndefined();
 		expect(input.value).toBe('');
 		expect(onchange).toHaveBeenCalledWith(undefined);
+	});
+
+	it('reads and writes the number the way the locale does', () => {
+		const { state, field } = build(4, { decimals: () => 1, locale: () => 'de-DE' });
+		const { input, event } = typed('1,5');
+		field.change(event);
+		expect(state.value).toBe(1.5);
+		expect(input.value).toBe('1,5');
+	});
+});
+
+describe('text', () => {
+	it('is the value in the locale, and empty for none', () => {
+		const { field } = build(undefined, { decimals: () => 2, locale: () => 'es-CO' });
+		expect(field.text()).toBe('');
+		expect(field.text(2.5)).toBe('2,5');
+	});
+});
+
+describe('keydown', () => {
+	it('steps with the arrows, coarsely with Shift, and takes the key', () => {
+		const { state, field } = build(2);
+		const up = pressed('ArrowUp', '2');
+		field.keydown(up.event);
+		expect(state.value).toBe(3);
+		expect(up.event.preventDefault).toHaveBeenCalled();
+
+		field.keydown(pressed('ArrowDown', '3', { shiftKey: true }).event);
+		expect(state.value).toBe(0);
+	});
+
+	it('pages by the large step and jumps to the bounds', () => {
+		const { state, field } = build(2);
+		field.keydown(pressed('PageUp', '2').event);
+		expect(state.value).toBe(7);
+		field.keydown(pressed('End', '7').event);
+		expect(state.value).toBe(10);
+		field.keydown(pressed('Home', '10').event);
+		expect(state.value).toBe(0);
+	});
+
+	it('leaves Home and End to the caret when there is no bound to jump to', () => {
+		const { state, field } = build(2, { min: () => undefined, max: () => undefined });
+		const { event } = pressed('End', '2');
+		field.keydown(event);
+		expect(state.value).toBe(2);
+		expect(event.preventDefault).not.toHaveBeenCalled();
+	});
+
+	it('puts the held value back on Escape, and keeps the key only when it did', () => {
+		const { field } = build(2);
+		const edited = pressed('Escape', '25');
+		field.keydown(edited.event);
+		expect(edited.input.value).toBe('2');
+		expect(edited.event.stopPropagation).toHaveBeenCalled();
+
+		const untouched = pressed('Escape', '2');
+		field.keydown(untouched.event);
+		expect(untouched.event.stopPropagation).not.toHaveBeenCalled();
+	});
+
+	it('does nothing while the field cannot be edited', () => {
+		const { state, field } = build(2, { editable: () => false });
+		field.keydown(pressed('ArrowUp', '2').event);
+		expect(state.value).toBe(2);
 	});
 });
 
