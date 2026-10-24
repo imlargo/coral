@@ -45,8 +45,8 @@ export type PasswordInputProps = InputProps & {
 	capsLockIndicator?: Snippet;
 };
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every password input, through `setDefaults`. */
 		'kit/password-input'?: Pick<PasswordInputProps, 'toggleLabel' | 'capsLockLabel'>;
 	}

@@ -87,8 +87,8 @@ export type FileInputProps = InputProps & {
 
 export type { FileRejection, RejectionReason } from './collect.js';
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every file input, through `setDefaults`. */
 		'kit/file-input'?: Pick<FileInputProps, 'label' | 'removeLabel'>;
 	}

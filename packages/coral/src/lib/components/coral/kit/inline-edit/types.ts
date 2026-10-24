@@ -61,8 +61,8 @@ export type InlineEditProps = InputProps & {
 	display?: Snippet<[{ value: string; placeholder: string }]>;
 };
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every inline edit, through `setDefaults`. */
 		'kit/inline-edit'?: Pick<InlineEditProps, 'placeholder' | 'editLabel'>;
 	}

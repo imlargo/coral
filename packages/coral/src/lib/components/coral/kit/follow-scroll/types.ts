@@ -56,8 +56,8 @@ export type FollowScrollProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'>
 	jump?: Snippet<[JumpContext]>;
 };
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every follow scroll, through `setDefaults`. */
 		'kit/follow-scroll'?: Pick<FollowScrollProps, 'jumpLabel' | 'unreadLabel'>;
 	}

@@ -61,8 +61,8 @@ export type NumberInputProps = InputProps & {
 	groupClass?: string;
 };
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every number input, through `setDefaults`. */
 		'kit/number-input'?: Pick<NumberInputProps, 'decrementLabel' | 'incrementLabel' | 'locale'>;
 	}

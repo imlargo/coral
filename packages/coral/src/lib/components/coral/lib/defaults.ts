@@ -5,17 +5,24 @@
 
 import { getContext, setContext } from 'svelte';
 
+declare global {
+	/**
+	 * Each component adds its own entry from its `types.ts`, picked from its props, so only the
+	 * components a project installed appear here and a renamed prop fails to compile. Global rather
+	 * than a module augmentation: a relative `declare module` stops resolving once the folder is
+	 * reached through a package or an alias, and the entries would silently vanish.
+	 */
+	interface CoralDefaults {
+		/** Used by every component that takes `locale`, unless its own entry sets one. */
+		locale?: string;
+	}
+}
+
 /**
  * What a project can set once instead of at every call site: the `locale` every formatting
  * component shares, and one entry per component, keyed by its manifest name.
- *
- * Each component adds its own entry from its `types.ts`, picked from its props, so only the
- * components a project installed appear here and a renamed prop fails to compile.
  */
-export interface Defaults {
-	/** Used by every component that takes `locale`, unless its own entry sets one. */
-	locale?: string;
-}
+export type Defaults = CoralDefaults;
 
 type ComponentName = Exclude<keyof Defaults, 'locale'>;
 type Entry<Name extends ComponentName> = NonNullable<Defaults[Name]>;

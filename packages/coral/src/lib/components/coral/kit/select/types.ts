@@ -91,8 +91,8 @@ export type SelectProps<T> = RootProps &
 		indicator?: Snippet;
 	};
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every select, through `setDefaults`. */
 		'kit/select'?: Pick<SelectProps<unknown>, 'placeholder' | 'clearLabel' | 'loadingLabel'>;
 	}

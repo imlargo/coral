@@ -93,8 +93,8 @@ export type StepperNextProps = ButtonProps & {
 export type { StepperContext } from './context.js';
 export type { StepState } from './steps.js';
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every stepper, through `setDefaults`. `previousLabel` is `StepperPrevious`'s `label`. */
 		'kit/stepper'?: Pick<StepperNextProps, 'nextLabel' | 'finishLabel'> & {
 			previousLabel?: StepperPreviousProps['label'];

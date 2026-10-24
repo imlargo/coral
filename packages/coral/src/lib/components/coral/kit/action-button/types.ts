@@ -37,8 +37,8 @@ export type ActionButtonProps = ButtonProps & {
 	children?: Snippet<[{ pending: boolean }]>;
 };
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every action button, through `setDefaults`. */
 		'kit/action-button'?: Pick<ActionButtonProps, 'pendingLabel'>;
 	}

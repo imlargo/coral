@@ -65,8 +65,8 @@ export type ReorderListProps<T> = Omit<HTMLAttributes<HTMLUListElement>, 'childr
 	row?: Snippet<[ItemContext<T>]>;
 };
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every reorder list, through `setDefaults`. */
 		'kit/reorder-list'?: Pick<ReorderListProps<unknown>, 'handleLabel'>;
 	}

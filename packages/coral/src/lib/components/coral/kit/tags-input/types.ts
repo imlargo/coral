@@ -98,8 +98,8 @@ export type TagsInputProps = InputProps & {
 	tag?: Snippet<[TagContext]>;
 };
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every tags input, through `setDefaults`. */
 		'kit/tags-input'?: Pick<TagsInputProps, 'clearLabel' | 'removeLabel'>;
 	}

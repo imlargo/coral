@@ -48,8 +48,8 @@ export type RelativeTimeProps = Omit<HTMLTimeAttributes, 'children' | 'datetime'
 
 export type { Relative, Unit } from './relative.js';
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every relative time, through `setDefaults`. */
 		'kit/relative-time'?: Pick<
 			RelativeTimeProps,

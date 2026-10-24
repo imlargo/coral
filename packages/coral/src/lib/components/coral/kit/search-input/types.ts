@@ -36,8 +36,8 @@ export type SearchInputProps = InputProps & {
 	groupClass?: string;
 };
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every search input, through `setDefaults`. */
 		'kit/search-input'?: Pick<SearchInputProps, 'clearLabel'>;
 	}

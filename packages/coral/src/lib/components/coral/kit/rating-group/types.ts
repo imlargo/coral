@@ -66,8 +66,8 @@ export type RatingGroupProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> 
 	star?: Snippet<[StarContext]>;
 };
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every rating group, through `setDefaults`. */
 		'kit/rating-group'?: Pick<RatingGroupProps, 'locale' | 'label'>;
 	}

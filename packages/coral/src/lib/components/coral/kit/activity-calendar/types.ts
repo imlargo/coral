@@ -88,8 +88,8 @@ export type ActivityCalendarProps<T = unknown> = Omit<
 export type { Weekday } from './dates.js';
 export type { ActivityCell, ActivityDay, ActivityWeek, Grid, MonthSpan } from './grid.js';
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every activity calendar, through `setDefaults`. */
 		'kit/activity-calendar'?: Pick<
 			ActivityCalendarProps<unknown>,

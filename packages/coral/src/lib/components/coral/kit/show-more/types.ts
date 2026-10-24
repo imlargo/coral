@@ -36,8 +36,8 @@ export type ShowMoreProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
 	toggle?: Snippet<[ToggleContext]>;
 };
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every show more, through `setDefaults`. */
 		'kit/show-more'?: Pick<ShowMoreProps, 'moreLabel' | 'lessLabel'>;
 	}

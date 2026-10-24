@@ -163,8 +163,8 @@ export type ComboboxProps<T, Type extends ComboboxType = 'single'> = BaseProps<T
 	onchange?: (selection: ComboboxSelection<T, Type>) => void;
 };
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every combobox, through `setDefaults`. */
 		'kit/combobox'?: Pick<
 			ComboboxProps<unknown>,

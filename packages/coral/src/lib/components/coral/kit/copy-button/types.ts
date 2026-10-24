@@ -51,8 +51,8 @@ export type CopyButtonProps = ButtonProps & {
 
 export type { CopySource } from './clipboard.js';
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every copy button, through `setDefaults`. */
 		'kit/copy-button'?: Pick<CopyButtonProps, 'label' | 'copiedLabel' | 'failedLabel'>;
 	}

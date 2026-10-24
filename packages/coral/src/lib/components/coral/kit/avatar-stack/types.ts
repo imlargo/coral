@@ -56,8 +56,8 @@ export type AvatarStackProps<T> = GroupProps & {
 	overflow?: Snippet<[OverflowContext<T>]>;
 };
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every avatar stack, through `setDefaults`. */
 		'kit/avatar-stack'?: Pick<AvatarStackProps<unknown>, 'overflowLabel'>;
 	}

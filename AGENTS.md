@@ -159,9 +159,10 @@ every project that already copied it.
   (`lib/trigger`). Never set an `aria-label` over a label that already names the control.
 - **Every string a reader sees or hears is a prop with an English default**, read through
   `defaultsFor` (`lib/defaults`) so a project can set it once; `locale` and formatting policy go
-  the same way, and the component's `types.ts` adds its entry to `Defaults`. `*Message` is one
-  line; `*Title` and `*Description` are a heading and the line under it. `on<thing>change` is the
-  callback for a root that is an element, which already has an `onchange` of its own.
+  the same way, and the component's `types.ts` adds its entry to the global `CoralDefaults`.
+  `*Message` is one line; `*Title` and `*Description` are a heading and the line under it.
+  `on<thing>change` is the callback for a root that is an element, which already has an
+  `onchange` of its own.
 - **Shared helpers first:** `lib/intl` for formatters and collators, `lib/focus` for focus rings,
   `lib/scale` before mixing a rect with a layout size, `prefersReducedMotion` from `svelte/motion`.
 - **What must happen when a popover closes goes in `onOpenChangeComplete`**, chained after the

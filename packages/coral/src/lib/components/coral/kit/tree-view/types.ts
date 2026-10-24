@@ -52,8 +52,8 @@ export type TreeViewProps<T> = Omit<HTMLAttributes<HTMLDivElement>, 'children' |
 
 export type { TreeNode, TreeRow } from './tree.js';
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every tree view, through `setDefaults`. */
 		'kit/tree-view'?: Pick<TreeViewProps<unknown>, 'locale' | 'toggleLabel'>;
 	}

@@ -66,8 +66,8 @@ export type TextareaProps = BaseProps & {
 
 export type { Height, Metrics } from './measure.js';
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every textarea, through `setDefaults`. */
 		'kit/textarea'?: Pick<TextareaProps, 'remainingLabel'>;
 	}

@@ -89,8 +89,8 @@ export type CommandPaletteProps = DialogProps & {
 
 export type { CommandAction, CommandGroup } from './actions.js';
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every command palette, through `setDefaults`. */
 		'kit/command-palette'?: Pick<
 			CommandPaletteProps,

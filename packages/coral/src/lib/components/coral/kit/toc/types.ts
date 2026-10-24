@@ -66,8 +66,8 @@ export type TocProps = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
 
 export type { TocHeading } from './headings.js';
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every table of contents, through `setDefaults`. */
 		'kit/toc'?: Pick<TocProps, 'label'>;
 	}

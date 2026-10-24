@@ -67,8 +67,8 @@ export type ConfirmDialogProps = RootProps & {
 	children?: Snippet;
 };
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every confirm dialog, through `setDefaults`. */
 		'kit/confirm-dialog'?: Pick<ConfirmDialogProps, 'confirmLabel' | 'cancelLabel'>;
 	}

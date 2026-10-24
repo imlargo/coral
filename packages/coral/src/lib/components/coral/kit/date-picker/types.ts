@@ -154,8 +154,8 @@ type ForwardedProps<Type extends DatePickerType> = Type extends 'range'
 export type DatePickerProps<Type extends DatePickerType = 'single'> = BaseProps<Type> &
 	ForwardedProps<Type>;
 
-declare module '../../lib/defaults.js' {
-	interface Defaults {
+declare global {
+	interface CoralDefaults {
 		/** Set once for every date picker, through `setDefaults`. */
 		'kit/date-picker'?: Pick<DatePickerProps, 'placeholder' | 'locale' | 'format' | 'clearLabel'>;
 	}
