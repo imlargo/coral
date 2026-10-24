@@ -5,16 +5,11 @@
 	 */
 	import * as InputGroup from '#lib/components/ui/input-group/index.js';
 	import { cn } from '#lib/utils.js';
-	import { defaultsFor } from '../../lib/defaults.js';
 	import HiddenField from '../../lib/hidden-field.svelte';
 	import { decimalsOf } from '../../lib/number.js';
 	import { numberField, numberFieldClass } from '../../lib/number-field.js';
 	import { amountFor, consume } from './scrub.js';
 	import type { ScrubInputProps } from './types.js';
-
-	const defaults = defaultsFor('kit/scrub-input', {
-		locale: 'en-US'
-	});
 
 	let {
 		label,
@@ -24,7 +19,7 @@
 		step = 1,
 		largeStep,
 		decimals,
-		locale = defaults.locale,
+		locale = 'en-US',
 		pixelsPerStep = 2,
 		onchange,
 		onscrubstart,

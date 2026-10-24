@@ -1,6 +1,6 @@
 /**
  * @coral/kit/copy-button
- * @version 1.1.0
+ * @version 1.0.0
  */
 
 import { afterEach, describe, expect, it, vi } from 'vitest';

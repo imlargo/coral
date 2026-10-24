@@ -1,6 +1,6 @@
 /**
  * @coral/kit/action-button
- * @version 1.1.0
+ * @version 1.0.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -36,10 +36,3 @@ export type ActionButtonProps = ButtonProps & {
 	/** The label. Receives the busy state, for a button that says "Saving..." while it waits. */
 	children?: Snippet<[{ pending: boolean }]>;
 };
-
-declare global {
-	interface CoralDefaults {
-		/** Set once for every action button, through `setDefaults`. */
-		'kit/action-button'?: Pick<ActionButtonProps, 'pendingLabel'>;
-	}
-}

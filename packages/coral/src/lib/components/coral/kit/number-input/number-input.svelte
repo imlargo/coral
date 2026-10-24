@@ -7,17 +7,10 @@
 	import PlusIcon from '@lucide/svelte/icons/plus';
 	import * as InputGroup from '#lib/components/ui/input-group/index.js';
 	import { cn } from '#lib/utils.js';
-	import { defaultsFor } from '../../lib/defaults.js';
 	import HiddenField from '../../lib/hidden-field.svelte';
 	import { decimalsOf } from '../../lib/number.js';
 	import { numberField, numberFieldClass } from '../../lib/number-field.js';
 	import type { NumberInputProps } from './types.js';
-
-	const defaults = defaultsFor('kit/number-input', {
-		decrementLabel: 'Decrease',
-		incrementLabel: 'Increase',
-		locale: 'en-US'
-	});
 
 	let {
 		value = $bindable(),
@@ -26,10 +19,10 @@
 		step = 1,
 		largeStep,
 		decimals,
-		locale = defaults.locale,
+		locale = 'en-US',
 		onchange,
-		decrementLabel = defaults.decrementLabel,
-		incrementLabel = defaults.incrementLabel,
+		decrementLabel = 'Decrease',
+		incrementLabel = 'Increase',
 		disabled = false,
 		readonly = false,
 		name,

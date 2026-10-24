@@ -103,9 +103,8 @@ Everything the shadcn popover root accepts stays available: `open`, `onOpenChang
 | `keywords`    | `string[]` | Searched, never shown.                          |
 | `disabled`    | `boolean`  | Blocks selection; stays visible and searchable. |
 
-The defaults are English because Coral is written in English. A project in another language sets
-its own once, with [`setDefaults`](/docs/installation#set-copy-and-locale-once), rather than at
-every call site.
+The defaults are English because Coral is written in English. Every consuming project passes its
+own copy. These exist so the component renders during a spike, not as a translation layer.
 
 ## Reacting to a selection
 

@@ -1,18 +1,15 @@
 <script lang="ts" generics="T = unknown">
 	/**
 	 * @coral/kit/tree-view
-	 * @version 1.1.0
+	 * @version 1.0.1
 	 */
 	import { tick } from 'svelte';
 	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
 	import { cn } from '#lib/utils.js';
-	import { defaultsFor } from '../../lib/defaults.js';
 	import { focusRingInset } from '../../lib/focus.js';
 	import { ancestorsOf, expandableSiblings, typeahead, visibleRows } from './tree.js';
 	import type { TreeRow } from './tree.js';
 	import type { NodeContext, TreeViewProps } from './types.js';
-
-	const defaults = defaultsFor('kit/tree-view', {});
 
 	let {
 		nodes,
@@ -20,9 +17,9 @@
 		selected = $bindable(),
 		onselect,
 		onexpandedchange,
-		locale = defaults.locale,
+		locale,
 		label,
-		toggleLabel = defaults.toggleLabel,
+		toggleLabel,
 		ref = $bindable(null),
 		class: className,
 		rowClass,

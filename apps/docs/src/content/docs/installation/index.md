@@ -78,40 +78,6 @@ There are no barrels. One component, one folder, imported directly:
 That makes filenames public API. Renaming one breaks every project that already installed it, so a
 rename is a breaking change and bumps the component's major.
 
-## Set copy and locale once
-
-Every string a component shows or says has an English default, and the components that format
-dates or numbers take a `locale` that defaults to `en-US` (`tree-view`'s typeahead follows the
-reader's own when none is given). A product in another language sets its own once, in the root
-layout, instead of repeating them at every call site:
-
-```svelte
-<script lang="ts">
-	import { setDefaults } from '#lib/components/coral/lib/defaults.js';
-
-	let { children } = $props();
-
-	setDefaults({
-		locale: 'fr-FR',
-		'kit/combobox': { placeholder: 'Choisir une option...', emptyMessage: 'Aucun résultat.' },
-		'kit/confirm-dialog': { confirmLabel: 'Continuer', cancelLabel: 'Annuler' }
-	});
-</script>
-
-{@render children()}
-```
-
-- **A prop passed at the call site still wins**, then the component's entry, then `locale`, then
-  the English default.
-- **Entries are keyed by manifest name and typed from the component's props.** An entry for a
-  component you have not installed, or a prop it does not take, fails to compile, and your editor
-  lists what each entry accepts: the copy props, `locale`, and the formatting policy a project sets
-  once, such as `relative-time`'s `cutoff` or `date-picker`'s `format`.
-- **A nested call merges into the one above it**, entry by entry, so one section of the app can
-  change a single string and keep the rest.
-- **It is read when each component is created.** Switching language at runtime means rendering the
-  tree again, for instance inside a `{#key locale}` block.
-
 ## Everything at once
 
 One item pulls in every `kit/*` component, and through them every primitive they need:

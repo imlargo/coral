@@ -1,6 +1,6 @@
 /**
  * @coral/kit/password-input
- * @version 1.1.0
+ * @version 1.0.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -44,10 +44,3 @@ export type PasswordInputProps = InputProps & {
 	 */
 	capsLockIndicator?: Snippet;
 };
-
-declare global {
-	interface CoralDefaults {
-		/** Set once for every password input, through `setDefaults`. */
-		'kit/password-input'?: Pick<PasswordInputProps, 'toggleLabel' | 'capsLockLabel'>;
-	}
-}

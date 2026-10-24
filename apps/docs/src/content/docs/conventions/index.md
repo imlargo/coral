@@ -125,9 +125,8 @@ where the props a form library's control hands out belong. An `aria-label` writt
 already names the control replaces it silently, so a component only supplies one of its own when
 nothing else does.
 
-**Words.** Every string a reader sees or hears is a prop with an English default, and a project can
-replace any of them once for the whole app through `lib/defaults`. A `*Message` is a single plain
-line; a `*Title` and `*Description` are a heading and the line beneath it. Callbacks
+**Words.** Every string a reader sees or hears is a prop with an English default. A `*Message` is a
+single plain line; a `*Title` and `*Description` are a heading and the line beneath it. Callbacks
 that report a change to a root that is an element are named `on<thing>change`, because a `<div>` has
 an `onchange` of its own and the two would merge into a handler nobody can satisfy.
 

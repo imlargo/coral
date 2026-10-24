@@ -60,8 +60,6 @@ sign. Typed text is read the way the locale writes it, so in `de-DE` the comma i
 and a `.` groups thousands, while in `en-US` it is the other way round. The value itself is always
 a plain number, and a form with `name` submits it as `2.5`, whatever the field shows.
 
-Set it once for the whole app with [`setDefaults`](/docs/installation#set-copy-and-locale-once).
-
 ## Empty, readonly, disabled
 
 <Preview name="kit/number-input/states" />

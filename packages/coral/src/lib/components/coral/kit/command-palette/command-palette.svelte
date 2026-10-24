@@ -7,7 +7,6 @@
 	import { Spinner } from '#lib/components/ui/spinner/index.js';
 	import { Action } from '../../lib/action.svelte.js';
 	import { debounce } from '../../lib/debounce.js';
-	import { defaultsFor } from '../../lib/defaults.js';
 	import LoadingRow from '../../lib/loading-row.svelte';
 	import Shortcut from '../shortcut/shortcut.svelte';
 	import { ariaKeyshortcuts, parse } from '../shortcut/keys.js';
@@ -18,13 +17,6 @@
 	import type { CommandAction } from './actions.js';
 	import type { CommandPaletteProps } from './types.js';
 
-	const defaults = defaultsFor('kit/command-palette', {
-		recentLabel: 'Recent',
-		placeholder: 'Type a command or search...',
-		emptyMessage: 'No results found.',
-		loadingLabel: 'Loading'
-	});
-
 	let {
 		actions,
 		open = $bindable(false),
@@ -32,16 +24,16 @@
 		bindActionShortcuts = true,
 		recent = $bindable([]),
 		maxRecent = 5,
-		recentLabel = defaults.recentLabel,
+		recentLabel = 'Recent',
 		search = $bindable(''),
 		onsearch,
 		searchDebounce = 0,
 		loading = false,
-		loadingLabel = defaults.loadingLabel,
+		loadingLabel = 'Loading',
 		onrun,
 		onerror,
-		placeholder = defaults.placeholder,
-		emptyMessage = defaults.emptyMessage,
+		placeholder = 'Type a command or search...',
+		emptyMessage = 'No results found.',
 		vimBindings,
 		onOpenChangeComplete,
 		class: className,

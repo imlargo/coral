@@ -1,6 +1,6 @@
 /**
  * @coral/kit/date-picker
- * @version 1.1.0
+ * @version 1.0.1
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -153,10 +153,3 @@ type ForwardedProps<Type extends DatePickerType> = Type extends 'range'
  */
 export type DatePickerProps<Type extends DatePickerType = 'single'> = BaseProps<Type> &
 	ForwardedProps<Type>;
-
-declare global {
-	interface CoralDefaults {
-		/** Set once for every date picker, through `setDefaults`. */
-		'kit/date-picker'?: Pick<DatePickerProps, 'placeholder' | 'locale' | 'format' | 'clearLabel'>;
-	}
-}

@@ -1,6 +1,6 @@
 /**
  * @coral/kit/avatar-stack
- * @version 1.1.0
+ * @version 1.0.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -55,10 +55,3 @@ export type AvatarStackProps<T> = GroupProps & {
 	 */
 	overflow?: Snippet<[OverflowContext<T>]>;
 };
-
-declare global {
-	interface CoralDefaults {
-		/** Set once for every avatar stack, through `setDefaults`. */
-		'kit/avatar-stack'?: Pick<AvatarStackProps<unknown>, 'overflowLabel'>;
-	}
-}

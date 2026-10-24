@@ -1,30 +1,22 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/relative-time
-	 * @version 1.1.0
+	 * @version 1.0.0
 	 */
 	import { onMount } from 'svelte';
-	import { defaultsFor } from '../../lib/defaults.js';
 	import { dateTimeFormat, relativeTimeFormat } from '../../lib/intl.js';
 	import { describe, nextChange, toDate } from './relative.js';
 	import type { RelativeTimeProps } from './types.js';
 
-	const defaults = defaultsFor('kit/relative-time', {
-		locale: 'en-US',
-		numeric: 'auto',
-		format: 'long',
-		titleFormat: { dateStyle: 'long', timeStyle: 'short' }
-	});
-
 	let {
 		date,
-		locale = defaults.locale,
-		numeric = defaults.numeric,
-		format = defaults.format,
+		locale = 'en-US',
+		numeric = 'auto',
+		format = 'long',
 		precision = 'minute',
 		live = true,
-		cutoff = defaults.cutoff,
-		titleFormat = defaults.titleFormat,
+		cutoff,
+		titleFormat = { dateStyle: 'long', timeStyle: 'short' },
 		now: pinnedNow,
 		ref = $bindable(null),
 		children,

@@ -1,6 +1,6 @@
 /**
  * @coral/kit/tags-input
- * @version 1.1.0
+ * @version 1.0.1
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -97,10 +97,3 @@ export type TagsInputProps = InputProps & {
 	/** Replaces the body of each tag - an icon, an avatar, a count. The remove control stays. */
 	tag?: Snippet<[TagContext]>;
 };
-
-declare global {
-	interface CoralDefaults {
-		/** Set once for every tags input, through `setDefaults`. */
-		'kit/tags-input'?: Pick<TagsInputProps, 'clearLabel' | 'removeLabel'>;
-	}
-}

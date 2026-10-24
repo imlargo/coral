@@ -82,10 +82,3 @@ export type ScrubInputProps = InputProps & {
 };
 
 export type { Consumed } from './scrub.js';
-
-declare global {
-	interface CoralDefaults {
-		/** Set once for every scrub input, through `setDefaults`. */
-		'kit/scrub-input'?: Pick<ScrubInputProps, 'locale'>;
-	}
-}

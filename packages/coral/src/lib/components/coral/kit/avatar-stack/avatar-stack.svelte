@@ -1,17 +1,12 @@
 <script lang="ts" generics="T">
 	/**
 	 * @coral/kit/avatar-stack
-	 * @version 1.1.0
+	 * @version 1.0.0
 	 */
 	import { AvatarGroup, AvatarGroupCount } from '#lib/components/ui/avatar/index.js';
 	import Avatar from '../avatar/avatar.svelte';
-	import { defaultsFor } from '../../lib/defaults.js';
 	import { split } from './overflow.js';
 	import type { AvatarStackPerson, AvatarStackProps } from './types.js';
-
-	const defaults = defaultsFor('kit/avatar-stack', {
-		overflowLabel: (count: number) => `${count} more`
-	});
 
 	let {
 		items,
@@ -20,7 +15,7 @@
 		getKey = (_: T, index: number) => index,
 		size = 'default',
 		label,
-		overflowLabel = defaults.overflowLabel,
+		overflowLabel = (count: number) => `${count} more`,
 		avatar,
 		overflow,
 		ref = $bindable(null),

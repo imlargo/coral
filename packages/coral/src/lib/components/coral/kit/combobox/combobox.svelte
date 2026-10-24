@@ -11,7 +11,6 @@
 	import { Badge } from '#lib/components/ui/badge/index.js';
 	import { Button } from '#lib/components/ui/button/index.js';
 	import { cn } from '#lib/utils.js';
-	import { defaultsFor } from '../../lib/defaults.js';
 	import HiddenField from '../../lib/hidden-field.svelte';
 	import LiveRegion from '../../lib/live-region.svelte';
 	import LoadingRow from '../../lib/loading-row.svelte';
@@ -22,14 +21,6 @@
 	import type { Option } from '../../lib/options.js';
 	import type { ComboboxProps, ComboboxType } from './types.js';
 
-	const defaults = defaultsFor('kit/combobox', {
-		placeholder: 'Select an option...',
-		searchPlaceholder: 'Search...',
-		emptyMessage: 'No results found.',
-		clearLabel: 'Clear selection',
-		loadingLabel: 'Loading'
-	});
-
 	let {
 		options,
 		// Left undefined rather than defaulted: `Type` is inferred, and writing a concrete
@@ -39,10 +30,10 @@
 		value = $bindable(),
 		open = $bindable(false),
 		search = $bindable(''),
-		placeholder = defaults.placeholder,
-		searchPlaceholder = defaults.searchPlaceholder,
-		emptyMessage = defaults.emptyMessage,
-		clearLabel = defaults.clearLabel,
+		placeholder = 'Select an option...',
+		searchPlaceholder = 'Search...',
+		emptyMessage = 'No results found.',
+		clearLabel = 'Clear selection',
 		onchange,
 		onsearch,
 		searchDebounce = 0,
@@ -53,7 +44,7 @@
 		disabled = false,
 		clearable = false,
 		loading = false,
-		loadingLabel = defaults.loadingLabel,
+		loadingLabel = 'Loading',
 		align = 'start',
 		id,
 		'aria-label': ariaLabel,

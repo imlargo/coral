@@ -1,6 +1,6 @@
 /**
  * @coral/kit/follow-scroll
- * @version 1.1.0
+ * @version 1.0.0
  */
 
 import { render } from 'vitest-browser-svelte';

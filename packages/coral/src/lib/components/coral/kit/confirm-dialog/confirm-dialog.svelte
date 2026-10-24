@@ -6,19 +6,13 @@
 	import * as AlertDialog from '#lib/components/ui/alert-dialog/index.js';
 	import { Spinner } from '#lib/components/ui/spinner/index.js';
 	import { Action } from '../../lib/action.svelte.js';
-	import { defaultsFor } from '../../lib/defaults.js';
 	import type { ConfirmDialogProps } from './types.js';
-
-	const defaults = defaultsFor('kit/confirm-dialog', {
-		confirmLabel: 'Continue',
-		cancelLabel: 'Cancel'
-	});
 
 	let {
 		title,
 		description,
-		confirmLabel = defaults.confirmLabel,
-		cancelLabel = defaults.cancelLabel,
+		confirmLabel = 'Continue',
+		cancelLabel = 'Cancel',
 		showCancel = true,
 		variant = 'default',
 		onconfirm,

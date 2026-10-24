@@ -1,11 +1,10 @@
 <script lang="ts" generics="T = unknown">
 	/**
 	 * @coral/kit/activity-calendar
-	 * @version 1.1.0
+	 * @version 1.0.1
 	 */
 	import * as Tooltip from '#lib/components/ui/tooltip/index.js';
 	import { cn } from '#lib/utils.js';
-	import { defaultsFor } from '../../lib/defaults.js';
 	import { dateTimeFormat } from '../../lib/intl.js';
 	import { focusRingTight } from '../../lib/focus.js';
 	import { scaleOf } from '../../lib/scale.js';
@@ -14,26 +13,21 @@
 	import type { ActivityCell } from './grid.js';
 	import type { ActivityCalendarProps } from './types.js';
 
-	const defaults = defaultsFor('kit/activity-calendar', {
-		locale: 'en-US',
-		weekStart: 1
-	});
-
 	let {
 		data,
 		start,
 		end,
-		weekStart = defaults.weekStart,
+		weekStart = 1,
 		levels = 4,
 		thresholds,
-		locale = defaults.locale,
+		locale = 'en-US',
 		color = 'var(--primary)',
 		emptyColor = 'var(--muted)',
 		showWeekdays = true,
 		showMonths = true,
 		showLegend = true,
 		caption,
-		label = defaults.label,
+		label,
 		onselect,
 		ref = $bindable(null),
 		class: className,

@@ -232,10 +232,6 @@ every date, weekday and number follows it, including the decimal comma a number 
 `formatBytes` takes one as an optional second argument, and `tree-view` takes one for its
 typeahead, following the reader's locale when it is not given.
 
-**Set once.** `setDefaults` from `lib/defaults`, called in the root layout, replaces the English
-copy and the `locale` for every component beneath it, typed per component, so a translated app does
-not repeat them at every call site. A prop passed directly still wins.
-
 **The reader's locale by default.** The helpers that format without a prop go through `Intl` on
 whatever locale the reader is actually in, not one chosen when the file was written: byte sizes
 (`kit/file-input/format-bytes.ts`) print `1.5 MB` or `1,5 MB` accordingly, and initials casing

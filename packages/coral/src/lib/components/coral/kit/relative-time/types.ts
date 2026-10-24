@@ -1,6 +1,6 @@
 /**
  * @coral/kit/relative-time
- * @version 1.1.0
+ * @version 1.0.0
  */
 
 import type { Snippet } from 'svelte';
@@ -47,13 +47,3 @@ export type RelativeTimeProps = Omit<HTMLTimeAttributes, 'children' | 'datetime'
 };
 
 export type { Relative, Unit } from './relative.js';
-
-declare global {
-	interface CoralDefaults {
-		/** Set once for every relative time, through `setDefaults`. */
-		'kit/relative-time'?: Pick<
-			RelativeTimeProps,
-			'locale' | 'numeric' | 'format' | 'cutoff' | 'titleFormat'
-		>;
-	}
-}

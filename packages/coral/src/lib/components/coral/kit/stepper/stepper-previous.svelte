@@ -1,19 +1,14 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/stepper
-	 * @version 1.1.0
+	 * @version 1.0.0
 	 */
 	import { Button } from '#lib/components/ui/button/index.js';
-	import { defaultsFor } from '../../lib/defaults.js';
 	import { getStepper } from './context.js';
 	import type { StepperPreviousProps } from './types.js';
 
-	const defaults = defaultsFor('kit/stepper', {
-		previousLabel: 'Previous'
-	});
-
 	let {
-		label = defaults.previousLabel,
+		label = 'Previous',
 		variant = 'outline',
 		disabled = false,
 		ref = $bindable(null),

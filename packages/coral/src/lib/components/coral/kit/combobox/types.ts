@@ -165,13 +165,3 @@ export type ComboboxProps<T, Type extends ComboboxType = 'single'> = BaseProps<T
 	 */
 	onchange?: (selection: ComboboxSelection<T, Type>) => void;
 };
-
-declare global {
-	interface CoralDefaults {
-		/** Set once for every combobox, through `setDefaults`. */
-		'kit/combobox'?: Pick<
-			ComboboxProps<unknown>,
-			'placeholder' | 'searchPlaceholder' | 'emptyMessage' | 'clearLabel' | 'loadingLabel'
-		>;
-	}
-}

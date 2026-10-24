@@ -1,26 +1,20 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/show-more
-	 * @version 1.1.0
+	 * @version 1.0.1
 	 */
 	import { tick } from 'svelte';
 	import { Button } from '#lib/components/ui/button/index.js';
 	import { cn } from '#lib/utils.js';
-	import { defaultsFor } from '../../lib/defaults.js';
 	import { scaleOf } from '../../lib/scale.js';
 	import type { ShowMoreProps } from './types.js';
-
-	const defaults = defaultsFor('kit/show-more', {
-		moreLabel: 'Show more',
-		lessLabel: 'Show less'
-	});
 
 	let {
 		lines = 3,
 		expanded = $bindable(false),
 		onexpandedchange,
-		moreLabel = defaults.moreLabel,
-		lessLabel = defaults.lessLabel,
+		moreLabel = 'Show more',
+		lessLabel = 'Show less',
 		ref = $bindable(null),
 		class: className,
 		contentClass,

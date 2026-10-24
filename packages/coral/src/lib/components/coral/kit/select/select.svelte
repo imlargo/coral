@@ -7,29 +7,22 @@
 	import * as Select from '#lib/components/ui/select/index.js';
 	import { Button } from '#lib/components/ui/button/index.js';
 	import { cn } from '#lib/utils.js';
-	import { defaultsFor } from '../../lib/defaults.js';
 	import HiddenField from '../../lib/hidden-field.svelte';
 	import LoadingRow from '../../lib/loading-row.svelte';
 	import { flatten, toGroups } from '../../lib/options.js';
 	import type { SelectProps } from './types.js';
 
-	const defaults = defaultsFor('kit/select', {
-		placeholder: 'Select an option...',
-		clearLabel: 'Clear selection',
-		loadingLabel: 'Loading'
-	});
-
 	let {
 		options,
 		value = $bindable(),
 		open = $bindable(false),
-		placeholder = defaults.placeholder,
-		clearLabel = defaults.clearLabel,
+		placeholder = 'Select an option...',
+		clearLabel = 'Clear selection',
 		onchange,
 		disabled = false,
 		clearable = false,
 		loading = false,
-		loadingLabel = defaults.loadingLabel,
+		loadingLabel = 'Loading',
 		id,
 		'aria-label': ariaLabel,
 		'aria-labelledby': ariaLabelledby,

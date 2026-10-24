@@ -1,6 +1,6 @@
 /**
  * @coral/kit/tree-view
- * @version 1.1.0
+ * @version 1.0.1
  */
 
 import { collator } from '../../lib/intl.js';

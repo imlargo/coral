@@ -1,6 +1,6 @@
 /**
  * @coral/kit/textarea
- * @version 1.1.0
+ * @version 1.0.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -65,10 +65,3 @@ export type TextareaProps = BaseProps & {
 };
 
 export type { Height, Metrics } from './measure.js';
-
-declare global {
-	interface CoralDefaults {
-		/** Set once for every textarea, through `setDefaults`. */
-		'kit/textarea'?: Pick<TextareaProps, 'remainingLabel'>;
-	}
-}

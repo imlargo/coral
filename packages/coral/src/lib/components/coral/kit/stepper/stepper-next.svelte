@@ -1,22 +1,16 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/stepper
-	 * @version 1.1.0
+	 * @version 1.0.0
 	 */
 	import { Button } from '#lib/components/ui/button/index.js';
 	import { Spinner } from '#lib/components/ui/spinner/index.js';
-	import { defaultsFor } from '../../lib/defaults.js';
 	import { getStepper } from './context.js';
 	import type { StepperNextProps } from './types.js';
 
-	const defaults = defaultsFor('kit/stepper', {
-		nextLabel: 'Next',
-		finishLabel: 'Finish'
-	});
-
 	let {
-		nextLabel = defaults.nextLabel,
-		finishLabel = defaults.finishLabel,
+		nextLabel = 'Next',
+		finishLabel = 'Finish',
 		disabled = false,
 		ref = $bindable(null),
 		children,

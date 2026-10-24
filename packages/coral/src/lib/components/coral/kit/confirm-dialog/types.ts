@@ -66,10 +66,3 @@ export type ConfirmDialogProps = RootProps & {
 	/** Extra content between the description and the buttons - a list of what will be affected. */
 	children?: Snippet;
 };
-
-declare global {
-	interface CoralDefaults {
-		/** Set once for every confirm dialog, through `setDefaults`. */
-		'kit/confirm-dialog'?: Pick<ConfirmDialogProps, 'confirmLabel' | 'cancelLabel'>;
-	}
-}

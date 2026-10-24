@@ -90,10 +90,3 @@ export type SelectProps<T> = RootProps &
 		/** Replaces the loading row's spinner. The row keeps its name. */
 		indicator?: Snippet;
 	};
-
-declare global {
-	interface CoralDefaults {
-		/** Set once for every select, through `setDefaults`. */
-		'kit/select'?: Pick<SelectProps<unknown>, 'placeholder' | 'clearLabel' | 'loadingLabel'>;
-	}
-}

@@ -60,10 +60,3 @@ export type NumberInputProps = InputProps & {
 	/** Merged onto the input group - the bordered box around everything. */
 	groupClass?: string;
 };
-
-declare global {
-	interface CoralDefaults {
-		/** Set once for every number input, through `setDefaults`. */
-		'kit/number-input'?: Pick<NumberInputProps, 'decrementLabel' | 'incrementLabel' | 'locale'>;
-	}
-}

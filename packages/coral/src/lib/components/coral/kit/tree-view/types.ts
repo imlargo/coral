@@ -1,6 +1,6 @@
 /**
  * @coral/kit/tree-view
- * @version 1.1.0
+ * @version 1.0.1
  */
 
 import type { Snippet } from 'svelte';
@@ -51,10 +51,3 @@ export type TreeViewProps<T> = Omit<HTMLAttributes<HTMLDivElement>, 'children' |
 };
 
 export type { TreeNode, TreeRow } from './tree.js';
-
-declare global {
-	interface CoralDefaults {
-		/** Set once for every tree view, through `setDefaults`. */
-		'kit/tree-view'?: Pick<TreeViewProps<unknown>, 'locale' | 'toggleLabel'>;
-	}
-}

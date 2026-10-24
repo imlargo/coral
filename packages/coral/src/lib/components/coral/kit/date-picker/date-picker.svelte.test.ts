@@ -1,6 +1,6 @@
 /**
  * @coral/kit/date-picker
- * @version 1.1.0
+ * @version 1.0.1
  */
 
 import { render } from 'vitest-browser-svelte';
