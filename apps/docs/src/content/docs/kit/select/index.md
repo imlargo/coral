@@ -79,9 +79,10 @@ button nested in a button is invalid HTML that browsers recover from by dropping
 
 <Preview name="kit/select/loading" />
 
-`loading` puts a row in place of the options while they are on their way, so a select opened
-early says something is coming instead of showing an empty list. It is the same row the combobox
-shows, named by `loadingLabel` for a screen reader, and `indicator` replaces what it draws.
+`loading` adds a row below the options, and stands in for them while there are none yet, so a
+select opened early says something is coming instead of showing an empty list. It is the same row
+the combobox and the command palette show, named by `loadingLabel` for a screen reader, and
+`indicator` replaces its spinner.
 
 ## Forms
 
@@ -93,7 +94,8 @@ bits-ui would submit the internal item key. `serialize` controls what gets writt
 is not a primitive.
 
 `form` points the field at a form by `id`, for a select that renders outside it: a portalled
-dialog, a sticky toolbar. `required` blocks submission while nothing is selected.
+dialog, a sticky toolbar. `required` blocks submission while nothing is selected, and a disabled
+select submits nothing, as a native one would.
 
 > The field is clipped to a pixel rather than `type="hidden"`, because a hidden input is barred
 > from constraint validation and `required` on one does nothing at all. It stays out of the tab
@@ -123,7 +125,7 @@ Everything the shadcn root accepts stays available: `open`, `onOpenChange`, `loo
 | `disabled`     | `boolean`                                               | `false`               | Blocks the trigger.                             |
 | `clearable`    | `boolean`                                               | `false`               | Adds a clear control; re-picking deselects.     |
 | `clearLabel`   | `string`                                                | `Clear selection`     | Accessible label for the clear control.         |
-| `loading`      | `boolean`                                               | `false`               | Swaps the options for a loading row.            |
+| `loading`      | `boolean`                                               | `false`               | A loading row below the options, or in place.   |
 | `loadingLabel` | `string`                                                | `Loading`             | What a screen reader calls the loading row.     |
 | `name`         | `string`                                                | -                     | Submits with a surrounding form.                |
 | `form`         | `string`                                                | -                     | `id` of the form, for a select outside it.      |

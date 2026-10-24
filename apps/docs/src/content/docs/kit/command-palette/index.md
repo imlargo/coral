@@ -111,7 +111,7 @@ On top of that:
 | `class`, `listClass`           | `string`                          | -                             | Merged onto the dialog, and onto the list.        |
 | `trigger`                      | `Snippet<[{ props, open }]>`      | -                             | The element that opens it.                        |
 | `action`                       | `Snippet<[{ action, pending }]>`  | -                             | Replaces each row's body.                         |
-| `indicator`, `empty`, `footer` | `Snippet`                         | -                             | Loading row, empty state, footer.                 |
+| `indicator`, `empty`, `footer` | `Snippet`                         | -                             | Loading spinner, empty state, footer.             |
 
 ## Accessibility
 

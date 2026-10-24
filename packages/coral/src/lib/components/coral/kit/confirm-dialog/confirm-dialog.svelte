@@ -50,7 +50,7 @@
 	 * the entry too: a second click would submit the same destructive action twice.
 	 */
 	async function confirm() {
-		if (busy) return;
+		if (busy || confirmDisabled) return;
 
 		if (!onconfirm) {
 			open = false;

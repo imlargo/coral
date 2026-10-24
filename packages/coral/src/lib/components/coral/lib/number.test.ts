@@ -110,7 +110,7 @@ describe('parse', () => {
 	});
 
 	it('rounds to the step precision', () => {
-		expect(parse('1.239', 0, 10, 2)).toBe(1.24);
+		expect(parse('1.239', 0, 10, 2, 'en-US')).toBe(1.24);
 	});
 
 	it('treats an empty field as no value, not as the minimum', () => {
@@ -132,10 +132,23 @@ describe('parse', () => {
 		expect(parse('-0,25', undefined, undefined, 2, 'fr-FR')).toBe(-0.25);
 	});
 
-	it("drops the locale's group separator", () => {
+	it("drops the locale's group separator where it groups", () => {
 		expect(parse('1,500', undefined, undefined, 0, 'en-US')).toBe(1500);
 		expect(parse('1.500,5', undefined, undefined, 1, 'de-DE')).toBe(1500.5);
 		expect(parse('1 500,5', undefined, undefined, 1, 'fr-FR')).toBe(1500.5);
+		expect(parse('1,234,567', undefined, undefined, 0, 'en-US')).toBe(1234567);
+	});
+
+	it('reads a lone separator that cannot be a group as the decimal point', () => {
+		expect(parse('1.5', undefined, undefined, 1, 'de-DE')).toBe(1.5);
+		expect(parse('1,5', undefined, undefined, 1, 'en-US')).toBe(1.5);
+	});
+
+	it('refuses what is not a plain decimal number', () => {
+		for (const raw of [',', '.', '-', '1.2.3', '1,5,0', '0x1A', '1e5', 'Infinity', '12abc']) {
+			expect(parse(raw, undefined, undefined, 2, 'en-US'), raw).toBeUndefined();
+		}
+		expect(parse('1.2.3', undefined, undefined, 2, 'de-DE')).toBeUndefined();
 	});
 
 	it('reads the digits and the minus sign a locale writes', () => {

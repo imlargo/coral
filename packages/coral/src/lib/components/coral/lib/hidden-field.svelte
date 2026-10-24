@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * @coral/lib/hidden-field
-	 * @version 1.0.0
+	 * @version 1.0.1
 	 */
 
 	let {
@@ -22,8 +22,9 @@
 </script>
 
 <!--
-	The field that submits, for the components whose visible control is not an input: select,
-	combobox and date-picker.
+	The field that submits, for the components whose visible control is not the value: select,
+	combobox, date-picker and tags-input, and the number fields, which show `1,5` and submit `1.5`.
+	Each renders it only while enabled, since a disabled control submits nothing.
 
 	**Not `type="hidden"`.** A hidden input is barred from constraint validation, so `required` on
 	one is inert - the form submits empty and the browser reports nothing. Clipped to a pixel it is

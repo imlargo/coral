@@ -13,7 +13,8 @@ import type { Option } from '../../lib/options.js';
  * the options losing their tick are the ones the filter is hiding. A disabled option is skipped
  * unless already selected, since a bulk action is no place to quietly deselect something.
  *
- * Ordered by `all`, so a bulk change reads back like every other selection.
+ * Ordered by `all`, so a bulk change reads back like every other selection, followed by anything
+ * held that `all` no longer carries - a pick from an earlier server answer stays picked.
  */
 export function selectAllVisible<T>(all: Option<T>[], visible: Option<T>[], current: T[]): T[] {
 	// Sets, not a scan per option: unfiltered, both lists are the whole list, and nesting the scans
@@ -22,7 +23,9 @@ export function selectAllVisible<T>(all: Option<T>[], visible: Option<T>[], curr
 	const showing = new Set(visible);
 	const held = new Set(current);
 
-	return all
+	const listed = all
 		.filter((option) => held.has(option.value) || (showing.has(option) && !option.disabled))
 		.map((option) => option.value);
+	const known = new Set(all.map((option) => option.value));
+	return [...listed, ...current.filter((value) => !known.has(value))];
 }

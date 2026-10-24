@@ -223,12 +223,20 @@ describe('searching', () => {
 		expect(onOpenChangeComplete).toHaveBeenLastCalledWith(false);
 	});
 
-	it("shows a loading row in place of the list, named in the caller's words", async () => {
-		await draw({ options: fruits, open: true, loading: true, loadingLabel: 'Fetching fruit' });
+	it("stands a loading row in for an empty list, named in the caller's words", async () => {
+		await draw({ options: [], open: true, loading: true, loadingLabel: 'Fetching fruit' });
 		expect(options()).toHaveLength(0);
 		const row = document.querySelector('[role="progressbar"]');
 		expect(row?.getAttribute('aria-label')).toBe('Fetching fruit');
 		expect(document.querySelector<HTMLElement>('[role="listbox"]')?.hidden).toBe(true);
+		expect(document.body.textContent).not.toContain('No results found.');
+	});
+
+	it('keeps what is listed while more is loading, with the row below it', async () => {
+		await draw({ options: fruits, open: true, loading: true, shouldFilter: false });
+		expect(options()).toHaveLength(4);
+		expect(document.querySelector('[role="progressbar"]')).not.toBeNull();
+		expect(document.querySelector<HTMLElement>('[role="listbox"]')?.hidden).toBe(false);
 	});
 });
 

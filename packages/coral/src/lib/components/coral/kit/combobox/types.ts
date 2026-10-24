@@ -57,7 +57,10 @@ type BaseProps<T> = RootProps &
 		clearable?: boolean;
 		/** Accessible label for the clear control. */
 		clearLabel?: string;
-		/** Renders a loading row in place of the list. Pair with `onsearch` for server-side search. */
+		/**
+		 * Renders a loading row below the options, or in place of the list while there are none.
+		 * Pair with `onsearch` for server-side search.
+		 */
 		loading?: boolean;
 		/** What the loading row is called, for a screen reader. */
 		loadingLabel?: string;
@@ -113,7 +116,7 @@ type BaseProps<T> = RootProps &
 		option?: Snippet<[OptionContext<T>]>;
 		/** Replaces the empty state. */
 		empty?: Snippet;
-		/** Replaces the loading row. */
+		/** Replaces the loading row's spinner. The row keeps its name. */
 		indicator?: Snippet;
 		/** Rendered below the list - bulk actions, a count, a "create new" affordance. */
 		footer?: Snippet<[FooterContext<T>]>;

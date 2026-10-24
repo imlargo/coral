@@ -326,7 +326,7 @@
 	One hidden input per tag, the shape a server already reads as a list. The visible field never
 	carries the name: it holds what is being typed, which is precisely what has not been added yet.
 -->
-{#if name}
+{#if name && !disabled}
 	{#each value as entry, index (index)}
 		<input type="hidden" {name} {form} value={entry} />
 	{/each}

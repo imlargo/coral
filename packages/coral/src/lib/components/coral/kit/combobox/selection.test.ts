@@ -45,6 +45,11 @@ describe('selectAllVisible', () => {
 		expect(selectAllVisible([], [], [])).toEqual([]);
 	});
 
+	it('keeps a selection the list no longer carries, after the rest', () => {
+		// Picked from an earlier server answer: not in `all`, and still selected.
+		expect(selectAllVisible(all, [all[1]], ['old'])).toEqual(['gua', 'old']);
+	});
+
 	it('keeps a disabled option that was already selected', () => {
 		// It was selected somehow - programmatically, or before it was disabled. Dropping it here
 		// would be a bulk action quietly deselecting something.

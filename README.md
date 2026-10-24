@@ -33,24 +33,24 @@
 The table below is what Coral actually resolves, case by case, which matters more for deciding
 whether you need it than a list of props would:
 
-| Case                                 | Hand-rolled with shadcn-svelte / bits-ui                | Coral                                                     |
-| ------------------------------------ | ------------------------------------------------------- | --------------------------------------------------------- |
-| Combobox search                      | exact substring, case- and accent-sensitive             | folds accents - `acai` finds `Açaí`                       |
-| Combobox, after selecting an option  | focus is lost to the body                               | returns to the trigger                                    |
-| Confirm dialog when the action fails | you wire the re-open and the pending state per instance | stays open, blocks double-submit, one prop                |
-| Date range picker                    | closes on the first click, mid-range                    | closes only once the range is complete                    |
-| Avatar with a broken image URL       | a blank box, or fallback logic written per instance     | initials fallback; the accessible name never doubles      |
-| A file dropped on the input twice    | added twice, unless you de-dupe yourself                | de-duplicated                                             |
-| Number input via the mouse wheel     | can silently push the value out of bounds               | bounds hold from steppers, typing and the wheel alike     |
-| A select's bound value               | bits-ui's own string keys                               | keeps the type you gave it - a number, a union, an object |
-| Tags typed vs. pasted                | two code paths, two rules to keep in sync               | one delimiter rule for both                               |
-| Escape in a search inside a dialog   | closes the dialog along with the term                   | first Escape clears the term, the second is the dialog's  |
-| Password shown when the form submits | the password manager never offers to save it            | back to `type="password"` before the form is read         |
-| Copy button on plain `http`          | throws, or shows a check mark for nothing               | falls back, and reports a failure as a failure            |
-| Reordering a list on a phone         | HTML5 drag-and-drop fires nothing on touch              | pointer events for touch, plus a full keyboard path       |
-| "5 minutes ago" on a page left open  | stale, or an interval per timestamp every second        | each label wakes only when its own text changes           |
-| Table of contents, last section      | never highlights - it cannot cross the boundary         | the end of the page activates the final heading           |
-| ⌘K palette off a Mac                 | opens on Ctrl+K, then refuses to close on it            | the primitive's vim bindings give way to your combo       |
+| Case                                   | Hand-rolled with shadcn-svelte / bits-ui                | Coral                                                     |
+| -------------------------------------- | ------------------------------------------------------- | --------------------------------------------------------- |
+| Combobox search                        | exact substring, case- and accent-sensitive             | folds accents - `acai` finds `Açaí`                       |
+| Combobox, after selecting an option    | focus is lost to the body                               | returns to the trigger                                    |
+| Confirm dialog when the action fails   | you wire the re-open and the pending state per instance | stays open, blocks double-submit, one prop                |
+| Date range picker                      | closes on the first click, mid-range                    | closes only once the range is complete                    |
+| Avatar with a broken image URL         | a blank box, or fallback logic written per instance     | initials fallback; the accessible name never doubles      |
+| A file dropped on the input twice      | added twice, unless you de-dupe yourself                | de-duplicated                                             |
+| Number input in a decimal-comma locale | `type="number"` reads `1,5` as empty in Chromium        | reads and shows `1,5`, submits `1.5`                      |
+| A select's bound value                 | bits-ui's own string keys                               | keeps the type you gave it - a number, a union, an object |
+| Tags typed vs. pasted                  | two code paths, two rules to keep in sync               | one delimiter rule for both                               |
+| Escape in a search inside a dialog     | closes the dialog along with the term                   | first Escape clears the term, the second is the dialog's  |
+| Password shown when the form submits   | the password manager never offers to save it            | back to `type="password"` before the form is read         |
+| Copy button on plain `http`            | throws, or shows a check mark for nothing               | falls back, and reports a failure as a failure            |
+| Reordering a list on a phone           | HTML5 drag-and-drop fires nothing on touch              | pointer events for touch, plus a full keyboard path       |
+| "5 minutes ago" on a page left open    | stale, or an interval per timestamp every second        | each label wakes only when its own text changes           |
+| Table of contents, last section        | never highlights - it cannot cross the boundary         | the end of the page activates the final heading           |
+| ⌘K palette off a Mac                   | opens on Ctrl+K, then refuses to close on it            | the primitive's vim bindings give way to your combo       |
 
 Every row is one line of a fuller story: the full reasoning, the edge cases and a live demo are
 on each component's own page, linked under [Components](#components).
@@ -204,8 +204,10 @@ Each one's version, title and the shadcn primitives it needs are recorded in
 derived from, and the only place they are written down.
 
 `kit/select` and `kit/combobox` speak the `Option<T>` vocabulary in `lib/options`, and share
-`lib/hidden-field` with `kit/date-picker`: the clipped field that makes `name`, `form` and
-`required` work on a control the browser cannot validate on its own.
+`lib/hidden-field` with `kit/date-picker`, `kit/tags-input` and the number fields: the clipped
+field that makes `name`, `form` and `required` work on a control whose visible text is not the
+value it submits. `lib/loading-row` is the row combobox, select and command palette show while
+their results load.
 
 `kit/command-palette` composes `kit/shortcut`, and `kit/avatar-stack` composes `kit/avatar`, so
 those pairs travel together.

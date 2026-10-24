@@ -264,7 +264,7 @@
 	an empty one does. Half a range is not a selection - it is the user mid-gesture, which is the
 	same reading `onchange` takes.
 -->
-{#if name}
+{#if name && !disabled}
 	{#if isRange}
 		<HiddenField {name} {form} {required} value={range?.start ? toText(range.start) : ''} />
 		<HiddenField

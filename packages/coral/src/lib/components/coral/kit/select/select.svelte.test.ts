@@ -32,6 +32,11 @@ describe('form participation', () => {
 		expect(field().value).toBe('2');
 	});
 
+	it('submits nothing while disabled, as a native field would', () => {
+		render(Select, { options: fruits, name: 'fruit', value: 2, disabled: true });
+		expect(document.querySelector('input[name="fruit"]')).toBeNull();
+	});
+
 	it('writes an empty field while nothing is selected', () => {
 		render(Select, { options: fruits, name: 'fruit' });
 		expect(field().value).toBe('');
@@ -132,16 +137,17 @@ describe('naming the trigger', () => {
 describe('loading', () => {
 	const options = () => Array.from(document.querySelectorAll('[role="option"]'));
 
-	it('shows one named, unpickable row in place of the options', async () => {
-		await render(Select, { options: fruits, open: true, loading: true, loadingLabel: 'Fetching' });
+	it('shows one named, unpickable row while there are no options yet', async () => {
+		await render(Select, { options: [], open: true, loading: true, loadingLabel: 'Fetching' });
 		await expect.poll(() => options()).toHaveLength(1);
 		expect(options()[0].getAttribute('aria-label')).toBe('Fetching');
 		expect(options()[0].getAttribute('aria-disabled')).toBe('true');
 	});
 
-	it('brings the options back once loaded', async () => {
+	it('keeps the options it has above the row, and drops the row once loaded', async () => {
 		const props = $state({ options: fruits, open: true, loading: true });
 		await render(Select, props);
+		await expect.poll(() => options()).toHaveLength(3);
 		props.loading = false;
 		await expect
 			.poll(() => options().map((entry) => entry.textContent?.trim()))

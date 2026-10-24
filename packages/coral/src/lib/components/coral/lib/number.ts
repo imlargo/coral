@@ -86,30 +86,49 @@ function symbolsOf(locale: string | undefined): Symbols {
 	return found;
 }
 
+/** Separates thousands once a group separator has been read as one. */
+const GROUP = '_';
+const NUMBER = /^-?(\d+(\.\d*)?|\.\d+)$/;
+const GROUPED = /^-?\d{1,3}(_\d{3})+$/;
+
 /**
- * Rewrites typed text into the form `Number` reads: the locale's digits, decimal separator and
- * minus sign swapped for ASCII ones, its group separator dropped. A locale whose groups are spaces
- * writes a narrow no-break space that no keyboard types, so any space counts as one there.
+ * Rewrites typed text into the form `Number` reads, or `undefined` when it is not a number: the
+ * locale's digits, decimal separator and minus sign swapped for ASCII ones, its groups dropped. A
+ * locale whose groups are spaces writes a narrow no-break space that no keyboard types, so any
+ * space counts as one there.
+ *
+ * A group separator only groups when three digits follow it. Anywhere else, a single one with no
+ * decimal separator beside it is the reader typing their own convention - `1.5` in `de-DE`, `1,5`
+ * in `en-US` - and is read as the decimal point, instead of turning the number into fifteen.
  */
-function delocalize(raw: string, locale: string | undefined): string {
+function delocalize(raw: string, locale: string | undefined): string | undefined {
 	const { group, decimal, minus, digits } = symbolsOf(locale);
 	const spaced = /\s/.test(group);
 
 	let text = '';
 	for (const char of raw.replace(MARKS, '').trim()) {
-		if (char === group || (spaced && /\s/.test(char))) continue;
-		if (char === decimal) text += '.';
+		if (char === group || (spaced && /\s/.test(char))) text += GROUP;
+		else if (char === decimal) text += '.';
 		else if (char === minus || char === '\u2212') text += '-';
 		else text += digits.get(char) ?? char;
 	}
-	return text;
+
+	const [whole, fraction] = text.split('.', 2);
+	if (whole.includes(GROUP)) {
+		if (GROUPED.test(whole)) text = text.replaceAll(GROUP, '');
+		else if (fraction === undefined && whole.split(GROUP).length === 2)
+			text = whole.replace(GROUP, '.');
+		else return undefined;
+	}
+	return NUMBER.test(text) ? text : undefined;
 }
 
 /**
  * Reads what someone typed, on commit rather than per keystroke, the way `locale` writes numbers:
- * `1,5` is one and a half in `de-DE`, and fifteen in `en-US`, where the comma groups. `undefined`
- * for an empty field, because clearing means "no value", not "the smallest allowed one", and for
- * anything that is not a number at all. A `locale` left out follows the reader's own.
+ * `1.500,5` is fifteen hundred and a half in `de-DE`. `undefined` for an empty field, because
+ * clearing means "no value", not "the smallest allowed one", and for anything that is not a plain
+ * decimal number - a lone separator, `1e5`, `Infinity`. A `locale` left out follows the reader's
+ * own.
  */
 export function parse(
 	raw: string,
@@ -118,12 +137,10 @@ export function parse(
 	decimals: number,
 	locale?: string
 ): number | undefined {
-	if (raw.trim() === '') return undefined;
+	const text = delocalize(raw, locale);
+	if (text === undefined) return undefined;
 
-	const parsed = Number(delocalize(raw, locale));
-	if (Number.isNaN(parsed)) return undefined;
-
-	return clamp(round(parsed, decimals), min, max);
+	return clamp(round(Number(text), decimals), min, max);
 }
 
 /**

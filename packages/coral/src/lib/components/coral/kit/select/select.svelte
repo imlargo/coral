@@ -163,6 +163,33 @@
 		</Select.Trigger>
 
 		<Select.Content id={listId} aria-labelledby={triggerId} class={contentClass}>
+			{#each indexed as group, groupIndex (groupIndex)}
+				<Select.Group>
+					{#if group.label}
+						<Select.GroupHeading>{group.label}</Select.GroupHeading>
+					{/if}
+					{#each group.entries as entry (entry.index)}
+						{@const isSelected = entry.index === selectedIndex}
+						<Select.Item
+							value={String(entry.index)}
+							label={entry.option.label}
+							disabled={entry.option.disabled}
+						>
+							{#if optionSnippet}
+								{@render optionSnippet({ option: entry.option, selected: isSelected })}
+							{:else if entry.option.description}
+								<span class="flex min-w-0 flex-col">
+									<span class="truncate">{entry.option.label}</span>
+									<span class="truncate text-muted-foreground">{entry.option.description}</span>
+								</span>
+							{:else}
+								{entry.option.label}
+							{/if}
+						</Select.Item>
+					{/each}
+				</Select.Group>
+			{/each}
+
 			<!-- The content is the listbox itself, and a listbox may only own options: the row is one,
 			     disabled, and not an item the primitive knows, so nothing can pick it. -->
 			{#if loading}
@@ -173,33 +200,6 @@
 					label={loadingLabel}
 					{indicator}
 				/>
-			{:else}
-				{#each indexed as group, groupIndex (groupIndex)}
-					<Select.Group>
-						{#if group.label}
-							<Select.GroupHeading>{group.label}</Select.GroupHeading>
-						{/if}
-						{#each group.entries as entry (entry.index)}
-							{@const isSelected = entry.index === selectedIndex}
-							<Select.Item
-								value={String(entry.index)}
-								label={entry.option.label}
-								disabled={entry.option.disabled}
-							>
-								{#if optionSnippet}
-									{@render optionSnippet({ option: entry.option, selected: isSelected })}
-								{:else if entry.option.description}
-									<span class="flex min-w-0 flex-col">
-										<span class="truncate">{entry.option.label}</span>
-										<span class="truncate text-muted-foreground">{entry.option.description}</span>
-									</span>
-								{:else}
-									{entry.option.label}
-								{/if}
-							</Select.Item>
-						{/each}
-					</Select.Group>
-				{/each}
 			{/if}
 		</Select.Content>
 	</Select.Root>
@@ -222,6 +222,6 @@
 
 <!-- `required` is not forwarded to the primitive: it spends it on a field it only renders when it
      owns `name`, and Coral owns `name` here so the value submits instead of the index key. -->
-{#if name}
+{#if name && !disabled}
 	<HiddenField {name} {form} {required} value={value === undefined ? '' : toText(value)} />
 {/if}

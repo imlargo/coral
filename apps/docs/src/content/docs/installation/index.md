@@ -80,9 +80,10 @@ rename is a breaking change and bumps the component's major.
 
 ## Set copy and locale once
 
-Every string a component shows or says has an English default, and every component that formats
-dates or numbers takes a `locale` that defaults to `en-US`. A product in another language sets its
-own once, in the root layout, instead of repeating them at every call site:
+Every string a component shows or says has an English default, and the components that format
+dates or numbers take a `locale` that defaults to `en-US` (`tree-view`'s typeahead follows the
+reader's own when none is given). A product in another language sets its own once, in the root
+layout, instead of repeating them at every call site:
 
 ```svelte
 <script lang="ts">

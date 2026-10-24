@@ -164,7 +164,7 @@
 
 	/** The highlighted option's element id, while there is a list for it to be in. */
 	const activeId = $derived(
-		highlighted !== '' && !noMatches && !loading ? `${listId}-${highlighted}` : undefined
+		highlighted !== '' && rendered.length > 0 ? `${listId}-${highlighted}` : undefined
 	);
 
 	/**
@@ -333,39 +333,39 @@
 
 			<!--
 				A listbox may only own options and groups, so while it has none - nothing matches, or the
-				results are on their way - it is hidden and the message sits beside it instead.
+				results are on their way - it is hidden and the message sits beside it instead. While more
+				are loading, what is already listed stays: blanking it on every keystroke of a server
+				search would take away the rows the reader was about to pick.
 			-->
-			<Command.List id={listId} class={listClass} hidden={noMatches || loading}>
-				{#if !loading}
-					{#each rendered as group, groupIndex (groupIndex)}
-						<Command.Group heading={group.label}>
-							{#each group.entries as entry (entry.index)}
-								{@const isSelected = includesValue(values, entry.option.value)}
-								<Command.Item
-									id={`${listId}-${entry.index}`}
-									value={String(entry.index)}
-									disabled={entry.option.disabled}
-									class="data-disabled:pointer-events-none data-disabled:opacity-50"
-									data-checked={isSelected ? 'true' : undefined}
-									onSelect={() => select(entry.option)}
-								>
-									{#if optionSnippet}
-										{@render optionSnippet({ option: entry.option, selected: isSelected })}
-									{:else if entry.option.description}
-										<span class="flex min-w-0 flex-col">
-											<span class="truncate">{entry.option.label}</span>
-											<span class="truncate text-muted-foreground">
-												{entry.option.description}
-											</span>
+			<Command.List id={listId} class={listClass} hidden={rendered.length === 0}>
+				{#each rendered as group, groupIndex (groupIndex)}
+					<Command.Group heading={group.label}>
+						{#each group.entries as entry (entry.index)}
+							{@const isSelected = includesValue(values, entry.option.value)}
+							<Command.Item
+								id={`${listId}-${entry.index}`}
+								value={String(entry.index)}
+								disabled={entry.option.disabled}
+								class="data-disabled:pointer-events-none data-disabled:opacity-50"
+								data-checked={isSelected ? 'true' : undefined}
+								onSelect={() => select(entry.option)}
+							>
+								{#if optionSnippet}
+									{@render optionSnippet({ option: entry.option, selected: isSelected })}
+								{:else if entry.option.description}
+									<span class="flex min-w-0 flex-col">
+										<span class="truncate">{entry.option.label}</span>
+										<span class="truncate text-muted-foreground">
+											{entry.option.description}
 										</span>
-									{:else}
-										{entry.option.label}
-									{/if}
-								</Command.Item>
-							{/each}
-						</Command.Group>
-					{/each}
-				{/if}
+									</span>
+								{:else}
+									{entry.option.label}
+								{/if}
+							</Command.Item>
+						{/each}
+					</Command.Group>
+				{/each}
 			</Command.List>
 
 			{#if loading}
@@ -394,7 +394,7 @@
 	</Popover.Content>
 </Popover.Root>
 
-{#if name}
+{#if name && !disabled}
 	{#if multiple}
 		{#each values as entry (entry)}
 			<HiddenField {name} {form} value={toText(entry)} />

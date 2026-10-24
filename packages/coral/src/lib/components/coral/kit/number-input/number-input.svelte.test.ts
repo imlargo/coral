@@ -194,12 +194,17 @@ describe('the locale', () => {
 
 describe('the field', () => {
 	it('shows a numeric keypad, with a decimal one when the step needs it', async () => {
-		const props = $state({ value: 1 as number | undefined, step: 1 });
+		const props = $state({ value: 1 as number | undefined, step: 1, min: 0 });
 		await render(NumberInput, props);
 		expect(field().inputMode).toBe('numeric');
 
 		props.step = 0.25;
 		await expect.poll(() => field().inputMode).toBe('decimal');
+	});
+
+	it('keeps the full keyboard where negatives are allowed, since keypads have no minus', async () => {
+		await render(NumberInput, { value: 1, step: 0.5 });
+		expect(field().inputMode).toBe('text');
 	});
 
 	it('takes the labels for its buttons as props', async () => {
@@ -219,5 +224,10 @@ describe('the field', () => {
 		await render(NumberInput, { value: 2.5, step: 0.5, name: 'price', locale: 'de-DE' });
 		expect(field().name).toBe('');
 		expect(document.querySelector<HTMLInputElement>('input[name="price"]')?.value).toBe('2.5');
+	});
+
+	it('submits nothing while disabled, as a native field would', async () => {
+		await render(NumberInput, { value: 2, name: 'seats', disabled: true });
+		expect(document.querySelector('input[name="seats"]')).toBeNull();
 	});
 });

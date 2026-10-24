@@ -62,7 +62,7 @@ export type SelectProps<T> = RootProps &
 		clearable?: boolean;
 		/** Accessible label for the clear control. */
 		clearLabel?: string;
-		/** Renders a loading row in place of the options, for a list that is still on its way. */
+		/** Renders a loading row below the options, or in place of them while there are none. */
 		loading?: boolean;
 		/** What the loading row is called, for a screen reader. */
 		loadingLabel?: string;
@@ -87,7 +87,7 @@ export type SelectProps<T> = RootProps &
 		trigger?: Snippet<[TriggerContext<T>]>;
 		/** Replaces the body of each option row. The check indicator stays. */
 		option?: Snippet<[OptionContext<T>]>;
-		/** Replaces the loading row. */
+		/** Replaces the loading row's spinner. The row keeps its name. */
 		indicator?: Snippet;
 	};
 

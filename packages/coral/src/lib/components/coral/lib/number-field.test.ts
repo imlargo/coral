@@ -119,12 +119,29 @@ describe('commit', () => {
 describe('keydown', () => {
 	it('steps with the arrows, coarsely with Shift and with Page Up and Down', () => {
 		const { state, field } = build(0, { max: () => 100 });
-		field.keydown(pressed('ArrowUp').event);
+		const shown = () => String(state.value);
+		field.keydown(pressed('ArrowUp', { text: shown() }).event);
 		expect(state.value).toBe(1);
-		field.keydown(pressed('ArrowUp', { shiftKey: true }).event);
+		field.keydown(pressed('ArrowUp', { shiftKey: true, text: shown() }).event);
 		expect(state.value).toBe(6);
-		field.keydown(pressed('PageDown').event);
+		field.keydown(pressed('PageDown', { text: shown() }).event);
 		expect(state.value).toBe(1);
+	});
+
+	it('steps from what is being typed, and shows where it landed', () => {
+		const { state, field } = build(4);
+		const { input, event } = pressed('ArrowUp', { text: '7' });
+		field.keydown(event);
+		expect(state.value).toBe(8);
+		expect(input.value).toBe('8');
+	});
+
+	it('rewrites the text when the step lands on the value already held', () => {
+		const { state, field } = build(4);
+		const { input, event } = pressed('ArrowUp', { text: '3' });
+		field.keydown(event);
+		expect(state.value).toBe(4);
+		expect(input.value).toBe('4');
 	});
 
 	it('goes to a bound with Home and End, and leaves the key alone without one', () => {
@@ -152,12 +169,17 @@ describe('keydown', () => {
 
 	it('does nothing while the field cannot be edited', () => {
 		const { state, field } = build(4, { editable: () => false });
-		field.keydown(pressed('ArrowUp').event);
+		field.keydown(pressed('ArrowUp', { text: '4' }).event);
 		expect(state.value).toBe(4);
 	});
 });
 
 describe('attributes', () => {
+	it('asks for the full keyboard only where a minus sign can be typed', () => {
+		expect(build(1, { min: () => -10 }).field.attributes().inputmode).toBe('text');
+		expect(build(1, { min: () => 0 }).field.attributes().inputmode).toBe('numeric');
+	});
+
 	it('announces a text field as a spinbutton, with the value written in the locale', () => {
 		const { field } = build(2.5, { decimals: () => 1, locale: () => 'de-DE' });
 		expect(field.attributes()).toMatchObject({

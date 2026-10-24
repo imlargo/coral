@@ -101,6 +101,6 @@
 </InputGroup.Root>
 
 <!-- What a form submits is the number, `1.5`, not the text the reader sees, which may be `1,5`. -->
-{#if name}
+{#if name && !disabled}
 	<HiddenField {name} {form} value={value === undefined ? '' : String(value)} />
 {/if}

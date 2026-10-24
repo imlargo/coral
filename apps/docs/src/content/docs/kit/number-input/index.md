@@ -104,8 +104,10 @@ Everything the shadcn input accepts stays available: `placeholder`, `disabled`, 
 The field is a text input with `role="spinbutton"`, carrying `aria-valuenow`, `aria-valuemin`,
 `aria-valuemax` and the value as the reader sees it in `aria-valuetext`. It keeps the spinbutton
 keys: Up and Down step, Shift or Page Up and Page Down step by `largeStep`, Home and End go to the
-bounds, and the first Escape puts back an edit still being typed. Mobile shows a numeric keypad,
-a decimal one when the step needs it. The two stepper buttons carry labels and are `type="button"`,
+bounds, and the first Escape puts back an edit still being typed, while an arrow pressed mid-edit
+steps from what was typed. With `min` at zero or above, mobile shows a numeric keypad, a decimal
+one when the step needs it; a field that takes negatives keeps the full keyboard, because those
+keypads have no minus key. The two stepper buttons carry labels and are `type="button"`,
 so neither submits a surrounding form.
 
 It is not `type="number"` because that hands the reading to the engine, and Chromium reads `1,5` as

@@ -64,7 +64,7 @@ Everything the shadcn popover root accepts stays available: `open`, `onOpenChang
 | `shouldFilter`      | `boolean`                                               | `true`                | Client-side filtering. `false` when the server filtered.        |
 | `filter`            | `(option, search) => boolean`                           | folded match          | Replaces the built-in matching.                                 |
 | `clearable`         | `boolean`                                               | `false`               | Adds a clear control; re-picking deselects.                     |
-| `loading`           | `boolean`                                               | `false`               | Swaps the list for an indicator.                                |
+| `loading`           | `boolean`                                               | `false`               | A loading row below the options, or in their place while empty. |
 | `loadingLabel`      | `string`                                                | `Loading`             | What a screen reader calls the loading row.                     |
 | `disabled`          | `boolean`                                               | `false`               | Blocks the trigger.                                             |
 | `name`              | `string`                                                | -                     | Submits with a surrounding form, one field per value.           |
@@ -90,7 +90,7 @@ Everything the shadcn popover root accepts stays available: `open`, `onOpenChang
 | `trigger`   | `{ props, selected, open, disabled, clear }`     | The whole trigger.                    |
 | `option`    | `{ option, selected }`                           | The body of a row.                    |
 | `empty`     | -                                                | The empty state.                      |
-| `indicator` | -                                                | The loading row.                      |
+| `indicator` | -                                                | The loading row's spinner.            |
 | `footer`    | `{ selected, visible, clear, selectAll, close }` | Nothing - it is added below the list. |
 
 ### Option
@@ -180,8 +180,10 @@ filtered twice.
 
 <Preview name="kit/combobox/remote" />
 
-`loading` swaps the list for an indicator. The search term is cleared when the popover closes, so
-the next open starts from the full list rather than from whatever was typed last time.
+`loading` adds a row below the options already listed, and stands in for the list only while it is
+empty, so the results of the last term stay pickable while the next ones load. It is the same row
+select and the command palette show. The search term is cleared when the popover closes, so the
+next open starts from the full list rather than from whatever was typed last time.
 
 The trigger keeps the label of whatever was picked even after the results stop including it: search
 for something else and the selection still reads as itself. An edit form whose saved value is not in
@@ -243,7 +245,7 @@ Three things the primitives leave out, which Coral supplies from outside them:
   `aria-activedescendant`, so a screen reader is told which list it drives and which option the
   arrow keys are on. The primitive derives both from an element the shadcn list never renders.
 - **An empty list is not left as an empty listbox.** A listbox must own options, so while nothing
-  matches, or the results are loading, the list is hidden and the message or the indicator sits
+  matches, or the first results are loading, the list is hidden and the message or the indicator sits
   beside it. With the default message, the result is also spoken: typing into a box whose list has
   emptied otherwise says nothing at all.
 - **A disabled option looks disabled.** The shadcn item styles `data-[disabled=true]`, while the

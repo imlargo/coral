@@ -33,6 +33,8 @@ export const numberFieldClass = 'w-16 text-center';
 /** The behaviour `kit/number-input` and `kit/scrub-input` share; what differs is the controls around it. */
 export function numberField(config: NumberFieldConfig) {
 	const text = (value: number | undefined) => format(value, config.decimals(), config.locale());
+	const read = (raw: string) =>
+		parse(raw, config.min(), config.max(), config.decimals(), config.locale());
 
 	/** The one door: nothing is written, and nothing reported, unless the value actually moved. */
 	function commit(next: number | undefined) {
@@ -41,12 +43,13 @@ export function numberField(config: NumberFieldConfig) {
 		config.onchange()?.(next);
 	}
 
-	function nudge(delta: number) {
+	/** Steps from `from`, which is the held value unless the reader is partway through typing one. */
+	function nudge(delta: number, from = config.value()) {
 		if (!config.editable()) return;
 
 		commit(
 			stepValue({
-				value: config.value(),
+				value: from,
 				delta,
 				min: config.min(),
 				max: config.max(),
@@ -63,7 +66,7 @@ export function numberField(config: NumberFieldConfig) {
 	 */
 	function change(event: Event & { currentTarget: HTMLInputElement }) {
 		const field = event.currentTarget;
-		const next = parse(field.value, config.min(), config.max(), config.decimals(), config.locale());
+		const next = read(field.value);
 
 		commit(next);
 
@@ -82,15 +85,23 @@ export function numberField(config: NumberFieldConfig) {
 
 		const field = event.currentTarget;
 		const step = event.shiftKey ? config.largeStep() : config.step();
+		const large = config.largeStep();
 		const min = config.min();
 		const max = config.max();
+		// `47` typed over a held `4` steps to `48`, as it would in a native number field.
+		const typed = field.value === text(config.value()) ? config.value() : read(field.value);
+		const by = (delta: number) => {
+			nudge(delta, typed);
+			field.value = text(config.value());
+			return true;
+		};
 
 		/** Each key returns whether it acted; one that did not is left to the caret or a dialog above. */
 		const keys: Record<string, () => boolean> = {
-			ArrowUp: () => (nudge(step), true),
-			ArrowDown: () => (nudge(-step), true),
-			PageUp: () => (nudge(config.largeStep()), true),
-			PageDown: () => (nudge(-config.largeStep()), true),
+			ArrowUp: () => by(step),
+			ArrowDown: () => by(-step),
+			PageUp: () => by(large),
+			PageDown: () => by(-large),
 			Home: () => min !== undefined && (commit(min), true),
 			End: () => max !== undefined && (commit(max), true),
 			// Puts back what the field held before the edit that is still being typed.
@@ -115,9 +126,13 @@ export function numberField(config: NumberFieldConfig) {
 	 */
 	function attributes() {
 		const value = config.value();
+		const min = config.min();
+		// The numeric keypads phones show have no minus key, so a field that takes negatives gets the
+		// full keyboard rather than one that cannot type them.
+		const signed = min === undefined || min < 0;
 		return {
 			type: 'text',
-			inputmode: config.decimals() > 0 ? 'decimal' : 'numeric',
+			inputmode: signed ? 'text' : config.decimals() > 0 ? 'decimal' : 'numeric',
 			role: 'spinbutton',
 			'aria-valuenow': value,
 			'aria-valuemin': config.min(),

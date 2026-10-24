@@ -79,7 +79,7 @@ export type CommandPaletteProps = DialogProps & {
 	trigger?: Snippet<[{ props: Record<string, unknown>; open: boolean }]>;
 	/** Replaces the body of each row - the icon, the label, what sits on the right. */
 	action?: Snippet<[ActionContext]>;
-	/** Replaces the loading row. */
+	/** Replaces the loading row's spinner. The row keeps its name. */
 	indicator?: Snippet;
 	/** Replaces the empty state. */
 	empty?: Snippet;

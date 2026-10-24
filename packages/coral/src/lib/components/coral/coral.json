@@ -39,7 +39,7 @@
 		"lib/hidden-field": {
 			"title": "Hidden field",
 			"description": "The hidden input that lets a select, combobox or date picker take part in a plain form.",
-			"version": "1.0.0",
+			"version": "1.0.1",
 			"shadcn": []
 		},
 		"lib/intl": {
@@ -62,7 +62,7 @@
 		},
 		"lib/number-field": {
 			"title": "Number field",
-			"description": "The stepping, committing and wheel handling a number input and a scrub input share.",
+			"description": "The stepping, committing, locale-aware reading and spinbutton keys a number input and a scrub input share.",
 			"version": "2.0.0",
 			"shadcn": []
 		},
