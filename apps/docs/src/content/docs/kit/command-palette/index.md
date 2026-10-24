@@ -41,7 +41,15 @@ is a record of.
 
 Pass `onsearch` and the primitive's own filtering is switched off, because the list becomes the
 server's answer and filtering it again locally would hide rows it meant to return. Debounce it with
-`searchDebounce`, and show `loading` while the request is out.
+`searchDebounce`, and set `loading` while the request is out.
+
+`loading` adds a loading row under the actions already listed, and announces `loadingMessage`. The
+actions stay where they were and stay runnable: a palette that mixes local actions (go to settings,
+toggle the theme) with remote results (search repositories) never blanks the local ones while the
+server is thinking, and the list does not flicker on every keystroke.
+
+For that mixed palette, set `shouldFilter` back on. The local actions are then narrowed by the term
+like any other row, and the remote results pass through because the server already matched them.
 
 ## One thing to know about `mod+k`
 
@@ -94,16 +102,18 @@ On top of that:
 | `search`                       | `string`                          | `''`                          | Bindable.                                         |
 | `onsearch`                     | `(term: string) => void`          | -                             | Server-side search. Switches off local filtering. |
 | `searchDebounce`               | `number`                          | `0`                           | Milliseconds of quiet typing before `onsearch`.   |
-| `loading`                      | `boolean`                         | `false`                       | A loading row in place of the list.               |
+| `shouldFilter`                 | `boolean`                         | unless `onsearch` is set      | The primitive's own filtering by the term.        |
+| `loading`                      | `boolean`                         | `false`                       | A loading row under the actions already listed.   |
 | `onrun`                        | `(action: CommandAction) => void` | -                             | An action ran and did not refuse.                 |
 | `onerror`                      | `(error, action) => void`         | -                             | Receives what an action threw.                    |
 | `vimBindings`                  | `boolean`                         | unless a combo clashes        | The primitive's Ctrl+N/P/J/K navigation.          |
 | `placeholder`                  | `string`                          | `Type a command or search...` | Shown in the search box.                          |
-| `emptyMessage`                 | `string`                          | `No results found.`           | Shown when nothing matches.                       |
+| `emptyMessage`                 | `string`                          | `No results found.`           | Shown, and announced, when nothing matches.       |
+| `loadingMessage`               | `string`                          | `Loading...`                  | Shown, and announced, while `loading`.            |
 | `class`, `listClass`           | `string`                          | -                             | Merged onto the dialog, and onto the list.        |
 | `trigger`                      | `Snippet<[{ props, open }]>`      | -                             | The element that opens it.                        |
 | `action`                       | `Snippet<[{ action, pending }]>`  | -                             | Replaces each row's body.                         |
-| `indicator`, `empty`, `footer` | `Snippet`                         | -                             | Loading row, empty state, footer.                 |
+| `indicator`, `empty`, `footer` | `Snippet`                         | -                             | Loading row contents, empty row contents, footer. |
 
 ## Accessibility
 
@@ -113,8 +123,9 @@ the visually hidden title and description every dialog needs. What is added here
 name rather than as "place of interest sign." See [shortcut](/docs/kit/shortcut).
 
 The search box also carries `aria-controls` and `aria-activedescendant`, which the primitive cannot
-derive here, so the highlighted action is announced. While results load the list is hidden and the
-indicator sits beside it, since a listbox may only own options, and a disabled action is dimmed.
+derive here, so the highlighted action is announced. A list with nothing to run says so inside
+itself, as an option nothing can pick - a listbox may own nothing else - and the words are spoken
+too, whether the results are loading or the term matched nothing. A disabled action is dimmed.
 
 A disabled action stays in the list. Hiding it is how a reader concludes the feature does not exist,
 rather than that they cannot use it right now.

@@ -19,6 +19,8 @@ const headings = () =>
 	Array.from(document.querySelectorAll('[data-slot="command-group"]')).map((entry) =>
 		entry.getAttribute('data-value')
 	);
+const status = () => document.querySelector('[data-slot="coral-list-status"]')?.textContent?.trim();
+const announced = () => document.querySelector('span[role="status"]')?.textContent?.trim();
 
 function actions(run = vi.fn()): CommandAction[] {
 	return [
@@ -104,6 +106,52 @@ describe('listing', () => {
 
 		await userEvent.keyboard('spreadsheet');
 		await expect.poll(rows).toEqual(['Import from CSV']);
+	});
+});
+
+describe('while a server answers', () => {
+	it('keeps the actions it already has runnable, and says more are coming', async () => {
+		const run = vi.fn();
+		await render(CommandPalette, {
+			actions: actions(run),
+			open: true,
+			shortcut: '',
+			loading: true,
+			loadingMessage: 'Searching repositories...',
+			onsearch: () => {}
+		});
+
+		expect(rows()).toHaveLength(3);
+		expect(status()).toBe('Searching repositories...');
+		expect(announced()).toBe('Searching repositories...');
+
+		const row = document.querySelector<HTMLElement>('[data-slot="command-item"]')!;
+		await userEvent.click(row);
+		expect(run).toHaveBeenCalledTimes(1);
+	});
+
+	it('narrows local actions by the term beside a server search when asked', async () => {
+		await render(CommandPalette, {
+			actions: actions(),
+			open: true,
+			shortcut: '',
+			onsearch: () => {},
+			shouldFilter: true
+		});
+		await userEvent.fill(document.querySelector('[data-slot="command-input"]')!, 'settings');
+		await expect.poll(rows).toEqual(['Settings']);
+	});
+
+	it('says so when nothing matches, in the list and to a screen reader', async () => {
+		await render(CommandPalette, {
+			actions: actions(),
+			open: true,
+			shortcut: '',
+			emptyMessage: 'Nothing like that.'
+		});
+		await userEvent.fill(document.querySelector('[data-slot="command-input"]')!, 'zzz');
+		await expect.poll(status).toBe('Nothing like that.');
+		expect(announced()).toBe('Nothing like that.');
 	});
 });
 
