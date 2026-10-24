@@ -78,12 +78,6 @@
 			"version": "1.0.0",
 			"shadcn": []
 		},
-		"lib/table": {
-			"title": "Table",
-			"description": "Sorting, filtering, paging and selection for a table of rows, as plain functions.",
-			"version": "1.0.0",
-			"shadcn": []
-		},
 		"kit/action-button": {
 			"title": "Action button",
 			"description": "A button that waits on its own request, blocks the second click, and keeps focus.",
@@ -134,13 +128,6 @@
 			"shadcn": ["button"],
 			"npm": ["@lucide/svelte"]
 		},
-		"kit/data-table": {
-			"title": "Data table",
-			"description": "Rows with sortable headers, selection that survives a sort, and its own loading and empty states.",
-			"version": "1.0.0",
-			"shadcn": ["table", "checkbox", "empty", "skeleton"],
-			"npm": ["@lucide/svelte"]
-		},
 		"kit/date-picker": {
 			"title": "Date picker",
 			"description": "A popover, a calendar and a formatted trigger. One day or two, with shortcuts.",
@@ -173,13 +160,6 @@
 			"description": "A number field with steppers, bounds that hold, and arithmetic that stays exact.",
 			"version": "1.0.0",
 			"shadcn": ["input-group"],
-			"npm": ["@lucide/svelte"]
-		},
-		"kit/page-state": {
-			"title": "Page state",
-			"description": "The states a screen goes through - waiting, failed, empty, content - and a wait that does not flash.",
-			"version": "1.0.0",
-			"shadcn": ["empty", "spinner"],
 			"npm": ["@lucide/svelte"]
 		},
 		"kit/password-input": {

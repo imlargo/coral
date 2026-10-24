@@ -27,13 +27,11 @@ import Combobox from './components/coral/kit/combobox/combobox.svelte';
 import CommandPalette from './components/coral/kit/command-palette/command-palette.svelte';
 import ConfirmDialog from './components/coral/kit/confirm-dialog/confirm-dialog.svelte';
 import CopyButton from './components/coral/kit/copy-button/copy-button.svelte';
-import DataTable from './components/coral/kit/data-table/data-table.svelte';
 import DatePicker from './components/coral/kit/date-picker/date-picker.svelte';
 import FileInput from './components/coral/kit/file-input/file-input.svelte';
 import FollowScroll from './components/coral/kit/follow-scroll/follow-scroll.svelte';
 import InlineEdit from './components/coral/kit/inline-edit/inline-edit.svelte';
 import NumberInput from './components/coral/kit/number-input/number-input.svelte';
-import PageState from './components/coral/kit/page-state/page-state.svelte';
 import PasswordInput from './components/coral/kit/password-input/password-input.svelte';
 import RatingGroup from './components/coral/kit/rating-group/rating-group.svelte';
 import RelativeTime from './components/coral/kit/relative-time/relative-time.svelte';
@@ -86,19 +84,6 @@ const people = [
 	{ name: 'Wei Zhang' },
 	{ name: 'Sofia Rossi' }
 ];
-const rows = [
-	{ id: 'a', project: 'Açaí', status: 'ready' },
-	{ id: 'b', project: 'Kiwi', status: 'failed' }
-];
-const columns = [
-	{
-		id: 'project',
-		header: 'Project',
-		value: (row: (typeof rows)[number]) => row.project,
-		sortable: true
-	},
-	{ id: 'status', header: 'Status', value: (row: (typeof rows)[number]) => row.status }
-];
 
 const cases: [string, () => unknown][] = [
 	['action-button', () => draw(ActionButton, { children: html('Save') })],
@@ -135,27 +120,6 @@ const cases: [string, () => unknown][] = [
 	],
 	['confirm-dialog', () => draw(ConfirmDialog, { open: true, title: 'Delete project' })],
 	['copy-button', () => draw(CopyButton, { text: 'pnpm add coral' })],
-	[
-		'data-table',
-		() =>
-			draw(DataTable, {
-				rows,
-				columns,
-				getRowId: (row: (typeof rows)[number]) => row.id,
-				caption: 'Deploys',
-				selection: 'multiple',
-				selected: ['a']
-			})
-	],
-	[
-		'data-table, loading',
-		() =>
-			draw(DataTable, { rows: [], columns, getRowId: () => '', loading: true, caption: 'Deploys' })
-	],
-	[
-		'data-table, empty',
-		() => draw(DataTable, { rows: [], columns, getRowId: () => '', caption: 'Deploys' })
-	],
 	['date-picker', () => draw(DatePicker, { 'aria-label': 'Start date' })],
 	[
 		'date-picker, range, open',
@@ -172,11 +136,6 @@ const cases: [string, () => unknown][] = [
 		() => draw(InlineEdit, { value: 'Central Office', editing: true, 'aria-label': 'Name' })
 	],
 	['number-input', () => draw(NumberInput, { value: 3, 'aria-label': 'Seats' })],
-	['page-state', () => draw(PageState, { children: html('<p>Deploys</p>') })],
-	[
-		'page-state, error',
-		() => draw(PageState, { error: new Error('x'), onretry: () => {}, children: html('') })
-	],
 	['password-input', () => draw(PasswordInput, { 'aria-label': 'Password' })],
 	['rating-group', () => draw(RatingGroup, { value: 3, label: undefined, 'aria-label': 'Rating' })],
 	['rating-group, read only', () => draw(RatingGroup, { value: 3.5, readonly: true })],
@@ -256,19 +215,6 @@ const cases: [string, () => unknown][] = [
 			})
 	],
 	[
-		'data-table, everything selected',
-		() =>
-			draw(DataTable, {
-				rows,
-				columns,
-				getRowId: (row: (typeof rows)[number]) => row.id,
-				caption: 'Deploys',
-				selection: 'multiple',
-				selected: ['a', 'b'],
-				sort: { column: 'project', direction: 'desc' }
-			})
-	],
-	[
 		'file-input, files held',
 		() =>
 			draw(FileInput, {
@@ -280,10 +226,6 @@ const cases: [string, () => unknown][] = [
 	[
 		'stepper, vertical',
 		() => draw(StepperHarness, { steps: ['a', 'b', 'c'], orientation: 'vertical' })
-	],
-	[
-		'page-state, loading',
-		() => draw(PageState, { loading: true, delay: 0, children: html('<p></p>') })
 	],
 	[
 		'confirm-dialog, waiting',

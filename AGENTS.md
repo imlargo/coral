@@ -19,11 +19,11 @@ The repo is a pnpm workspace with two members: **`packages/coral`**, the library
 **`packages/coral/src/lib/components/coral/`**, one self-contained folder that lands in the target
 project at `#lib/components/coral/` (`$lib/...` on SvelteKit 2), beside shadcn's `ui/`.
 Currently: `kit/{action-button, activity-calendar, avatar, avatar-stack, combobox, command-palette,
-confirm-dialog, copy-button, data-table, date-picker, file-input, follow-scroll, inline-edit,
-number-input, page-state, password-input, rating-group, relative-time, reorder-list,
+confirm-dialog, copy-button, date-picker, file-input, follow-scroll, inline-edit,
+number-input, password-input, rating-group, relative-time, reorder-list,
 responsive-dialog, scrub-input, search-input, select, shortcut, show-more, stepper, tags-input,
 textarea, toc, tree-view}`, over `lib/{action, announce, debounce, focus, fold, hidden-field, intl,
-live-region, number, number-field, options, scale, table, trigger}`. There is no `blocks/` or
+live-region, number, number-field, options, scale, trigger}`. There is no `blocks/` or
 `product/` entry right now - both layers exist in the architecture below, waiting on the first thing
 that needs them.
 `packages/coral/src/lib/components/coral/coral.json` is the list that counts. Read it rather than

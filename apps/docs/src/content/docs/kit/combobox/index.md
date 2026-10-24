@@ -265,6 +265,3 @@ fold('Açaí'); // 'acai'
 fold('Piña'); // 'pina'
 fold('Café'); // 'cafe'
 ```
-
-It lives in `lib/fold.ts` rather than beside the combobox because [data table](/docs/kit/data-table)
-searches the same way, and the two cannot be allowed to drift.

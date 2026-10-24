@@ -116,7 +116,7 @@ through `lib/action`. Return exactly `false`, or throw, and the component stays 
 dialog open, the field editing, the stepper on its step. Anything else, including nothing, counts as
 done, so an existing handler can be passed straight in. `onerror` receives what was thrown; without
 it the error propagates as an unhandled rejection, visible in the console and to nobody using the
-page. Where `error` is already a prop, as on `page-state`, it is `onretryerror`.
+page. Where `error` is already a prop, it is `onretryerror`.
 
 **A trigger that is a button.** `select`, `combobox` and `date-picker` take `id`, `aria-label`,
 `aria-labelledby`, `aria-describedby` and `aria-invalid` and put them on the trigger, because that is
