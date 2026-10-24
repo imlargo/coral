@@ -91,6 +91,41 @@ describe('form participation', () => {
 	});
 });
 
+describe('a list with nothing to pick', () => {
+	const status = () => document.querySelector('[data-slot="coral-list-status"]');
+	const announced = () => document.querySelector('span[role="status"]')?.textContent?.trim();
+
+	it('says the options are loading, seen and heard', async () => {
+		await render(Select, { options: [], open: true, loading: true, 'aria-label': 'Fruit' });
+		await expect.poll(() => status()?.textContent?.trim()).toBe('Loading...');
+		expect(status()?.closest('[role="listbox"]')).not.toBeNull();
+		expect(status()?.getAttribute('aria-disabled')).toBe('true');
+		expect(announced()).toBe('Loading...');
+	});
+
+	it('keeps the options it has while more are loading', async () => {
+		await render(Select, { options: fruits, open: true, loading: true, 'aria-label': 'Fruit' });
+		await expect.poll(() => document.querySelectorAll('[data-slot="select-item"]').length).toBe(2);
+		expect(status()).not.toBeNull();
+	});
+
+	it('says when the list is empty rather than opening onto nothing', async () => {
+		await render(Select, {
+			options: [],
+			open: true,
+			emptyMessage: 'No regions yet.',
+			'aria-label': 'Region'
+		});
+		await expect.poll(() => status()?.textContent?.trim()).toBe('No regions yet.');
+		expect(announced()).toBe('No regions yet.');
+	});
+
+	it('announces nothing while the list is shut', async () => {
+		await render(Select, { options: [], loading: true, 'aria-label': 'Fruit' });
+		expect(announced()).toBe('');
+	});
+});
+
 describe('naming the trigger', () => {
 	const trigger = () => document.querySelector<HTMLButtonElement>('[data-slot="select-trigger"]')!;
 
