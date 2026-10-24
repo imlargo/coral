@@ -9,9 +9,13 @@
 		description: i % 3 === 0 ? 'N. Virginia' : i % 3 === 1 ? 'São Paulo' : 'Frankfurt'
 	}));
 
-	let options = $state<typeof CATALOG>([]);
+	// The saved value an edit form opens on. Its option goes in with the first `options`, so the
+	// trigger can name it before any results arrive and remembers it once they replace it.
+	const saved = CATALOG[254];
+
+	let options = $state<typeof CATALOG>([saved]);
 	let loading = $state(false);
-	let repoId = $state<number>();
+	let repoId = $state<number | undefined>(saved.value);
 	let requests = $state(0);
 
 	async function fetchOptions(search: string) {
