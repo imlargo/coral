@@ -24,6 +24,12 @@
 			"version": "1.0.0",
 			"shadcn": []
 		},
+		"lib/draft": {
+			"title": "Draft",
+			"description": "An editable copy of something saved, and whether it still matches: what a settings page and an edit dialog both ask.",
+			"version": "1.0.0",
+			"shadcn": []
+		},
 		"lib/fold": {
 			"title": "Fold",
 			"description": "Folds text into the form searches compare against - lower case, no accents.",
@@ -160,6 +166,13 @@
 			"shadcn": ["attachment", "empty"],
 			"npm": ["@lucide/svelte"]
 		},
+		"kit/file-upload": {
+			"title": "File upload",
+			"description": "Picked files sent a few at a time, each with its real progress, its own cancel and retry, and a tally at the end.",
+			"version": "1.0.0",
+			"shadcn": ["attachment", "progress", "spinner"],
+			"npm": ["@lucide/svelte"]
+		},
 		"kit/follow-scroll": {
 			"title": "Follow scroll",
 			"description": "A scroller that stays at the end while new content arrives - and stops the moment the reader scrolls away.",
@@ -288,6 +301,18 @@
 			"version": "1.1.0",
 			"shadcn": [],
 			"npm": ["@lucide/svelte"]
+		},
+		"blocks/form-dialog": {
+			"title": "Form dialog",
+			"description": "A dialog that creates or edits a record: sends once, keeps the input until the reader lets go of it, shows what went wrong beside the fields, and opens on the right values.",
+			"version": "1.0.0",
+			"shadcn": ["alert", "button"]
+		},
+		"blocks/settings-form": {
+			"title": "Settings form",
+			"description": "A form that edits a saved copy: says when there are unsaved changes, saves once, announces how it went, and warns before the tab closes on them.",
+			"version": "1.0.0",
+			"shadcn": ["button"]
 		}
 	}
 }
