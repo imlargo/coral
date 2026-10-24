@@ -19,7 +19,7 @@ second save starts while the first is still out; closing the tab loses the edits
 
 - **A draft, not the record.** Fields bind to `draft.current`, a deep copy of what is saved, and
   `draft.dirty` is read against the saved record as it stands - so the moment the record reflects
-  the save, the form is clean on its own, with nothing to call. See [`lib/draft`](#lib-draft).
+  the save, the form is clean on its own, with nothing to call. See [`lib/draft`](#libdraft).
 - **A bar that appears when it has something to say.** Unsaved changes, saving, saved, could not
   save: one line, with discard and save beside it, and nothing at all while the form is clean.
 - **One save at a time**, from the button, from Enter in a field and from `mod+s`, all through the
