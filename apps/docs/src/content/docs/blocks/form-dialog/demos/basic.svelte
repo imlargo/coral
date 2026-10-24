@@ -6,7 +6,7 @@
 	import { Input } from '#lib/components/ui/input/index.js';
 	import { Label } from '#lib/components/ui/label/index.js';
 
-	type Invite = { email: string; role: string };
+	type Invite = { email: string; role?: string };
 
 	const roles = [
 		{ value: 'viewer', label: 'Viewer' },

@@ -5,7 +5,7 @@
 	import { Input } from '#lib/components/ui/input/index.js';
 	import { Label } from '#lib/components/ui/label/index.js';
 
-	type Project = { name: string; seats: number };
+	type Project = { name: string; seats?: number };
 
 	// Stands in for the record a page loads and the API that writes it back.
 	let project = $state<Project>({ name: 'api-gateway', seats: 5 });

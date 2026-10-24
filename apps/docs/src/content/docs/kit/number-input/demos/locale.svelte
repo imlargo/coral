@@ -9,7 +9,7 @@
 		{ value: 'fr-FR', label: 'Français' }
 	];
 
-	let locale = $state('de-DE');
+	let locale = $state<string | undefined>('de-DE');
 	let price = $state<number | undefined>(1234.5);
 </script>
 
