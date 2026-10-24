@@ -1,6 +1,6 @@
 /**
  * @coral/kit/copy-button
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -50,3 +50,10 @@ export type CopyButtonProps = ButtonProps & {
 };
 
 export type { CopySource } from './clipboard.js';
+
+declare module '../../lib/defaults.js' {
+	interface Defaults {
+		/** Set once for every copy button, through `setDefaults`. */
+		'kit/copy-button'?: Pick<CopyButtonProps, 'label' | 'copiedLabel' | 'failedLabel'>;
+	}
+}

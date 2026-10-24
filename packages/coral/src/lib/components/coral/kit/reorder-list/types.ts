@@ -1,6 +1,6 @@
 /**
  * @coral/kit/reorder-list
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import type { Snippet } from 'svelte';
@@ -64,3 +64,10 @@ export type ReorderListProps<T> = Omit<HTMLAttributes<HTMLUListElement>, 'childr
 	/** Replaces each row's contents entirely. Spread `handle` onto your own grip. */
 	row?: Snippet<[ItemContext<T>]>;
 };
+
+declare module '../../lib/defaults.js' {
+	interface Defaults {
+		/** Set once for every reorder list, through `setDefaults`. */
+		'kit/reorder-list'?: Pick<ReorderListProps<unknown>, 'handleLabel'>;
+	}
+}

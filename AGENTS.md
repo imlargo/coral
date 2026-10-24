@@ -22,8 +22,8 @@ Currently: `kit/{action-button, activity-calendar, avatar, avatar-stack, combobo
 confirm-dialog, copy-button, date-picker, file-input, follow-scroll, inline-edit,
 number-input, password-input, rating-group, relative-time, reorder-list,
 responsive-dialog, scrub-input, search-input, select, shortcut, show-more, stepper, tags-input,
-textarea, toc, tree-view}`, over `lib/{action, announce, debounce, focus, fold, hidden-field, intl,
-live-region, number, number-field, options, scale, trigger}`. There is no `blocks/` or
+textarea, toc, tree-view}`, over `lib/{action, announce, debounce, defaults, focus, fold,
+hidden-field, intl, live-region, number, number-field, options, scale, trigger}`. There is no `blocks/` or
 `product/` entry right now - both layers exist in the architecture below, waiting on the first thing
 that needs them.
 `packages/coral/src/lib/components/coral/coral.json` is the list that counts. Read it rather than
@@ -157,7 +157,9 @@ every project that already copied it.
   it the error is an unhandled rejection. Where `error` is already a prop, it is `onretryerror`.
 - **A control whose trigger is a button takes `id` and `aria-*` on the trigger**, not its root
   (`lib/trigger`). Never set an `aria-label` over a label that already names the control.
-- **Every string a reader sees or hears is a prop with an English default.** `*Message` is one
+- **Every string a reader sees or hears is a prop with an English default**, read through
+  `defaultsFor` (`lib/defaults`) so a project can set it once; `locale` and formatting policy go
+  the same way, and the component's `types.ts` adds its entry to `Defaults`. `*Message` is one
   line; `*Title` and `*Description` are a heading and the line under it. `on<thing>change` is the
   callback for a root that is an element, which already has an `onchange` of its own.
 - **Shared helpers first:** `lib/intl` for formatters and collators, `lib/focus` for focus rings,

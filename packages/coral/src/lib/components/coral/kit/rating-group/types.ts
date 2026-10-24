@@ -1,6 +1,6 @@
 /**
  * @coral/kit/rating-group
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import type { Snippet } from 'svelte';
@@ -65,3 +65,10 @@ export type RatingGroupProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> 
 	 */
 	star?: Snippet<[StarContext]>;
 };
+
+declare module '../../lib/defaults.js' {
+	interface Defaults {
+		/** Set once for every rating group, through `setDefaults`. */
+		'kit/rating-group'?: Pick<RatingGroupProps, 'locale' | 'label'>;
+	}
+}

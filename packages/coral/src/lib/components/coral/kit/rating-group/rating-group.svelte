@@ -1,14 +1,19 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/rating-group
-	 * @version 1.0.0
+	 * @version 1.1.0
 	 */
 	import StarIcon from '@lucide/svelte/icons/star';
 	import { cn } from '#lib/utils.js';
+	import { defaultsFor } from '../../lib/defaults.js';
 	import { numberFormat } from '../../lib/intl.js';
 	import { focusRingWithin } from '../../lib/focus.js';
 	import { fillOf, snap, stepsFor } from './rating.js';
 	import type { RatingGroupProps } from './types.js';
+
+	const defaults = defaultsFor('kit/rating-group', {
+		locale: 'en-US'
+	});
 
 	let {
 		value = $bindable(0),
@@ -19,10 +24,10 @@
 		required = false,
 		name,
 		form,
-		locale = 'en-US',
+		locale = defaults.locale,
 		color = 'var(--primary)',
 		emptyColor = 'var(--muted-foreground)',
-		label,
+		label = defaults.label,
 		onchange,
 		onhover,
 		ref = $bindable(null),

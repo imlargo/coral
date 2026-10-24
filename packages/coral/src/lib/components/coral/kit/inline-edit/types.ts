@@ -1,6 +1,6 @@
 /**
  * @coral/kit/inline-edit
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -60,3 +60,10 @@ export type InlineEditProps = InputProps & {
 	/** Replaces what the button shows. Whatever is rendered here is the thing that gets clicked. */
 	display?: Snippet<[{ value: string; placeholder: string }]>;
 };
+
+declare module '../../lib/defaults.js' {
+	interface Defaults {
+		/** Set once for every inline edit, through `setDefaults`. */
+		'kit/inline-edit'?: Pick<InlineEditProps, 'placeholder' | 'editLabel'>;
+	}
+}

@@ -1,16 +1,22 @@
 <script lang="ts">
 	/**
 	 * @coral/kit/tags-input
-	 * @version 1.0.0
+	 * @version 1.1.0
 	 */
 	import { tick } from 'svelte';
 	import XIcon from '@lucide/svelte/icons/x';
 	import * as InputGroup from '#lib/components/ui/input-group/index.js';
 	import { Badge } from '#lib/components/ui/badge/index.js';
 	import { cn } from '#lib/utils.js';
+	import { defaultsFor } from '../../lib/defaults.js';
 	import { focusRing } from '../../lib/focus.js';
 	import { add, split } from './tags.js';
 	import type { TagsInputProps } from './types.js';
+
+	const defaults = defaultsFor('kit/tags-input', {
+		clearLabel: 'Clear all',
+		removeLabel: (tag: string) => `Remove ${tag}`
+	});
 
 	let {
 		value = $bindable([]),
@@ -24,8 +30,8 @@
 		sanitize = (raw: string) => raw.trim(),
 		addOnBlur = true,
 		clearable = false,
-		clearLabel = 'Clear all',
-		removeLabel = (tag: string) => `Remove ${tag}`,
+		clearLabel = defaults.clearLabel,
+		removeLabel = defaults.removeLabel,
 		required = false,
 		name,
 		form,

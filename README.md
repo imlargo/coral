@@ -224,10 +224,15 @@ Installing any of these through the registry brings what it shares along with it
 
 Nothing here is pinned to one language or region.
 
-**Configurable.** `activity-calendar`, `date-picker`, `rating-group` and `relative-time` take a
-`locale` prop, defaulting to `en-US`. Pass your own and every date, weekday and number follows it.
+**Configurable.** `activity-calendar`, `date-picker`, `number-input`, `rating-group`,
+`relative-time` and `scrub-input` take a `locale` prop, defaulting to `en-US`. Pass your own and
+every date, weekday and number follows it, including the decimal comma a number field reads.
 `formatBytes` takes one as an optional second argument, and `tree-view` takes one for its
 typeahead, following the reader's locale when it is not given.
+
+**Set once.** `setDefaults` from `lib/defaults`, called in the root layout, replaces the English
+copy and the `locale` for every component beneath it, typed per component, so a translated app does
+not repeat them at every call site. A prop passed directly still wins.
 
 **The reader's locale by default.** The helpers that format without a prop go through `Intl` on
 whatever locale the reader is actually in, not one chosen when the file was written: byte sizes

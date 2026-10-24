@@ -1,6 +1,6 @@
 /**
  * @coral/kit/file-input
- * @version 1.1.1
+ * @version 1.2.0
  */
 
 import type { Snippet } from 'svelte';
@@ -86,3 +86,10 @@ export type FileInputProps = InputProps & {
 };
 
 export type { FileRejection, RejectionReason } from './collect.js';
+
+declare module '../../lib/defaults.js' {
+	interface Defaults {
+		/** Set once for every file input, through `setDefaults`. */
+		'kit/file-input'?: Pick<FileInputProps, 'label' | 'removeLabel'>;
+	}
+}

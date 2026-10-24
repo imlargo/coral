@@ -1,7 +1,7 @@
 <script lang="ts" generics="T">
 	/**
 	 * @coral/kit/reorder-list
-	 * @version 1.0.0
+	 * @version 1.1.0
 	 */
 	import { flushSync } from 'svelte';
 	import { flip } from 'svelte/animate';
@@ -9,10 +9,15 @@
 	import GripVerticalIcon from '@lucide/svelte/icons/grip-vertical';
 	import { cn } from '#lib/utils.js';
 	import { Announcer } from '../../lib/announce.svelte.js';
+	import { defaultsFor } from '../../lib/defaults.js';
 	import LiveRegion from '../../lib/live-region.svelte';
 	import { focusRing } from '../../lib/focus.js';
 	import { keyTarget, move, targetIndex } from './reorder.js';
 	import type { HandleProps, ItemContext, ReorderListProps } from './types.js';
+
+	const defaults = defaultsFor('kit/reorder-list', {
+		handleLabel: (label: string) => `Reorder ${label}`
+	});
 
 	let {
 		items = $bindable([]),
@@ -20,7 +25,7 @@
 		getLabel = (item: T) => String(item),
 		onreorder,
 		disabled = false,
-		handleLabel = (label: string) => `Reorder ${label}`,
+		handleLabel = defaults.handleLabel,
 		instructions = 'Press Space to pick up. Use the arrow keys to move, Space to drop, Escape to cancel.',
 		grabbed = (label: string, position: number, total: number) =>
 			`${label} picked up. Position ${position} of ${total}.`,

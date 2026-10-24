@@ -1,6 +1,6 @@
 /**
  * @coral/kit/stepper
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -92,3 +92,12 @@ export type StepperNextProps = ButtonProps & {
 
 export type { StepperContext } from './context.js';
 export type { StepState } from './steps.js';
+
+declare module '../../lib/defaults.js' {
+	interface Defaults {
+		/** Set once for every stepper, through `setDefaults`. `previousLabel` is `StepperPrevious`'s `label`. */
+		'kit/stepper'?: Pick<StepperNextProps, 'nextLabel' | 'finishLabel'> & {
+			previousLabel?: StepperPreviousProps['label'];
+		};
+	}
+}

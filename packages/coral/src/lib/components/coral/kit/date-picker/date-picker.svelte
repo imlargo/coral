@@ -1,7 +1,7 @@
 <script lang="ts" generics="Type extends DatePickerType = 'single'">
 	/**
 	 * @coral/kit/date-picker
-	 * @version 1.0.0
+	 * @version 1.1.0
 	 */
 	import { tick } from 'svelte';
 	import CalendarIcon from '@lucide/svelte/icons/calendar';
@@ -11,6 +11,7 @@
 	import { RangeCalendar } from '#lib/components/ui/range-calendar/index.js';
 	import { Button } from '#lib/components/ui/button/index.js';
 	import { cn } from '#lib/utils.js';
+	import { defaultsFor } from '../../lib/defaults.js';
 	import HiddenField from '../../lib/hidden-field.svelte';
 	import { formatDay, formatDayRange, isSameDay, isSameRange } from './format.js';
 	import { activePreset, resolvePreset } from './presets.js';
@@ -23,6 +24,13 @@
 		DateValue
 	} from './types.js';
 
+	const defaults = defaultsFor('kit/date-picker', {
+		placeholder: 'Select a date...',
+		locale: 'en-US',
+		format: { dateStyle: 'medium' },
+		clearLabel: 'Clear date'
+	});
+
 	let {
 		// Undefined, not defaulted: `Type` is inferred, so a concrete `'single'` would not be
 		// assignable to whatever the caller instantiated it as. Absent means single.
@@ -31,12 +39,12 @@
 		open = $bindable(false),
 		month = $bindable(),
 		presets,
-		placeholder = 'Select a date...',
-		locale = 'en-US',
-		format = { dateStyle: 'medium' },
+		placeholder = defaults.placeholder,
+		locale = defaults.locale,
+		format = defaults.format,
 		disabled = false,
 		clearable = false,
-		clearLabel = 'Clear date',
+		clearLabel = defaults.clearLabel,
 		name,
 		endName,
 		form,

@@ -1,6 +1,6 @@
 /**
  * @coral/kit/search-input
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import type { ComponentProps } from 'svelte';
@@ -35,3 +35,10 @@ export type SearchInputProps = InputProps & {
 	/** Merged onto the bordered group around everything. */
 	groupClass?: string;
 };
+
+declare module '../../lib/defaults.js' {
+	interface Defaults {
+		/** Set once for every search input, through `setDefaults`. */
+		'kit/search-input'?: Pick<SearchInputProps, 'clearLabel'>;
+	}
+}
