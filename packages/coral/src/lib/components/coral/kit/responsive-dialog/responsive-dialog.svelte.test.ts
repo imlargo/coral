@@ -44,6 +44,32 @@ describe('which primitive it draws', () => {
 	});
 });
 
+describe('the body', () => {
+	const body = () => document.querySelector<HTMLElement>('[data-slot="responsive-dialog-body"]');
+
+	it("puts the drawer's own inset back around the body, which the dialog already pads", async () => {
+		const narrow = await render(Harness, draw({ open: true, query: NARROW }));
+		await expect.poll(body).not.toBeNull();
+		expect(getComputedStyle(body()!).paddingLeft).not.toBe('0px');
+		narrow.unmount();
+
+		await render(Harness, draw({ open: true, query: WIDE }));
+		await expect.poll(body).not.toBeNull();
+		expect(getComputedStyle(body()!).paddingLeft).toBe('0px');
+	});
+
+	it('is the part that scrolls, under a surface capped at the viewport', async () => {
+		for (const query of [WIDE, NARROW]) {
+			const view = await render(Harness, draw({ open: true, query }));
+			await expect.poll(body).not.toBeNull();
+			expect(getComputedStyle(body()!).overflowY).toBe('auto');
+			const surface = body()!.closest<HTMLElement>('[data-slot$="-content"]')!;
+			expect(getComputedStyle(surface).maxHeight).not.toBe('none');
+			view.unmount();
+		}
+	});
+});
+
 describe('opening and closing', () => {
 	it('opens from its trigger, whichever primitive it is', async () => {
 		for (const query of [WIDE, NARROW]) {

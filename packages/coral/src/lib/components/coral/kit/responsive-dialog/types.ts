@@ -39,6 +39,16 @@ export type ResponsiveDialogCloseProps = ComponentProps<typeof DialogClose>;
  */
 export type ResponsiveDialogContentProps = ComponentProps<typeof DialogContent>;
 
+/** The header, the body and the footer: a `<div>` each, under either primitive. */
 export type ResponsiveDialogSectionProps = HTMLAttributes<HTMLDivElement> & {
 	ref?: HTMLElement | null;
 };
+
+/** What a project can state once for every responsive dialog - see `lib/defaults`. */
+export type ResponsiveDialogDefaults = Partial<Pick<ResponsiveDialogProps, 'query'>>;
+
+declare module '../../lib/defaults.js' {
+	interface CoralDefaults {
+		'kit/responsive-dialog'?: ResponsiveDialogDefaults;
+	}
+}

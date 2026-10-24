@@ -4,6 +4,7 @@
 	 * @version 1.0.0
 	 */
 	import ResponsiveDialog from './responsive-dialog.svelte';
+	import ResponsiveDialogBody from './responsive-dialog-body.svelte';
 	import ResponsiveDialogClose from './responsive-dialog-close.svelte';
 	import ResponsiveDialogContent from './responsive-dialog-content.svelte';
 	import ResponsiveDialogDescription from './responsive-dialog-description.svelte';
@@ -26,7 +27,9 @@
 			<ResponsiveDialogTitle>Invite a teammate</ResponsiveDialogTitle>
 			<ResponsiveDialogDescription>They will get an email.</ResponsiveDialogDescription>
 		</ResponsiveDialogHeader>
-		<input aria-label="Email" bind:value={draft} />
+		<ResponsiveDialogBody>
+			<input aria-label="Email" bind:value={draft} />
+		</ResponsiveDialogBody>
 		<ResponsiveDialogFooter>
 			<ResponsiveDialogClose>Cancel</ResponsiveDialogClose>
 		</ResponsiveDialogFooter>

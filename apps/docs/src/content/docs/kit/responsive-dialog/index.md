@@ -23,6 +23,9 @@ then a change in two places, and crossing the breakpoint with it open closes it.
   stays too.
 - **Each surface keeps its behaviour.** The dialog traps focus and closes on Escape; the drawer drags
   to dismiss. Nothing is emulated: they are shadcn's `dialog` and `drawer`.
+- **One body for both.** `ResponsiveDialogBody` is padded like the drawer's own header and footer
+  on a phone and left to the dialog's padding on a desktop, and it is the part that scrolls when a
+  form is taller than the screen.
 
 ## Composition
 
@@ -33,18 +36,28 @@ ResponsiveDialog
     ├── ResponsiveDialogHeader
     │   ├── ResponsiveDialogTitle
     │   └── ResponsiveDialogDescription
+    ├── ResponsiveDialogBody
     └── ResponsiveDialogFooter
         └── ResponsiveDialogClose
 ```
 
-One file per piece, imported by path. Trigger and Close accept a `child` snippet exactly as the
-primitives do, since under both primitives they are the same bits-ui parts.
+One file per piece, imported by path. There is no `import * as ResponsiveDialog` namespace, because
+Coral has no barrels: each piece is its own import, as the snippet under **Import** shows. Trigger
+and Close accept a `child` snippet exactly as the primitives do, since under both primitives they
+are the same bits-ui parts.
 
-## Spacing
+## The body
 
-The dialog pads its content; the drawer pads its header and footer and leaves the body to you. That is
-the primitives' own layout and Coral does not paper over it: give the body `px-4 md:px-0`, as the
-demo does, or whatever matches your `query`.
+<Preview name="kit/responsive-dialog/form" />
+
+The dialog pads everything inside it; the drawer pads its header and footer and leaves the body to
+whoever wrote it, so the same form sits flush against the screen edges on a phone and looks right
+on a desktop, and the difference only ever shows on the device the author did not test on. Put the
+fields in `ResponsiveDialogBody` and both surfaces read the same: it carries the drawer's own inset
+where the drawer needs it and nothing where the dialog already pads.
+
+It is also the part that scrolls. Both surfaces are capped at the viewport, so a form taller than the
+screen scrolls inside the body while the title and the buttons stay where the reader can see them.
 
 ## Import
 
@@ -68,7 +81,8 @@ demo does, or whatever matches your `query`.
 | `children` | `Snippet` | -                    | The trigger and the content.                         |
 
 `ResponsiveDialogContent` accepts the dialog content's props; `showCloseButton` applies to the dialog
-only. The trigger, title, description and close forward everything to their primitive.
+only. The trigger, title, description and close forward everything to their primitive, and the
+header, body and footer are each a `<div>` that takes `class` and `ref`.
 
 ## Accessibility
 
