@@ -1,6 +1,6 @@
 /**
  * @coral/kit/confirm-dialog
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -33,6 +33,20 @@ function open(extra: Partial<ConfirmDialogProps> = {}) {
 }
 
 describe('confirming', () => {
+	it('holds the confirm button back while the body is incomplete, and cancel never', async () => {
+		const onconfirm = vi.fn();
+		const props = open({ confirmDisabled: true, onconfirm });
+		await render(ConfirmDialog, props);
+
+		await expect.poll(() => button('Delete')?.disabled).toBe(true);
+		expect(button('Cancel')?.disabled).toBe(false);
+
+		props.confirmDisabled = false;
+		await expect.poll(() => button('Delete')?.disabled).toBe(false);
+		await userEvent.click(button('Delete')!);
+		expect(onconfirm).toHaveBeenCalledTimes(1);
+	});
+
 	it('names the question and closes when there is nothing to wait for', async () => {
 		const props = open();
 		await render(ConfirmDialog, props);

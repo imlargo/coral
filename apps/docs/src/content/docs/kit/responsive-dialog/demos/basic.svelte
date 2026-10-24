@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ResponsiveDialog from '#lib/components/coral/kit/responsive-dialog/responsive-dialog.svelte';
+	import ResponsiveDialogBody from '#lib/components/coral/kit/responsive-dialog/responsive-dialog-body.svelte';
 	import ResponsiveDialogClose from '#lib/components/coral/kit/responsive-dialog/responsive-dialog-close.svelte';
 	import ResponsiveDialogContent from '#lib/components/coral/kit/responsive-dialog/responsive-dialog-content.svelte';
 	import ResponsiveDialogDescription from '#lib/components/coral/kit/responsive-dialog/responsive-dialog-description.svelte';
@@ -28,10 +29,10 @@
 			</ResponsiveDialogDescription>
 		</ResponsiveDialogHeader>
 
-		<div class="flex flex-col gap-2 px-4 md:px-0">
+		<ResponsiveDialogBody class="flex flex-col gap-2">
 			<Label for="invite-email">Email</Label>
 			<Input id="invite-email" type="email" bind:value={email} placeholder="name@company.com" />
-		</div>
+		</ResponsiveDialogBody>
 
 		<ResponsiveDialogFooter>
 			<ResponsiveDialogClose class={buttonVariants({ variant: 'outline' })}>

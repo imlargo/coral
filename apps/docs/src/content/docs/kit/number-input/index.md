@@ -21,8 +21,8 @@ that hole by taking typing away, which turns a jump from `1` to `40` into thirty
 - **The field never lies.** Clamping `150` to `10` also rewrites what is on screen, so the number you
   read is the number that is stored.
 - **The arithmetic stays exact.** Stepping by `0.1` gives `0.3`, not `0.30000000000000004`.
-- **Scrolling does not edit.** A focused `type="number"` steps on wheel in Chromium; a page scrolled
-  past one would change silently.
+- **Decimals the way the reader writes them.** `1,5` is one and a half in `de-DE` and `es-CO`, and
+  the field shows it back with the same comma. A `type="number"` field drops it.
 - **Empty means empty.** Clearing the field gives `undefined`, not the minimum.
 
 Everything else is the primitive's: `input-group` puts the steppers inside the field, so it reads as
@@ -50,6 +50,34 @@ and it quietly makes a temperature or a balance field impossible to express.
 `step` sets the precision as well as the jump, so `step={0.1}` rounds to one decimal. When the two
 genuinely differ (money that steps by whole units but stores cents), set `decimals` on its own.
 
+## Locale
+
+<Preview name="kit/number-input/locale" />
+
+Most of Europe and Latin America write a decimal with a comma, and a `type="number"` field reports
+`1,5` as empty, so the value is dropped on commit and the reader watches their field clear itself.
+This component is a text field that reads and writes the number in `locale`: `1,5` is one and a
+half there, `1.234,5` is a thousand and change, and the field shows the number back with the
+separators that locale uses. The rules are the locale's own, so in `de-DE` a typed `1.5` is fifteen,
+exactly as `1.500` is fifteen hundred.
+
+`locale` defaults to `en-US`, or to whatever the project stated with
+[`setCoralDefaults`](/docs/conventions#project-wide-defaults).
+
+## Keyboard
+
+| Key                     | Does                                     |
+| ----------------------- | ---------------------------------------- |
+| `↑` / `↓`               | Step by `step`                           |
+| `Shift` + `↑` / `↓`     | Step by `largeStep`                      |
+| `Page Up` / `Page Down` | Step by `largeStep`                      |
+| `Home` / `End`          | Jump to `min` / `max`, when bounded      |
+| `Escape`                | Put back the value the field already had |
+
+The same keys as [scrub input](/docs/kit/scrub-input), from the same shared handler, so a number
+behaves the same whichever field holds it. `Escape` is only taken while there is an edit to put
+back; otherwise it goes on to the dialog around the field.
+
 ## Empty, readonly, disabled
 
 <Preview name="kit/number-input/states" />
@@ -76,7 +104,9 @@ Everything the shadcn input accepts stays available: `placeholder`, `disabled`, 
 | `min`            | `number`                               | -           | Lowest allowed. Omitted means unbounded, negatives included. |
 | `max`            | `number`                               | -           | Highest allowed. Omitted means unbounded.                    |
 | `step`           | `number`                               | `1`         | Jump per press. Also sets the rounding precision.            |
+| `largeStep`      | `number`                               | `step * 10` | Jump for the paging keys, and the arrows with Shift.         |
 | `decimals`       | `number`                               | from `step` | Rounding precision, when it differs from the step.           |
+| `locale`         | `string`                               | `en-US`     | How the number is typed and shown.                           |
 | `onchange`       | `(value: number \| undefined) => void` | -           | Fired on a stepper or a committed edit. Never on mount.      |
 | `decrementLabel` | `string`                               | `Decrease`  | Accessible label for the `−` button.                         |
 | `incrementLabel` | `string`                               | `Increase`  | Accessible label for the `+` button.                         |
@@ -85,17 +115,16 @@ Everything the shadcn input accepts stays available: `placeholder`, `disabled`, 
 
 ## Accessibility
 
-The field stays a native `input type="number"`, so it keeps what the browser already gives: arrow
-keys step, mobile shows a numeric keypad, and assistive tech reads it as a spinbutton with its
-`min`, `max` and `step`. The two stepper buttons carry labels and are `type="button"`, so neither
-submits a surrounding form.
+The field is a text input with `role="spinbutton"`, which is what a number field is to assistive
+tech: it announces its value and its bounds through `aria-valuenow`, `aria-valuemin` and
+`aria-valuemax`, and `aria-valuetext` carries the number as the locale writes it. `inputmode` asks a
+phone for a numeric keypad, with a decimal key when the step needs one. The two stepper buttons
+carry labels and are `type="button"`, so neither submits a surrounding form.
 
-The native spinner arrows are hidden, because the component draws its own and two sets of steppers on
-one field is one too many.
-
-> **One thing to know about locale.** `type="number"` parses through the browser, which in a
-> Spanish locale may accept `1,5` and in another only `1.5`. If a field must accept a decimal comma
-> everywhere, that is a text field with its own parsing, not this component.
+What the native number type gave for free - the role, the keypad, the arrow keys - is put back by
+hand so that it can give the locale back too. Nothing else is lost: a text field does not step on
+the mouse wheel, so the Chromium quirk that edited a focused number field under a scrolling page
+has nothing to act on.
 
 ## lib/number
 
@@ -113,5 +142,6 @@ stepValue({ value: undefined, delta: 1, min: 5, decimals: 0 }); // 5
 ```
 
 They live in `lib/number.ts` rather than beside the component because [scrub input](/docs/kit/scrub-input)
-steps its value the same way, and the two cannot be allowed to drift. Both compose them through
-`lib/number-field.ts`, which also holds the commit, the typed-value read and the wheel handling.
+steps its value the same way, and the two cannot be allowed to drift. `parse` and `format` read and
+write a number in a locale, and both fields compose everything through `lib/number-field.ts`, which
+also holds the commit, the typed-value read and the keyboard.

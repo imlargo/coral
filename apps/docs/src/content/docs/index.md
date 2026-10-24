@@ -46,7 +46,7 @@ There is no mandatory form: the interface is determined by the nature of the com
 badge, skeleton, empty state.
 
 **Composition** with sub-components and shared state through context when the parts vary
-independently and there is no real "normal case": combobox, select, data table, complex dialogs.
+independently and there is no real "normal case": responsive dialog, stepper, form dialog.
 
 **When in doubt, composition.** A flat API that falls short forces a rewrite of the component and
 breaks everyone already using it. A verbose composition only asks for a shortcut on top, and

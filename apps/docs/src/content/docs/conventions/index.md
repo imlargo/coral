@@ -130,6 +130,9 @@ single plain line; a `*Title` and `*Description` are a heading and the line bene
 that report a change to a root that is an element are named `on<thing>change`, because a `<div>` has
 an `onchange` of its own and the two would merge into a handler nobody can satisfy.
 
+**Locale.** A `locale` prop defaults to `en-US`, never to the reader's own, so the server and the
+browser render the same text. A project states its locale once, below, and every component follows.
+
 **Being the reader's first Escape.** A field that has something to undo - a search term, a rename,
 a number being typed - takes the first Escape and stops it there. With nothing to undo, it lets the
 key through, so a dialog around it still closes.
@@ -149,6 +152,45 @@ Where a primitive already draws the thing, Coral uses it.
 **Tests.** Behaviour is tested in a real browser, next to the component. Every component is also run
 through axe in `a11y.svelte.test.ts`, in its default state and in each state that changes its
 markup.
+
+## Project-wide defaults
+
+A product whose UI is not in English would otherwise pass the same `placeholder`, `cancelLabel` and
+`locale` at every call site, and one forgotten prop leaves English in the middle of a translated
+screen. `lib/defaults` is where a project says it once:
+
+```svelte
+<!-- +layout.svelte, or App.svelte -->
+<script lang="ts">
+	import { setCoralDefaults } from '#lib/components/coral/lib/defaults.js';
+
+	setCoralDefaults({
+		locale: 'es-CO',
+		'kit/select': { placeholder: 'Selecciona una opción...' },
+		'kit/combobox': { placeholder: 'Selecciona una opción...', emptyMessage: 'Sin resultados.' },
+		'kit/confirm-dialog': { cancelLabel: 'Cancelar', confirmLabel: 'Continuar' },
+		'kit/relative-time': { cutoff: 30 * 24 * 60 * 60 * 1000 }
+	});
+</script>
+```
+
+Three rules keep it predictable:
+
+- **Keyed by component, typed by what is installed.** Each component declares which of its props
+  can be set this way - its copy, its `locale`, and the values that are project policy rather than
+  per-field choices, such as `relative-time`'s `cutoff` or `date-picker`'s `format` - and adds that
+  entry to `CoralDefaults` from its own `types.ts`. A prop that is not on the component cannot be
+  set as a default for it, and a component that is not installed has no entry.
+- **A call site still wins.** A prop passed to one component applies to that one, whatever the
+  project stated. The defaults only fill what was left out.
+- **Read when a component is created.** It goes through Svelte context, so it can be set again for
+  one subtree - a section in another language - and it is not re-read on the fly. A language
+  switch keys the subtree on the locale, which re-creates the components, and is what such a
+  switch does anyway.
+
+`setCoralDefaults` is a plain function that has to run during a component's initialization, which
+is where a root layout's script runs. The English defaults stay in the source, so a component
+rendered outside any `setCoralDefaults` reads exactly as it did before.
 
 ## Types
 

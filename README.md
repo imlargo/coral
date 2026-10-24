@@ -21,12 +21,15 @@
   imports rewritten to your aliases. From then it's your code, versioned like the rest of your
   codebase, with no npm dependency to fall behind.
 - **Extraction only, never speculation:** a component enters only after the same pattern has been
-  written twice in real production work. Twenty-eight components exist, not eighty.
+  written twice in real production work. Thirty-four components exist, not eighty.
 - **No appearance of its own:** no colors, shadows, radii or typography, only layout utilities.
   Everything visual comes from _your_ shadcn theme.
 - Every component's version and required shadcn primitives are recorded in
   [`coral.json`](./packages/coral/src/lib/components/coral/coral.json), and follow semver
   independently.
+- **Your language, stated once.** Every string a reader sees is a prop with an English default, and
+  a project in another language sets its copy and its locale once with `setCoralDefaults`; every
+  component under it follows.
 
 ## Behavior
 
@@ -36,12 +39,14 @@ whether you need it than a list of props would:
 | Case                                 | Hand-rolled with shadcn-svelte / bits-ui                | Coral                                                     |
 | ------------------------------------ | ------------------------------------------------------- | --------------------------------------------------------- |
 | Combobox search                      | exact substring, case- and accent-sensitive             | folds accents - `acai` finds `Açaí`                       |
+| Combobox with server-side search     | the selected label vanishes once results drop it        | remembers what it showed as selected                      |
 | Combobox, after selecting an option  | focus is lost to the body                               | returns to the trigger                                    |
 | Confirm dialog when the action fails | you wire the re-open and the pending state per instance | stays open, blocks double-submit, one prop                |
 | Date range picker                    | closes on the first click, mid-range                    | closes only once the range is complete                    |
 | Avatar with a broken image URL       | a blank box, or fallback logic written per instance     | initials fallback; the accessible name never doubles      |
 | A file dropped on the input twice    | added twice, unless you de-dupe yourself                | de-duplicated                                             |
-| Number input via the mouse wheel     | can silently push the value out of bounds               | bounds hold from steppers, typing and the wheel alike     |
+| Number input, `1,5` typed in `de-DE` | dropped: `type="number"` reads it as empty              | one and a half, shown back with the comma                 |
+| A select whose options are loading   | an empty, clickable list                                | says it is loading, in the list and out loud              |
 | A select's bound value               | bits-ui's own string keys                               | keeps the type you gave it - a number, a union, an object |
 | Tags typed vs. pasted                | two code paths, two rules to keep in sync               | one delimiter rule for both                               |
 | Escape in a search inside a dialog   | closes the dialog along with the term                   | first Escape clears the term, the second is the dialog's  |
@@ -50,6 +55,8 @@ whether you need it than a list of props would:
 | Reordering a list on a phone         | HTML5 drag-and-drop fires nothing on touch              | pointer events for touch, plus a full keyboard path       |
 | "5 minutes ago" on a page left open  | stale, or an interval per timestamp every second        | each label wakes only when its own text changes           |
 | Table of contents, last section      | never highlights - it cannot cross the boundary         | the end of the page activates the final heading           |
+| A deep breadcrumb trail on a phone   | wraps, or every crumb truncates to a stub               | folds the middle into a menu, keeps both ends readable    |
+| Copy in a Spanish product            | the same `placeholder` and `locale` at every call site  | stated once with `setCoralDefaults`, overridable per call |
 | ⌘K palette off a Mac                 | opens on Ctrl+K, then refuses to close on it            | the primitive's vim bindings give way to your combo       |
 
 Every row is one line of a fuller story: the full reasoning, the edge cases and a live demo are
@@ -124,7 +131,8 @@ and lose the alias and icon rewriting.
 
 ## Components
 
-Twenty-eight so far. Each links to its full API, props table and live demos:
+Thirty-two in `kit/` and two in `blocks/` so far. Each links to its full API, props table and live
+demos:
 
 - **[action-button](https://coral.imlargo.dev/docs/kit/action-button):** a button that waits on
   its own async `onclick`. One click, one request; busy without dropping keyboard focus; the same
@@ -137,6 +145,8 @@ Twenty-eight so far. Each links to its full API, props table and live demos:
 - **[avatar-stack](https://coral.imlargo.dev/docs/kit/avatar-stack):** overlapping avatars with a
   count for the rest. `max` counts circles including the count, never renders `+1`, and reads as a
   list.
+- **[breadcrumbs](https://coral.imlargo.dev/docs/kit/breadcrumbs):** a trail that fits one line at
+  any width, folding its middle into a menu, never its ends, with the current page marked as such.
 - **[combobox](https://coral.imlargo.dev/docs/kit/combobox):** a select with a search box.
   Accent-insensitive search, focus returned to the trigger, single or multiple, server-side search
   with debounce.
@@ -154,14 +164,21 @@ Twenty-eight so far. Each links to its full API, props table and live demos:
 - **[file-input](https://coral.imlargo.dev/docs/kit/file-input):** click or drop, validate, show
   what was picked. Keyboard-operable, drag-and-drop that survives child elements, de-duplicates a
   file dropped twice.
+- **[file-upload](https://coral.imlargo.dev/docs/kit/file-upload):** the files file-input picked,
+  sent a few at a time through your own handler, each with real progress, its own cancel that aborts
+  and retry that resends, and a tally at the end.
 - **[follow-scroll](https://coral.imlargo.dev/docs/kit/follow-scroll):** a scroller that stays at
   the end while output arrives, lets go the moment the reader scrolls back, and offers the way
   forward with a count of what they missed.
 - **[inline-edit](https://coral.imlargo.dev/docs/kit/inline-edit):** rename in place. Keyboard
   reachable, Enter saves, Escape cancels without closing the dialog, an async save that fails keeps
   what was typed.
+- **[lightbox](https://coral.imlargo.dev/docs/kit/lightbox):** images and videos full screen over
+  the dialog and carousel primitives: arrows from anywhere, swipe, a position that is announced, the
+  next picture loaded ahead, and focus back on the thumbnail.
 - **[number-input](https://coral.imlargo.dev/docs/kit/number-input):** bounds that hold from the
-  steppers _and_ from typing, exact decimal arithmetic, no silent wheel-scroll edits.
+  steppers _and_ from typing, exact decimal arithmetic, and `1,5` read and written the way the
+  reader's locale does.
 - **[password-input](https://coral.imlargo.dev/docs/kit/password-input):** a visibility toggle
   that keeps the caret, hides the password again on submit so password managers still work, and
   warns about Caps Lock.
@@ -193,11 +210,24 @@ Twenty-eight so far. Each links to its full API, props table and live demos:
 - **[textarea](https://coral.imlargo.dev/docs/kit/textarea):** grows with its text between a floor
   and a ceiling in lines, without the page jumping, and counts characters the way `maxlength`
   counts them.
+- **[timeline](https://coral.imlargo.dev/docs/kit/timeline):** a history grouped by the reader's own
+  calendar days, "Today" and "Yesterday" from `Intl`, a list with a `<time>` on every event, and
+  older events loaded below with the count announced.
 - **[toc](https://coral.imlargo.dev/docs/kit/toc):** a table of contents whose highlight follows
   what has been scrolled past rather than what is on screen, so short sections and the last heading
   both work. Invents the anchors when the markup has none.
 - **[tree-view](https://coral.imlargo.dev/docs/kit/tree-view):** the WAI-ARIA tree pattern from a
-  plain array: one tab stop, the full arrow-key model, typeahead, children loaded on demand.
+  plain array: one tab stop, the full arrow-key model, typeahead, children loaded on demand, and row
+  actions that keep the model whole.
+
+And the blocks, which wire several of those for one use case:
+
+- **[form-dialog](https://coral.imlargo.dev/docs/blocks/form-dialog):** a create-or-edit dialog over
+  a draft of the record: sends once, keeps typed input until the reader lets go of it, shows the
+  failure beside the fields, and opens on the right record's values.
+- **[settings-form](https://coral.imlargo.dev/docs/blocks/settings-form):** a form over a draft of
+  saved data: a bar that appears with unsaved changes, one save at a time from the button, Enter or
+  `mod+s`, the outcome announced, and a warning before the tab closes on them.
 
 Each one's version, title and the shadcn primitives it needs are recorded in
 [`coral.json`](./packages/coral/src/lib/components/coral/coral.json): the manifest the registry is

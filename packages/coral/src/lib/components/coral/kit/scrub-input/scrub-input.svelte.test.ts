@@ -1,6 +1,6 @@
 /**
  * @coral/kit/scrub-input
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -8,7 +8,7 @@ import { userEvent } from 'vitest/browser';
 import { describe, expect, it, vi } from 'vitest';
 import ScrubInput from './scrub-input.svelte';
 
-const field = () => document.querySelector<HTMLInputElement>('input[type="number"]')!;
+const field = () => document.querySelector<HTMLInputElement>('input[role="spinbutton"]')!;
 const handle = () => document.querySelector<HTMLLabelElement>('label')!;
 
 /**

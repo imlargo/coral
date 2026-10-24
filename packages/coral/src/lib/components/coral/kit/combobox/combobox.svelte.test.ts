@@ -1,6 +1,6 @@
 /**
  * @coral/kit/combobox
- * @version 1.0.1
+ * @version 1.1.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -24,7 +24,11 @@ const draw = (props: Record<string, unknown>) =>
 
 const trigger = () => document.querySelector<HTMLButtonElement>('button[role="combobox"]')!;
 const search = () => document.querySelector<HTMLInputElement>('[data-slot="command-input"]')!;
-const options = () => Array.from(document.querySelectorAll<HTMLElement>('[role="option"]'));
+const options = () =>
+	Array.from(
+		document.querySelectorAll<HTMLElement>('[role="option"]:not([data-slot="coral-list-status"])')
+	);
+const status = () => document.querySelector<HTMLElement>('[data-slot="coral-list-status"]');
 const labels = () => options().map((option) => option.textContent?.replace(/\s+/g, ' ').trim());
 const option = (label: string) => options().find((entry) => entry.textContent?.includes(label))!;
 const button = (label: string) =>
@@ -123,25 +127,22 @@ describe('searching', () => {
 	it('says so when nothing matches, in the page and to a screen reader', async () => {
 		await draw({ options: fruits, open: true, emptyMessage: 'Nothing like that.' });
 		await userEvent.fill(search(), 'zzz');
-		await expect.poll(() => document.body.textContent).toContain('Nothing like that.');
-		expect(document.querySelector('[role="status"]')?.textContent?.trim()).toBe(
+		await expect.poll(() => status()?.textContent?.trim()).toBe('Nothing like that.');
+		expect(document.querySelector('span[role="status"]')?.textContent?.trim()).toBe(
 			'Nothing like that.'
 		);
-		// An empty listbox is invalid ARIA, so it is hidden rather than left holding only the message.
-		expect(document.querySelector<HTMLElement>('[role="listbox"]')?.hidden).toBe(true);
+		// A listbox may only own options, so the message is one nothing can pick.
+		expect(status()?.closest('[role="listbox"]')).not.toBeNull();
+		expect(status()?.getAttribute('aria-disabled')).toBe('true');
 	});
 
-	it('brings the list back when the search matches again', async () => {
+	it('drops the message when the search matches again', async () => {
 		await draw({ options: fruits, open: true });
 		await userEvent.fill(search(), 'zzz');
-		await expect
-			.poll(() => document.querySelector<HTMLElement>('[role="listbox"]')?.hidden)
-			.toBe(true);
+		await expect.poll(() => status()).not.toBeNull();
 		await userEvent.fill(search(), 'gua');
-		await expect
-			.poll(() => document.querySelector<HTMLElement>('[role="listbox"]')?.hidden)
-			.toBe(false);
-		expect(document.querySelector('[role="status"]')?.textContent?.trim()).toBe('');
+		await expect.poll(() => status()).toBeNull();
+		expect(document.querySelector('span[role="status"]')?.textContent?.trim()).toBe('');
 	});
 
 	it('takes over matching with a filter of its own', async () => {
@@ -223,11 +224,63 @@ describe('searching', () => {
 		expect(onOpenChangeComplete).toHaveBeenLastCalledWith(false);
 	});
 
-	it('shows a loading row in place of the list', async () => {
-		await draw({ options: fruits, open: true, loading: true });
-		expect(options()).toHaveLength(0);
-		expect(document.querySelector('[role="progressbar"]')).not.toBeNull();
-		expect(document.querySelector<HTMLElement>('[role="listbox"]')?.hidden).toBe(true);
+	it('keeps the options usable while more are loading, and says so', async () => {
+		await draw({ options: fruits, open: true, loading: true, loadingMessage: 'Fetching...' });
+		expect(options()).toHaveLength(4);
+		expect(status()?.textContent?.trim()).toBe('Fetching...');
+		expect(document.querySelector('span[role="status"]')?.textContent?.trim()).toBe('Fetching...');
+	});
+
+	it('keeps the selected label when the results stop including it', async () => {
+		const props = $state({
+			options: fruits as Option<number>[],
+			value: 2 as number | undefined,
+			shouldFilter: false
+		});
+		await draw(props);
+		expect(trigger().textContent?.trim()).toBe('Guava');
+
+		// The server answered a new term: Guava is gone from the list, not from the selection.
+		props.options = [fruits[3]];
+		await new Promise((resolve) => setTimeout(resolve, 30));
+		expect(trigger().textContent?.trim()).toBe('Guava');
+	});
+
+	it('reports a remembered option on clear, in multiple mode', async () => {
+		const onchange = vi.fn();
+		const footer = createRawSnippet<[{ clear: () => void }]>((context) => ({
+			render: () => '<button data-none>None</button>',
+			setup: (node) => node.addEventListener('click', () => context().clear())
+		}));
+		const props = $state({
+			options: fruits as Option<number>[],
+			type: 'multiple' as const,
+			value: [2, 4] as number[],
+			open: true,
+			shouldFilter: false,
+			footer,
+			onchange
+		});
+		await draw(props);
+		props.options = [fruits[3]];
+		await new Promise((resolve) => setTimeout(resolve, 30));
+
+		await userEvent.click(option('Mango'));
+		await expect.poll(() => props.value).toEqual([2]);
+		expect(onchange.mock.lastCall![0].map((entry: Option<number>) => entry.label)).toEqual([
+			'Guava'
+		]);
+	});
+});
+
+describe('placing the list', () => {
+	it('lines the list up with the trigger edge it is told to', async () => {
+		await draw({ options: fruits, open: true, align: 'end' });
+		await expect
+			.poll(() =>
+				document.querySelector('[data-slot="popover-content"]')?.getAttribute('data-align')
+			)
+			.toBe('end');
 	});
 });
 

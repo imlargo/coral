@@ -1,10 +1,10 @@
 /**
  * @coral/kit/scrub-input
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import { describe, expect, it } from 'vitest';
-import { amountFor, consume } from './scrub.js';
+import { consume } from './scrub.js';
 
 describe('consume', () => {
 	it('spends whole steps and keeps the change', () => {
@@ -47,16 +47,5 @@ describe('consume', () => {
 
 	it('survives a non-finite distance', () => {
 		expect(consume(Number.NaN, 4)).toEqual({ steps: 0, rest: 0 });
-	});
-});
-
-describe('amountFor', () => {
-	it('is the step, or the large one while the coarse modifier is held', () => {
-		expect(amountFor(1, 10, false)).toBe(1);
-		expect(amountFor(1, 10, true)).toBe(10);
-	});
-
-	it('carries fractional steps through untouched', () => {
-		expect(amountFor(0.1, 1, false)).toBe(0.1);
 	});
 });

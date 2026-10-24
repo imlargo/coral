@@ -1,6 +1,6 @@
 /**
  * @coral/kit/responsive-dialog
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -41,6 +41,32 @@ describe('which primitive it draws', () => {
 	it('draws the drawer on the server, until the page can measure, when told to assume so', async () => {
 		await render(Harness, draw({ open: true, query: NARROW, fallback: true }));
 		await expect.poll(drawer).not.toBeNull();
+	});
+});
+
+describe('the body', () => {
+	const body = () => document.querySelector<HTMLElement>('[data-slot="responsive-dialog-body"]');
+
+	it("puts the drawer's own inset back around the body, which the dialog already pads", async () => {
+		const narrow = await render(Harness, draw({ open: true, query: NARROW }));
+		await expect.poll(body).not.toBeNull();
+		expect(getComputedStyle(body()!).paddingLeft).not.toBe('0px');
+		narrow.unmount();
+
+		await render(Harness, draw({ open: true, query: WIDE }));
+		await expect.poll(body).not.toBeNull();
+		expect(getComputedStyle(body()!).paddingLeft).toBe('0px');
+	});
+
+	it('is the part that scrolls, under a surface capped at the viewport', async () => {
+		for (const query of [WIDE, NARROW]) {
+			const view = await render(Harness, draw({ open: true, query }));
+			await expect.poll(body).not.toBeNull();
+			expect(getComputedStyle(body()!).overflowY).toBe('auto');
+			const surface = body()!.closest<HTMLElement>('[data-slot$="-content"]')!;
+			expect(getComputedStyle(surface).maxHeight).not.toBe('none');
+			view.unmount();
+		}
 	});
 });
 
