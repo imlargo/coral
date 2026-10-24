@@ -114,6 +114,12 @@
 			"version": "1.1.0",
 			"shadcn": ["avatar"]
 		},
+		"kit/breadcrumbs": {
+			"title": "Breadcrumbs",
+			"description": "A trail that fits on one line at any width, folding its middle into a menu, with the current page marked as the current page.",
+			"version": "1.0.0",
+			"shadcn": ["breadcrumb", "dropdown-menu"]
+		},
 		"kit/combobox": {
 			"title": "Combobox",
 			"description": "A select with a search box, filtering the way accented text is actually typed.",
@@ -166,6 +172,12 @@
 			"description": "Text that turns into a field in place - rename a project, a column, a file.",
 			"version": "1.1.0",
 			"shadcn": ["input-group", "spinner"]
+		},
+		"kit/lightbox": {
+			"title": "Lightbox",
+			"description": "Images and videos full screen, moved through by keyboard, touch or pointer, with the reader told where they are and returned to the thumbnail they left.",
+			"version": "1.0.0",
+			"shadcn": ["carousel", "dialog"]
 		},
 		"kit/number-input": {
 			"title": "Number input",
@@ -257,6 +269,12 @@
 			"description": "A textarea that grows with its text, up to a line count you set, with a counter that agrees with the limit.",
 			"version": "1.1.0",
 			"shadcn": ["textarea"]
+		},
+		"kit/timeline": {
+			"title": "Timeline",
+			"description": "Events grouped by the reader's own calendar days, read as a list with a time on every one, and grown with older ones without moving what was read.",
+			"version": "1.0.0",
+			"shadcn": ["empty"]
 		},
 		"kit/toc": {
 			"title": "Table of contents",

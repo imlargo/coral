@@ -23,6 +23,7 @@ import ActionButton from './components/coral/kit/action-button/action-button.sve
 import ActivityCalendar from './components/coral/kit/activity-calendar/activity-calendar.svelte';
 import Avatar from './components/coral/kit/avatar/avatar.svelte';
 import AvatarStack from './components/coral/kit/avatar-stack/avatar-stack.svelte';
+import Breadcrumbs from './components/coral/kit/breadcrumbs/breadcrumbs.svelte';
 import Combobox from './components/coral/kit/combobox/combobox.svelte';
 import CommandPalette from './components/coral/kit/command-palette/command-palette.svelte';
 import ConfirmDialog from './components/coral/kit/confirm-dialog/confirm-dialog.svelte';
@@ -31,6 +32,7 @@ import DatePicker from './components/coral/kit/date-picker/date-picker.svelte';
 import FileInput from './components/coral/kit/file-input/file-input.svelte';
 import FollowScroll from './components/coral/kit/follow-scroll/follow-scroll.svelte';
 import InlineEdit from './components/coral/kit/inline-edit/inline-edit.svelte';
+import Lightbox from './components/coral/kit/lightbox/lightbox.svelte';
 import NumberInput from './components/coral/kit/number-input/number-input.svelte';
 import PasswordInput from './components/coral/kit/password-input/password-input.svelte';
 import RatingGroup from './components/coral/kit/rating-group/rating-group.svelte';
@@ -44,6 +46,7 @@ import ShowMore from './components/coral/kit/show-more/show-more.svelte';
 import StepperHarness from './components/coral/kit/stepper/stepper-harness.test.svelte';
 import TagsInput from './components/coral/kit/tags-input/tags-input.svelte';
 import Textarea from './components/coral/kit/textarea/textarea.svelte';
+import Timeline from './components/coral/kit/timeline/timeline.svelte';
 import Toc from './components/coral/kit/toc/toc.svelte';
 import TreeView from './components/coral/kit/tree-view/tree-view.svelte';
 
@@ -100,6 +103,31 @@ const cases: [string, () => unknown][] = [
 	],
 	['avatar', () => draw(Avatar, { name: 'Amara Diallo' })],
 	['avatar-stack', () => draw(AvatarStack, { items: people, max: 3, label: 'Team' })],
+	[
+		'breadcrumbs',
+		() =>
+			draw(Breadcrumbs, {
+				class: 'w-[600px]',
+				items: [
+					{ label: 'Projects', href: '/projects' },
+					{ label: 'api-gateway', href: '/projects/api-gateway' },
+					{ label: 'Deployments' }
+				]
+			})
+	],
+	[
+		'breadcrumbs, folded',
+		() =>
+			draw(Breadcrumbs, {
+				class: 'w-[160px]',
+				items: [
+					{ label: 'Projects', href: '/projects' },
+					{ label: 'api-gateway', href: '/projects/api-gateway' },
+					{ label: 'Environments', href: '/projects/api-gateway/environments' },
+					{ label: 'Deployments' }
+				]
+			})
+	],
 	['combobox', () => draw(Combobox, { options: fruits, 'aria-label': 'Fruit' })],
 	[
 		'combobox, multiple with a selection',
@@ -135,6 +163,18 @@ const cases: [string, () => unknown][] = [
 		'inline-edit, editing',
 		() => draw(InlineEdit, { value: 'Central Office', editing: true, 'aria-label': 'Name' })
 	],
+	[
+		'lightbox, open',
+		() =>
+			draw(Lightbox, {
+				open: true,
+				index: 0,
+				items: [
+					{ src: 'data:,', alt: 'Dashboard' },
+					{ src: 'data:,', alt: 'Settings' }
+				]
+			})
+	],
 	['number-input', () => draw(NumberInput, { value: 3, 'aria-label': 'Seats' })],
 	['password-input', () => draw(PasswordInput, { 'aria-label': 'Password' })],
 	['rating-group', () => draw(RatingGroup, { value: 3, label: undefined, 'aria-label': 'Rating' })],
@@ -161,6 +201,20 @@ const cases: [string, () => unknown][] = [
 		() => draw(TagsInput, { value: ['a', 'b'], 'aria-label': 'Tags', clearable: true })
 	],
 	['textarea', () => draw(Textarea, { 'aria-label': 'Notes', maxLength: 100, showCount: true })],
+	[
+		'timeline',
+		() =>
+			draw(Timeline, {
+				items: [{ at: '2026-10-24T10:00:00Z' }, { at: '2026-10-23T10:00:00Z' }],
+				getDate: (event: { at: string }) => event.at,
+				hasMore: true,
+				item: html('<span>Deployed</span>')
+			})
+	],
+	[
+		'timeline, empty',
+		() => draw(Timeline, { items: [], getDate: () => 0, item: html('<span>x</span>') })
+	],
 	[
 		'toc',
 		() =>
