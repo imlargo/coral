@@ -76,6 +76,13 @@ Anything between the description and the buttons: what exactly is about to chang
 
 <Preview name="kit/confirm-dialog/details" />
 
+## Asking for something first
+
+`confirmDisabled` keeps the confirm button blocked while what the body asks for is missing: a
+reason, or the name of the thing being deleted, typed back. Cancel stays available throughout.
+
+<Preview name="kit/confirm-dialog/type-to-confirm" />
+
 ## Acknowledge-only
 
 `showCancel={false}` leaves a dialog that can only be agreed with. Escape still closes it, so it is
@@ -96,23 +103,24 @@ a nudge and not a trap.
 Everything the shadcn alert-dialog root accepts stays available: `open`, `onOpenChange`. On top of
 that:
 
-| Prop           | Type                       | Default     | Description                                                      |
-| -------------- | -------------------------- | ----------- | ---------------------------------------------------------------- |
-| `title`        | `string`                   | -           | The question. Required.                                          |
-| `description`  | `string`                   | -           | What changes, and whether it can be undone.                      |
-| `onconfirm`    | `() => unknown`            | -           | Runs on confirm. Return `false` or throw to keep it open.        |
-| `oncancel`     | `() => void`               | -           | Runs on cancel button or Escape. Never on confirm.               |
-| `confirmLabel` | `string`                   | `Continue`  | Label for the button that goes ahead.                            |
-| `cancelLabel`  | `string`                   | `Cancel`    | Label for the button that backs out.                             |
-| `showCancel`   | `boolean`                  | `true`      | Set `false` for acknowledge-only.                                |
-| `variant`      | `ButtonVariant`            | `'default'` | Confirm button variant. `destructive` for anything irreversible. |
-| `onerror`      | `(error: unknown) => void` | -           | What `onconfirm` threw. It stays open either way.                |
-| `pending`      | `boolean`                  | -           | Drive the busy state yourself. Otherwise it tracks `onconfirm`.  |
-| `open`         | `boolean`                  | `false`     | Bindable.                                                        |
-| `size`         | `'default'` \| `'sm'`      | `'default'` | Forwarded to the content.                                        |
-| `class`        | `string`                   | -           | Merged onto the content.                                         |
-| `trigger`      | `Snippet<[{ props }]>`     | -           | The element that opens it.                                       |
-| `children`     | `Snippet`                  | -           | Extra content between description and buttons.                   |
+| Prop              | Type                       | Default     | Description                                                      |
+| ----------------- | -------------------------- | ----------- | ---------------------------------------------------------------- |
+| `title`           | `string`                   | -           | The question. Required.                                          |
+| `description`     | `string`                   | -           | What changes, and whether it can be undone.                      |
+| `onconfirm`       | `() => unknown`            | -           | Runs on confirm. Return `false` or throw to keep it open.        |
+| `oncancel`        | `() => void`               | -           | Runs on cancel button or Escape. Never on confirm.               |
+| `confirmLabel`    | `string`                   | `Continue`  | Label for the button that goes ahead.                            |
+| `cancelLabel`     | `string`                   | `Cancel`    | Label for the button that backs out.                             |
+| `showCancel`      | `boolean`                  | `true`      | Set `false` for acknowledge-only.                                |
+| `variant`         | `ButtonVariant`            | `'default'` | Confirm button variant. `destructive` for anything irreversible. |
+| `onerror`         | `(error: unknown) => void` | -           | What `onconfirm` threw. It stays open either way.                |
+| `pending`         | `boolean`                  | -           | Drive the busy state yourself. Otherwise it tracks `onconfirm`.  |
+| `confirmDisabled` | `boolean`                  | `false`     | Blocks confirm while the body is incomplete. Cancel stays.       |
+| `open`            | `boolean`                  | `false`     | Bindable.                                                        |
+| `size`            | `'default'` \| `'sm'`      | `'default'` | Forwarded to the content.                                        |
+| `class`           | `string`                   | -           | Merged onto the content.                                         |
+| `trigger`         | `Snippet<[{ props }]>`     | -           | The element that opens it.                                       |
+| `children`        | `Snippet`                  | -           | Extra content between description and buttons.                   |
 
 ## Accessibility
 

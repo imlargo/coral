@@ -1,6 +1,6 @@
 /**
  * @coral/kit/confirm-dialog
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -49,6 +49,11 @@ export type ConfirmDialogProps = RootProps & {
 	 * dialog tracks its own `onconfirm`.
 	 */
 	pending?: boolean;
+	/**
+	 * Blocks the confirm button while what `children` asks for is missing - a reason, the name typed
+	 * back. Cancel stays available.
+	 */
+	confirmDisabled?: boolean;
 	/** Forwarded to the shadcn content. */
 	size?: 'default' | 'sm';
 	/** Merged onto the content. */
@@ -61,3 +66,10 @@ export type ConfirmDialogProps = RootProps & {
 	/** Extra content between the description and the buttons - a list of what will be affected. */
 	children?: Snippet;
 };
+
+declare module '../../lib/defaults.js' {
+	interface Defaults {
+		/** Set once for every confirm dialog, through `setDefaults`. */
+		'kit/confirm-dialog'?: Pick<ConfirmDialogProps, 'confirmLabel' | 'cancelLabel'>;
+	}
+}

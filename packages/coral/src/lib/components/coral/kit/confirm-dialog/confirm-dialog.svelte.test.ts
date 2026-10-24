@@ -1,6 +1,6 @@
 /**
  * @coral/kit/confirm-dialog
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -102,6 +102,22 @@ describe('confirming', () => {
 
 		await userEvent.click(button('Delete')!);
 		await expect.poll(() => props.open).toBe(false);
+	});
+});
+
+describe('while its content is incomplete', () => {
+	it('keeps confirm blocked until told otherwise, and cancel available throughout', async () => {
+		const onconfirm = vi.fn();
+		const props = open({ onconfirm, confirmDisabled: true });
+		await render(ConfirmDialog, props);
+
+		expect(button('Delete')?.disabled).toBe(true);
+		expect(button('Cancel')?.disabled).toBe(false);
+
+		props.confirmDisabled = false;
+		await expect.poll(() => button('Delete')?.disabled).toBe(false);
+		await userEvent.click(button('Delete')!);
+		expect(onconfirm).toHaveBeenCalledTimes(1);
 	});
 });
 
