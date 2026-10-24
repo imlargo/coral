@@ -68,11 +68,24 @@ Everything a `<div>` accepts stays available on the root. On top of that:
 | `locale`           | `string`                       | -       | Typeahead's case- and accent-insensitive matching. |
 | `toggleLabel`      | `(node, expanded) => string`   | -       | Tooltip on the chevron.                            |
 | `class`            | `string`                       | -       | Merged onto the root. `[--coral-indent:1.5rem]`.   |
-| `rowClass`         | `string`                       | -       | Merged onto every row.                             |
+| `rowClass`         | `string`                       | -       | Merged onto every row. Padding adds to the indent. |
 | `node`             | `Snippet<[NodeContext<T>]>`    | -       | Replaces the row body.                             |
 | `icon`             | `Snippet<[NodeContext<T>]>`    | -       | Replaces the chevron.                              |
 
 Rows expose `data-state="open|closed"`, `data-selected` and `data-disabled` for styling.
+
+## Acting on a node
+
+Rename, add a child, delete: put those controls outside the tree, acting on `selected`, in a toolbar
+above it or a menu beside it. A tree may only hold tree items, and a button inside one becomes a
+second tab stop per row, which breaks the arrow-key model the tree depends on. Rows with their own
+controls are a grid of rows and columns, the WAI-ARIA treegrid pattern, and that is a different
+component.
+
+```svelte
+<TreeView {nodes} bind:selected label="Files" />
+<Button disabled={!selected} onclick={() => rename(selected)}>Rename</Button>
+```
 
 ## Accessibility
 

@@ -1,6 +1,6 @@
 /**
  * @coral/kit/tree-view
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -98,5 +98,15 @@ describe('structure', () => {
 			app.getAttribute('aria-posinset'),
 			app.getAttribute('aria-setsize')
 		]).toEqual(['2', '2', '2']);
+	});
+
+	it('keeps the indentation when rowClass pads the rows', async () => {
+		await render(TreeView, { nodes, label: 'Files', expanded: ['src'], rowClass: 'px-2' });
+		// The expand icon, or the space a leaf keeps for one: the first thing the indent pushes in.
+		const start = (id: string) =>
+			row(id)!.querySelector('[aria-hidden="true"]')!.getBoundingClientRect().left;
+
+		expect(parseFloat(getComputedStyle(row('lib')!).paddingInlineStart)).toBeGreaterThan(0);
+		expect(start('lib')).toBeGreaterThan(start('src'));
 	});
 });

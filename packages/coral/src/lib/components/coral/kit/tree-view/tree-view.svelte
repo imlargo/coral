@@ -1,15 +1,18 @@
 <script lang="ts" generics="T = unknown">
 	/**
 	 * @coral/kit/tree-view
-	 * @version 1.0.0
+	 * @version 1.1.0
 	 */
 	import { tick } from 'svelte';
 	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
 	import { cn } from '#lib/utils.js';
+	import { defaultsFor } from '../../lib/defaults.js';
 	import { focusRingInset } from '../../lib/focus.js';
 	import { ancestorsOf, expandableSiblings, typeahead, visibleRows } from './tree.js';
 	import type { TreeRow } from './tree.js';
 	import type { NodeContext, TreeViewProps } from './types.js';
+
+	const defaults = defaultsFor('kit/tree-view', {});
 
 	let {
 		nodes,
@@ -17,9 +20,9 @@
 		selected = $bindable(),
 		onselect,
 		onexpandedchange,
-		locale,
+		locale = defaults.locale,
 		label,
-		toggleLabel,
+		toggleLabel = defaults.toggleLabel,
 		ref = $bindable(null),
 		class: className,
 		rowClass,
@@ -184,11 +187,7 @@
 			data-selected={context.selected || undefined}
 			data-disabled={row.node.disabled || undefined}
 			style:--coral-pad="calc(var(--coral-indent) * {row.level - 1})"
-			class={cn(
-				'flex cursor-default items-center gap-1 ps-(--coral-pad) select-none',
-				focusRingInset,
-				rowClass
-			)}
+			class={cn('flex cursor-default items-center select-none', focusRingInset, rowClass)}
 			onfocus={() => (focusedId = row.node.id)}
 			onkeydown={handleKeydown}
 			onclick={() => {
@@ -196,45 +195,49 @@
 				select(row);
 			}}
 		>
-			{#if row.expandable}
-				<!--
-					A mouse target only, hidden from assistive tech: from the keyboard, the arrows do what
-					this does, and a second focusable control inside a treeitem breaks the one-tab-stop
-					model the pattern depends on.
-				-->
-				<span
-					aria-hidden="true"
-					title={toggleLabel?.(row.node, row.expanded)}
-					class="flex shrink-0 cursor-pointer items-center justify-center"
-					onclick={(event) => {
-						event.stopPropagation();
-						focusedId = row.node.id;
-						toggle(row);
-					}}
-				>
-					{#if icon}
-						{@render icon(context)}
-					{:else}
-						<ChevronRightIcon
-							class={cn(
-								'size-4 transition-transform',
-								// Only one rotation at a time: both would fight, and in a right-to-left
-								// tree an open node would point sideways instead of down.
-								row.expanded ? 'rotate-90' : 'rtl:rotate-180'
-							)}
-						/>
-					{/if}
-				</span>
-			{:else}
-				<!-- Keeps leaves aligned with their expandable siblings' labels. -->
-				<span aria-hidden="true" class="size-4 shrink-0"></span>
-			{/if}
+			<!-- The indent lives here rather than on the row, so padding in `rowClass` adds to it
+			     instead of replacing it. -->
+			<div class="flex min-w-0 flex-1 items-center gap-1 ps-(--coral-pad)">
+				{#if row.expandable}
+					<!--
+						A mouse target only, hidden from assistive tech: from the keyboard, the arrows do what
+						this does, and a second focusable control inside a treeitem breaks the one-tab-stop
+						model the pattern depends on.
+					-->
+					<span
+						aria-hidden="true"
+						title={toggleLabel?.(row.node, row.expanded)}
+						class="flex shrink-0 cursor-pointer items-center justify-center"
+						onclick={(event) => {
+							event.stopPropagation();
+							focusedId = row.node.id;
+							toggle(row);
+						}}
+					>
+						{#if icon}
+							{@render icon(context)}
+						{:else}
+							<ChevronRightIcon
+								class={cn(
+									'size-4 transition-transform',
+									// Only one rotation at a time: both would fight, and in a right-to-left
+									// tree an open node would point sideways instead of down.
+									row.expanded ? 'rotate-90' : 'rtl:rotate-180'
+								)}
+							/>
+						{/if}
+					</span>
+				{:else}
+					<!-- Keeps leaves aligned with their expandable siblings' labels. -->
+					<span aria-hidden="true" class="size-4 shrink-0"></span>
+				{/if}
 
-			{#if nodeSnippet}
-				{@render nodeSnippet(context)}
-			{:else}
-				<span class="min-w-0 truncate">{row.node.label}</span>
-			{/if}
+				{#if nodeSnippet}
+					{@render nodeSnippet(context)}
+				{:else}
+					<span class="min-w-0 truncate">{row.node.label}</span>
+				{/if}
+			</div>
 		</div>
 	{/each}
 </div>
