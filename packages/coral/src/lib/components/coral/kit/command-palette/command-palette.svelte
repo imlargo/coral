@@ -195,12 +195,14 @@
 
 	<!-- A listbox may only own options and groups, so it is hidden until there is something to own. -->
 	<Command.List id={listId} class={listClass} hidden={waiting}>
-		<Command.Empty>
-			<!-- A listbox must own options; the primitive says when it is empty, and this is what it holds. -->
-			<div role="option" aria-selected="false" aria-disabled="true">
-				{#if empty}{@render empty()}{:else}{emptyMessage}{/if}
-			</div>
-		</Command.Empty>
+		{#if !waiting}
+			<Command.Empty>
+				<!-- A listbox must own options; the primitive says when it is empty, and this is what it holds. -->
+				<div role="option" aria-selected="false" aria-disabled="true">
+					{#if empty}{@render empty()}{:else}{emptyMessage}{/if}
+				</div>
+			</Command.Empty>
+		{/if}
 
 		{#each groups as entry, index (entry.label ?? index)}
 			<Command.Group heading={entry.label}>
