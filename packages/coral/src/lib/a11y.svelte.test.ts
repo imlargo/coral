@@ -31,8 +31,6 @@ import CopyButton from './components/coral/kit/copy-button/copy-button.svelte';
 import DatePicker from './components/coral/kit/date-picker/date-picker.svelte';
 import FileInput from './components/coral/kit/file-input/file-input.svelte';
 import FileUpload from './components/coral/kit/file-upload/file-upload.svelte';
-import FormDialogHarness from './components/coral/blocks/form-dialog/form-dialog-harness.test.svelte';
-import SettingsFormHarness from './components/coral/blocks/settings-form/settings-form-harness.test.svelte';
 import FollowScroll from './components/coral/kit/follow-scroll/follow-scroll.svelte';
 import InlineEdit from './components/coral/kit/inline-edit/inline-edit.svelte';
 import Lightbox from './components/coral/kit/lightbox/lightbox.svelte';
@@ -161,8 +159,6 @@ const cases: [string, () => unknown][] = [
 		'file-upload',
 		() => draw(FileUpload, { 'aria-label': 'Attachments', upload: () => Promise.resolve() })
 	],
-	['form-dialog, open', () => draw(FormDialogHarness, { open: true, onsubmit: () => {} })],
-	['settings-form', () => draw(SettingsFormHarness, { onsave: () => {} })],
 	[
 		'follow-scroll',
 		() => draw(FollowScroll, { class: 'h-24', children: html('<p>line</p><p>line</p>') })

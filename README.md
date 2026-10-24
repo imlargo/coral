@@ -131,7 +131,7 @@ and lose the alias and icon rewriting.
 
 ## Components
 
-Thirty-two in `kit/` and two in `blocks/` so far. Each links to its full API, props table and live
+Thirty-two in `kit/` so far. Each links to its full API, props table and live
 demos:
 
 - **[action-button](https://coral.imlargo.dev/docs/kit/action-button):** a button that waits on
@@ -219,15 +219,6 @@ demos:
 - **[tree-view](https://coral.imlargo.dev/docs/kit/tree-view):** the WAI-ARIA tree pattern from a
   plain array: one tab stop, the full arrow-key model, typeahead, children loaded on demand, and row
   actions that keep the model whole.
-
-And the blocks, which wire several of those for one use case:
-
-- **[form-dialog](https://coral.imlargo.dev/docs/blocks/form-dialog):** a create-or-edit dialog over
-  a draft of the record: sends once, keeps typed input until the reader lets go of it, shows the
-  failure beside the fields, and opens on the right record's values.
-- **[settings-form](https://coral.imlargo.dev/docs/blocks/settings-form):** a form over a draft of
-  saved data: a bar that appears with unsaved changes, one save at a time from the button, Enter or
-  `mod+s`, the outcome announced, and a warning before the tab closes on them.
 
 Each one's version, title and the shadcn primitives it needs are recorded in
 [`coral.json`](./packages/coral/src/lib/components/coral/coral.json): the manifest the registry is
