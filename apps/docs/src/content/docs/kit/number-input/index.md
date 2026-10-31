@@ -64,6 +64,22 @@ exactly as `1.500` is fifteen hundred.
 `locale` defaults to `en-US`, or to whatever the project stated with
 [`setCoralDefaults`](/docs/conventions#project-wide-defaults).
 
+## Currency, percent and units
+
+<Preview name="kit/number-input/format" />
+
+`format` is passed to `Intl.NumberFormat`, so the field writes `$1234.50`, `15%` or `20 GB` the way
+`locale` does, and reads it back past the symbol whether or not the reader typed it. A
+hand-rolled currency field usually does one of the two: it shows the symbol and then rejects
+`$7.25` as not a number, or it accepts `7.25` and drops the symbol for good.
+
+- **A currency keeps its cents.** The precision defaults to the digits the currency always shows,
+  two for dollars and none for yen, so a step of `1` still takes `7.25`.
+- **A percent is a fraction.** `0.15` shows as `15%`, and `15` typed into the field is fifteen
+  percent. Set `step={0.01}` for one percent per press.
+- **No grouping while editing**, for the reason the field never groups: a separator appearing under
+  the caret is one more character to delete on the next edit.
+
 ## Keyboard
 
 | Key                     | Does                                     |
@@ -107,6 +123,7 @@ Everything the shadcn input accepts stays available: `placeholder`, `disabled`, 
 | `largeStep`      | `number`                               | `step * 10` | Jump for the paging keys, and the arrows with Shift.         |
 | `decimals`       | `number`                               | from `step` | Rounding precision, when it differs from the step.           |
 | `locale`         | `string`                               | `en-US`     | How the number is typed and shown.                           |
+| `format`         | `Intl.NumberFormatOptions`             | -           | A currency, a percent or a unit, written and read back.      |
 | `onchange`       | `(value: number \| undefined) => void` | -           | Fired on a stepper or a committed edit. Never on mount.      |
 | `decrementLabel` | `string`                               | `Decrease`  | Accessible label for the `−` button.                         |
 | `incrementLabel` | `string`                               | `Increase`  | Accessible label for the `+` button.                         |

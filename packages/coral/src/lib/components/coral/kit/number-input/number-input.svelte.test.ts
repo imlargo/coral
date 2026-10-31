@@ -1,6 +1,6 @@
 /**
  * @coral/kit/number-input
- * @version 1.1.0
+ * @version 1.2.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -199,5 +199,43 @@ describe('the field', () => {
 
 		props.value = undefined;
 		await expect.poll(() => field().hasAttribute('aria-valuenow')).toBe(false);
+	});
+});
+
+describe('format', () => {
+	it('writes a currency with its cents, steps on whole units, and reads a typed price back', async () => {
+		const props = $state({
+			value: 12 as number | undefined,
+			format: { style: 'currency', currency: 'USD' } as Intl.NumberFormatOptions
+		});
+		await render(NumberInput, props);
+
+		expect(field().value).toBe('$12.00');
+		await userEvent.click(increase());
+		expect(props.value).toBe(13);
+
+		await userEvent.fill(field(), '$7.25');
+		await userEvent.keyboard('{Enter}');
+		field().blur();
+		await expect.poll(() => props.value).toBe(7.25);
+		expect(field().getAttribute('aria-valuetext')).toBe('$7.25');
+	});
+
+	it('holds a percent as the fraction it shows', async () => {
+		const props = $state({
+			value: 0.15 as number | undefined,
+			step: 0.01,
+			format: { style: 'percent' } as Intl.NumberFormatOptions
+		});
+		await render(NumberInput, props);
+
+		expect(field().value).toBe('15%');
+		await userEvent.click(increase());
+		expect(props.value).toBe(0.16);
+
+		await userEvent.fill(field(), '40');
+		field().blur();
+		await expect.poll(() => props.value).toBe(0.4);
+		await expect.poll(() => field().value).toBe('40%');
 	});
 });

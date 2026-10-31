@@ -63,13 +63,13 @@
 		"lib/number-field": {
 			"title": "Number field",
 			"description": "The stepping, committing and wheel handling a number input and a scrub input share.",
-			"version": "1.1.0",
+			"version": "1.2.0",
 			"shadcn": []
 		},
 		"lib/number": {
 			"title": "Number",
 			"description": "The clamping, rounding and parsing the number fields share, as plain functions.",
-			"version": "1.1.0",
+			"version": "1.2.0",
 			"shadcn": []
 		},
 		"lib/options": {
@@ -195,7 +195,7 @@
 		"kit/number-input": {
 			"title": "Number input",
 			"description": "A number field with steppers, bounds that hold, and arithmetic that stays exact.",
-			"version": "1.1.0",
+			"version": "1.2.0",
 			"shadcn": ["input-group"],
 			"npm": ["@lucide/svelte"]
 		},

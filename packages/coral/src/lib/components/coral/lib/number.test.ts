@@ -1,10 +1,19 @@
 /**
  * @coral/lib/number
- * @version 1.1.0
+ * @version 1.2.0
  */
 
 import { describe, expect, it } from 'vitest';
-import { clamp, decimalsOf, format, parse, round, separators, stepValue } from './number.js';
+import {
+	clamp,
+	decimalsOf,
+	format,
+	fractionDigits,
+	parse,
+	round,
+	separators,
+	stepValue
+} from './number.js';
 
 describe('decimalsOf', () => {
 	it('counts the decimals of a fractional step', () => {
@@ -176,5 +185,42 @@ describe('format', () => {
 	it('round-trips through parse', () => {
 		const text = format(0.3, 1, 'de-DE');
 		expect(parse(text, { locale: 'de-DE', decimals: 1 })).toBe(0.3);
+	});
+});
+
+describe('a styled number', () => {
+	const usd: Intl.NumberFormatOptions = { style: 'currency', currency: 'USD' };
+	const eur: Intl.NumberFormatOptions = { style: 'currency', currency: 'EUR' };
+	const percent: Intl.NumberFormatOptions = { style: 'percent' };
+	const unit: Intl.NumberFormatOptions = { style: 'unit', unit: 'gigabyte' };
+
+	it('writes the symbol, and the digits the currency always shows', () => {
+		expect(format(1234.5, 2, 'en-US', usd)).toBe('$1234.50');
+		expect(format(1234.5, 2, 'de-DE', eur)).toBe('1234,50\u00a0€');
+		expect(format(12, 0, 'en-US', usd)).toBe('$12');
+	});
+
+	it('reads past the symbol, typed or not', () => {
+		expect(parse('$1234.50', { decimals: 2, locale: 'en-US', style: usd })).toBe(1234.5);
+		expect(parse('1.234,50 €', { decimals: 2, locale: 'de-DE', style: eur })).toBe(1234.5);
+		expect(parse('99', { decimals: 2, locale: 'en-US', style: usd })).toBe(99);
+		expect(parse('-$5', { decimals: 2, locale: 'en-US', style: usd })).toBe(-5);
+	});
+
+	it('reads a percent as the fraction it stands for, with or without the sign', () => {
+		expect(format(0.155, 3, 'en-US', percent)).toBe('15.5%');
+		expect(parse('15.5%', { decimals: 3, locale: 'en-US', style: percent })).toBe(0.155);
+		expect(parse('15', { decimals: 2, locale: 'en-US', style: percent })).toBe(0.15);
+	});
+
+	it('reads past a unit', () => {
+		expect(format(20, 0, 'en-US', unit)).toBe('20 GB');
+		expect(parse('20 GB', { decimals: 0, locale: 'en-US', style: unit })).toBe(20);
+	});
+
+	it('knows how many fraction digits a currency always writes', () => {
+		expect(fractionDigits('en-US', usd)).toBe(2);
+		expect(fractionDigits('ja-JP', { style: 'currency', currency: 'JPY' })).toBe(0);
+		expect(fractionDigits('en-US')).toBe(0);
 	});
 });

@@ -1,6 +1,6 @@
 /**
  * @coral/lib/number-field
- * @version 1.1.0
+ * @version 1.2.0
  */
 
 import { describe, expect, it, vi } from 'vitest';
