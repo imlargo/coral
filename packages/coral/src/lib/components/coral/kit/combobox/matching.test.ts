@@ -1,10 +1,10 @@
 /**
  * @coral/kit/combobox
- * @version 1.2.0
+ * @version 1.3.0
  */
 
 import { describe, expect, it } from 'vitest';
-import { includesValue, matches, terms } from './matching.js';
+import { canCreate, includesValue, matches, terms } from './matching.js';
 import type { Option } from '../../lib/options.js';
 
 const option = (over: Partial<Option<string>> = {}): Option<string> => ({
@@ -69,5 +69,19 @@ describe('includesValue', () => {
 
 	it('handles an empty selection', () => {
 		expect(includesValue([], 'x')).toBe(false);
+	});
+});
+
+describe('canCreate', () => {
+	const listed = [{ value: 1, label: 'Açaí' }];
+
+	it('offers a term no option is called, and nothing for an empty one', () => {
+		expect(canCreate(listed, 'Papaya')).toBe(true);
+		expect(canCreate(listed, '   ')).toBe(false);
+	});
+
+	it('does not offer a second option under the same folded label', () => {
+		expect(canCreate(listed, ' acai ')).toBe(false);
+		expect(canCreate(listed, 'aca')).toBe(true);
 	});
 });

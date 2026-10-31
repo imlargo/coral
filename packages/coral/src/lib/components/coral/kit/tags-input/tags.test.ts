@@ -1,10 +1,10 @@
 /**
  * @coral/kit/tags-input
- * @version 1.1.0
+ * @version 1.2.0
  */
 
 import { describe, expect, it } from 'vitest';
-import { add, split } from './tags.js';
+import { add, split, suggest } from './tags.js';
 
 describe('split', () => {
 	it('cuts on the default comma', () => {
@@ -119,5 +119,18 @@ describe('add', () => {
 		const current = ['a'];
 		add(['b'], { current });
 		expect(current).toEqual(['a']);
+	});
+});
+
+describe('suggest', () => {
+	const labels = ['frontend', 'backend', 'infra', 'Front office', 'backend'];
+
+	it('offers what contains the typed text, folded, once each, in the order given', () => {
+		expect(suggest(labels, 'FRONT', [])).toEqual(['frontend', 'Front office']);
+		expect(suggest(labels, 'end', [])).toEqual(['frontend', 'backend']);
+	});
+
+	it('leaves out what is already held, and offers everything for an empty field', () => {
+		expect(suggest(labels, '', ['infra'])).toEqual(['frontend', 'backend', 'Front office']);
 	});
 });

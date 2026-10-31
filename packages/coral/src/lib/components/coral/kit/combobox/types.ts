@@ -1,6 +1,6 @@
 /**
  * @coral/kit/combobox
- * @version 1.2.0
+ * @version 1.3.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -131,6 +131,19 @@ type BaseProps<T> = RootProps &
 		empty?: Snippet;
 		/** Replaces the loading row. */
 		indicator?: Snippet;
+		/**
+		 * Adds a row that creates an option from the search term, offered when no option is already
+		 * labelled that. Receives the trimmed term; return the new option, and add it to `options`,
+		 * and the combobox selects it. Return `false`, or throw, and nothing is selected.
+		 */
+		oncreate?: (term: string) => Option<T> | false | Promise<Option<T> | false>;
+		/** The create row's text. Takes the term, because 'Create' alone says nothing about what. */
+		createLabel?: (term: string) => string;
+		/**
+		 * Receives whatever `oncreate` threw. Without it the error propagates as an unhandled
+		 * rejection, which is visible in the console but to nobody using the page.
+		 */
+		onerror?: (error: unknown) => void;
 		/** Rendered below the list - bulk actions, a count, a "create new" affordance. */
 		footer?: Snippet<[FooterContext<T>]>;
 	};
@@ -144,6 +157,7 @@ export type ComboboxDefaults = Partial<
 		| 'emptyMessage'
 		| 'loadingMessage'
 		| 'clearLabel'
+		| 'createLabel'
 		| 'searchDebounce'
 	>
 >;

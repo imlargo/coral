@@ -77,6 +77,22 @@ through the same door.
 `validate` receives the tags as they stand, not as they arrived, so a pasted batch is judged
 against what the values before it already added.
 
+## Suggestions
+
+<Preview name="kit/tags-input/suggestions" />
+
+`suggestions` offers existing tags while typing, filtered the way Coral's searches filter
+(`FRONT` finds `Front office`), in the order given, minus the tags already held. A suggestion is
+only an offer: Enter with none chosen adds what was typed, so a new tag is never harder to add than
+an existing one.
+
+- **Focus stays in the field.** The arrows move the highlight through `aria-activedescendant`, the
+  pattern a search box with suggestions follows, so typing never stops.
+- **A click takes the suggestion, not the draft.** The list keeps the field from blurring, which
+  would otherwise add `fro` as a tag of its own before `frontend` could replace it.
+- **One rule for every route in.** A suggestion goes through `sanitize`, `validate` and `max`
+  like anything typed or pasted.
+
 ## Forms
 
 <Preview name="kit/tags-input/form" />
@@ -109,6 +125,9 @@ back in the field.
 | Key                    | Where            | What it does                                           |
 | ---------------------- | ---------------- | ------------------------------------------------------ |
 | `Enter`                | Field, non-empty | Adds the tag. Empty, it is left to the form to submit. |
+| `↓` / `↑`              | Field            | Moves through the suggestions, opening them if closed. |
+| `Enter`                | On a suggestion  | Adds the suggestion instead of what was typed.         |
+| `Escape`               | Suggestions open | Closes them. A second `Escape` is the dialog's.        |
 | The delimiter          | Field            | Adds the tag, same as `Enter`.                         |
 | `Backspace`            | Empty field      | Steps onto the last tag.                               |
 | `Backspace` / `Delete` | On a tag         | Removes it, and stays on the one that takes its place. |
@@ -133,30 +152,32 @@ Arrow directions are read off the element, so they reverse inside an RTL subtree
 Everything the shadcn input accepts stays available on the field: `placeholder`, `id`, `aria-*`,
 `maxlength`, `autocomplete`, `ref`. On top of that:
 
-| Prop              | Type                                         | Default               | Description                                               |
-| ----------------- | -------------------------------------------- | --------------------- | --------------------------------------------------------- |
-| `value`           | `string[]`                                   | `[]`                  | The tags. Bindable.                                       |
-| `inputValue`      | `string`                                     | `''`                  | The text being typed. Bindable.                           |
-| `onchange`        | `(tags: string[]) => void`                   | -                     | Fired when the list changes. Never on mount.              |
-| `onreject`        | `(rejected: TagRejection[]) => void`         | -                     | Fired once per batch with everything turned away.         |
-| `delimiter`       | `string \| RegExp`                           | `,`                   | What separates tags. Newlines always do too.              |
-| `max`             | `number`                                     | -                     | How many tags fit. Extras are reported to `onreject`.     |
-| `allowDuplicates` | `boolean`                                    | `false`               | Whether the same tag may be held twice.                   |
-| `validate`        | `(value: string, tags: string[]) => boolean` | -                     | Return `false` to turn a value away.                      |
-| `sanitize`        | `(raw: string) => string`                    | trim                  | Cleans a value before it is judged and stored.            |
-| `addOnBlur`       | `boolean`                                    | `true`                | Whether leaving the field turns what is in it into a tag. |
-| `clearable`       | `boolean`                                    | `false`               | Adds a control that empties the list.                     |
-| `clearLabel`      | `string`                                     | `Clear all`           | Accessible label for that control.                        |
-| `removeLabel`     | `(value: string) => string`                  | `` `Remove ${tag}` `` | Accessible label for a tag's remove control.              |
-| `required`        | `boolean`                                    | `false`               | Requires at least one tag before the form submits.        |
-| `name`            | `string`                                     | -                     | Submits the tags as one hidden input per tag.             |
-| `disabled`        | `boolean`                                    | `false`               | Blocks the field and drops the remove controls.           |
-| `readonly`        | `boolean`                                    | `false`               | Shows the tags without offering to change them.           |
-| `tagVariant`      | `BadgeVariant`                               | `secondary`           | Which badge variant the tags are drawn with.              |
-| `class`           | `string`                                     | -                     | Merged onto the box.                                      |
-| `inputClass`      | `string`                                     | -                     | Merged onto the field.                                    |
-| `tagClass`        | `string`                                     | -                     | Merged onto each tag.                                     |
-| `tag`             | `Snippet<[{ value, index, remove }]>`        | -                     | Replaces the body of each tag. The remove control stays.  |
+| Prop               | Type                                         | Default               | Description                                               |
+| ------------------ | -------------------------------------------- | --------------------- | --------------------------------------------------------- |
+| `value`            | `string[]`                                   | `[]`                  | The tags. Bindable.                                       |
+| `inputValue`       | `string`                                     | `''`                  | The text being typed. Bindable.                           |
+| `onchange`         | `(tags: string[]) => void`                   | -                     | Fired when the list changes. Never on mount.              |
+| `onreject`         | `(rejected: TagRejection[]) => void`         | -                     | Fired once per batch with everything turned away.         |
+| `delimiter`        | `string \| RegExp`                           | `,`                   | What separates tags. Newlines always do too.              |
+| `max`              | `number`                                     | -                     | How many tags fit. Extras are reported to `onreject`.     |
+| `allowDuplicates`  | `boolean`                                    | `false`               | Whether the same tag may be held twice.                   |
+| `validate`         | `(value: string, tags: string[]) => boolean` | -                     | Return `false` to turn a value away.                      |
+| `sanitize`         | `(raw: string) => string`                    | trim                  | Cleans a value before it is judged and stored.            |
+| `addOnBlur`        | `boolean`                                    | `true`                | Whether leaving the field turns what is in it into a tag. |
+| `clearable`        | `boolean`                                    | `false`               | Adds a control that empties the list.                     |
+| `clearLabel`       | `string`                                     | `Clear all`           | Accessible label for that control.                        |
+| `removeLabel`      | `(value: string) => string`                  | `` `Remove ${tag}` `` | Accessible label for a tag's remove control.              |
+| `required`         | `boolean`                                    | `false`               | Requires at least one tag before the form submits.        |
+| `name`             | `string`                                     | -                     | Submits the tags as one hidden input per tag.             |
+| `disabled`         | `boolean`                                    | `false`               | Blocks the field and drops the remove controls.           |
+| `readonly`         | `boolean`                                    | `false`               | Shows the tags without offering to change them.           |
+| `suggestions`      | `string[]`                                   | -                     | Tags to offer while typing, minus the ones held.          |
+| `suggestionsLabel` | `string`                                     | `Suggestions`         | Accessible name of the suggestion list.                   |
+| `tagVariant`       | `BadgeVariant`                               | `secondary`           | Which badge variant the tags are drawn with.              |
+| `class`            | `string`                                     | -                     | Merged onto the box.                                      |
+| `inputClass`       | `string`                                     | -                     | Merged onto the field.                                    |
+| `tagClass`         | `string`                                     | -                     | Merged onto each tag.                                     |
+| `tag`              | `Snippet<[{ value, index, remove }]>`        | -                     | Replaces the body of each tag. The remove control stays.  |
 
 `oninput`, `onkeydown` and `onblur` are forwarded rather than swallowed. The caller's `onkeydown`
 runs first, so calling `preventDefault` on it takes that key away from the component, which is how
