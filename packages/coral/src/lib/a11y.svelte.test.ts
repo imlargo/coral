@@ -138,6 +138,18 @@ const cases: [string, () => unknown][] = [
 			draw(Combobox, { options: fruits, type: 'multiple', value: [1, 2], 'aria-label': 'Fruit' })
 	],
 	['combobox, open', () => draw(Combobox, { options: fruits, open: true, 'aria-label': 'Fruit' })],
+	[
+		'combobox, offering to create',
+		async () => {
+			await draw(Combobox, {
+				options: fruits,
+				open: true,
+				search: 'Papaya',
+				oncreate: () => false,
+				'aria-label': 'Fruit'
+			});
+		}
+	],
 	['country-select', () => draw(CountrySelect, { value: 'KE', 'aria-label': 'Country' })],
 	[
 		'country-select, open',

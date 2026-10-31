@@ -76,6 +76,9 @@ Everything the shadcn popover root accepts stays available: `open`, `onOpenChang
 | `emptyMessage`      | `string`                                                | `No results found.`   | Shown, and announced, when the search matches nothing.          |
 | `loadingMessage`    | `string`                                                | `Loading...`          | Shown, and announced, while `loading`.                          |
 | `clearLabel`        | `string`                                                | `Clear selection`     | Accessible label for the clear control.                         |
+| `oncreate`          | `(term) => Option<T> \| false \| Promise<...>`          | -                     | Adds a row that creates an option from the search term.         |
+| `createLabel`       | `(term: string) => string`                              | `Create "term"`       | The create row's text.                                          |
+| `onerror`           | `(error: unknown) => void`                              | -                     | Receives what `oncreate` threw.                                 |
 | `id`                | `string`                                                | generated             | Put on the trigger, for a `<Label for>`.                        |
 | `aria-*`            | `aria-label`, `-labelledby`, `-describedby`, `-invalid` | -                     | Put on the trigger.                                             |
 | `align`             | `'start'` \| `'center'` \| `'end'`                      | `'start'`             | Which trigger edge the list lines up with.                      |
@@ -177,6 +180,21 @@ is searched. `keywords` are searched but never shown: synonyms, codes, an old na
 
 Filtering removes rows rather than hiding them, so a group whose options all fail the search
 disappears along with its heading. No empty section is left behind.
+
+## Creating options
+
+<Preview name="kit/combobox/create" />
+
+`oncreate` adds a row that turns the search term into an option: a label, a project, a
+team. It is offered only when no option is already called that, compared the way the search
+compares, so `acai` never offers a second `Açaí`, and never while `loading`, when the option may be
+in the results still on their way.
+
+The handler receives the trimmed term and returns the new option; the combobox selects it and
+keeps its label on the trigger before `options` has caught up. Add it to `options` yourself, since
+the list is yours. Return `false`, or throw, and nothing is selected: the handler goes through the
+same `lib/action` as every Coral handler that can fail, so a second Enter while the request is out
+does not create the option twice, and `onerror` hears what went wrong.
 
 ## Server-side search
 

@@ -1,6 +1,6 @@
 /**
  * @coral/kit/combobox
- * @version 1.2.0
+ * @version 1.3.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -480,5 +480,75 @@ describe('naming the trigger', () => {
 		const controls = search().getAttribute('aria-controls');
 		expect(controls).toBeTruthy();
 		expect(document.getElementById(controls!)?.getAttribute('role')).toBe('listbox');
+	});
+});
+
+describe('creating', () => {
+	const createRow = () =>
+		Array.from(document.querySelectorAll<HTMLElement>('[role="option"]')).find((entry) =>
+			entry.textContent?.includes('Create')
+		);
+
+	it('offers the term only when no option is already called that, accents aside', async () => {
+		await draw({ options: fruits, open: true, oncreate: () => false });
+
+		await userEvent.fill(search(), 'acai');
+		await expect.poll(() => createRow()).toBeUndefined();
+
+		await userEvent.fill(search(), 'Papaya');
+		await expect.poll(() => createRow()?.textContent?.trim()).toBe('Create "Papaya"');
+		expect(status()).toBeNull();
+	});
+
+	it('selects what the caller created and shows its label before the list carries it', async () => {
+		const oncreate = vi.fn(async (term: string) => ({ value: 9, label: term }));
+		const props = $state({ options: fruits, value: undefined as number | undefined, oncreate });
+		await draw(props);
+
+		await userEvent.click(trigger());
+		await userEvent.fill(search(), 'Papaya');
+		await userEvent.click(createRow()!);
+
+		await expect.poll(() => props.value).toBe(9);
+		expect(oncreate).toHaveBeenCalledWith('Papaya');
+		await expect.poll(() => trigger().textContent?.trim()).toBe('Papaya');
+	});
+
+	it('selects nothing when the caller says no, and hands a throw to onerror', async () => {
+		const onerror = vi.fn();
+		const props = $state({
+			options: fruits,
+			value: undefined as number | undefined,
+			open: true,
+			onerror,
+			oncreate: async (): Promise<false> => {
+				throw new Error('taken');
+			}
+		});
+		await draw(props);
+
+		await userEvent.fill(search(), 'Papaya');
+		await userEvent.click(createRow()!);
+
+		await expect.poll(() => onerror.mock.calls.length).toBe(1);
+		expect(props.value).toBeUndefined();
+	});
+
+	it('creates from the keyboard, and clears the term to create another with type="multiple"', async () => {
+		let next = 10;
+		const props = $state({
+			options: fruits,
+			type: 'multiple',
+			value: [] as number[],
+			open: true,
+			oncreate: (term: string) => ({ value: next++, label: term })
+		});
+		await draw(props);
+
+		await userEvent.fill(search(), 'Papaya');
+		await userEvent.keyboard('{ArrowDown}{Enter}');
+
+		await expect.poll(() => props.value).toEqual([10]);
+		expect(search().value).toBe('');
 	});
 });
