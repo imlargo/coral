@@ -45,7 +45,7 @@
 		"lib/intl": {
 			"title": "Intl",
 			"description": "Collators and formatters built once per locale and options, instead of once per call.",
-			"version": "1.0.0",
+			"version": "1.1.0",
 			"shadcn": []
 		},
 		"lib/list-status": {

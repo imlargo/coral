@@ -1,10 +1,16 @@
 /**
  * @coral/lib/intl
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import { describe, expect, it } from 'vitest';
-import { collator, dateTimeFormat, numberFormat, relativeTimeFormat } from './intl.js';
+import {
+	collator,
+	dateTimeFormat,
+	displayNames,
+	numberFormat,
+	relativeTimeFormat
+} from './intl.js';
 
 describe('intl', () => {
 	it('hands back the same object for the same locale and options', () => {
@@ -28,10 +34,12 @@ describe('intl', () => {
 	it('keeps the four constructors apart even for the same key', () => {
 		expect(collator('en-US')).toBeInstanceOf(Intl.Collator);
 		expect(numberFormat('en-US')).toBeInstanceOf(Intl.NumberFormat);
+		expect(displayNames('en-US', { type: 'region' })).toBeInstanceOf(Intl.DisplayNames);
 	});
 
 	it('builds working formatters, and follows the reader when no locale is given', () => {
 		expect(numberFormat('de-DE').format(1.5)).toBe('1,5');
+		expect(displayNames('de-DE', { type: 'region' }).of('DE')).toBe('Deutschland');
 		expect(numberFormat().resolvedOptions().locale).toBe(
 			new Intl.NumberFormat().resolvedOptions().locale
 		);
