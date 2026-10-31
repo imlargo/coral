@@ -1,7 +1,7 @@
 <script lang="ts" generics="T, Type extends ComboboxType = 'single'">
 	/**
 	 * @coral/kit/combobox
-	 * @version 1.1.0
+	 * @version 1.2.0
 	 */
 	import { tick } from 'svelte';
 	import ChevronsUpDownIcon from '@lucide/svelte/icons/chevrons-up-down';
@@ -60,10 +60,12 @@
 		serialize,
 		maxDisplay = 3,
 		align = 'start',
+		anchor,
 		class: className,
 		contentClass,
 		listClass,
 		trigger,
+		selection,
 		option: optionSnippet,
 		empty,
 		indicator,
@@ -267,6 +269,8 @@
 						>
 							{#if selected.length === 0}
 								{placeholder}
+							{:else if selection}
+								{@render selection({ selected })}
 							{:else if multiple}
 								{#each shown as option (option.value)}
 									<Badge variant="secondary">{option.label}</Badge>
@@ -300,7 +304,11 @@
 		{/if}
 	</div>
 
-	<Popover.Content {align} class={cn('w-(--bits-popover-anchor-width) p-0', contentClass)}>
+	<Popover.Content
+		{align}
+		customAnchor={anchor}
+		class={cn('w-(--bits-popover-anchor-width) p-0', contentClass)}
+	>
 		<Command.Root shouldFilter={false} bind:value={highlighted}>
 			<!--
 				`aria-controls` and `aria-activedescendant` by hand: the primitive derives both from a

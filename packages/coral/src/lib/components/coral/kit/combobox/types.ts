@@ -1,6 +1,6 @@
 /**
  * @coral/kit/combobox
- * @version 1.1.0
+ * @version 1.2.0
  */
 
 import type { ComponentProps, Snippet } from 'svelte';
@@ -23,6 +23,12 @@ export type TriggerContext<T> = {
 export type OptionContext<T> = {
 	option: Option<T>;
 	selected: boolean;
+};
+
+/** What the `selection` snippet receives. */
+export type SelectionContext<T> = {
+	/** Every selected option. Never empty: the placeholder shows instead. */
+	selected: Option<T>[];
 };
 
 /** What the `footer` snippet receives. Rendered below the list, inside the popover. */
@@ -101,6 +107,11 @@ type BaseProps<T> = RootProps &
 		maxDisplay?: number;
 		/** Which trigger edge the list lines up with. `end` for a combobox at the end of a toolbar. */
 		align?: ComponentProps<typeof PopoverContent>['align'];
+		/**
+		 * The element the list lines up with and takes its width from, instead of the trigger. For a
+		 * trigger that is one part of a wider control, such as the country button in a phone field.
+		 */
+		anchor?: HTMLElement | null;
 		/** Merged onto the trigger button. */
 		class?: string;
 		/** Merged onto the popover content. */
@@ -109,6 +120,11 @@ type BaseProps<T> = RootProps &
 		listClass?: string;
 		/** Replaces the whole trigger. */
 		trigger?: Snippet<[TriggerContext<T>]>;
+		/**
+		 * Replaces what the default trigger prints for the selection: the label, or the badges with
+		 * `type="multiple"`. The placeholder, the chevron and the clear control stay.
+		 */
+		selection?: Snippet<[SelectionContext<T>]>;
 		/** Replaces the body of each option row. The check indicator stays. */
 		option?: Snippet<[OptionContext<T>]>;
 		/** Replaces the empty state. */
