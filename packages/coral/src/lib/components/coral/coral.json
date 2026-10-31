@@ -206,6 +206,13 @@
 			"shadcn": ["input-group"],
 			"npm": ["@lucide/svelte"]
 		},
+		"kit/phone-input": {
+			"title": "Phone input",
+			"description": "A phone number formatted as it is typed, with a searchable country picker, bound as the E.164 a server stores.",
+			"version": "1.0.0",
+			"shadcn": ["input-group"],
+			"npm": ["@lucide/svelte", "libphonenumber-js"]
+		},
 		"kit/rating-group": {
 			"title": "Rating group",
 			"description": "Stars you can pick and stars you can only read. Native radios underneath, so the keyboard, the form and the screen reader come for free.",
