@@ -146,6 +146,12 @@
 			"shadcn": ["button"],
 			"npm": ["@lucide/svelte"]
 		},
+		"kit/country-select": {
+			"title": "Country select",
+			"description": "Every country, named and sorted in the reader's language, and found by its English name or its code.",
+			"version": "1.0.0",
+			"shadcn": []
+		},
 		"kit/date-picker": {
 			"title": "Date picker",
 			"description": "A popover, a calendar and a formatted trigger. One day or two, with shortcuts.",
