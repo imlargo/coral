@@ -1,6 +1,6 @@
 /**
  * @coral/kit/tags-input
- * @version 1.1.0
+ * @version 1.2.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -298,5 +298,66 @@ describe('in a form', () => {
 
 		props.value = ['red'];
 		await expect.poll(() => field().required).toBe(false);
+	});
+});
+
+describe('suggestions', () => {
+	const labels = ['frontend', 'backend', 'infra'];
+	const offered = () =>
+		Array.from(document.querySelectorAll<HTMLElement>('[role="option"]')).map((entry) =>
+			entry.textContent?.trim()
+		);
+
+	it('offers what matches the typed text, minus the tags held', async () => {
+		await render(TagsInput, { value: ['backend'], suggestions: labels });
+
+		await userEvent.type(field(), 'end');
+		await expect.poll(() => offered()).toEqual(['frontend']);
+		expect(field().getAttribute('aria-expanded')).toBe('true');
+	});
+
+	it('picks one with the arrows and Enter, keeping focus in the field', async () => {
+		const props = $state({ value: [] as string[], suggestions: labels });
+		await render(TagsInput, props);
+
+		await userEvent.type(field(), 'in');
+		await userEvent.keyboard('{ArrowDown}');
+		expect(field().getAttribute('aria-activedescendant')).toMatch(/-0$/);
+		await userEvent.keyboard('{Enter}');
+
+		expect(props.value).toEqual(['infra']);
+		expect(field().value).toBe('');
+		expect(document.activeElement).toBe(field());
+	});
+
+	it('adds what was typed on Enter while no suggestion is chosen', async () => {
+		const props = $state({ value: [] as string[], suggestions: labels });
+		await render(TagsInput, props);
+
+		await userEvent.type(field(), 'front{Enter}');
+		expect(props.value).toEqual(['front']);
+	});
+
+	it('takes a suggestion by click without adding the half-typed text first', async () => {
+		const props = $state({ value: [] as string[], suggestions: labels });
+		await render(TagsInput, props);
+
+		await userEvent.type(field(), 'back');
+		await expect.poll(() => offered()).toEqual(['backend']);
+		await userEvent.click(document.querySelector<HTMLElement>('[role="option"]')!);
+
+		expect(props.value).toEqual(['backend']);
+	});
+
+	it('closes the list on the first Escape and leaves the second to whatever is around it', async () => {
+		const outer = vi.fn();
+		document.addEventListener('keydown', outer);
+		await render(TagsInput, { suggestions: labels });
+
+		await userEvent.type(field(), 'in');
+		await userEvent.keyboard('{Escape}');
+		await expect.poll(() => offered()).toEqual([]);
+		expect(outer).not.toHaveBeenCalledWith(expect.objectContaining({ key: 'Escape' }));
+		document.removeEventListener('keydown', outer);
 	});
 });

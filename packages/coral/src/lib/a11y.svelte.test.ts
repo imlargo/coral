@@ -229,6 +229,13 @@ const cases: [string, () => unknown][] = [
 		'tags-input',
 		() => draw(TagsInput, { value: ['a', 'b'], 'aria-label': 'Tags', clearable: true })
 	],
+	[
+		'tags-input, with suggestions open',
+		async () => {
+			await draw(TagsInput, { suggestions: ['frontend', 'backend'], 'aria-label': 'Labels' });
+			await userEvent.type(document.querySelector<HTMLInputElement>('input')!, 'end');
+		}
+	],
 	['textarea', () => draw(Textarea, { 'aria-label': 'Notes', maxLength: 100, showCount: true })],
 	[
 		'timeline',

@@ -280,8 +280,8 @@
 		"kit/tags-input": {
 			"title": "Tags input",
 			"description": "A field that turns typed and pasted text into tags, with one rule for both.",
-			"version": "1.1.0",
-			"shadcn": ["input-group", "badge"],
+			"version": "1.2.0",
+			"shadcn": ["input-group", "badge", "popover", "command"],
 			"npm": ["@lucide/svelte"]
 		},
 		"kit/textarea": {
