@@ -45,7 +45,7 @@
 		"lib/intl": {
 			"title": "Intl",
 			"description": "Collators and formatters built once per locale and options, instead of once per call.",
-			"version": "1.0.0",
+			"version": "1.1.0",
 			"shadcn": []
 		},
 		"lib/list-status": {
@@ -123,7 +123,7 @@
 		"kit/combobox": {
 			"title": "Combobox",
 			"description": "A select with a search box, filtering the way accented text is actually typed.",
-			"version": "1.1.0",
+			"version": "1.2.0",
 			"shadcn": ["popover", "command", "button", "badge"],
 			"npm": ["@lucide/svelte"]
 		},
@@ -145,6 +145,12 @@
 			"version": "1.1.0",
 			"shadcn": ["button"],
 			"npm": ["@lucide/svelte"]
+		},
+		"kit/country-select": {
+			"title": "Country select",
+			"description": "Every country, named and sorted in the reader's language, and found by its English name or its code.",
+			"version": "1.0.0",
+			"shadcn": []
 		},
 		"kit/date-picker": {
 			"title": "Date picker",
@@ -199,6 +205,13 @@
 			"version": "1.1.0",
 			"shadcn": ["input-group"],
 			"npm": ["@lucide/svelte"]
+		},
+		"kit/phone-input": {
+			"title": "Phone input",
+			"description": "A phone number formatted as it is typed, with a searchable country picker, bound as the E.164 a server stores.",
+			"version": "1.0.0",
+			"shadcn": ["input-group"],
+			"npm": ["@lucide/svelte", "libphonenumber-js"]
 		},
 		"kit/rating-group": {
 			"title": "Rating group",

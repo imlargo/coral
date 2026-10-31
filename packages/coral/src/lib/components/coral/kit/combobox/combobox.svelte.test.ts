@@ -1,6 +1,6 @@
 /**
  * @coral/kit/combobox
- * @version 1.1.0
+ * @version 1.2.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -281,6 +281,37 @@ describe('placing the list', () => {
 				document.querySelector('[data-slot="popover-content"]')?.getAttribute('data-align')
 			)
 			.toBe('end');
+	});
+
+	it('takes its width from the anchor when given one', async () => {
+		const anchor = document.createElement('div');
+		anchor.style.width = '480px';
+		document.body.appendChild(anchor);
+
+		// Under `props`: a bare `anchor` is read as Svelte's own mount option.
+		await render(Combobox, {
+			props: { options: fruits, open: true, anchor } as unknown as ComponentProps<typeof Combobox>
+		});
+		await expect
+			.poll(
+				() => document.querySelector('[data-slot="popover-content"]')?.getBoundingClientRect().width
+			)
+			.toBe(480);
+		anchor.remove();
+	});
+});
+
+describe('the selection on the trigger', () => {
+	it('prints it through the selection snippet, and keeps the placeholder', async () => {
+		const selection = createRawSnippet<[{ selected: Option<number>[] }]>((context) => ({
+			render: () => `<span>Chosen: ${context().selected[0].label}</span>`
+		}));
+		const props = $state({ options: fruits, value: undefined as number | undefined, selection });
+		await draw(props);
+
+		expect(trigger().textContent?.trim()).toBe('Select an option...');
+		props.value = 4;
+		await expect.poll(() => trigger().textContent?.trim()).toBe('Chosen: Mango');
 	});
 });
 

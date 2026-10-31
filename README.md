@@ -57,6 +57,7 @@ whether you need it than a list of props would:
 | Table of contents, last section      | never highlights - it cannot cross the boundary         | the end of the page activates the final heading           |
 | A deep breadcrumb trail on a phone   | wraps, or every crumb truncates to a stub               | folds the middle into a menu, keeps both ends readable    |
 | Copy in a Spanish product            | the same `placeholder` and `locale` at every call site  | stated once with `setCoralDefaults`, overridable per call |
+| A phone number as typed              | stored as typed, `(415) 555-0123`, no country code      | bound as E.164, `+14155550123`, formatted on screen only  |
 | ⌘K palette off a Mac                 | opens on Ctrl+K, then refuses to close on it            | the primitive's vim bindings give way to your combo       |
 
 Every row is one line of a fuller story: the full reasoning, the edge cases and a live demo are
@@ -131,7 +132,7 @@ and lose the alias and icon rewriting.
 
 ## Components
 
-Thirty-two in `kit/` so far. Each links to its full API, props table and live
+Thirty-four in `kit/` so far. Each links to its full API, props table and live
 demos:
 
 - **[action-button](https://coral.imlargo.dev/docs/kit/action-button):** a button that waits on
@@ -158,6 +159,9 @@ demos:
   `onconfirm`, stays open on failure, blocks double-submit.
 - **[copy-button](https://coral.imlargo.dev/docs/kit/copy-button):** copies text, announces it to
   screen readers, falls back where the Clipboard API is missing, and treats failure as a state.
+- **[country-select](https://coral.imlargo.dev/docs/kit/country-select):** every country, named
+  and sorted in the reader's language by `Intl`, with no translation table shipped. Found by its
+  English name or its code too.
 - **[date-picker](https://coral.imlargo.dev/docs/kit/date-picker):** popover, calendar and
   formatted trigger, single day or range. Closes on range completion rather than first click;
   DST-safe day handling.
@@ -182,6 +186,9 @@ demos:
 - **[password-input](https://coral.imlargo.dev/docs/kit/password-input):** a visibility toggle
   that keeps the caret, hides the password again on submit so password managers still work, and
   warns about Caps Lock.
+- **[phone-input](https://coral.imlargo.dev/docs/kit/phone-input):** formatted as it is typed,
+  bound as E.164. The caret stays put, backspace deletes digits, and a pasted `+44` number moves
+  the country picker with it.
 - **[rating-group](https://coral.imlargo.dev/docs/kit/rating-group):** stars on native radios, so
   keyboard and form semantics come from the platform. Half fills from one glyph; `readonly` reads as
   an image, not a disabled control.
@@ -228,8 +235,10 @@ derived from, and the only place they are written down.
 `lib/hidden-field` with `kit/date-picker`: the clipped field that makes `name`, `form` and
 `required` work on a control the browser cannot validate on its own.
 
-`kit/command-palette` composes `kit/shortcut`, and `kit/avatar-stack` composes `kit/avatar`, so
-those pairs travel together.
+`kit/command-palette` composes `kit/shortcut`, `kit/avatar-stack` composes `kit/avatar`, and
+`kit/phone-input` composes `kit/country-select`, itself a `kit/combobox`, so those travel together.
+`kit/phone-input` is the one component that brings an npm package beyond the icons:
+`libphonenumber-js`, for the per-country numbering rules.
 
 `lib/fold` is the accent-folding the combobox search compares with. `lib/announce` and `lib/live-region` are what every component that speaks to a screen
 reader speaks through - including the rule that saying the same words twice has to be heard twice.

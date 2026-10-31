@@ -79,6 +79,7 @@ Everything the shadcn popover root accepts stays available: `open`, `onOpenChang
 | `id`                | `string`                                                | generated             | Put on the trigger, for a `<Label for>`.                        |
 | `aria-*`            | `aria-label`, `-labelledby`, `-describedby`, `-invalid` | -                     | Put on the trigger.                                             |
 | `align`             | `'start'` \| `'center'` \| `'end'`                      | `'start'`             | Which trigger edge the list lines up with.                      |
+| `anchor`            | `HTMLElement`                                           | the trigger           | What the list lines up with and takes its width from.           |
 | `class`             | `string`                                                | -                     | Merged onto the trigger button.                                 |
 | `contentClass`      | `string`                                                | -                     | Merged onto the popover content.                                |
 | `listClass`         | `string`                                                | -                     | Merged onto the scrolling list - e.g. its max height.           |
@@ -88,10 +89,15 @@ Everything the shadcn popover root accepts stays available: `open`, `onOpenChang
 | Snippet     | Receives                                         | Replaces                              |
 | ----------- | ------------------------------------------------ | ------------------------------------- |
 | `trigger`   | `{ props, selected, open, disabled, clear }`     | The whole trigger.                    |
+| `selection` | `{ selected }`                                   | The selection inside the trigger.     |
 | `option`    | `{ option, selected }`                           | The body of a row.                    |
 | `empty`     | -                                                | The contents of the empty row.        |
 | `indicator` | -                                                | The contents of the loading row.      |
 | `footer`    | `{ selected, visible, clear, selectAll, close }` | Nothing - it is added below the list. |
+
+Reach for `selection` before `trigger` when only the printed value changes, such as a flag beside a
+country's name: the button keeps its role, its `aria-*`, the placeholder and the clear control.
+`trigger` hands all of that to you.
 
 ### Option
 

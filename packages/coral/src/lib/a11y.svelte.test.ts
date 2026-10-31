@@ -28,6 +28,7 @@ import Combobox from './components/coral/kit/combobox/combobox.svelte';
 import CommandPalette from './components/coral/kit/command-palette/command-palette.svelte';
 import ConfirmDialog from './components/coral/kit/confirm-dialog/confirm-dialog.svelte';
 import CopyButton from './components/coral/kit/copy-button/copy-button.svelte';
+import CountrySelect from './components/coral/kit/country-select/country-select.svelte';
 import DatePicker from './components/coral/kit/date-picker/date-picker.svelte';
 import FileInput from './components/coral/kit/file-input/file-input.svelte';
 import FileUpload from './components/coral/kit/file-upload/file-upload.svelte';
@@ -36,6 +37,7 @@ import InlineEdit from './components/coral/kit/inline-edit/inline-edit.svelte';
 import Lightbox from './components/coral/kit/lightbox/lightbox.svelte';
 import NumberInput from './components/coral/kit/number-input/number-input.svelte';
 import PasswordInput from './components/coral/kit/password-input/password-input.svelte';
+import PhoneInput from './components/coral/kit/phone-input/phone-input.svelte';
 import RatingGroup from './components/coral/kit/rating-group/rating-group.svelte';
 import RelativeTime from './components/coral/kit/relative-time/relative-time.svelte';
 import ReorderList from './components/coral/kit/reorder-list/reorder-list.svelte';
@@ -136,6 +138,11 @@ const cases: [string, () => unknown][] = [
 			draw(Combobox, { options: fruits, type: 'multiple', value: [1, 2], 'aria-label': 'Fruit' })
 	],
 	['combobox, open', () => draw(Combobox, { options: fruits, open: true, 'aria-label': 'Fruit' })],
+	['country-select', () => draw(CountrySelect, { value: 'KE', 'aria-label': 'Country' })],
+	[
+		'country-select, open',
+		() => draw(CountrySelect, { countries: ['JP', 'KE'], open: true, 'aria-label': 'Country' })
+	],
 	[
 		'command-palette',
 		() =>
@@ -182,6 +189,11 @@ const cases: [string, () => unknown][] = [
 	],
 	['number-input', () => draw(NumberInput, { value: 3, 'aria-label': 'Seats' })],
 	['password-input', () => draw(PasswordInput, { 'aria-label': 'Password' })],
+	['phone-input', () => draw(PhoneInput, { 'aria-label': 'Phone' })],
+	[
+		'phone-input, with a number',
+		() => draw(PhoneInput, { value: '+14155550123', 'aria-label': 'Phone' })
+	],
 	['rating-group', () => draw(RatingGroup, { value: 3, label: undefined, 'aria-label': 'Rating' })],
 	['rating-group, read only', () => draw(RatingGroup, { value: 3.5, readonly: true })],
 	['relative-time', () => draw(RelativeTime, { date: new Date(Date.now() - 5 * 60_000) })],
