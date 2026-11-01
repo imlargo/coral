@@ -3,6 +3,7 @@ import { isComponent, itemName } from 'coral/registry.config.js';
 import { getCollection, getEntry, getRawSource } from '#lib/features/docs/content.js';
 import type { DocsFrontmatter } from '#lib/features/docs/types.js';
 import { DOCS_PAGES } from '#lib/features/docs/sidebar.js';
+import type { TocHeading } from '#lib/components/coral/kit/toc/headings.js';
 
 // The sidebar links to every page anyway, but this keeps prerendering from depending on that.
 export const entries = () => getCollection('docs').map((entry) => ({ slug: entry.slug }));
@@ -12,7 +13,7 @@ export const load = async ({ params }) => {
 	if (!entry) error(404, 'Not found');
 
 	const { title, description, updated } = entry.data as unknown as DocsFrontmatter;
-	const { default: Content } = await entry.load();
+	const { default: Content, headings } = await entry.load();
 	const raw = await getRawSource(entry.path);
 
 	const href = entry.slug ? `/docs/${entry.slug}` : '/docs';
@@ -23,5 +24,10 @@ export const load = async ({ params }) => {
 	// A component's page is its manifest name, so the install command comes from the slug.
 	const item = isComponent(params.slug) ? itemName(params.slug) : undefined;
 
-	return { Content, title, description, raw, updated, prev, next, item };
+	// The table of contents lists what svmd read from the page at build time, so it renders on the server.
+	const toc: TocHeading[] = headings.flatMap(({ depth, text, id }) =>
+		id && depth >= 2 && depth <= 3 ? [{ id, text, level: depth }] : []
+	);
+
+	return { Content, title, description, raw, updated, prev, next, item, toc };
 };
