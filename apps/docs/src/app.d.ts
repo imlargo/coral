@@ -18,7 +18,10 @@ declare global {
 		}
 
 		// interface Locals {}
-		// interface PageData {}
+		interface PageData {
+			/** A docs page's table of contents, from the headings svmd read at build time. */
+			toc?: import('#lib/components/coral/kit/toc/headings.js').TocHeading[];
+		}
 		// interface PageState {}
 		// interface Platform {}
 	}
