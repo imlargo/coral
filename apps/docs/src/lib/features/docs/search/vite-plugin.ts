@@ -25,39 +25,42 @@ export function searchIndex(): Plugin {
 			root = config.root;
 		},
 
-		resolveId(id) {
-			return id === ID ? RESOLVED : null;
+		// Filtered, so Rolldown calls these for the index alone and not for every module of the build.
+		resolveId: {
+			filter: { id: /^virtual:svdocs-search$/ },
+			handler: () => RESOLVED
 		},
 
-		async load(id) {
-			if (id !== RESOLVED) return null;
+		load: {
+			filter: { id: /^\0virtual:svdocs-search$/ },
+			async handler() {
+				const dir = path.resolve(root, CONTENT_DIR);
+				// No content yet is an empty index, not a crash.
+				const entries = await fs
+					.readdir(dir, { recursive: true, withFileTypes: true })
+					.catch(() => []);
+				const files = entries
+					.filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
+					.map((entry) => path.join(entry.parentPath, entry.name))
+					.sort();
 
-			const dir = path.resolve(root, CONTENT_DIR);
-			// No content yet is an empty index, not a crash.
-			const entries = await fs
-				.readdir(dir, { recursive: true, withFileTypes: true })
-				.catch(() => []);
-			const files = entries
-				.filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
-				.map((entry) => path.join(entry.parentPath, entry.name))
-				.sort();
-
-			const sections: SearchSection[] = [];
-			for (const file of files) {
-				this.addWatchFile(file);
-				const source = await fs.readFile(file, 'utf8');
-				try {
-					sections.push(...extractSections(source, docsHref(path.relative(dir, file))));
-				} catch (cause) {
-					// Bad frontmatter is the usual reason. Say which file, or the build failure is a mystery.
-					this.error({
-						message: `Could not index ${path.relative(root, file)}: ${cause instanceof Error ? cause.message : cause}`,
-						cause
-					});
+				const sections: SearchSection[] = [];
+				for (const file of files) {
+					this.addWatchFile(file);
+					const source = await fs.readFile(file, 'utf8');
+					try {
+						sections.push(...extractSections(source, docsHref(path.relative(dir, file))));
+					} catch (cause) {
+						// Bad frontmatter is the usual reason. Say which file, or the build failure is a mystery.
+						this.error({
+							message: `Could not index ${path.relative(root, file)}: ${cause instanceof Error ? cause.message : cause}`,
+							cause
+						});
+					}
 				}
-			}
 
-			return `export const sections = ${JSON.stringify(sections)};`;
+				return `export const sections = ${JSON.stringify(sections)};`;
+			}
 		},
 
 		// Not `handleHotUpdate`: that does not fire when a page is created or deleted, and a new page
