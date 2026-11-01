@@ -6,6 +6,8 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import failureDemo from './demos/failure.svelte?demo';
 </script>
 
 `let saving = $state(false)`, a `try/finally`, `disabled={saving}` and a spinner: short enough to
@@ -13,7 +15,7 @@ write inline every time, and that inline version has a bug. Disabling the button
 focus to the page body, so a keyboard user who pressed Enter is thrown back to the top of the page
 the moment the request starts.
 
-<Preview name="kit/action-button/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -28,7 +30,7 @@ the moment the request starts.
 
 ## When it fails
 
-<Preview name="kit/action-button/failure" />
+<Preview demo={failureDemo} />
 
 Without `onerror`, a thrown error propagates as an unhandled rejection, visible in the console and
 to nobody using the page. Catching inside `onclick` and returning `false` works just as well.

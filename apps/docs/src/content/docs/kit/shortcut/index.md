@@ -6,6 +6,9 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import platformsDemo from './demos/platforms.svelte?demo';
+	import inButtonDemo from './demos/in-button.svelte?demo';
 </script>
 
 `<Kbd>⌘</Kbd><Kbd>K</Kbd>` is right for half the readers, and the `keydown` listener next to it usually
@@ -13,7 +16,7 @@ checks `metaKey`, so on Windows the hint is wrong and the shortcut does not work
 search fires while someone is typing a slash into a field, and a combo checked with `includes` also
 fires on every combo that contains it.
 
-<Preview name="kit/shortcut/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -29,7 +32,7 @@ fires on every combo that contains it.
 
 ## Platforms
 
-<Preview name="kit/shortcut/platforms" />
+<Preview demo={platformsDemo} />
 
 The platform is detected in the browser after mount. The server cannot know it, so it renders the
 non-Mac version and a Mac corrects it on hydration: one repaint, and no hydration mismatch. When the
@@ -37,7 +40,7 @@ server does know, from the user-agent, pass `platform` and there is nothing to c
 
 ## Plain keys
 
-<Preview name="kit/shortcut/in-button" />
+<Preview demo={inButtonDemo} />
 
 A shortcut something closer to the focus already handled (its `keydown` called `preventDefault`) is
 left alone. This site's own search takes `mod+k` and `/`, which is why these demos use other keys.

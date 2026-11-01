@@ -6,13 +6,19 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import typedValuesDemo from './demos/typed-values.svelte?demo';
+	import groupsDemo from './demos/groups.svelte?demo';
+	import clearableDemo from './demos/clearable.svelte?demo';
+	import loadingDemo from './demos/loading.svelte?demo';
+	import formDemo from './demos/form.svelte?demo';
 </script>
 
 Wrapping a select is the first thing most projects do with the primitive and the last thing any of
 them revisit: derive the trigger label, map the value in and out of the primitive's own keys,
 decide what cleared means. Written by hand, no two copies of those few lines stay the same for long.
 
-<Preview name="kit/select/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -51,7 +57,7 @@ and keeps this component the size of the problem it solves.
 
 ## Typed values
 
-<Preview name="kit/select/typed-values" />
+<Preview demo={typedValuesDemo} />
 
 The obvious item key is `String(option.value)`, and it is lossy twice: two ids that stringify the
 same collapse onto one item, and any object value becomes `[object Object]`, so every option in
@@ -60,14 +66,14 @@ itself, and hands the value back untouched.
 
 ## Groups
 
-<Preview name="kit/select/groups" />
+<Preview demo={groupsDemo} />
 
 Pass `OptionGroup[]` instead of `Option[]` and each run gets a heading. Do not mix the two shapes in
 one array: the first entry decides how the whole array is read.
 
 ## Clearable
 
-<Preview name="kit/select/clearable" />
+<Preview demo={clearableDemo} />
 
 `clearable` does both halves of unsetting: a `✕` appears on the trigger, and re-picking the selected
 option deselects it. Cleared means `undefined`, not `''`. An empty string is a value, and a field
@@ -78,7 +84,7 @@ button nested in a button is invalid HTML that browsers recover from by dropping
 
 ## Options from a request
 
-<Preview name="kit/select/loading" />
+<Preview demo={loadingDemo} />
 
 A select whose options arrive later opens, without this, onto an empty list, and the reader cannot
 tell "nothing here" from "not here yet". `loading` adds a loading row under whatever options are
@@ -88,7 +94,7 @@ nothing else, and both are spoken only while the list is open.
 
 ## Forms
 
-<Preview name="kit/select/form" />
+<Preview demo={formDemo} />
 
 `name` renders the field that submits. It is Coral's own rather than the primitive's, because
 bits-ui would submit the internal item key. `serialize` controls what gets written; it defaults to

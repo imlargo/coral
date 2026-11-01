@@ -6,6 +6,9 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import videosDemo from './demos/videos.svelte?demo';
+	import customDemo from './demos/custom.svelte?demo';
 </script>
 
 Opening a screenshot or a recording full screen from a grid is a `Dialog` with an `<img>` in it,
@@ -15,7 +18,7 @@ behind it, focus that goes back to the thumbnail, a position the reader can hear
 loaded before it is asked for, and a video that keeps playing after the reader has moved on.
 shadcn's `carousel` scrolls a strip; it is not a viewer.
 
-<Preview name="kit/lightbox/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -36,11 +39,11 @@ shadcn's `carousel` scrolls a strip; it is not a viewer.
 The viewer has no trigger of its own: a gallery is the project's, and every thumbnail is a button
 that sets `index` and `open`. Focus returns to whichever button that was.
 
-<Preview name="kit/lightbox/videos" />
+<Preview demo={videosDemo} />
 
 ## Your own slides
 
-<Preview name="kit/lightbox/custom" />
+<Preview demo={customDemo} />
 
 `items` is generic: `getMedia` says what the default slide reads from an item, and the `media`
 snippet replaces the slide altogether while the moving, the position and the keyboard stay. `footer`

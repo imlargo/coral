@@ -6,6 +6,9 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import withTextDemo from './demos/with-text.svelte?demo';
+	import lazyDemo from './demos/lazy.svelte?demo';
 </script>
 
 The five-line version (`navigator.clipboard.writeText`, a `copied` flag, a `setTimeout`) is the
@@ -13,7 +16,7 @@ one every project writes, and it has four holes: it throws on any page not serve
 screen reader never hears that anything happened, the timer keeps running after the component is
 gone, and a failure looks exactly like a success.
 
-<Preview name="kit/copy-button/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -33,11 +36,11 @@ gone, and a failure looks exactly like a success.
 The `children` snippet receives the status, so the label can change with it. With visible text the
 accessible name comes from the text, and `label` is not applied.
 
-<Preview name="kit/copy-button/with-text" />
+<Preview demo={withTextDemo} />
 
 ## Text computed on click
 
-<Preview name="kit/copy-button/lazy" />
+<Preview demo={lazyDemo} />
 
 `status` is bindable, so something beside the button can react to it. A copy that is still resolving
 ignores further clicks.

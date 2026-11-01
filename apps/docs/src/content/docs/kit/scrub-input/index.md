@@ -6,6 +6,9 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import boundsDemo from './demos/bounds.svelte?demo';
+	import historyDemo from './demos/history.svelte?demo';
 </script>
 
 Inspector panels are made of number fields, and reaching for a stepper twenty times to find the
@@ -15,7 +18,7 @@ a `pointermove` listener that reads `clientX`, and it has three holes: dragging 
 text, slow drags of a pixel at a time round to nothing, and there is no way back once the pointer
 has started moving.
 
-<Preview name="kit/scrub-input/basic" class="min-h-72" />
+<Preview demo={basicDemo} class="min-h-72" />
 
 ## What Coral adds
 
@@ -35,7 +38,7 @@ has started moving.
 
 ## Bounds, steps and units
 
-<Preview name="kit/scrub-input/bounds" class="min-h-64" />
+<Preview demo={boundsDemo} class="min-h-64" />
 
 `step` sets both the jump and the precision, so `step={0.05}` rounds to two decimals; `largeStep`
 is what Shift uses, and defaults to ten times `step`. `pixelsPerStep` is the sensitivity: at `1` the
@@ -48,7 +51,7 @@ both fine on the way, and only the finished number can be wrong.
 
 ## One drag, one undo
 
-<Preview name="kit/scrub-input/history" class="min-h-80" />
+<Preview demo={historyDemo} class="min-h-80" />
 
 ## Scrub or steppers
 

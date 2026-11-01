@@ -6,13 +6,15 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import localeDemo from './demos/locale.svelte?demo';
 </script>
 
 A country field is usually a combobox over an array of English names pasted into the project, and
 it shows. The list is English in a product that is not, sorted by English spelling, and a reader
 who looks for their country by the name they use gets nothing back.
 
-<Preview name="kit/country-select/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -29,7 +31,7 @@ who looks for their country by the name they use gets nothing back.
 
 ## In another language
 
-<Preview name="kit/country-select/locale" />
+<Preview demo={localeDemo} />
 
 The names follow `locale`, and so does their order. The copy around them (placeholder, search
 placeholder, empty message) is props, or stated once for the project with

@@ -6,9 +6,16 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import halfDemo from './demos/half.svelte?demo';
+	import readonlyDemo from './demos/readonly.svelte?demo';
+	import iconsDemo from './demos/icons.svelte?demo';
+	import scaleDemo from './demos/scale.svelte?demo';
+	import formDemo from './demos/form.svelte?demo';
+	import statesDemo from './demos/states.svelte?demo';
 </script>
 
-<Preview name="kit/rating-group/basic" />
+<Preview demo={basicDemo} />
 
 Flat props, because a rating has a defensible canonical case: some stars, a value, click one. The
 compound alternative (a root, a control, a context, an each, an item) is eight lines of ceremony
@@ -27,14 +34,14 @@ to draw five stars, and it is the boilerplate Coral exists to delete.
 
 ## Halves
 
-<Preview name="kit/rating-group/half" />
+<Preview demo={halfDemo} />
 
 `allowHalf` doubles the options rather than adding a mode: five choices become ten, each star gets
 two hit areas, and the keyboard steps by a half because there is genuinely another radio there.
 
 ## Reading, not rating
 
-<Preview name="kit/rating-group/readonly" />
+<Preview demo={readonlyDemo} />
 
 `readonly` is the case that shows an average, and it is a different thing from a control nobody may
 touch:
@@ -51,7 +58,7 @@ to show what it would submit.
 
 ## Icons
 
-<Preview name="kit/rating-group/icons" />
+<Preview demo={iconsDemo} />
 
 One `star` snippet, not three. It is rendered **twice per star** (once as the track with `fill: 0`,
 once clipped to the real fill), so a custom shape keeps its half steps with no half-shaped glyph to
@@ -75,7 +82,7 @@ Fill is a **fraction**, `0` to `1`, not a state. `fill > 0` is the "is this one 
 <RatingGroup bind:value color="var(--chart-2)" class="[--coral-star:1.75rem]" />
 ```
 
-<Preview name="kit/rating-group/scale" />
+<Preview demo={scaleDemo} />
 
 `color` and `emptyColor` are the two ends; both default to theme tokens, and passing a literal is
 the project's call. `--coral-star` is the size, a custom property rather than a prop because a star
@@ -84,7 +91,7 @@ is sized, not styled; everything else in the row derives from it. The gap is a p
 
 ## Forms
 
-<Preview name="kit/rating-group/form" />
+<Preview demo={formDemo} />
 
 **`name` is what puts the rating in the request.** With it you get a real radio group: the value is
 posted, `required` blocks submission natively, and the browser's own validation message points at
@@ -120,7 +127,7 @@ is copy and copy is the project's. `label` is where that goes:
 <RatingGroup bind:value label={(value, count) => `${value} out of ${count} stars`} />
 ```
 
-<Preview name="kit/rating-group/states" />
+<Preview demo={statesDemo} />
 
 ## Import
 

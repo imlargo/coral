@@ -6,6 +6,8 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import chatDemo from './demos/chat.svelte?demo';
 </script>
 
 Logs, build output, chat threads: anything that grows from the bottom needs the same rule, and
@@ -14,7 +16,7 @@ someone is reading further up, which is the single most complained-about behavio
 The fix people reach for - a "follow" checkbox - moves the decision onto the reader for something
 they already expressed by scrolling.
 
-<Preview name="kit/follow-scroll/basic" class="min-h-96" />
+<Preview demo={basicDemo} class="min-h-96" />
 
 ## What Coral adds
 
@@ -32,7 +34,7 @@ they already expressed by scrolling.
 
 ## With a composer
 
-<Preview name="kit/follow-scroll/chat" class="min-h-96" />
+<Preview demo={chatDemo} class="min-h-96" />
 
 `pinned` is bindable and reads as an instruction, not just a flag: set it to `true` after sending a
 message and the view returns to the end. Start it at `false` for a view that opens at the top.

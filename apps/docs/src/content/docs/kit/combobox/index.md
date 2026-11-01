@@ -6,6 +6,15 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import accentsDemo from './demos/accents.svelte?demo';
+	import onchangeDemo from './demos/onchange.svelte?demo';
+	import multipleDemo from './demos/multiple.svelte?demo';
+	import groupsDemo from './demos/groups.svelte?demo';
+	import createDemo from './demos/create.svelte?demo';
+	import remoteDemo from './demos/remote.svelte?demo';
+	import customTriggerDemo from './demos/custom-trigger.svelte?demo';
+	import typedValuesDemo from './demos/typed-values.svelte?demo';
 </script>
 
 shadcn builds the combobox out of a popover and a command menu, and its docs are explicit that this
@@ -15,7 +24,7 @@ is a recipe rather than a component: around fifty lines of markup, a `triggerRef
 Hand-rolled, that recipe gets pasted rather than read, and the parts it leaves out (accent
 handling first) are the ones that quietly go missing. That is the pattern this component ends.
 
-<Preview name="kit/combobox/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -30,7 +39,7 @@ Everything else is shadcn's, unchanged.
 
 ## Search
 
-<Preview name="kit/combobox/accents" />
+<Preview demo={accentsDemo} />
 
 Both the search term and the label are folded before comparison: lower case, accents removed, `ñ`
 to `n`. It matches how people type, not how the word is spelled.
@@ -126,7 +135,7 @@ It does not also receive the raw value, because that would be the same fact twic
 recovers it, and `bind:value` already has it. The reverse is not free: handed a bare value, a
 caller who wants the label has to search the list it just passed in.
 
-<Preview name="kit/combobox/onchange" />
+<Preview demo={onchangeDemo} />
 
 It fires from the selection handler and nowhere else, so it never fires on mount and never fires
 when `value` is assigned from code, as the button in that demo shows.
@@ -157,7 +166,7 @@ the previous value.
 past `maxDisplay`, and the popover stays open while picking. Choosing one of several is rarely
 choosing the last one.
 
-<Preview name="kit/combobox/multiple" />
+<Preview demo={multipleDemo} />
 
 The `footer` snippet gets `selectAll`, `clear`, the current selection and everything passing the
 filter, which is enough to build bulk actions without Coral guessing what they should say.
@@ -172,7 +181,7 @@ filter, which is enough to build bulk actions without Coral guessing what they s
 
 ## Groups, descriptions and keywords
 
-<Preview name="kit/combobox/groups" />
+<Preview demo={groupsDemo} />
 
 Pass groups instead of options and each gets a heading. `description` renders as a second line and
 is searched. `keywords` are searched but never shown: synonyms, codes, an old name. Try `berry`,
@@ -183,7 +192,7 @@ disappears along with its heading. No empty section is left behind.
 
 ## Creating options
 
-<Preview name="kit/combobox/create" />
+<Preview demo={createDemo} />
 
 `oncreate` adds a row that turns the search term into an option: a label, a project, a
 team. It is offered only when no option is already called that, compared the way the search
@@ -202,7 +211,7 @@ does not create the option twice, and `onerror` hears what went wrong.
 through `options`, and set `shouldFilter={false}` so a list the server already filtered is not
 filtered twice.
 
-<Preview name="kit/combobox/remote" />
+<Preview demo={remoteDemo} />
 
 `loading` adds a loading row under the options already listed, and announces `loadingMessage`. The
 previous results stay where they were and stay pickable while the next ones are on their way, so
@@ -219,7 +228,7 @@ remembered.
 
 ## Custom trigger and options
 
-<Preview name="kit/combobox/custom-trigger" />
+<Preview demo={customTriggerDemo} />
 
 The `trigger` snippet replaces the button entirely. Spread `props` onto whatever you render and
 the popover still wires itself up. The `option` snippet replaces the body of each row, and the
@@ -233,7 +242,7 @@ dropping Coral and rebuilding from raw shadcn.
 `Option<T>` is generic. The value stays whatever the project already has (an id, an enum member)
 and comes back out the same type, with no conversion at the call site.
 
-<Preview name="kit/combobox/typed-values" />
+<Preview demo={typedValuesDemo} />
 
 Options are matched with `===`, so object values compare by reference. `disabled` on an option is
 forwarded to the command item.

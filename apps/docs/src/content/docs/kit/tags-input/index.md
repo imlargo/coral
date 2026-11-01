@@ -6,6 +6,13 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import limitsDemo from './demos/limits.svelte?demo';
+	import rulesDemo from './demos/rules.svelte?demo';
+	import suggestionsDemo from './demos/suggestions.svelte?demo';
+	import formDemo from './demos/form.svelte?demo';
+	import customDemo from './demos/custom.svelte?demo';
+	import statesDemo from './demos/states.svelte?demo';
 </script>
 
 A tags field is an input, a row of badges and about eighty lines of keyboard handling nobody enjoys
@@ -13,7 +20,7 @@ writing twice. The eighty lines are the component: what separates one tag from t
 happens to a paste, what Backspace does when the field is empty, and where focus goes after a tag
 is taken out.
 
-<Preview name="kit/tags-input/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -56,7 +63,7 @@ depending on how it got into the field.
 
 ## Limits and rejections
 
-<Preview name="kit/tags-input/limits" />
+<Preview demo={limitsDemo} />
 
 `max` caps the list, `allowDuplicates` opens or closes the door on repeats, and both report what
 they turned away through `onreject`, one call per batch, so a paste of thirty over the cap is one
@@ -67,7 +74,7 @@ component that ships that sentence ships a language with it.
 
 ## Rules
 
-<Preview name="kit/tags-input/rules" />
+<Preview demo={rulesDemo} />
 
 `sanitize` runs before anything is judged or stored (trimming by default, but lowercasing, or
 stripping a leading `#`, belongs here too). `validate` then decides whether the value is a tag at
@@ -79,7 +86,7 @@ against what the values before it already added.
 
 ## Suggestions
 
-<Preview name="kit/tags-input/suggestions" />
+<Preview demo={suggestionsDemo} />
 
 `suggestions` offers existing tags while typing, filtered the way Coral's searches filter
 (`FRONT` finds `Front office`), in the order given, minus the tags already held. A suggestion is
@@ -95,7 +102,7 @@ an existing one.
 
 ## Forms
 
-<Preview name="kit/tags-input/form" />
+<Preview demo={formDemo} />
 
 `name` posts one hidden input per tag, which `FormData.getAll(name)` reads back as a list. The
 visible field never carries the name: it holds what is being typed, which is precisely what has not
@@ -106,7 +113,7 @@ own validation guards the tags, and never blocks a submit over text left half-ty
 
 ## Custom tags
 
-<Preview name="kit/tags-input/custom" />
+<Preview demo={customDemo} />
 
 The `tag` snippet replaces the body of each tag (an icon, an avatar, a count). The remove control
 stays, along with its label and its place in the keyboard order. `tagVariant`, `tagClass`,
@@ -114,7 +121,7 @@ stays, along with its label and its place in the keyboard order. `tagVariant`, `
 
 ## Readonly, disabled, clearable
 
-<Preview name="kit/tags-input/states" />
+<Preview demo={statesDemo} />
 
 Both `readonly` and `disabled` drop the remove controls: nothing about a field that cannot be
 edited should offer to edit it. `clearable` adds one control that empties the list and puts focus

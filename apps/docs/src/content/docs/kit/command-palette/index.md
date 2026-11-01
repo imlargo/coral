@@ -6,6 +6,8 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import asyncDemo from './demos/async.svelte?demo';
 </script>
 
 shadcn's `command` gives the list, the filtering and the arrow keys. What every project then writes
@@ -13,7 +15,7 @@ by hand is the rest of the palette: the global shortcut that opens it, an `open`
 in groups, what happens while an action is in flight, and the recents that make the second use
 faster than the first. The search box at the top of this site is that hand-written version.
 
-<Preview name="kit/command-palette/basic" class="min-h-64" />
+<Preview demo={basicDemo} class="min-h-64" />
 
 ## What Coral adds
 
@@ -30,7 +32,7 @@ faster than the first. The search box at the top of this site is that hand-writt
 
 ## Waiting, and failing
 
-<Preview name="kit/command-palette/async" class="min-h-64" />
+<Preview demo={asyncDemo} class="min-h-64" />
 
 The same rule as [confirm dialog](/docs/kit/confirm-dialog) and
 [action button](/docs/kit/action-button): return `false`, or throw, to stay put. An action is

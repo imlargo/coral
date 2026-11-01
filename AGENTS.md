@@ -227,7 +227,8 @@ The rules most often missed, because nothing in the code enforces them.
 - **Locale is never a region.** A `locale` prop defaults to `en-US`; a helper that formats without
   one passes `undefined` and follows the reader's own locale. Don't hardcode a country.
 - **A docs page is `index.md` plus `demos/*.svelte`**, found by glob; there is no index to
-  update. `<Preview name="kit/<component>/<demo>" />` embeds one. Frontmatter `title` is what the
+  update. A page imports each demo it shows, `import basicDemo from './demos/basic.svelte?demo'`,
+  and embeds it with `<Preview demo={basicDemo} />`, so it only loads its own demos. Frontmatter `title` is what the
   sidebar shows, spelled out in sentence case ("Table of contents", not "Toc"), and it has to
   match `coral.json` (`coral-pages.test.ts` in the docs app checks it). `group` is the sidebar
   section and search group: `Kit` for a component page. The install command is not written into

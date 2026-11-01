@@ -6,6 +6,8 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import remoteDemo from './demos/remote.svelte?demo';
 </script>
 
 A search box is an input with an icon until it drives a request. Then it needs a debounce, a way to
@@ -13,7 +15,7 @@ clear it that also clears the results, a rule for terms too short to be worth se
 against sending the same term twice, and Escape inside a dialog has to clear the term instead of
 closing the dialog.
 
-<Preview name="kit/search-input/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -29,7 +31,7 @@ closing the dialog.
 
 ## Remote search
 
-<Preview name="kit/search-input/remote" />
+<Preview demo={remoteDemo} />
 
 `minLength` reads a short term as an empty search rather than no search: backspacing from `bog` to
 `bo` clears the results instead of leaving them filtered by a term that is no longer on screen.

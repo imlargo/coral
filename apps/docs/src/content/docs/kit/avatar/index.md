@@ -6,6 +6,12 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import fallbackDemo from './demos/fallback.svelte?demo';
+	import sizesDemo from './demos/sizes.svelte?demo';
+	import customFallbackDemo from './demos/custom-fallback.svelte?demo';
+	import badgeDemo from './demos/badge.svelte?demo';
+	import groupDemo from './demos/group.svelte?demo';
 </script>
 
 Raw shadcn asks for three components and a hand-written fallback every single time:
@@ -20,7 +26,7 @@ Raw shadcn asks for three components and a hand-written fallback every single ti
 That last line is the problem. It is rewritten in every project, and it is wrong in most of them:
 `slice(0, 2)` on `Elena van der Meer` gives `EL`, not `EM`.
 
-<Preview name="kit/avatar/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -63,7 +69,7 @@ than one. Single-word names give a single letter.
 An empty or missing `name` produces an empty string rather than a placeholder. The caller decides
 what an unknown person looks like, and gets an empty circle until it says so.
 
-<Preview name="kit/avatar/fallback" />
+<Preview demo={fallbackDemo} />
 
 ## Accessibility
 
@@ -91,26 +97,26 @@ same name will not be read twice.
 
 `size` is forwarded straight to the shadcn root. Coral adds nothing here, and removes nothing.
 
-<Preview name="kit/avatar/sizes" />
+<Preview demo={sizesDemo} />
 
 ## Custom fallback
 
 When initials are not the right answer (an unauthenticated user, a machine account), pass a
 snippet instead of a string.
 
-<Preview name="kit/avatar/custom-fallback" />
+<Preview demo={customFallbackDemo} />
 
 ## Escaping the flat API
 
 The pieces stay reachable. `children` renders inside the root, next to the image, so anything the
 primitive supports still works without dropping Coral.
 
-<Preview name="kit/avatar/badge" />
+<Preview demo={badgeDemo} />
 
 The same goes for grouping: `AvatarGroup` comes from shadcn and Coral avatars sit inside it
 unchanged.
 
-<Preview name="kit/avatar/group" />
+<Preview demo={groupDemo} />
 
 ## Why flat props
 

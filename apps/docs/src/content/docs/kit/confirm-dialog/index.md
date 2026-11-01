@@ -6,6 +6,11 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import asyncDemo from './demos/async.svelte?demo';
+	import detailsDemo from './demos/details.svelte?demo';
+	import typeToConfirmDemo from './demos/type-to-confirm.svelte?demo';
+	import acknowledgeDemo from './demos/acknowledge.svelte?demo';
 </script>
 
 Written by hand, this is an `AlertDialog`, a `Spinner`, an `isSaving` flag and a `try/catch` at
@@ -14,7 +19,7 @@ move, and `Dialog` is the wrong primitive: it closes when you click outside, so 
 confirmation is one stray click away from being dismissed, and it has nothing that waits for a
 request.
 
-<Preview name="kit/confirm-dialog/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -28,7 +33,7 @@ request.
 
 ## Waiting, and failing
 
-<Preview name="kit/confirm-dialog/async" />
+<Preview demo={asyncDemo} />
 
 That demo fails the first time and succeeds after. Nothing closes on the failure: the buttons come
 back, the reader reads the error, and pressing the button again retries.
@@ -74,7 +79,7 @@ Two ways, and the choice is usually made for you:
 
 Anything between the description and the buttons: what exactly is about to change.
 
-<Preview name="kit/confirm-dialog/details" />
+<Preview demo={detailsDemo} />
 
 ## Confirm only once the body is complete
 
@@ -83,7 +88,7 @@ deleted. Checking inside `onconfirm` and returning `false` keeps the dialog open
 looks armed the whole time and the reader finds out it was not only after clicking. For a
 destructive action, a button that looks ready when it is not is the wrong signal.
 
-<Preview name="kit/confirm-dialog/type-to-confirm" />
+<Preview demo={typeToConfirmDemo} />
 
 `confirmDisabled` holds the confirm button back until the body says so. Cancel stays available
 throughout, because a reader who cannot finish still needs a way out.
@@ -93,7 +98,7 @@ throughout, because a reader who cannot finish still needs a way out.
 `showCancel={false}` leaves a dialog that can only be agreed with. Escape still closes it, so it is
 a nudge and not a trap.
 
-<Preview name="kit/confirm-dialog/acknowledge" />
+<Preview demo={acknowledgeDemo} />
 
 ## Import
 

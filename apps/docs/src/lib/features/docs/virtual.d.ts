@@ -1,5 +1,5 @@
-// Provided by `demo-sources.ts`. Not a file: it does not exist until the build makes it.
-declare module 'virtual:coral-demo-sources' {
-	/** Every docs demo's source, already highlighted, keyed by root-relative path. */
-	export const sources: Record<string, { html: string; text: string }>;
+// Provided by `demo-sources.ts`: the demo component with its own highlighted source.
+declare module '*.svelte?demo' {
+	const demo: import('./types.js').Demo;
+	export default demo;
 }

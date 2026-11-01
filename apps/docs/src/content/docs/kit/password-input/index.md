@@ -6,6 +6,8 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import formDemo from './demos/form.svelte?demo';
 </script>
 
 Switching `type` between `password` and `text` is one line, and it is the line that goes wrong: the
@@ -13,7 +15,7 @@ caret jumps to the start, the toggle announces itself as a different button afte
 form submitted while the password is showing hands a password manager a plain text field, so the
 offer to save it never comes.
 
-<Preview name="kit/password-input/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -29,7 +31,7 @@ offer to save it never comes.
 
 ## In a form
 
-<Preview name="kit/password-input/form" />
+<Preview demo={formDemo} />
 
 Show the password and submit: the form reports `type="password"`. Turn this off with
 `hideOnSubmit={false}` only if the field is not a credential.
