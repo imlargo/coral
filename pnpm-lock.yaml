@@ -69,14 +69,14 @@ importers:
         specifier: ^7.2.0
         version: 7.3.0(svelte@5.57.2(@typescript-eslint/types@8.70.0))(vite@8.3.0(@types/node@24.13.6)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1))
       '@svmd/content':
-        specifier: ^0.2.0
-        version: 0.2.0(svelte@5.57.2(@typescript-eslint/types@8.70.0))
+        specifier: ^0.3.0
+        version: 0.3.0(svelte@5.57.2(@typescript-eslint/types@8.70.0))
       '@svmd/core':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.3.0
+        version: 0.3.0
       '@svmd/vite':
-        specifier: ^0.2.0
-        version: 0.2.0(@sveltejs/vite-plugin-svelte@7.3.0(svelte@5.57.2(@typescript-eslint/types@8.70.0))(vite@8.3.0(@types/node@24.13.6)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1)))(svelte@5.57.2(@typescript-eslint/types@8.70.0))(vite@8.3.0(@types/node@24.13.6)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1))
+        specifier: ^0.3.0
+        version: 0.3.0(@sveltejs/vite-plugin-svelte@7.3.0(svelte@5.57.2(@typescript-eslint/types@8.70.0))(vite@8.3.0(@types/node@24.13.6)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1)))(svelte@5.57.2(@typescript-eslint/types@8.70.0))(vite@8.3.0(@types/node@24.13.6)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1))
       '@tailwindcss/typography':
         specifier: ^0.5.19
         version: 0.5.20(tailwindcss@4.3.3)
@@ -959,30 +959,30 @@ packages:
       svelte: ^5.46.4
       vite: ^8.0.0-beta.7 || ^8.0.0
 
-  '@svmd/content@0.2.0':
-    resolution: {integrity: sha512-w1sw3Cq6bm+cGgGNFKxFj+xf1DQ8eLaWF9AmYnajw/qwkNrlvc2gXspLZo+ZdDmDk5qFDQJXtM9wY+0vkWlDdg==}
+  '@svmd/content@0.3.0':
+    resolution: {integrity: sha512-J6z9Ah9iD19x/sG7nzhkuhgtBJG2fPE8itd56vl4bSXqCkR/oFZvAG5crzIFcJDuEa3Zo98/nCETxNqiGeRXEw==}
     engines: {node: '>=20'}
     peerDependencies:
       svelte: ^5.0.0
 
-  '@svmd/core@0.2.0':
-    resolution: {integrity: sha512-1xn51WFtEMD0w0X90LVQqvJMjBHphbsWvrcqV7+cGGrkZv68PM1whXPZKC5o7KP3Hag9hh0qCWF8eCdgE7xvjA==}
+  '@svmd/core@0.3.0':
+    resolution: {integrity: sha512-r9NS/6E92aXTGeuI7A5sujFR4H2VgLhmJi9Sht3QktVmATvlTnorXFdttrhc4MRtV4au2unZ1pzF4lMu8qETFA==}
     engines: {node: '>=20'}
 
-  '@svmd/mdast-util-svelte@0.2.0':
-    resolution: {integrity: sha512-enO6wbvxiIXmJ6PTCqoLQu3sUEoi2uu3LZYzfp85goYG7z2gN71VDOQdz7gufh7IOdJxAxRIbz4QZqCdYtZjgw==}
+  '@svmd/mdast-util-svelte@0.3.0':
+    resolution: {integrity: sha512-yRDzJrk34G0qXjk6bhunIiK6FPOOtU6ihUh7GpFFCzrPl+pZI0mL+LC1mbqqL0tad4uub+ahqxJdfH8s0QejLQ==}
     engines: {node: '>=20'}
 
-  '@svmd/micromark-extension-svelte@0.2.0':
-    resolution: {integrity: sha512-NXYEa1TeE7LVdJ316Ja2TVR9IiZ13bGFDrIQJQcjCtNFmwGZsjQ5sfhYpoA3R/Xz0QwOSa8wakL2msPs1Yal4g==}
+  '@svmd/micromark-extension-svelte@0.3.0':
+    resolution: {integrity: sha512-3OUF3XVb/qw2HwDoJxN/d2VHYoaKix5b1LVbCagk4DnNesHpw8Ryk+tN9J/e8TDlK4dXXzpLiYNSkyii7MlQLw==}
     engines: {node: '>=20'}
 
-  '@svmd/micromark-factory-svelte-expression@0.2.0':
-    resolution: {integrity: sha512-EHVCG52m2diyaKEtj8yhyeAyE6mDdECBBDsCyXeHpspHOK3Qp4TQVileWNB/YC/JI+wCCaKJp5YmMBIEJ7pJog==}
+  '@svmd/micromark-factory-svelte-expression@0.3.0':
+    resolution: {integrity: sha512-JqoxkgccPBvbpFPB9fhb48TwQ/NNZ2WybQuKAdgm/8Qza9nR/Iv7kXJh6GjARvewpe1LBYyAW5gzFFAy4Ydw1A==}
     engines: {node: '>=20'}
 
-  '@svmd/vite@0.2.0':
-    resolution: {integrity: sha512-b3YaX0SdWkbG9pTFyWNn42iEJ3PLWHK6kiOCj4pweZFkzHe10bsmBRljOnAffKh8ysSqqYfVgZBPiqbtuFNBvA==}
+  '@svmd/vite@0.3.0':
+    resolution: {integrity: sha512-+uoOEc3PU4vp38dgeR7/0C0JGtkel8pHnb9nXkNFaRTWu+tWEFaypjuLWF/47DOi1k8V2m+INrdroNfbOFslWg==}
     engines: {node: '>=20'}
     peerDependencies:
       '@sveltejs/vite-plugin-svelte': ^5.0.0 || ^6.0.0 || ^7.0.0
@@ -1877,9 +1877,6 @@ packages:
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
-
-  libphonenumber-js@1.13.13:
-    resolution: {integrity: sha512-hV6SmWnyQ8U1QXhhqbqYBHIStNnscG7A5XbGodgdHhf/8N5PwhYpJA5U/yHDjYwPYTd8uNGXqq416XctuvK2PA==}
 
   libphonenumber-js@1.13.15:
     resolution: {integrity: sha512-AHdhEQeDFEJ4GKDAQ9AwxChy+v2kUILUB3TGQRpkXMkWePjXTU/WQEzWVQoIx/Gz8fE73Wr5SEuZCy2vk8jrMQ==}
@@ -3530,16 +3527,16 @@ snapshots:
       vite: 8.3.0(@types/node@24.13.6)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1)
       vitefu: 1.1.3(vite@8.3.0(@types/node@24.13.6)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1))
 
-  '@svmd/content@0.2.0(svelte@5.57.2(@typescript-eslint/types@8.70.0))':
+  '@svmd/content@0.3.0(svelte@5.57.2(@typescript-eslint/types@8.70.0))':
     dependencies:
       svelte: 5.57.2(@typescript-eslint/types@8.70.0)
 
-  '@svmd/core@0.2.0':
+  '@svmd/core@0.3.0':
     dependencies:
       '@jridgewell/sourcemap-codec': 1.6.0
       '@standard-schema/spec': 1.1.0
-      '@svmd/mdast-util-svelte': 0.2.0
-      '@svmd/micromark-extension-svelte': 0.2.0
+      '@svmd/mdast-util-svelte': 0.3.0
+      '@svmd/micromark-extension-svelte': 0.3.0
       '@types/hast': 3.0.5
       '@types/mdast': 4.0.4
       acorn: 8.18.0
@@ -3561,9 +3558,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@svmd/mdast-util-svelte@0.2.0':
+  '@svmd/mdast-util-svelte@0.3.0':
     dependencies:
-      '@svmd/micromark-extension-svelte': 0.2.0
+      '@svmd/micromark-extension-svelte': 0.3.0
       '@types/mdast': 4.0.4
       devlop: 1.1.0
       mdast-util-from-markdown: 2.0.3
@@ -3573,9 +3570,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@svmd/micromark-extension-svelte@0.2.0':
+  '@svmd/micromark-extension-svelte@0.3.0':
     dependencies:
-      '@svmd/micromark-factory-svelte-expression': 0.2.0
+      '@svmd/micromark-factory-svelte-expression': 0.3.0
       '@types/estree': 1.0.9
       acorn: 8.18.0
       devlop: 1.1.0
@@ -3586,7 +3583,7 @@ snapshots:
       micromark-util-symbol: 2.0.1
       micromark-util-types: 2.0.2
 
-  '@svmd/micromark-factory-svelte-expression@0.2.0':
+  '@svmd/micromark-factory-svelte-expression@0.3.0':
     dependencies:
       devlop: 1.1.0
       micromark-util-character: 2.1.1
@@ -3594,10 +3591,10 @@ snapshots:
       micromark-util-symbol: 2.0.1
       micromark-util-types: 2.0.2
 
-  '@svmd/vite@0.2.0(@sveltejs/vite-plugin-svelte@7.3.0(svelte@5.57.2(@typescript-eslint/types@8.70.0))(vite@8.3.0(@types/node@24.13.6)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1)))(svelte@5.57.2(@typescript-eslint/types@8.70.0))(vite@8.3.0(@types/node@24.13.6)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1))':
+  '@svmd/vite@0.3.0(@sveltejs/vite-plugin-svelte@7.3.0(svelte@5.57.2(@typescript-eslint/types@8.70.0))(vite@8.3.0(@types/node@24.13.6)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1)))(svelte@5.57.2(@typescript-eslint/types@8.70.0))(vite@8.3.0(@types/node@24.13.6)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
       '@sveltejs/vite-plugin-svelte': 7.3.0(svelte@5.57.2(@typescript-eslint/types@8.70.0))(vite@8.3.0(@types/node@24.13.6)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1))
-      '@svmd/core': 0.2.0
+      '@svmd/core': 0.3.0
       svelte: 5.57.2(@typescript-eslint/types@8.70.0)
       vite: 8.3.0(@types/node@24.13.6)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1)
     transitivePeerDependencies:
@@ -4026,7 +4023,7 @@ snapshots:
   class-validator@0.14.4:
     dependencies:
       '@types/validator': 13.15.10
-      libphonenumber-js: 1.13.13
+      libphonenumber-js: 1.13.15
       validator: 13.15.35
     optional: true
 
@@ -4567,9 +4564,6 @@ snapshots:
     dependencies:
       prelude-ls: 1.2.1
       type-check: 0.4.0
-
-  libphonenumber-js@1.13.13:
-    optional: true
 
   libphonenumber-js@1.13.15: {}
 
