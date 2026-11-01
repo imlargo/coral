@@ -262,15 +262,20 @@ apps/docs/src/content/docs/kit/avatar/
    └─ sizes.svelte
 ```
 
-Render a demo with its name, the path minus `demos/` and the extension:
+Import a demo with `?demo` and hand it to `Preview`:
 
 ```svelte
-<Preview name="kit/avatar/basic" />
+<script lang="ts">
+	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+</script>
+
+<Preview demo={basicDemo} />
 ```
 
 The Code tab shows that file's actual source, read at build time. There is no second copy of the
-snippet to keep in sync, and a demo that does not exist fails the build instead of rendering an
-empty box.
+snippet to keep in sync, a demo that does not exist fails the build instead of rendering an empty
+box, and a page only loads the demos it imports.
 
 The sidebar and the install command come for free: the pages of every layer - `kit/`, `blocks/`,
 `product/` - are collected from the folder itself and listed under the `group` in their

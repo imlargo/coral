@@ -6,6 +6,9 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import counterDemo from './demos/counter.svelte?demo';
+	import composerDemo from './demos/composer.svelte?demo';
 </script>
 
 A comment box that does not grow makes people write into a two-line window with a scrollbar, and a
@@ -14,7 +17,7 @@ hand-rolled fix is four lines - set the height to `auto`, read `scrollHeight`, s
 has three quiet problems: the page jumps as the field shrinks, the field loses a pixel a time in a
 border-box layout, and none of it runs when the text arrives from anywhere other than a keystroke.
 
-<Preview name="kit/textarea/basic" class="min-h-64" />
+<Preview demo={basicDemo} class="min-h-64" />
 
 ## What Coral adds
 
@@ -33,7 +36,7 @@ border-box layout, and none of it runs when the text arrives from anywhere other
 
 ## A counter and a limit
 
-<Preview name="kit/textarea/counter" class="min-h-64" />
+<Preview demo={counterDemo} class="min-h-64" />
 
 Near the limit the counter takes the theme's destructive colour and the number left is announced
 politely - once, near the end, rather than on every keystroke, which is what makes a counted field
@@ -41,7 +44,7 @@ usable with a screen reader on.
 
 ## A composer
 
-<Preview name="kit/textarea/composer" class="min-h-80" />
+<Preview demo={composerDemo} class="min-h-80" />
 
 `submitOn="enter"` is the chat convention: Enter sends, Shift-Enter writes a newline.
 `submitOn="mod-enter"` is the form one, where Enter belongs to the text and Cmd or Ctrl sends. Both

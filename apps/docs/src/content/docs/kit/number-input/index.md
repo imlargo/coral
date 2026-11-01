@@ -6,6 +6,12 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import boundsDemo from './demos/bounds.svelte?demo';
+	import decimalsDemo from './demos/decimals.svelte?demo';
+	import localeDemo from './demos/locale.svelte?demo';
+	import formatDemo from './demos/format.svelte?demo';
+	import statesDemo from './demos/states.svelte?demo';
 </script>
 
 A hand-rolled stepper field clamps in one direction and forgets the other: the buttons stop at the
@@ -13,7 +19,7 @@ cap while a typed `150` walks straight through it, so the same field enforces it
 mouse and not with the keyboard. Dropping the text field entirely (just `-` / value / `+`) closes
 that hole by taking typing away, which turns a jump from `1` to `40` into thirty-nine presses.
 
-<Preview name="kit/number-input/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -30,7 +36,7 @@ one control with one focus ring instead of three.
 
 ## Bounds
 
-<Preview name="kit/number-input/bounds" />
+<Preview demo={boundsDemo} />
 
 Type `999` into that field and click away. It becomes `25`, and the field itself updates: the state
 and what you can see never disagree.
@@ -45,14 +51,14 @@ and it quietly makes a temperature or a balance field impossible to express.
 
 ## Decimals
 
-<Preview name="kit/number-input/decimals" />
+<Preview demo={decimalsDemo} />
 
 `step` sets the precision as well as the jump, so `step={0.1}` rounds to one decimal. When the two
 genuinely differ (money that steps by whole units but stores cents), set `decimals` on its own.
 
 ## Locale
 
-<Preview name="kit/number-input/locale" />
+<Preview demo={localeDemo} />
 
 Most of Europe and Latin America write a decimal with a comma, and a `type="number"` field reports
 `1,5` as empty, so the value is dropped on commit and the reader watches their field clear itself.
@@ -66,7 +72,7 @@ exactly as `1.500` is fifteen hundred.
 
 ## Currency, percent and units
 
-<Preview name="kit/number-input/format" />
+<Preview demo={formatDemo} />
 
 `format` is passed to `Intl.NumberFormat`, so the field writes `$1234.50`, `15%` or `20 GB` the way
 `locale` does, and reads it back past the symbol whether or not the reader typed it. A
@@ -96,7 +102,7 @@ back; otherwise it goes on to the dialog around the field.
 
 ## Empty, readonly, disabled
 
-<Preview name="kit/number-input/states" />
+<Preview demo={statesDemo} />
 
 An empty field keeps both steppers live, because stepping from empty has somewhere to go either way.
 The first press lands on the first allowed value: with `min={5}`, `+` gives `5`, not `6`.

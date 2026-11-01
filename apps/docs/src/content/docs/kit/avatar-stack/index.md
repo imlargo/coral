@@ -6,6 +6,8 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import overflowDemo from './demos/overflow.svelte?demo';
 </script>
 
 shadcn ships the overlap, `AvatarGroup` and `AvatarGroupCount`. What it leaves to each call site is
@@ -13,7 +15,7 @@ the arithmetic: slice the list, count the rest, render `+N`. That arithmetic is 
 so that `max={4}` draws four avatars _and_ a count, a fifth circle, and six people in five slots
 renders `+1`, a circle that hides exactly one avatar the same size as itself.
 
-<Preview name="kit/avatar-stack/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -29,7 +31,7 @@ renders `+1`, a circle that hides exactly one avatar the same size as itself.
 
 ## Listing the rest
 
-<Preview name="kit/avatar-stack/overflow" />
+<Preview demo={overflowDemo} />
 
 The `overflow` snippet receives the hidden items, the count and its label, enough to put the count in
 a popover or a tooltip. Render an `AvatarGroupCount` so it keeps its place in the overlap.

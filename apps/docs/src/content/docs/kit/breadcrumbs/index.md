@@ -6,6 +6,9 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import foldedDemo from './demos/folded.svelte?demo';
+	import customDemo from './demos/custom.svelte?demo';
 </script>
 
 shadcn-svelte's `breadcrumb` ships the parts, an ellipsis included, and no behaviour: when and how a
@@ -13,7 +16,7 @@ trail shortens is left to every project, and most never decide. A deep trail wra
 or shrinks every crumb into an unreadable stub, the current page is drawn as a link to itself, and
 a long repository name pushes everything else off the screen.
 
-<Preview name="kit/breadcrumbs/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -29,7 +32,7 @@ a long repository name pushes everything else off the screen.
 
 ## Folding
 
-<Preview name="kit/breadcrumbs/folded" class="min-h-32" />
+<Preview demo={foldedDemo} class="min-h-32" />
 
 Resize the preview, or the window. The whole trail is measured off an invisible copy, so the shown
 trail never has to change shape to find out whether it fits, and the fold runs from the second
@@ -38,7 +41,7 @@ fold, and the pages nearest to where the reader is.
 
 ## Your own crumbs
 
-<Preview name="kit/breadcrumbs/custom" />
+<Preview demo={customDemo} />
 
 The `item` snippet replaces what a crumb shows (an icon beside the root, a status dot) and the
 link or the current-page mark stays around it. `separator` replaces the glyph between crumbs.

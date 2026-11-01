@@ -6,6 +6,8 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import richDemo from './demos/rich.svelte?demo';
 </script>
 
 A description, an incident note, release notes: clamp it with `line-clamp-3` and add a "Show more"
@@ -13,7 +15,7 @@ button, and the button shows up under text that already fits, the clamp does not
 followed by a list, and tabbing onto a link inside the hidden part puts focus somewhere nobody can
 see.
 
-<Preview name="kit/show-more/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -28,7 +30,7 @@ see.
 
 ## Rich content, custom toggle
 
-<Preview name="kit/show-more/rich" />
+<Preview demo={richDemo} />
 
 The `toggle` snippet receives `props` to spread onto your own button (they carry the ARIA wiring and
 the click handler), plus `expanded` and `toggle`.

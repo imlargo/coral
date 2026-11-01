@@ -6,6 +6,8 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import olderDemo from './demos/older.svelte?demo';
 </script>
 
 Audit logs, deployment histories, account activity: a product has several of these, and each one is
@@ -14,7 +16,7 @@ day at UTC midnight rather than the reader's, so an evening deploy files under t
 not a list, so a screen reader hears one run of text with no count and no time on anything. "Load
 older" appends without a word, so nobody is told anything arrived.
 
-<Preview name="kit/timeline/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -30,7 +32,7 @@ older" appends without a word, so nobody is told anything arrived.
 
 ## Loading older events
 
-<Preview name="kit/timeline/older" />
+<Preview demo={olderDemo} />
 
 `hasMore` shows the control; `onloadmore` fetches and appends to `items`, and follows the
 [action convention](/docs/conventions): return a promise and it waits, return `false` or throw and

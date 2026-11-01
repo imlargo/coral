@@ -6,6 +6,9 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import liveDemo from './demos/live.svelte?demo';
+	import cutoffDemo from './demos/cutoff.svelte?demo';
 </script>
 
 `relativeTime(date)` helpers get written once per project, and they share the same limits: the text
@@ -13,7 +16,7 @@ is computed at render and goes stale while the page is open, "60 minutes ago" sh
 ago" belongs, and the fix (a `setInterval` per timestamp) wakes a two-hundred-row table every
 second to change nothing.
 
-<Preview name="kit/relative-time/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -30,14 +33,14 @@ second to change nothing.
 
 ## Live
 
-<Preview name="kit/relative-time/live" />
+<Preview demo={liveDemo} />
 
 `precision="minute"`, the default, reads anything within half a minute as "now", since a label
 ticking every second draws the eye for no reason. Use `second` where the seconds matter.
 
 ## Past a cutoff
 
-<Preview name="kit/relative-time/cutoff" />
+<Preview demo={cutoffDemo} />
 
 "40 days ago" is rarely what anyone wants to read about a deployment. Past `cutoff` milliseconds
 the date is shown in full instead, formatted with `titleFormat`, and nothing is scheduled for it.

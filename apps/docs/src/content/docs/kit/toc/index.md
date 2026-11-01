@@ -6,6 +6,8 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import givenDemo from './demos/given.svelte?demo';
 </script>
 
 The hand-rolled version tracks the active heading with an `IntersectionObserver` and takes
@@ -15,7 +17,7 @@ a section short enough to sit entirely above the band never lights up, and the l
 page can never win at all, because at the bottom of the document there is nothing left to scroll
 and it never crosses the line.
 
-<Preview name="kit/toc/basic" class="min-h-80" />
+<Preview demo={basicDemo} class="min-h-80" />
 
 ## What Coral adds
 
@@ -34,7 +36,7 @@ and it never crosses the line.
 
 ## Headings you already have
 
-<Preview name="kit/toc/given" />
+<Preview demo={givenDemo} />
 
 Pass `headings` and nothing is read from the DOM. That's the right shape when a markdown pipeline
 or a CMS payload already lists them, and the ids are its doing.

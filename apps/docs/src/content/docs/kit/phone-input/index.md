@@ -6,6 +6,8 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import formDemo from './demos/form.svelte?demo';
 </script>
 
 A phone field looks like a text input with a country dropdown beside it. Written that way, it stores
@@ -14,7 +16,7 @@ code from either, so the SMS provider rejects both. Formatting it as it is typed
 versions get stuck: the caret jumps to the end after every digit, and backspace hits a space the
 formatter immediately puts back.
 
-<Preview name="kit/phone-input/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -34,7 +36,7 @@ formatter immediately puts back.
 
 ## In a form
 
-<Preview name="kit/phone-input/form" />
+<Preview demo={formDemo} />
 
 With `name`, the form submits the E.164 value under it rather than the formatted text. The visible
 field has no `name` of its own, so nothing submits twice.

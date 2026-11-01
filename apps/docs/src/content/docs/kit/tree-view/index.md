@@ -6,13 +6,16 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import actionsDemo from './demos/actions.svelte?demo';
+	import lazyDemo from './demos/lazy.svelte?demo';
 </script>
 
 Nested `<ul>`s with a chevron that toggles a boolean is a tree for the mouse. The keyboard gets
 nothing, or a tab stop per row, which in a folder of two hundred files is two hundred Tab presses to
 get past it. A screen reader hears a list of lists with no idea what is open.
 
-<Preview name="kit/tree-view/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -28,7 +31,7 @@ get past it. A screen reader hears a list of lists with no idea what is open.
 
 ## Row actions
 
-<Preview name="kit/tree-view/actions" />
+<Preview demo={actionsDemo} />
 
 File trees and navigation trees usually need rename, add or delete on a row, and a button inside a
 `treeitem` is what breaks the tree's single tab stop. The `actions` snippet keeps the model whole:
@@ -48,7 +51,7 @@ erasing the levels.
 
 ## Loading children on demand
 
-<Preview name="kit/tree-view/lazy" />
+<Preview demo={lazyDemo} />
 
 A node with `children: []` is a branch with nothing loaded yet: it can be opened. Fetch when its id
 appears in `onexpandedchange`, then hand back `nodes` with the children filled in.

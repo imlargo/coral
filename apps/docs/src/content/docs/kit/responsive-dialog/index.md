@@ -6,13 +6,15 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import formDemo from './demos/form.svelte?demo';
 </script>
 
 shadcn's own docs show how to do this, and the way it is done is by writing the dialog twice (once
 inside `Dialog`, once inside `Drawer`) behind an `{#if isDesktop}`. Every change to the content is
 then a change in two places, and crossing the breakpoint with it open closes it.
 
-<Preview name="kit/responsive-dialog/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -48,7 +50,7 @@ are the same bits-ui parts.
 
 ## The body
 
-<Preview name="kit/responsive-dialog/form" />
+<Preview demo={formDemo} />
 
 The dialog pads everything inside it; the drawer pads its header and footer and leaves the body to
 whoever wrote it, so the same form sits flush against the screen edges on a phone and looks right

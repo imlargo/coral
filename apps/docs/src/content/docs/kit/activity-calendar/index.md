@@ -6,12 +6,18 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import thresholdsDemo from './demos/thresholds.svelte?demo';
+	import scaleDemo from './demos/scale.svelte?demo';
+	import labelledDemo from './demos/labelled.svelte?demo';
+	import piecesDemo from './demos/pieces.svelte?demo';
+	import selectDemo from './demos/select.svelte?demo';
 </script>
 
 Counts per day, one square each, weeks as columns. Coral draws the calendar, buckets the counts and
 handles the keyboard; what the numbers mean stays with the project.
 
-<Preview name="kit/activity-calendar/basic" class="justify-start overflow-x-auto" />
+<Preview demo={basicDemo} class="justify-start overflow-x-auto" />
 
 ## What Coral adds
 
@@ -80,7 +86,7 @@ each one is scaled to its own busiest day and the darker grid is not the busier 
 cuts is then the number of steps and `levels` is ignored, so the ramp cannot end up with more levels
 than the scale has room for.
 
-<Preview name="kit/activity-calendar/thresholds" class="justify-start overflow-x-auto" />
+<Preview demo={thresholdsDemo} class="justify-start overflow-x-auto" />
 
 ## Colour
 
@@ -104,7 +110,7 @@ Two CSS custom properties, set through `class`:
 <ActivityCalendar {data} class="[--coral-cell:1rem] [--coral-gap:0.25rem]" />
 ```
 
-<Preview name="kit/activity-calendar/scale" class="justify-start overflow-x-auto" />
+<Preview demo={scaleDemo} class="justify-start overflow-x-auto" />
 
 Everything in the grid derives from the square, so those two are the whole knob. They are custom
 properties rather than props because a grid is sized, not styled.
@@ -117,7 +123,7 @@ copy is the project's, and Coral does not know what is being counted.
 `label` is where it goes. It feeds both the tooltip and the square's accessible name, so writing it
 once fixes both.
 
-<Preview name="kit/activity-calendar/labelled" class="justify-start overflow-x-auto" />
+<Preview demo={labelledDemo} class="justify-start overflow-x-auto" />
 
 ## The pieces
 
@@ -126,14 +132,14 @@ cell, including whatever `meta` you hung on the day. `legend` replaces the swatc
 the ramp and the cuts, so a legend that reads `1 ▢▢▢▢▢ 12+` needs nothing Coral did not already
 compute.
 
-<Preview name="kit/activity-calendar/pieces" class="justify-start overflow-x-auto" />
+<Preview demo={piecesDemo} class="justify-start overflow-x-auto" />
 
 `meta` is generic and untouched: Coral carries it from `data` to the snippet and to `onselect`, and
 never reads it.
 
 ## Selection
 
-<Preview name="kit/activity-calendar/select" class="justify-start overflow-x-auto" />
+<Preview demo={selectDemo} class="justify-start overflow-x-auto" />
 
 `onselect` fires on click, Enter and Space. There is no selected state: a square is where a day is
 picked, not where it is held. The selection opens a panel, filters a list or pushes a route, and it

@@ -6,13 +6,15 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import validationDemo from './demos/validation.svelte?demo';
 </script>
 
 A wizard is a `currentStep` number until it has to validate. Then Next needs to wait on a request
 and stay put when it fails, the step list has to refuse a jump past a step nobody filled in, and after
 Next the focus is on a button that may no longer exist. For a keyboard user, that's the page body.
 
-<Preview name="kit/stepper/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -28,7 +30,7 @@ Next the focus is on a button that may no longer exist. For a keyboard user, tha
 
 ## Validation
 
-<Preview name="kit/stepper/validation" />
+<Preview demo={validationDemo} />
 
 Next on the last step runs `onbeforenext`, then `onfinish`, under the same `false` convention.
 

@@ -6,13 +6,16 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import customRowDemo from './demos/custom-row.svelte?demo';
+	import constrainedDemo from './demos/constrained.svelte?demo';
 </script>
 
 Almost every app grows one, and it is almost always the same hand-rolled shape: a `<div>` with an
 `onclick` over a hidden `<input type="file">`, a MIME check that turns away valid files, and a list
 that grows a second row when the same file is dropped twice. This is that input with those fixed.
 
-<Preview name="kit/file-input/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -65,7 +68,7 @@ The real seam is the `file` snippet: Coral holds the selection and renders the z
 renders each row with whatever its own uploader knows - including the attachment states the default
 row deliberately leaves alone.
 
-<Preview name="kit/file-input/custom-row" />
+<Preview demo={customRowDemo} />
 
 ## The `accept` bug
 
@@ -94,7 +97,7 @@ The server is the real gate either way; the point is not to turn away a file the
 
 ## Constraints and rejections
 
-<Preview name="kit/file-input/constrained" />
+<Preview demo={constrainedDemo} />
 
 `accept`, `maxSize` and `maxFiles` filter what gets in. What gets turned away goes to `onreject`, as
 structured data:

@@ -6,6 +6,8 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import customRowDemo from './demos/custom-row.svelte?demo';
 </script>
 
 HTML5 `draggable` gets a sortable list working on a desktop in an afternoon, and then it does not work
@@ -13,7 +15,7 @@ on a phone (touch devices do not fire its events), and there is no way to do it 
 all. The bound array usually updates on every row the pointer crosses, so an `$effect` that saves the
 order sends a request for each one.
 
-<Preview name="kit/reorder-list/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -30,7 +32,7 @@ order sends a request for each one.
 
 ## Your own row
 
-<Preview name="kit/reorder-list/custom-row" />
+<Preview demo={customRowDemo} />
 
 The `item` snippet replaces the row's body and keeps Coral's grip. The `row` snippet replaces
 everything: spread `handle` onto whatever should grab the row, whether that's a grip or the whole

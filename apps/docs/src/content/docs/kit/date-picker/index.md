@@ -6,6 +6,14 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import rangeDemo from './demos/range.svelte?demo';
+	import changesDemo from './demos/changes.svelte?demo';
+	import presetsDemo from './demos/presets.svelte?demo';
+	import boundsDemo from './demos/bounds.svelte?demo';
+	import birthDemo from './demos/birth.svelte?demo';
+	import formDemo from './demos/form.svelte?demo';
+	import piecesDemo from './demos/pieces.svelte?demo';
 </script>
 
 The shadcn docs are honest about this one: there is no date picker component, there is a recipe.
@@ -13,7 +21,7 @@ Every project writes the same forty lines (a popover, a trigger button, a `DateF
 `getLocalTimeZone()`, an `open` flag that has to be closed by hand), and every project writes them
 slightly differently.
 
-<Preview name="kit/date-picker/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -35,7 +43,7 @@ slightly differently.
 
 ## Ranges
 
-<Preview name="kit/date-picker/range" />
+<Preview demo={rangeDemo} />
 
 `type="range"` swaps the calendar for the range calendar and `value` for a `{ start, end }`. The
 popover stays open through the middle of a selection and shuts when the second end lands.
@@ -46,7 +54,7 @@ placeholder. A picker that says "Pick a range" while a start day sits highlighte
 about its own state. It is also why the `trigger` snippet gets `empty` as a signal of its own
 instead of testing `value === undefined`.
 
-<Preview name="kit/date-picker/changes" />
+<Preview demo={changesDemo} />
 
 **`onchange` skips the half state.** A whole range and a cleared one are both selections; half of
 one is the user still mid-gesture, and a caller that fetches on change would otherwise fire a
@@ -54,7 +62,7 @@ request for a range with no end. Bind `value` if you do want every click.
 
 ## Presets
 
-<Preview name="kit/date-picker/presets" />
+<Preview demo={presetsDemo} />
 
 A preset is a label and the value it selects. **Give it as a function whenever it is relative to
 now**:
@@ -82,13 +90,13 @@ popover.
 
 ## The calendar keeps everything it had
 
-<Preview name="kit/date-picker/bounds" />
+<Preview demo={boundsDemo} />
 
 Unrecognised props go to the **calendar**, not to the popover: `minValue`, `maxValue`,
 `numberOfMonths`, `isDateDisabled`, `isDateUnavailable`, `captionLayout`, `weekStartsOn`,
 `fixedWeeks`, the `day` snippet, all of it.
 
-<Preview name="kit/date-picker/birth" />
+<Preview demo={birthDemo} />
 
 The popover's own surface is small on purpose, because a date picker only ever needs three knobs
 from it (`open`, `align` and `contentClass`), and those are named props.
@@ -99,7 +107,7 @@ one name, one a string and one a date, is a coin flip every caller loses once.
 
 ## Forms
 
-<Preview name="kit/date-picker/form" />
+<Preview demo={formDemo} />
 
 `name` puts the selection in the request as a field holding the ISO day, `2026-01-05`, which is
 what `String(dateValue)` already gives you. A range submits two: `name`, and `endName` (defaulting
@@ -111,7 +119,7 @@ is the user mid-gesture rather than a selection.
 
 ## The pieces
 
-<Preview name="kit/date-picker/pieces" />
+<Preview demo={piecesDemo} />
 
 `trigger` replaces the button entirely and receives `label` already formatted, so a custom trigger
 does not have to re-derive it. `footer` adds a strip below the calendar: a clear action, a hint, a

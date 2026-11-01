@@ -6,6 +6,8 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import failingDemo from './demos/failing.svelte?demo';
 </script>
 
 [File input](/docs/kit/file-input) picks and validates files and stops there, on purpose: it is an
@@ -15,7 +17,7 @@ and each project wires `XMLHttpRequest` its own way. One failure inside a batch 
 says it succeeded, or every file is sent again. Cancel hides the row and leaves the request running.
 Ten files start at once and saturate the connection or the server's limits.
 
-<Preview name="kit/file-upload/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -58,7 +60,7 @@ A handler that uses `fetch` works too, with `signal` passed through and no progr
 
 ## Failures and retries
 
-<Preview name="kit/file-upload/failing" />
+<Preview demo={failingDemo} />
 
 `failedMessage` receives what the handler threw, so the row can say the server's own reason. The
 retry sends only that file; the tally is announced again once the batch settles.

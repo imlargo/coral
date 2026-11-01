@@ -6,13 +6,15 @@ group: Kit
 
 <script lang="ts">
 	import Preview from '#lib/features/docs/components/Preview.svelte';
+	import basicDemo from './demos/basic.svelte?demo';
+	import asyncDemo from './demos/async.svelte?demo';
 </script>
 
 Rename-in-place has more states than it looks: showing, editing, saving, rejected. The usual version
 swaps a span for an input on click and handles two of them: leaving the keyboard with no way in,
 the Escape key closing the dialog it sits in, and a failed rename throwing away what was typed.
 
-<Preview name="kit/inline-edit/basic" />
+<Preview demo={basicDemo} />
 
 ## What Coral adds
 
@@ -28,7 +30,7 @@ the Escape key closing the dialog it sits in, and a failed rename throwing away 
 
 ## Saving to a server
 
-<Preview name="kit/inline-edit/async" />
+<Preview demo={asyncDemo} />
 
 While saving, the field is `readonly` rather than `disabled`: disabling a focused field blurs it, and
 that blur would read as the reader leaving: saving a second time, or cancelling a save already on

@@ -1,18 +1,17 @@
 <script lang="ts">
 	import CodeBlock from '#lib/features/docs/components/CodeBlock.svelte';
-	import { getDemo } from '#lib/features/docs/demos.js';
+	import type { Demo } from '#lib/features/docs/types.js';
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '#lib/components/ui/tabs/index.js';
 	import { cn } from '#lib/utils.js';
 
 	let {
-		/** Demo name, e.g. `kit/avatar/basic`. Unknown names fail the build. */
-		name,
+		/** `import demo from './demos/<name>.svelte?demo'`. A missing file fails the build. */
+		demo,
 		/** Layout overrides for the preview stage - height, alignment, padding. */
 		class: className
-	}: { name: string; class?: string } = $props();
+	}: { demo: Demo; class?: string } = $props();
 
-	const demo = $derived(getDemo(name));
-	const Demo = $derived(demo.component);
+	const Component = $derived(demo.component);
 </script>
 
 <Tabs value="preview" class="not-prose my-6 gap-0 overflow-hidden rounded-lg border">
@@ -32,7 +31,7 @@
 				className
 			)}
 		>
-			<Demo />
+			<Component />
 		</div>
 	</TabsContent>
 
