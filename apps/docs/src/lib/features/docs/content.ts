@@ -2,7 +2,12 @@ import { createContent } from '@svmd/content';
 
 export const { getEntry, getCollection } = createContent({
 	docs: {
-		meta: import.meta.glob('/src/content/docs/**/*.md', { eager: true, import: 'metadata' }),
+		// `?metadata` holds only the frontmatter, so the index does not pull every page's body in.
+		meta: import.meta.glob('/src/content/docs/**/*.md', {
+			eager: true,
+			query: '?metadata',
+			import: 'metadata'
+		}),
 		body: import.meta.glob('/src/content/docs/**/*.md')
 	}
 });
