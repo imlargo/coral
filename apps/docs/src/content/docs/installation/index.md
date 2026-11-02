@@ -109,7 +109,7 @@ and follows semver. The registry item repeats it under `meta.version`, so
 anything.
 
 There is no single Coral version to track: you installed components, and what matters is which of
-them are behind.
+them are behind. The [changelog](/docs/changelog) says what each version changed.
 
 ## Item names
 

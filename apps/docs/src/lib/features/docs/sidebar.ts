@@ -7,7 +7,8 @@ const GETTING_STARTED: SidebarGroup = {
 	items: [
 		{ title: 'Introduction', href: '/docs' },
 		{ title: 'Installation', href: '/docs/installation' },
-		{ title: 'Conventions', href: '/docs/conventions' }
+		{ title: 'Conventions', href: '/docs/conventions' },
+		{ title: 'Changelog', href: '/docs/changelog' }
 	]
 };
 
