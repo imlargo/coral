@@ -202,6 +202,11 @@ every project that already copied it.
   omit `npm` when there are none. `title` and `description` also have to match the component's
   docs page frontmatter - a test checks it, because a description that only drifts in one of the
   two places is invisible.
+- **A version bump gets a changelog line in the same change**, in
+  `apps/docs/src/content/docs/changelog/index.md`, under that day's heading, newest first:
+  ``- `kit/combobox` 1.3.0: what changed, for someone who installed it.`` A breaking change says
+  **Breaking** and how to migrate. `coral-changelog.test.ts` fails when a manifest version has no
+  matching line.
 
 ## Language and demos
 
