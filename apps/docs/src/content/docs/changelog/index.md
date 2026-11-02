@@ -4,12 +4,16 @@ description: What changed in each component, version by version, newest first.
 group: Getting started
 ---
 
+<script lang="ts">
+	import { Badge } from '#lib/components/ui/badge/index.js';
+</script>
+
 Every component carries its own version, in the header of each of its files and in `coral.json`,
 so there is no single Coral release to read about. Find the `@version` your copy reports, then read
 the entries for that component above it: they are what [updating](/docs/installation#updating)
 brings in.
 
-Entries are grouped by the day they landed. A **Breaking** change leads its line and says how to
+Entries are grouped by the day they landed. A breaking change is marked as one and says how to
 migrate.
 
 ## 2026-10-30
@@ -78,15 +82,15 @@ locale. Each line below says which props a component takes from defaults.
 - `kit/select` 1.1.0: New `loading`, `loadingMessage` and `emptyMessage`. While `loading`, a loading
   row appears under the options, and an empty list says so instead of opening onto nothing, both
   read aloud. Takes `placeholder` and `clearLabel` from project defaults (#25).
-- `kit/number-input` 1.1.0: **Breaking** for code that reaches the input element: it is now a text
-  input with the `spinbutton` role rather than `type="number"`, so `valueAsNumber` through `ref` and
-  `input[type=number]` selectors no longer apply. New `locale`: decimals are typed and shown the way
+- `kit/number-input` 1.1.0: **Breaking:** The input is a text input with the `spinbutton` role
+  rather than `type="number"`, so `valueAsNumber` through `ref` and `input[type=number]` selectors
+  no longer apply. New `locale`: decimals are typed and shown the way
   it writes them, so `1,5` works in `de-DE`. New `largeStep` (ten times `step` by default) for Page
   Up, Page Down and Shift with an arrow; Home and End jump to the bounds and Escape undoes an
   unfinished edit. Takes `decrementLabel`, `incrementLabel` and `locale` from project defaults
   (#11).
-- `kit/scrub-input` 1.1.0: **Breaking** for code that reaches the input element, as with number
-  input: it is now a text input with the `spinbutton` role. New `locale`, read and written the same
+- `kit/scrub-input` 1.1.0: **Breaking:** The input is a text input with the `spinbutton` role, as
+  in number input. New `locale`, read and written the same
   way. Takes `locale` from project defaults (#11).
 - `kit/confirm-dialog` 1.1.0: New `confirmDisabled` keeps the confirm button off until the body is
   complete, such as a reason given or a name typed; cancel always works. Takes `confirmLabel` and
@@ -149,8 +153,8 @@ locale. Each line below says which props a component takes from defaults.
   container too. Before, the measurement could be wrong there and the content stayed clipped.
 - `lib/scale` 1.0.0: new. How much a CSS transform enlarges or shrinks an element, so measurements
   stay correct inside scaled containers.
-- `kit/data-table`: removed, with `lib/table`, its only consumer. An installed copy keeps working
-  but gets no further updates.
+- `kit/data-table`: removed. An installed copy keeps working but gets no further updates.
+- `lib/table`: removed. It goes with `kit/data-table`, its only consumer.
 - `kit/page-state`: removed. An installed copy keeps working but gets no further updates.
 - `lib/on-close`: removed. `kit/combobox` and `kit/command-palette` use the popover's
   `onOpenChangeComplete` instead; code of your own that imported it can do the same.
@@ -230,8 +234,14 @@ Per component:
 - `kit/number-input` 1.0.0: No change in behavior; stepping and committing moved to
   `lib/number-field`.
 - `kit/follow-scroll` 1.0.0: No change in behavior.
-- `kit/action-button`, `kit/avatar`, `kit/avatar-stack`, `kit/copy-button`, `kit/password-input`,
-  `kit/relative-time`, `kit/reorder-list` and `kit/tree-view` 1.0.0: No change in behavior.
+- `kit/action-button` 1.0.0: No change in behavior.
+- `kit/avatar` 1.0.0: No change in behavior.
+- `kit/avatar-stack` 1.0.0: No change in behavior.
+- `kit/copy-button` 1.0.0: No change in behavior.
+- `kit/password-input` 1.0.0: No change in behavior.
+- `kit/relative-time` 1.0.0: No change in behavior.
+- `kit/reorder-list` 1.0.0: No change in behavior.
+- `kit/tree-view` 1.0.0: No change in behavior.
 - `lib/focus` 1.0.0: new. The focus-visible outline Coral draws on the controls it renders itself.
 - `lib/intl` 1.0.0: new. Collators and formatters, built once per locale and options.
 - `lib/number-field` 1.0.0: new. The stepping, committing and wheel handling number input and
@@ -284,10 +294,17 @@ Per component:
 - `kit/reorder-list` 1.1.0: A keyboard move announces again when its message repeats, such as an
   arrow key pressed at the end of the list.
 - `kit/date-picker` 1.1.3: The trigger uses the button's own gap.
-- `kit/activity-calendar` 1.0.3, `kit/file-input` 1.1.2, `kit/rating-group` 1.0.2,
-  `kit/show-more` 1.0.2, `kit/toc` 1.1.3, `kit/tree-view` 1.0.2: No change in behavior. Sizes that
-  were inline styles are CSS variables now (`--coral-cell`, `--coral-star`, `--coral-indent`), with
-  the same defaults.
+- `kit/activity-calendar` 1.0.3: No change in behavior; cell size and gap are the `--coral-cell`
+  and `--coral-gap` variables instead of inline styles, with the same defaults.
+- `kit/file-input` 1.1.2: No change in behavior; classes the primitives already apply were removed.
+- `kit/rating-group` 1.0.2: No change in behavior; star size is the `--coral-star` variable instead
+  of an inline style, with the same default.
+- `kit/show-more` 1.0.2: No change in behavior; the collapsed height is a CSS variable instead of an
+  inline style.
+- `kit/toc` 1.1.3: No change in behavior; indentation is the `--coral-toc-indent` variable instead
+  of an inline style, with the same default.
+- `kit/tree-view` 1.0.2: No change in behavior; indentation is the `--coral-indent` variable instead
+  of an inline style, with the same default.
 - `lib/number` 1.0.0: new. The clamping, rounding, stepping and parsing number input and scrub input
   share.
 - `lib/fold` 1.0.0: new. Text in the form searches compare: lower case, accents removed.

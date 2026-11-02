@@ -51,6 +51,60 @@
 	}
 }
 
+/*
+ * Changelog, laid out by `rehype-changelog.ts`: one section per day, the date in a column of its own
+ * that stays in view while that day's entries scroll past it.
+ */
+@layer components {
+	.docs-changelog-day {
+		@apply mt-12 grid gap-x-10 gap-y-4 border-t pt-8 lg:grid-cols-[8rem_minmax(0,1fr)];
+	}
+
+	.docs-changelog-date {
+		@apply self-start lg:sticky lg:top-[calc(var(--header-height)+2rem)];
+	}
+
+	.prose .docs-changelog-date h2 {
+		@apply my-0 text-base font-semibold;
+	}
+
+	.prose .docs-changelog-date p {
+		@apply my-1 text-sm text-muted-foreground;
+	}
+
+	.prose .docs-changelog-body > :first-child {
+		@apply mt-0;
+	}
+
+	.prose .docs-changelog-list {
+		@apply list-none pl-0;
+	}
+
+	.prose .docs-changelog-entry {
+		@apply my-0 border-b py-4 pl-0 first:pt-0 last:border-b-0;
+	}
+
+	.prose .docs-changelog-entry p:first-child {
+		@apply mt-0;
+	}
+
+	.docs-changelog-entry[data-kind='unchanged'] {
+		@apply text-muted-foreground;
+	}
+
+	.docs-changelog-meta {
+		@apply mb-1.5 flex flex-wrap items-center gap-1.5;
+	}
+
+	.docs-changelog-name {
+		@apply mr-1 font-mono text-sm font-medium text-foreground;
+	}
+
+	a.docs-changelog-name {
+		@apply underline-offset-4 hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-ring;
+	}
+}
+
 /* Code blocks - shared by svmd fenced blocks and the Code tab of a preview. */
 @layer components {
 	.docs-md-code {

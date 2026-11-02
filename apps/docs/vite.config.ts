@@ -6,6 +6,7 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import { svmd } from '@svmd/vite';
 import { highlightCode } from './src/lib/features/docs/code-highlighter.ts';
 import { demoSources } from './src/lib/features/docs/demo-sources.ts';
+import { rehypeChangelog } from './src/lib/features/docs/rehype-changelog.ts';
 import { rehypeHeadingIds } from './src/lib/features/docs/rehype-heading-ids.ts';
 import { searchIndex } from './src/lib/features/docs/search/vite-plugin.ts';
 
@@ -28,7 +29,8 @@ export default defineConfig({
 		svmd({
 			include: ['src/content/docs/**/*.md'],
 			highlight: highlightCode,
-			rehypePlugins: [rehypeHeadingIds]
+			// The changelog reads the ids headings were given, so it runs after them.
+			rehypePlugins: [rehypeHeadingIds, rehypeChangelog]
 		}),
 		searchIndex(),
 		demoSources(),
