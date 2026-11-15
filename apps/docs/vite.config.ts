@@ -35,8 +35,8 @@ export default defineConfig({
 		searchIndex(),
 		demoSources(),
 		sveltekit({
-			// Lets a `+page.md` be a route on its own, with no `+page.svelte` importing it - see
-			// src/routes/(home)/+page.md. svmd reads this list and compiles route files itself.
+			// Lets a `+page.md` be a route on its own, with no `+page.svelte` importing it. svmd reads
+			// this list and compiles route files itself.
 			extensions: ['.svelte', '.md'],
 			compilerOptions: {
 				// Force runes mode for the project, except for libraries. Can be removed in svelte 6.
