@@ -114,3 +114,9 @@ input. Each row is the `attachment` primitive with its state, so a failed file i
 its description carries the size with the progress, the failure or the cancel in words - the bar is
 decoration for the same number. The cancel, retry and remove controls are real buttons named after
 the file, and the tally is announced through a status region once the batch settles.
+
+Those controls change while the reader is on them: cancel turns into retry, an upload that finishes
+takes its cancel button away, a removed row takes everything. Focus never falls to the body. It
+moves to the first control left in the same row, then to the row that took its place, and to the
+picker once the list is empty, including in rows drawn by the `row` snippet. Files can also be
+pasted into the focused picker, the way [file input](/docs/kit/file-input) takes them.

@@ -1,6 +1,6 @@
 /**
  * @coral/kit/file-upload
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import { describe, expect, it, vi } from 'vitest';
