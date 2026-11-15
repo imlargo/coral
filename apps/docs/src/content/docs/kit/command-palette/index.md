@@ -16,10 +16,6 @@ by hand is the rest of the palette: the global shortcut that opens it, an `open`
 in groups, what happens while an action is in flight, and the recents that make the second use
 faster than the first. The search box at the top of this site is that hand-written version.
 
-<Preview demo={basicDemo} class="min-h-64" />
-
-## What Coral adds
-
 - **The shortcut, both ways:** one combo opens and closes it, in [`kit/shortcut`](/docs/kit/shortcut)
   syntax, so `mod+k` is Command on a Mac and Control elsewhere.
 - **Actions carry their own shortcut.** Drawn beside the action, and bound for as long as the palette
@@ -31,7 +27,48 @@ faster than the first. The search box at the top of this site is that hand-writt
   or throwing keeps the palette open, which is where the error can still be read.
 - **Search by things you do not show.** `keywords` are matched but never rendered.
 
-## Waiting, and failing
+<Preview demo={basicDemo} class="min-h-64" />
+
+## When to use
+
+**Use it when**
+
+- The app has more actions than its menus can show, and readers should reach them by name.
+- Actions deserve keyboard shortcuts that work anywhere on the page, drawn where they are listed.
+- Search mixes local actions with results from a server, like repositories or team members.
+
+**Reach for something else when**
+
+- The reader picks a value for a form field: use [Combobox](/docs/kit/combobox), or
+  [Select](/docs/kit/select) for a short list.
+- The list filters a page in place rather than running something: use
+  [Search input](/docs/kit/search-input).
+- There are a handful of actions tied to one row or one object: shadcn's `DropdownMenu` keeps them
+  next to what they act on.
+
+## Usage
+
+Composes [`kit/shortcut`](/docs/kit/shortcut), which the install brings with it.
+
+```svelte
+<script lang="ts">
+	import CommandPalette from '#lib/components/coral/kit/command-palette/command-palette.svelte';
+</script>
+```
+
+```svelte
+<CommandPalette
+	bind:recent
+	actions={[
+		{ id: 'new-project', label: 'New project', group: 'Create', run: () => goto('/new') },
+		{ id: 'invite', label: 'Invite a teammate', group: 'Team', run: () => (inviting = true) }
+	]}
+/>
+```
+
+## Examples
+
+### Waiting, and failing
 
 <Preview demo={asyncDemo} class="min-h-64" />
 
@@ -40,7 +77,11 @@ The same rule as [confirm dialog](/docs/kit/confirm-dialog) and
 remembered as recent whether or not it succeeded: the reader reached for it, which is what the list
 is a record of.
 
-## Server-side search
+While an action runs, a spinner takes the place of its shortcut, and no other action can start until
+it settles. What it throws goes to `onerror`, with the action that threw it; without `onerror` it is
+an unhandled rejection.
+
+### Server-side search
 
 Pass `onsearch` and the primitive's own filtering is switched off, because the list becomes the
 server's answer and filtering it again locally would hide rows it meant to return. Debounce it with
@@ -54,39 +95,17 @@ server is thinking, and the list does not flicker on every keystroke.
 For that mixed palette, set `shouldFilter` back on. The local actions are then narrowed by the term
 like any other row, and the remote results pass through because the server already matched them.
 
-## One thing to know about `mod+k`
+When the palette finishes closing, the term is cleared, and `onsearch` is called once with `''` if
+the term was not already empty.
 
-Off a Mac, `mod+k` is `Ctrl+K`, and the command primitive reads Ctrl+K as "previous item" in its vim
-bindings, cancelling the key. A palette bound that way opens and then refuses to close on the same
-combo, on every machine that is not a Mac.
+### Nothing matches
 
-So when a combo the palette binds would be swallowed, those bindings give way to it. Set
-`vimBindings` to force the question either way.
+When the term matches no action and nothing is loading, the list shows `emptyMessage` in a row
+nothing can select, and announces it. The `empty` snippet replaces what that row draws.
 
-## Import
+### Disabled actions
 
-Composes [`kit/shortcut`](/docs/kit/shortcut), which the install brings with it.
-
-```svelte
-<script lang="ts">
-	import CommandPalette from '#lib/components/coral/kit/command-palette/command-palette.svelte';
-</script>
-```
-
-## Actions
-
-```ts
-type CommandAction = {
-	id: string; // stable: it is what `recent` remembers
-	label: string;
-	description?: string;
-	keywords?: string[]; // matched, never shown
-	group?: string; // heading to file it under
-	shortcut?: string; // drawn, and bound while mounted
-	disabled?: boolean; // stays listed, because hiding it reads as "it does not exist"
-	run: () => unknown; // async-aware; `false` or throw keeps the palette open
-};
-```
+A disabled action stays listed, dimmed, and cannot be run from the list or through its shortcut.
 
 ## Props
 
@@ -118,22 +137,82 @@ On top of that:
 | `action`                       | `Snippet<[{ action, pending }]>`  | -                             | Replaces each row's body.                         |
 | `indicator`, `empty`, `footer` | `Snippet`                         | -                             | Loading row contents, empty row contents, footer. |
 
+### Actions
+
+```ts
+type CommandAction = {
+	id: string; // stable: it is what `recent` remembers
+	label: string;
+	description?: string;
+	keywords?: string[]; // matched, never shown
+	group?: string; // heading to file it under
+	shortcut?: string; // drawn, and bound while mounted
+	disabled?: boolean; // stays listed, because hiding it reads as "it does not exist"
+	run: () => unknown; // async-aware; `false` or throw keeps the palette open
+};
+```
+
+## Keyboard
+
+The palette's own shortcut and each action's shortcut work anywhere on the page while the palette
+is mounted. The rest apply while the search box has focus.
+
+| Key                                       | Action                                                                   |
+| ----------------------------------------- | ------------------------------------------------------------------------ |
+| `mod` + `K` (or `shortcut`)               | Opens the palette, or closes it when open.                               |
+| An action's `shortcut`                    | Runs that action, open or not. Off with `bindActionShortcuts={false}`.   |
+| `↑` / `↓`                                 | Highlights the previous or next action.                                  |
+| `Alt` + `↑` / `↓`                         | Jumps to the previous or next group.                                     |
+| `Home` / `End`                            | Highlights the first or last action.                                     |
+| `Ctrl` + `N` or `J` / `Ctrl` + `P` or `K` | Next or previous action, while `vimBindings` is on.                      |
+| `Enter`                                   | Runs the highlighted action. Ignored while an input method is composing. |
+| `Escape`                                  | Closes the palette.                                                      |
+
+### One thing to know about `mod+k`
+
+Off a Mac, `mod+k` is `Ctrl+K`, and the command primitive reads Ctrl+K as "previous item" in its vim
+bindings, cancelling the key. A palette bound that way opens and then refuses to close on the same
+combo, on every machine that is not a Mac.
+
+So when a combo the palette binds would be swallowed, those bindings give way to it. Set
+`vimBindings` to force the question either way.
+
 ## Accessibility
 
-The dialog, the combobox semantics, the arrow keys and the focus trap are the primitive's, including
-the visually hidden title and description every dialog needs. What is added here is the trigger's
-`aria-haspopup`, `aria-expanded` and `aria-keyshortcuts`, and shortcut glyphs that are read out by
-name rather than as "place of interest sign." See [shortcut](/docs/kit/shortcut).
+- **From the primitive.** The dialog, the combobox semantics, the arrow keys and the focus trap are
+  the primitive's, including the visually hidden title and description every dialog needs.
+- **The trigger.** What is added here is the trigger's `aria-haspopup`, `aria-expanded` and
+  `aria-keyshortcuts`, and shortcut glyphs that are read out by name rather than as "place of
+  interest sign." See [shortcut](/docs/kit/shortcut).
+- **The highlighted action.** The search box also carries `aria-controls` and
+  `aria-activedescendant`, which the primitive cannot derive here, so the highlighted action is
+  announced.
+- **Empty and loading.** A list with nothing to run says so inside itself, as an option nothing can
+  pick - a listbox may own nothing else - and the words are spoken too, whether the results are
+  loading or the term matched nothing.
+- **Disabled actions.** A disabled action is dimmed, and it stays in the list. Hiding it is how a
+  reader concludes the feature does not exist, rather than that they cannot use it right now.
 
-The search box also carries `aria-controls` and `aria-activedescendant`, which the primitive cannot
-derive here, so the highlighted action is announced. A list with nothing to run says so inside
-itself, as an option nothing can pick - a listbox may own nothing else - and the words are spoken
-too, whether the results are loading or the term matched nothing. A disabled action is dimmed.
+## Customizing
 
-A disabled action stays in the list. Hiding it is how a reader concludes the feature does not exist,
-rather than that they cannot use it right now.
+- **`class`** is merged onto the dialog and **`listClass`** onto the list.
+- **Snippets:** `trigger` renders what opens the palette (spread `props` onto it), `action` replaces
+  the body of each row and receives `pending` for the one that is running, `indicator` and `empty`
+  replace the loading and empty rows, and `footer` renders below the list, inside the dialog.
+- **Project-wide defaults.** `placeholder`, `emptyMessage`, `loadingMessage`, `recentLabel` and
+  `searchDebounce` can be stated once with
+  [`setCoralDefaults`](/docs/conventions#project-wide-defaults) under `'kit/command-palette'`; a
+  prop at the call site still wins.
 
-## actions.ts
+### The pieces
+
+Dropping down to shadcn's `CommandDialog` means writing back the global shortcut, the per-action
+bindings, the recents, the busy row and the close that waits for `run`, plus the
+`aria-activedescendant` wiring and the announced empty and loading rows. Most of that is reachable
+on its own: the shortcut parsing and listening come from [`kit/shortcut`](/docs/kit/shortcut), the
+wait from `lib/action.svelte.ts`, and the ordering from `actions.ts` below.
+
+### actions.ts
 
 `group`, `remember` and `searchValue` are pure and exported, so the same ordering can drive a
 different surface (a menu, a toolbar, a mobile sheet):

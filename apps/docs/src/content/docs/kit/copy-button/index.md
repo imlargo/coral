@@ -17,10 +17,6 @@ one every project writes, and it has four holes: it throws on any page not serve
 screen reader never hears that anything happened, the timer keeps running after the component is
 gone, and a failure looks exactly like a success.
 
-<Preview demo={basicDemo} />
-
-## What Coral adds
-
 - **A fallback where the Clipboard API is missing:** plain `http` on a LAN address, an embedded
   webview: the selection-based copy is tried, and the reader's own selection and focus are put
   back afterwards.
@@ -32,27 +28,63 @@ gone, and a failure looks exactly like a success.
   runs when the button is pressed, with a `copying` state while it resolves.
 - **No leaked timers:** a reset scheduled before unmount is cancelled with it.
 
-## With text
+<Preview demo={basicDemo} />
 
-The `children` snippet receives the status, so the label can change with it. With visible text the
-accessible name comes from the text, and `label` is not applied.
+## When to use
 
-<Preview demo={withTextDemo} />
+**Use it when**
 
-## Text computed on click
+- A value is meant to be pasted somewhere else: an API key, a deployment URL, a commit hash, an
+  install command.
+- The text is only known at click time, like a signed URL that has to be requested first.
 
-<Preview demo={lazyDemo} />
+**Reach for something else when**
 
-`status` is bindable, so something beside the button can react to it. A copy that is still resolving
-ignores further clicks.
+- The reader should also see or edit the value: show it in a read-only shadcn `Input` and put the
+  copy button beside it, rather than hiding the value behind the button.
+- The value is a secret the reader types: use [Password input](/docs/kit/password-input).
+- The action does more than copy, like a request that can fail and retry: use
+  [Action button](/docs/kit/action-button).
 
-## Import
+## Usage
 
 ```svelte
 <script lang="ts">
 	import CopyButton from '#lib/components/coral/kit/copy-button/copy-button.svelte';
 </script>
 ```
+
+```svelte
+<CopyButton text="https://api-gateway-preview.example.dev" label="Copy deployment URL" />
+```
+
+## Examples
+
+### With text
+
+The `children` snippet receives the status, so the label can change with it. With visible text the
+accessible name comes from the text, and `label` is not applied.
+
+<Preview demo={withTextDemo} />
+
+### Text computed on click
+
+<Preview demo={lazyDemo} />
+
+`status` is bindable, so something beside the button can react to it. A copy that is still resolving
+ignores further clicks.
+
+### When the copy fails
+
+A denied permission, a page with neither the Clipboard API nor the selection fallback, or a `text`
+function that throws all end the same way: `status` becomes `failed`, the cross icon replaces the
+copy icon, `failedLabel` is announced, and `onerror` receives what went wrong. After `timeout` the
+button goes back to `idle`.
+
+### Disabled, or not ready yet
+
+`disabled` is forwarded to the button. To decide at click time instead, pass `onclick` and call
+`preventDefault()` on the event: it runs before the copy, and the copy is skipped.
 
 ## Props
 
@@ -72,13 +104,31 @@ Everything the shadcn button accepts stays available: `variant`, `size`, `disabl
 | `failedLabel` | `string`                                      | `Copy failed`       | Announced on failure.                                         |
 | `children`    | `Snippet<[{ status }]>`                       | -                   | Replaces the icon.                                            |
 
+## Keyboard
+
+A native button: `Tab` reaches it, and `Enter` or `Space` copies. Focus stays on the button
+afterwards, also when the selection fallback ran, which puts focus back where it was.
+
 ## Accessibility
 
-A native `<button type="button">`, so it never submits a surrounding form. The result is announced
-through `role="status"`, placed outside the button so it is not also read as part of its name.
-`aria-busy` is set while a function source is resolving.
+- **A real button.** A native `<button type="button">`, so it never submits a surrounding form.
+- **Its name.** `label` is the accessible name of an icon-only button. With `children`, the visible
+  text names it instead.
+- **The result is announced** through `role="status"`, placed outside the button so it is not also
+  read as part of its name. Copying the same value twice is announced twice.
+- **Busy.** `aria-busy` is set while a function source is resolving.
 
-## clipboard.ts
+## Customizing
+
+- **`class`**, `variant` and `size` go to the shadcn button. It defaults to `variant="ghost"`, and to
+  `size="icon"` when there is no `children`.
+- **`children`** replaces the icon and receives `status`. The button also carries `data-status`, so a
+  stylesheet can follow the state without a snippet.
+- **Project-wide defaults.** `label`, `copiedLabel`, `failedLabel` and `timeout` can be stated once
+  with [`setCoralDefaults`](/docs/conventions#project-wide-defaults) under `'kit/copy-button'`; a
+  prop at the call site still wins.
+
+### clipboard.ts
 
 `writeText` and `resolveText` are exported on their own, for copying from somewhere that is not a
 button: a keyboard shortcut, a context menu item.
@@ -88,3 +138,6 @@ import { writeText } from '#lib/components/coral/kit/copy-button/clipboard.js';
 
 await writeText(deployment.url); // rejects when the text did not reach the clipboard
 ```
+
+A plain shadcn `Button` calling `writeText` keeps the fallback and the failure, and leaves you to
+rebuild the status, the reset timer and the announcement.

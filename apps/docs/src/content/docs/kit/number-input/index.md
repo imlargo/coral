@@ -20,22 +20,44 @@ cap while a typed `150` walks straight through it, so the same field enforces it
 mouse and not with the keyboard. Dropping the text field entirely (just `-` / value / `+`) closes
 that hole by taking typing away, which turns a jump from `1` to `40` into thirty-nine presses.
 
+Here the bounds hold both ways, and clamping `150` to `10` also rewrites what is on screen.
+Stepping by `0.1` gives `0.3`, not `0.30000000000000004`. `1,5` is one and a half in `de-DE` and
+`es-CO`, where a `type="number"` field drops it. Clearing the field gives `undefined`, not the
+minimum.
+
 <Preview demo={basicDemo} />
 
-## What Coral adds
+## When to use
 
-- **The bounds hold both ways.** Steppers stop at the edge _and_ a typed value clamps on commit.
-- **The field never lies.** Clamping `150` to `10` also rewrites what is on screen, so the number you
-  read is the number that is stored.
-- **The arithmetic stays exact.** Stepping by `0.1` gives `0.3`, not `0.30000000000000004`.
-- **Decimals the way the reader writes them.** `1,5` is one and a half in `de-DE` and `es-CO`, and
-  the field shows it back with the same comma. A `type="number"` field drops it.
-- **Empty means empty.** Clearing the field gives `undefined`, not the minimum.
+**Use it when**
 
-Everything else is the primitive's: `input-group` puts the steppers inside the field, so it reads as
-one control with one focus ring instead of three.
+- The value is a number someone types or nudges: seats on a plan, a rate limit, a retention
+  period in days.
+- It has bounds that must hold whether it was typed or stepped.
+- It is a currency, a percent or a unit that should be written the reader's way (`format`).
 
-## Bounds
+**Reach for something else when**
+
+- The value is adjusted by dragging, in a dense panel of numbers: [Scrub input](/docs/kit/scrub-input).
+- Where the value sits in its range matters more than its exact figure: shadcn's `Slider`.
+- The "number" is an identifier read digit by digit (a code, a postal code): a plain shadcn `Input`,
+  or [Phone input](/docs/kit/phone-input) for a phone number.
+
+## Usage
+
+```svelte
+<script lang="ts">
+	import NumberInput from '#lib/components/coral/kit/number-input/number-input.svelte';
+
+	let seats = $state(5);
+</script>
+
+<NumberInput bind:value={seats} min={1} max={50} aria-label="Seats" />
+```
+
+## Examples
+
+### Bounds
 
 <Preview demo={boundsDemo} />
 
@@ -50,14 +72,14 @@ A stepper disables itself once the value is against its bound. Leave `min` or `m
 direction is unbounded, **negatives included**. Defaulting `min` to `0` is the tempting shortcut,
 and it quietly makes a temperature or a balance field impossible to express.
 
-## Decimals
+### Decimals
 
 <Preview demo={decimalsDemo} />
 
 `step` sets the precision as well as the jump, so `step={0.1}` rounds to one decimal. When the two
 genuinely differ (money that steps by whole units but stores cents), set `decimals` on its own.
 
-## Locale
+### Locale
 
 <Preview demo={localeDemo} />
 
@@ -71,7 +93,7 @@ exactly as `1.500` is fifteen hundred.
 `locale` defaults to `en-US`, or to whatever the project stated with
 [`setCoralDefaults`](/docs/conventions#project-wide-defaults).
 
-## Currency, percent and units
+### Currency, percent and units
 
 <Preview demo={formatDemo} />
 
@@ -87,34 +109,14 @@ hand-rolled currency field usually does one of the two: it shows the symbol and 
 - **No grouping while editing**, for the reason the field never groups: a separator appearing under
   the caret is one more character to delete on the next edit.
 
-## Keyboard
-
-| Key                     | Does                                     |
-| ----------------------- | ---------------------------------------- |
-| `↑` / `↓`               | Step by `step`                           |
-| `Shift` + `↑` / `↓`     | Step by `largeStep`                      |
-| `Page Up` / `Page Down` | Step by `largeStep`                      |
-| `Home` / `End`          | Jump to `min` / `max`, when bounded      |
-| `Escape`                | Put back the value the field already had |
-
-The same keys as [scrub input](/docs/kit/scrub-input), from the same shared handler, so a number
-behaves the same whichever field holds it. `Escape` is only taken while there is an edit to put
-back; otherwise it goes on to the dialog around the field.
-
-## Empty, readonly, disabled
+### Empty, readonly, disabled
 
 <Preview demo={statesDemo} />
 
 An empty field keeps both steppers live, because stepping from empty has somewhere to go either way.
 The first press lands on the first allowed value: with `min={5}`, `+` gives `5`, not `6`.
 
-## Import
-
-```svelte
-<script lang="ts">
-	import NumberInput from '#lib/components/coral/kit/number-input/number-input.svelte';
-</script>
-```
+`readonly` and `disabled` both disable the steppers and stop the keys from stepping.
 
 ## Props
 
@@ -137,6 +139,24 @@ Everything the shadcn input accepts stays available: `placeholder`, `disabled`, 
 | `class`          | `string`                               | -           | Merged onto the input - e.g. its width.                      |
 | `groupClass`     | `string`                               | -           | Merged onto the bordered group around everything.            |
 
+## Keyboard
+
+With focus in the field:
+
+| Key                     | Action                                         |
+| ----------------------- | ---------------------------------------------- |
+| `↑` / `↓`               | Steps by `step`.                               |
+| `Shift` + `↑` / `↓`     | Steps by `largeStep`.                          |
+| `Page Up` / `Page Down` | Steps by `largeStep`.                          |
+| `Home` / `End`          | Jumps to `min` / `max`, when bounded.          |
+| `Enter`                 | Commits what was typed, clamped to the bounds. |
+| `Escape`                | Puts back the value the field already had.     |
+
+The same keys as [scrub input](/docs/kit/scrub-input), from the same shared handler, so a number
+behaves the same whichever field holds it. `Escape` is only taken while there is an edit to put
+back; otherwise it goes on to the dialog around the field. `←` and `→` are left to the caret, and
+`Home` / `End` move it too while that direction is unbounded.
+
 ## Accessibility
 
 The field is a text input with `role="spinbutton"`, which is what a number field is to assistive
@@ -150,7 +170,20 @@ hand so that it can give the locale back too. Nothing else is lost: a text field
 the mouse wheel, so the Chromium quirk that edited a focused number field under a scrolling page
 has nothing to act on.
 
-## lib/number
+## Customizing
+
+`class` lands on the input (its width, say) and `groupClass` on the bordered group around the
+field and both steppers. The group is the primitive's: `input-group` puts the steppers inside the
+field, so it reads as one control with one focus ring instead of three.
+
+A project states `decrementLabel` and `incrementLabel` once under `'kit/number-input'` in
+[`setCoralDefaults`](/docs/conventions#project-wide-defaults), and the shared `locale` there; a
+prop at the call site still wins.
+
+A caller's `onkeydown` runs before the component's, so calling `preventDefault` on it takes that
+key away from the stepping.
+
+### lib/number
 
 The arithmetic lives in `lib/number.ts`, shared with [scrub input](/docs/kit/scrub-input) so a value
 moved by either field lands on the same number. It is exported on its own, so the same clamping and
@@ -169,3 +202,6 @@ They live in `lib/number.ts` rather than beside the component because [scrub inp
 steps its value the same way, and the two cannot be allowed to drift. `parse` and `format` read and
 write a number in a locale, and both fields compose everything through `lib/number-field.ts`, which
 also holds the commit, the typed-value read and the keyboard.
+
+Dropping to a raw shadcn `input-group` means writing back the commit-time clamp, the locale parsing
+and formatting, the exact stepping, the spinbutton attributes and the keys above.

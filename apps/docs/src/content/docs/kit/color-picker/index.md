@@ -20,24 +20,41 @@ the moment the thumb touches the grey edge of the square.
 
 <Preview demo={basicDemo} />
 
-## What Coral adds
+## When to use
 
-- **Every part works from the keyboard.** The square is a slider whose arrows move saturation across
-  and brightness up and down, the strip is a slider for hue, Shift moves ten times as far, and both
-  say what they are set to: `Saturation 60%, brightness 40%`.
-- **The hue holds.** The panel keeps the colour at full precision while it is being moved, so a grey
-  or a black keeps the hue it was dragged from, also when the popover is opened again, and the thumb
-  never drifts by rounding to a hex.
-- **A hex in any spelling.** `#3B82F6`, `3b82f6` and `#38f` are all read, and the value is always
-  written one way: `#3b82f6`. A typo puts the colour back on blur instead of clearing it.
-- **Escape undoes before it closes.** The first Escape in the hex field puts back what was there; the
-  next one closes the popover.
-- **The eyedropper where there is one.** A button picks a colour from anywhere on the screen in the
-  browsers that have the EyeDropper API, and is left out in the others rather than drawn disabled.
-- **A save per gesture.** `bind:value` follows every pointer move; `onchange` fires once, when a drag
-  lets go, a key moves the thumb, a hex is committed or a swatch is picked.
+**Use it when**
 
-## Swatches
+- A setting takes any colour: a project's brand colour, a label colour, an environment's accent.
+- The project offers its own palette as swatches, with free choice beside it.
+- The value is stored as a hex, on a server or in a CSS variable.
+
+**Reach for something else when**
+
+- Only a fixed set of colours is allowed: a [select](/docs/kit/select) or the shadcn
+  `RadioGroup`, so nothing else can be chosen.
+- A settings page has room for the editor itself: `ColorPanel`, shown under
+  [The panel on its own](#the-panel-on-its-own).
+- The colour needs transparency or another colour space: see
+  [What it does not do](#what-it-does-not-do).
+
+## Usage
+
+```svelte
+<script lang="ts">
+	import ColorPicker from '#lib/components/coral/kit/color-picker/color-picker.svelte';
+
+	let accent = $state('#0d9488');
+</script>
+
+<ColorPicker bind:value={accent} aria-label="Project accent" />
+```
+
+`bind:value` follows every pointer move; `onchange` fires once, when a drag lets go, a key moves the
+thumb, a hex is committed or a swatch is picked. That is where a save goes.
+
+## Examples
+
+### Swatches
 
 <Preview demo={swatchesDemo} />
 
@@ -45,31 +62,25 @@ the moment the thumb touches the grey edge of the square.
 colour needs a name: a screen reader hears `Teal` instead of `#0d9488`. They are native radios, so
 the arrow keys move through them and the one matching the value is checked.
 
-## The panel on its own
+### Typing a hex
 
-<Preview demo={panelDemo} />
+`#3B82F6`, `3b82f6` and `#38f` are all read, and the value is always written one way: `#3b82f6`. A
+typo puts the colour back on blur instead of clearing it. Enter commits the hex rather than
+submitting a surrounding form.
 
-`ColorPanel` is the editor without the popover, for a settings page with room for it. `ColorArea`
-and `HueSlider` are the two sliders inside it, for a layout of your own:
+### Greys keep their hue
 
-```svelte
-<script lang="ts">
-	import ColorArea from '#lib/components/coral/kit/color-picker/color-area.svelte';
-	import HueSlider from '#lib/components/coral/kit/color-picker/hue-slider.svelte';
+The panel keeps the colour at full precision while it is being moved, so a grey or a black keeps the
+hue it was dragged from, also when the popover is opened again, and the thumb never drifts by
+rounding to a hex.
 
-	let hue = $state(210);
-	let saturation = $state(0.7);
-	let brightness = $state(0.9);
-</script>
+### The eyedropper
 
-<ColorArea {hue} bind:saturation bind:brightness />
-<HueSlider bind:value={hue} />
-```
+A button picks a colour from anywhere on the screen in the browsers that have the EyeDropper API,
+and is left out in the others rather than drawn disabled. Escape while picking leaves the colour as
+it was.
 
-They take HSV, because those are the three things the reader moves. `color.ts` converts:
-`hsvToHex`, `hexToHsv` and `parseHex`.
-
-## Forms
+### Forms
 
 <Preview demo={formDemo} />
 
@@ -77,29 +88,10 @@ With `name`, the picker submits the hex through a field the browser validates, s
 an empty submit with the browser's own message. The trigger takes `id` and `aria-*`, so a `<Label
 for>` names it.
 
-## Accessibility
+### Empty and disabled
 
-| Key                   | On the square       | On the strip     |
-| --------------------- | ------------------- | ---------------- |
-| `←` `→`               | saturation          | hue              |
-| `↑` `↓`               | brightness          | hue              |
-| `Page Up` `Page Down` | brightness, by ten  | hue, by ten      |
-| `Home` `End`          | no saturation, full | first, last      |
-| `Shift` with an arrow | ten times as far    | ten times as far |
-
-Opening the popover puts focus on the square, ready for the arrows. The arrows follow the picture,
-not the reading direction: the square and the strip are drawn left to right in every language.
-
-The picker needs a name, from a `<Label for>`, `aria-label` or `aria-labelledby`. The words inside
-it are props with English defaults, and can come from [project defaults](/docs/conventions#project-wide-defaults).
-
-## Import
-
-```svelte
-<script lang="ts">
-	import ColorPicker from '#lib/components/coral/kit/color-picker/color-picker.svelte';
-</script>
-```
+With no `value`, the trigger prints `placeholder` in muted text. `disabled` blocks the trigger and
+every part of the panel.
 
 ## Props
 
@@ -161,7 +153,75 @@ Everything the panel takes, below, plus:
 The hue slider's own `value` is the hue, bindable, as in the panel's table above. On every part,
 everything else lands on the root element.
 
-## What it does not do
+## Keyboard
+
+The keys depend on which part of the panel has focus.
+
+| Key                     | Action                                                                |
+| ----------------------- | --------------------------------------------------------------------- |
+| `←` / `→`               | Square: saturation. Strip: hue.                                       |
+| `↑` / `↓`               | Square: brightness. Strip: hue.                                       |
+| `Page Up` / `Page Down` | Square: brightness, by ten. Strip: hue, by ten.                       |
+| `Home` / `End`          | Square: no saturation, full. Strip: first, last.                      |
+| `Shift` + an arrow      | Ten times as far, on the square and the strip.                        |
+| `Enter`                 | Hex field: commits the hex, without submitting a form.                |
+| `Escape`                | Hex field: puts back what was there. The next one closes the popover. |
+| `←` `→` `↑` `↓`         | Swatches: move through them and pick, as native radios do.            |
+
+## Accessibility
+
+Opening the popover puts focus on the square, ready for the arrows. The arrows follow the picture,
+not the reading direction: the square and the strip are drawn left to right in every language.
+
+The picker needs a name, from a `<Label for>`, `aria-label` or `aria-labelledby`. The words inside
+it are props with English defaults, and can come from [project defaults](/docs/conventions#project-wide-defaults).
+
+- **Every part works from the keyboard.** The square and the strip are sliders, and both say what
+  they are set to: `Saturation 60%, brightness 40%`, `210 degrees`. The square is a slider for its
+  first axis with both axes in its text, since a square has no role of its own.
+- **Swatches are a radio group**, named by `swatchesLabel`, and a swatch given as an `Option` is
+  read by its label: `Teal` instead of `#0d9488`.
+- **Escape undoes before it closes**, so a half-typed hex is not lost to a popover that closes
+  under it.
+
+## Customizing
+
+- `class` is merged onto the trigger, `contentClass` onto the popover.
+- `trigger` replaces the trigger and receives `{ props, value, open, disabled }`; spread `props`
+  onto the element you render. `children` is rendered under the panel, inside the popover.
+- `placeholder` and every label the panel speaks (`areaLabel`, `areaValueText`, `hueLabel`,
+  `hueValueText`, `hexLabel`, `swatchesLabel`, `eyeDropperLabel`) can be set once for the project
+  with [`setCoralDefaults`](/docs/conventions#project-wide-defaults) under `kit/color-picker`.
+
+The popover and trigger are the shadcn `Popover` and `Button`; everything inside is Coral's own,
+since shadcn has no colour editor. Dropping to the raw primitives means rebuilding the panel, so
+reach for the pieces below first.
+
+### The panel on its own
+
+<Preview demo={panelDemo} />
+
+`ColorPanel` is the editor without the popover, for a settings page with room for it. `ColorArea`
+and `HueSlider` are the two sliders inside it, for a layout of your own:
+
+```svelte
+<script lang="ts">
+	import ColorArea from '#lib/components/coral/kit/color-picker/color-area.svelte';
+	import HueSlider from '#lib/components/coral/kit/color-picker/hue-slider.svelte';
+
+	let hue = $state(210);
+	let saturation = $state(0.7);
+	let brightness = $state(0.9);
+</script>
+
+<ColorArea {hue} bind:saturation bind:brightness />
+<HueSlider bind:value={hue} />
+```
+
+They take HSV, because those are the three things the reader moves. `color.ts` converts:
+`hsvToHex`, `hexToHsv` and `parseHex`.
+
+### What it does not do
 
 - **No alpha.** A hex with transparency is rare in a product's settings and doubles what the panel
   has to explain. Pair the picker with a [number input](/docs/kit/number-input) if a project needs one.

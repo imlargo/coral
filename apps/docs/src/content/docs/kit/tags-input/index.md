@@ -21,37 +21,52 @@ writing twice. The eighty lines are the component: what separates one tag from t
 happens to a paste, what Backspace does when the field is empty, and where focus goes after a tag
 is taken out.
 
+Coral answers each one once. Typed and pasted text go through the same delimiter rule, text left in
+the field becomes a tag on the way out instead of being dropped, the keyboard reaches every tag,
+focus never falls onto `<body>` after a removal, rejections are reported with their reason, and
+the tags submit as a list.
+
 <Preview demo={basicDemo} />
 
-## What Coral adds
+## When to use
 
-- **One rule for typed and pasted text:** the delimiter separates tags wherever the text came from,
-  so `red, blue` is two tags whether it was typed or pasted. Newlines separate too, so a column out of
-  a spreadsheet arrives as tags, not as one tag with line breaks in it.
-- **Nothing is lost on the way out.** Leaving the field with something half-typed in it turns that
-  into a tag instead of dropping it.
-- **The keyboard reaches the tags.** Backspace on an empty field steps onto the last tag; Backspace
-  again removes it. Arrows walk the row, Escape goes back to the field, and typing anywhere in
-  there lands in the field again.
-- **Focus never falls on the floor.** Removing a tag moves focus to the next one, or back to the
-  field when the last one goes. It never lands on `<body>`.
-- **Rejections are reported, not guessed.** A duplicate, a failed `validate` or a full list arrives
-  at `onreject` with the reason. The message is the project's; Coral does not write copy.
-- **It submits like a list.** One hidden input per tag, which is what a server already reads.
+**Use it when**
 
-Everything else is the primitive's: `input-group` draws the box, and the focus ring, the disabled
-dimming and `aria-invalid` come from it reacting to the field inside. That's why a tags input sits
-next to a plain input without either of them being told what a field looks like.
+- The value is a list of free-text strings: labels on an issue, email domains allowed to join a
+  team, topics on a repository.
+- People paste lists into it, such as a column copied out of a spreadsheet.
+- Some values are known in advance but new ones must stay as easy to add (`suggestions`).
 
-## Delimiters and pasting
+**Reach for something else when**
+
+- Every value must come from a known list: [Combobox](/docs/kit/combobox) with `type="multiple"`.
+- The value is one string: a plain shadcn `Input`.
+- The text is long and free-form: [Textarea](/docs/kit/textarea).
+
+## Usage
+
+```svelte
+<script lang="ts">
+	import TagsInput from '#lib/components/coral/kit/tags-input/tags-input.svelte';
+
+	let labels = $state(['bug', 'frontend']);
+</script>
+
+<TagsInput bind:value={labels} placeholder="Add a label..." />
+```
+
+## Examples
+
+### Delimiters and pasting
 
 The `delimiter` is a comma by default, and a newline always separates as well, since a single-line
 field cannot hold one, so there is nothing to lose by cutting there. Pass a string, a regular expression,
-or `''` to leave newlines as the only separator.
+or `''` to leave newlines as the only separator. A column out of a spreadsheet arrives as tags, not
+as one tag with line breaks in it.
 
 The fragment after the last delimiter stays in the field. Pasting `red, blue` leaves `blue` being
 typed, which is where it would have ended up if the paste had no trailing comma either. It becomes
-a tag on Enter, or on the way out of the field.
+a tag on Enter, or on the way out of the field (`addOnBlur`).
 
 A paste that contains a line break is intercepted, because a single-line field flattens line breaks
 into spaces before an `input` event exists to read: three lines copied out of a spreadsheet would
@@ -62,18 +77,18 @@ browser.
 There is no `addOnPaste` switch on purpose. With one, the same string becomes two tags or one
 depending on how it got into the field.
 
-## Limits and rejections
+### Limits and rejections
 
 <Preview demo={limitsDemo} />
 
 `max` caps the list, `allowDuplicates` opens or closes the door on repeats, and both report what
 they turned away through `onreject`, one call per batch, so a paste of thirty over the cap is one
-message, not thirty.
+message, not thirty. A failed `validate` arrives there too, with its reason.
 
 Coral says nothing on screen about it. What "only 4 fit" reads like is the project's, and a
 component that ships that sentence ships a language with it.
 
-## Rules
+### Rules
 
 <Preview demo={rulesDemo} />
 
@@ -85,7 +100,7 @@ through the same door.
 `validate` receives the tags as they stand, not as they arrived, so a pasted batch is judged
 against what the values before it already added.
 
-## Suggestions
+### Suggestions
 
 <Preview demo={suggestionsDemo} />
 
@@ -101,7 +116,7 @@ an existing one.
 - **One rule for every route in.** A suggestion goes through `sanitize`, `validate` and `max`
   like anything typed or pasted.
 
-## Forms
+### Forms
 
 <Preview demo={formDemo} />
 
@@ -112,51 +127,14 @@ been added yet.
 `required` is enforced while the list is empty and released as soon as it is not, so the browser's
 own validation guards the tags, and never blocks a submit over text left half-typed in the field.
 
-## Custom tags
-
-<Preview demo={customDemo} />
-
-The `tag` snippet replaces the body of each tag (an icon, an avatar, a count). The remove control
-stays, along with its label and its place in the keyboard order. `tagVariant`, `tagClass`,
-`inputClass` and `class` cover the rest without a snippet.
-
-## Readonly, disabled, clearable
+### Readonly, disabled, clearable
 
 <Preview demo={statesDemo} />
 
 Both `readonly` and `disabled` drop the remove controls: nothing about a field that cannot be
 edited should offer to edit it. `clearable` adds one control that empties the list and puts focus
-back in the field.
-
-## Keyboard
-
-| Key                    | Where            | What it does                                           |
-| ---------------------- | ---------------- | ------------------------------------------------------ |
-| `Enter`                | Field, non-empty | Adds the tag. Empty, it is left to the form to submit. |
-| `↓` / `↑`              | Field            | Moves through the suggestions, opening them if closed. |
-| `Enter`                | On a suggestion  | Adds the suggestion instead of what was typed.         |
-| `Escape`               | Suggestions open | Closes them. A second `Escape` is the dialog's.        |
-| The delimiter          | Field            | Adds the tag, same as `Enter`.                         |
-| `Backspace`            | Empty field      | Steps onto the last tag.                               |
-| `Backspace` / `Delete` | On a tag         | Removes it, and stays on the one that takes its place. |
-| `←` / `→`              | On a tag         | Walks the row. Past the last one is the field again.   |
-| `←`                    | Empty field      | Steps onto the last tag.                               |
-| `Escape`               | On a tag         | Back to the field.                                     |
-| Any printable key      | On a tag         | Back to the field, with the character typed.           |
-| `Tab`                  | Anywhere         | The remove controls are real buttons, in order.        |
-
-While an input method is composing, `Enter` accepts its suggestion and adds nothing: the word is not
-finished yet.
-
-Arrow directions are read off the element, so they reverse inside an RTL subtree without being told.
-
-## Import
-
-```svelte
-<script lang="ts">
-	import TagsInput from '#lib/components/coral/kit/tags-input/tags-input.svelte';
-</script>
-```
+back in the field. `aria-invalid` on the field draws the box's invalid state, through
+`input-group`.
 
 ## Props
 
@@ -190,9 +168,30 @@ Everything the shadcn input accepts stays available on the field: `placeholder`,
 | `tagClass`         | `string`                                     | -                     | Merged onto each tag.                                     |
 | `tag`              | `Snippet<[{ value, index, remove }]>`        | -                     | Replaces the body of each tag. The remove control stays.  |
 
-`oninput`, `onkeydown` and `onblur` are forwarded rather than swallowed. The caller's `onkeydown`
-runs first, so calling `preventDefault` on it takes that key away from the component, which is how
-a project bolts on a key of its own without forking the file.
+## Keyboard
+
+Keys act differently in the field and on a tag's remove control, which is where focus sits once
+the arrows or Backspace step out of the field.
+
+| Key                    | Action                                                                                |
+| ---------------------- | ------------------------------------------------------------------------------------- |
+| `Enter`                | In a non-empty field: adds the tag. In an empty one it is left to the form to submit. |
+| The delimiter          | In the field: adds the tag, same as `Enter`.                                          |
+| `↓` / `↑`              | In the field: moves through the suggestions, opening them if closed.                  |
+| `Enter`                | On a suggestion: adds it instead of what was typed.                                   |
+| `Escape`               | With suggestions open: closes them. A second `Escape` is the dialog's.                |
+| `Backspace` / `←`      | In an empty field: steps onto the last tag.                                           |
+| `Backspace` / `Delete` | On a tag: removes it, and stays on the one that takes its place.                      |
+| `Enter` / `Space`      | On a tag: removes it, like any button.                                                |
+| `←` / `→`              | On a tag: walks the row. Past the last one is the field again.                        |
+| `Escape`               | On a tag: back to the field.                                                          |
+| Any printable key      | On a tag: back to the field, with the character typed.                                |
+| `Tab`                  | Anywhere: the remove controls are real buttons, in order.                             |
+
+While an input method is composing, `Enter` accepts its suggestion and adds nothing: the word is not
+finished yet.
+
+Arrow directions are read off the element, so they reverse inside an RTL subtree without being told.
 
 ## Accessibility
 
@@ -204,14 +203,48 @@ arrow keys are a shortcut over the top of that, not the only way in.
 Focus is the highlight. There is no second notion of "the selected tag" to keep in sync with it,
 nothing to announce that the browser does not announce already, and no roving `tabindex` to get
 wrong. Removing a tag moves focus to the one that takes its place, or back to the field when the
-list empties.
+list empties. It never lands on `<body>`.
 
-> **On editing a tag in place.** Some libraries let a double click turn a tag back into a text
-> field. Coral does not: it is a mode people fall into by accident and cannot discover on purpose,
-> and removing a short string and retyping it is two keystrokes. If a project genuinely needs it,
-> that is a `tag` snippet: the pieces are exposed.
+With `suggestions`, the field takes `role="combobox"`, `aria-autocomplete="list"` and
+`aria-expanded`, points `aria-controls` at the list while it is open, and the list is named by
+`suggestionsLabel`.
 
-## tags.ts
+## Customizing
+
+`class` lands on the box, `inputClass` on the field, `tagClass` on each tag, and `tagVariant` picks
+the badge variant the tags are drawn with. The box itself is the primitive's: `input-group` draws
+it, and the focus ring, the disabled dimming and `aria-invalid` come from it reacting to the field
+inside. That's why a tags input sits next to a plain input without either of them being told what
+a field looks like.
+
+### Custom tags
+
+<Preview demo={customDemo} />
+
+The `tag` snippet replaces the body of each tag (an icon, an avatar, a count). The remove control
+stays, along with its label and its place in the keyboard order. `tagVariant`, `tagClass`,
+`inputClass` and `class` cover the rest without a snippet.
+
+### Your own keys
+
+`oninput`, `onkeydown` and `onblur` are forwarded rather than swallowed. The caller's `onkeydown`
+runs first, so calling `preventDefault` on it takes that key away from the component, which is how
+a project bolts on a key of its own without forking the file.
+
+### Project-wide defaults
+
+`clearLabel`, `removeLabel`, `delimiter` and `suggestionsLabel` can be stated once under
+`'kit/tags-input'` in [`setCoralDefaults`](/docs/conventions#project-wide-defaults); a prop at the
+call site still wins.
+
+### On editing a tag in place
+
+Some libraries let a double click turn a tag back into a text field. Coral does not: it is a mode
+people fall into by accident and cannot discover on purpose, and removing a short string and
+retyping it is two keystrokes. If a project genuinely needs it, that is a `tag` snippet: the pieces
+are exposed.
+
+### tags.ts
 
 The rules live in `kit/tags-input/tags.ts` and are exported on their own, so the same splitting and
 validation can run where there is no field: normalising a payload, importing a CSV column.
@@ -225,3 +258,7 @@ split('a;b', /[;,]/); // ['a', 'b']
 add([' A ', 'a'], { current: [], sanitize: (raw) => raw.trim().toLowerCase() });
 // { tags: ['a'], rejected: [{ value: 'a', reason: 'duplicate' }] }
 ```
+
+Dropping to raw shadcn means an `input-group`, a row of `badge`s and a `popover` with a `command`
+list, plus every key in the table above, the paste interception, the focus moves after a removal
+and the hidden inputs.

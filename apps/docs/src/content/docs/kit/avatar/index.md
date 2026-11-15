@@ -27,10 +27,6 @@ Raw shadcn asks for three components and a hand-written fallback every single ti
 That last line is the problem. It is rewritten in every project, and it is wrong in most of them:
 `slice(0, 2)` on `Elena van der Meer` gives `EL`, not `EM`.
 
-<Preview demo={basicDemo} />
-
-## What Coral adds
-
 - **Correct initials, not `slice(0, 2)`.** First letter of the first word, plus first letter of the
   last one: "Elena van der Meer" gives `EM`, not `EL`.
 - **One accessible label, never doubled.** The image's `alt` and the fallback's hidden label are the
@@ -40,13 +36,60 @@ That last line is the problem. It is rewritten in every project, and it is wrong
 - **The pieces stay reachable.** `children` renders alongside the image, and `AvatarGroup` still
   wraps a Coral avatar unchanged.
 
-## Import
+<Preview demo={basicDemo} />
+
+## When to use
+
+**Use it when**
+
+- A person or an account is shown by face: a team member in a list, the author of a comment, the
+  signed-in user in a menu.
+- The photo may be missing or fail to load, and initials should stand in for it.
+
+**Reach for something else when**
+
+- Several people are shown together, with a "+3" for the rest: use
+  [Avatar stack](/docs/kit/avatar-stack).
+- The image is not a person or an account, like a screenshot of a deployment: a plain `<img>` with
+  its own `alt`.
+
+## Usage
 
 ```svelte
 <script lang="ts">
 	import Avatar from '#lib/components/coral/kit/avatar/avatar.svelte';
 </script>
 ```
+
+```svelte
+<Avatar src="/team/amara.jpg" name="Amara Diallo" />
+```
+
+## Examples
+
+### Fallback
+
+The fallback is shown when there is no `src`, and when the image fails to load. Initials come
+from `name`: first letter of the first word, plus first letter of the last word when there is more
+than one. Single-word names give a single letter.
+
+An empty or missing `name` produces an empty string rather than a placeholder. The caller decides
+what an unknown person looks like, and gets an empty circle until it says so.
+
+<Preview demo={fallbackDemo} />
+
+### Sizes
+
+`size` is forwarded straight to the shadcn root. Coral adds nothing here, and removes nothing.
+
+<Preview demo={sizesDemo} />
+
+### Custom fallback
+
+When initials are not the right answer (an unauthenticated user, a machine account), pass a
+snippet instead of a string.
+
+<Preview demo={customFallbackDemo} />
 
 ## Props
 
@@ -61,16 +104,10 @@ Everything the shadcn root accepts stays available: `size`, `class`, `delayMs`, 
 | `fallback` | `string` \| `Snippet` | -       | Replaces the derived initials. Text, or a snippet for full control. |
 | `children` | `Snippet`             | -       | Extra content inside the root, alongside the image - e.g. a badge.  |
 
-## Fallback
+## Keyboard
 
-The fallback is shown when there is no `src`, and when the image fails to load. Initials come
-from `name`: first letter of the first word, plus first letter of the last word when there is more
-than one. Single-word names give a single letter.
-
-An empty or missing `name` produces an empty string rather than a placeholder. The caller decides
-what an unknown person looks like, and gets an empty circle until it says so.
-
-<Preview demo={fallbackDemo} />
+Nothing to press: an avatar is an image, not a control, so it takes no focus. Wrap it in a link or
+a button when it should open a profile, and that element carries the keyboard.
 
 ## Accessibility
 
@@ -94,20 +131,15 @@ image is showing, so the name is never announced twice.
 in the text next to it. Use it in a table row or a list item that already names the person, and the
 same name will not be read twice.
 
-## Sizes
+## Customizing
 
-`size` is forwarded straight to the shadcn root. Coral adds nothing here, and removes nothing.
+- **`class`**, `size` and every other prop of the shadcn root land on the root.
+- **`fallback`** replaces the initials with text or a snippet; **`children`** renders inside the
+  root, next to the image.
+- **`loadingStatus`** is bindable, as on the primitive, so a caller can tell whether the image
+  loaded.
 
-<Preview demo={sizesDemo} />
-
-## Custom fallback
-
-When initials are not the right answer (an unauthenticated user, a machine account), pass a
-snippet instead of a string.
-
-<Preview demo={customFallbackDemo} />
-
-## Escaping the flat API
+### Escaping the flat API
 
 The pieces stay reachable. `children` renders inside the root, next to the image, so anything the
 primitive supports still works without dropping Coral.
@@ -119,14 +151,17 @@ unchanged.
 
 <Preview demo={groupDemo} />
 
-## Why flat props
+Dropping down to shadcn's `Avatar`, `AvatarImage` and `AvatarFallback` means writing the initials,
+the shared label and the `aria-hidden` on the fallback text back by hand.
+
+### Why flat props
 
 Avatar has a defensible canonical case: a person, maybe a photo, initials when there is no photo.
 The parts do not vary independently, so composition would be ceremony. This is the shape the
 [conventions](/docs/conventions) call for: flat props, and the pieces still reachable when the
 rare case shows up.
 
-## initials()
+### initials()
 
 The derivation lives in `kit/avatar/initials.ts` and is exported on its own, so a project that
 needs the same initials somewhere else (a mention chip, an export, a PDF) does not re-implement

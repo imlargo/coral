@@ -19,38 +19,72 @@ older" appends without a word, so nobody is told anything arrived.
 
 <Preview demo={basicDemo} />
 
-## What Coral adds
+## When to use
 
-- **Days cut where the reader is.** Events are grouped by the calendar day they fell on in the
-  reader's own zone, through `Intl`, or in one zone for everybody when the product has one.
-- **"Today" and "Yesterday" in the reader's language**, from `Intl`, then the formatted date.
-- **A list a screen reader can read.** A heading per day at the level you choose, an ordered list
-  under it, and a `<time datetime>` on every event.
-- **Older events arrive below, and are announced.** The control keeps focus while it waits, nothing
-  above it moves, and how many arrived is said out loud.
-- **What an event says is yours.** The `item` snippet is required: Coral does not know what a
-  deploy or a comment looks like, only when it happened.
+**Use it when**
 
-## Loading older events
+- Events are read by when they happened: an audit log, a deployment history, a project's activity.
+- Days matter to the reader, so "Yesterday" and a date heading help more than a timestamp per row.
+- The history is long and older events are fetched on demand.
+
+**Reach for something else when**
+
+- The order is a sequence of steps the reader moves through, not a record of the past: use
+  [Stepper](/docs/kit/stepper).
+- Only one timestamp needs to read "5 minutes ago": use [Relative time](/docs/kit/relative-time) on
+  its own.
+- Rows are compared by columns (who, what, environment, status) rather than read in order: a
+  shadcn `Table`.
+
+## Usage
+
+```svelte
+<script lang="ts">
+	import Timeline from '#lib/components/coral/kit/timeline/timeline.svelte';
+
+	const deployments = [
+		{ id: 'd2', at: '2026-11-15T14:05:00Z', what: 'api-gateway to production' },
+		{ id: 'd1', at: '2026-11-14T18:40:00Z', what: 'api-gateway to staging' }
+	];
+</script>
+
+<Timeline items={deployments} getDate={(event) => event.at} getKey={(event) => event.id}>
+	{#snippet item({ item })}
+		Deployed {item.what}
+	{/snippet}
+</Timeline>
+```
+
+The `item` snippet is required: Coral does not know what a deploy or a comment looks like, only when
+it happened. Days are cut in the reader's own zone through `Intl`, and the two most recent read
+"Today" and "Yesterday" in the reader's language, then the formatted date.
+
+## Examples
+
+### Loading older events
 
 <Preview demo={olderDemo} />
 
 `hasMore` shows the control; `onloadmore` fetches and appends to `items`, and follows the
 [action convention](/docs/conventions): return a promise and it waits, return `false` or throw and
-nothing changes. Once the list has grown, `loadedMessage` is announced with how many events came.
+nothing changes. Older events are appended below what was already read, so nothing above the
+control moves. Once the list has grown, `loadedMessage` is announced with how many events came.
 
-## One day for everybody
+### One day for everybody
 
 `timeZone` is left out for a personal history, where the reader's own day is the right one. An audit
 log that every administrator must read the same way sets it, and every day line is cut there.
 
-## Import
+### Empty
 
-```svelte
-<script lang="ts">
-	import Timeline from '#lib/components/coral/kit/timeline/timeline.svelte';
-</script>
-```
+With no events and `hasMore` off, the timeline shows shadcn's `Empty` with `emptyMessage` as its
+title, or the `empty` snippet in its place. While `hasMore` is on, an empty list shows only the
+control, since older events may still come.
+
+### When loading fails
+
+What `onloadmore` throws goes to `onerror`, and the list stays as it was so the reader can try
+again. Without `onerror` the error is an unhandled rejection.
 
 ## Props
 
@@ -86,15 +120,36 @@ Everything a `<div>` accepts stays available on the root. On top of that:
 | `heading` | `{ day, label, offset }` | The text of a day heading.                    |
 | `empty`   | -                        | The empty state.                              |
 
+## Keyboard
+
+The only control is the button that loads older events, a native button: `Tab` reaches it, and
+`Enter` or `Space` presses it. The events themselves are text and links from your `item` snippet.
+
 ## Accessibility
 
 Each day is a heading at `headingLevel`, so the H key walks the days, and its events are an ordered
 list, so the count is read before them. Every event carries a `<time datetime>` with the exact
-instant, printed as the reader's clock beside it. Older events are loaded by a real button that keeps
-focus while it waits, and what arrived is announced through a status region rather than left for
-the reader to notice.
+instant, printed as the reader's clock beside it. Older events are loaded by a real button that
+keeps focus while it waits, marked `aria-busy` and `aria-disabled` rather than `disabled`, and what
+arrived is announced through a status region rather than left for the reader to notice.
 
-## days.ts
+## Customizing
+
+- **Class props.** `class` merges onto the root, `headingClass` onto each day's heading, `listClass`
+  onto each day's `<ol>`, `itemClass` onto every event row.
+- **Snippets.** `item` is what an event says; `heading` replaces a day heading's text and receives
+  the `offset` in days from today, so a heading can read differently for recent days; `empty`
+  replaces the empty state.
+- **Project-wide defaults.** `timeZone`, `dayFormat`, `timeFormat`, `loadMoreLabel`,
+  `loadedMessage` and `emptyMessage` can be stated once under `'kit/timeline'` with
+  `setCoralDefaults`, and `locale` through the shared one: see
+  [Project-wide defaults](/docs/conventions#project-wide-defaults).
+
+Dropping to raw markup means rebuilding the grouping by the reader's calendar day, the localized
+"Today" and "Yesterday", the heading and list structure, and the announced load of older events
+with its busy button.
+
+### days.ts
 
 `groupByDay` and `dayKey` are exported on their own, for a feed that is not drawn by this component
 or a server that pre-groups what it sends:

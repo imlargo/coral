@@ -16,31 +16,53 @@ category: Inputs
 	import statesDemo from './demos/states.svelte?demo';
 </script>
 
+A row of star buttons with click handlers is the usual build, and it leaves out the keyboard, the
+form and the screen reader: arrow keys do nothing, a required rating cannot hold back a submit, and
+a screen reader hears five unnamed buttons. Half stars then need a second, half-shaped glyph that
+only fits one shape.
+
+Rating group puts a native radio under every star, so the keyboard, form submission and `required`
+validation are the platform's, and draws any fraction of a star by clipping one glyph.
+
 <Preview demo={basicDemo} />
 
-Flat props, because a rating has a defensible canonical case: some stars, a value, click one. The
-compound alternative (a root, a control, a context, an each, an item) is eight lines of ceremony
-to draw five stars, and it is the boilerplate Coral exists to delete.
+## When to use
 
-## What Coral adds
+**Use it when**
 
-- **Native radios underneath:** arrow keys, `Home`/`End`, roving focus, form submission and
-  `required` validation are the platform's, not a reimplementation of the platform's.
-- **Right-to-left works without a `dir` prop.** The halves swap, the fill grows the other way, and
-  the arrow keys reverse: the browser and CSS logical properties do all three.
-- **Half stars from one glyph:** no second icon, and any fraction, not just a half.
-- **`readonly` is not a disabled control.** It leaves the tab order and becomes an image with the
-  rating as its name, which is what showing someone else's average actually is.
-- **An average is drawn where it is.** `4.3` is four stars and a third.
+- Someone rates something on a short scale of stars: a template, a support reply, a release.
+- An average is shown as stars, unrounded, with `readonly`.
+- The rating has to post with a form and block it while empty, through `name` and `required`.
 
-## Halves
+**Reach for something else when**
+
+- The scale is a number the reader picks precisely: [number input](/docs/kit/number-input), or
+  [scrub input](/docs/kit/scrub-input) to drag it.
+- The choices are words, not a scale: the shadcn `RadioGroup`, or a [select](/docs/kit/select).
+- The value is a share of a whole, not a score: [gauge](/docs/kit/gauge).
+
+## Usage
+
+```svelte
+<script lang="ts">
+	import RatingGroup from '#lib/components/coral/kit/rating-group/rating-group.svelte';
+
+	let value = $state(0);
+</script>
+
+<RatingGroup bind:value aria-label="Rate this template" />
+```
+
+## Examples
+
+### Halves
 
 <Preview demo={halfDemo} />
 
 `allowHalf` doubles the options rather than adding a mode: five choices become ten, each star gets
 two hit areas, and the keyboard steps by a half because there is genuinely another radio there.
 
-## Reading, not rating
+### Reading, not rating
 
 <Preview demo={readonlyDemo} />
 
@@ -57,7 +79,34 @@ touch:
 Only `readonly` draws `value` unrounded, because only there is a fraction meaningful. A control has
 to show what it would submit.
 
-## Icons
+### Forms
+
+<Preview demo={formDemo} />
+
+**`name` is what puts the rating in the request.** With it you get a real radio group: the value is
+posted, `required` blocks submission natively, and the browser's own validation message points at
+the control.
+
+Without it, nothing is submitted at all, and that takes explaining, because radios need a name to
+group _whatever_ they are for:
+
+- Radios with no shared `name` are each a group of one. Arrow keys do nothing, and two stars can be
+  checked at the same time.
+- So Coral always sets one. A generated name would then be posted under a meaningless key.
+- So a rating the caller did not name is pointed at a form that does not exist. A control with no
+  form owner is never submitted, which leaves `name` meaning exactly one thing.
+
+`required` needs `name` for the same reason: an unowned control is not validated by any form.
+
+### Disabled, read-only and right-to-left
+
+<Preview demo={statesDemo} />
+
+`disabled` keeps the stars in the page, dimmed and unclickable, as something that could have been
+used. Right-to-left works without a `dir` prop: the halves swap, the fill grows the other way and
+the arrow keys reverse, because the browser and CSS logical properties do all three.
+
+### Icons
 
 <Preview demo={iconsDemo} />
 
@@ -77,7 +126,7 @@ glyph. Clipping one shape has none of those problems.
 
 Fill is a **fraction**, `0` to `1`, not a state. `fill > 0` is the "is this one earned" test.
 
-## Colour and size
+### Colour and size
 
 ```svelte
 <RatingGroup bind:value color="var(--chart-2)" class="[--coral-star:1.75rem]" />
@@ -89,54 +138,6 @@ Fill is a **fraction**, `0` to `1`, not a state. `fill > 0` is the "is this one 
 the project's call. `--coral-star` is the size, a custom property rather than a prop because a star
 is sized, not styled; everything else in the row derives from it. The gap is a plain `gap-*` on
 `class`.
-
-## Forms
-
-<Preview demo={formDemo} />
-
-**`name` is what puts the rating in the request.** With it you get a real radio group: the value is
-posted, `required` blocks submission natively, and the browser's own validation message points at
-the control.
-
-Without it, nothing is submitted at all, and that takes explaining, because radios need a name to
-group _whatever_ they are for:
-
-- Radios with no shared `name` are each a group of one. Arrow keys do nothing, and two stars can be
-  checked at the same time.
-- So Coral always sets one. A generated name would then be posted under a meaningless key.
-- So a rating the caller did not name is pointed at a form that does not exist. A control with no
-  form owner is never submitted, which leaves `name` meaning exactly one thing.
-
-`required` needs `name` for the same reason: an unowned control is not validated by any form.
-
-## Accessibility
-
-Each star is a `<label>` wrapping an `sr-only` radio, so it is a real radio group and everything
-below is the platform's behaviour, not an imitation of it:
-
-| Key             | Does                             |
-| --------------- | -------------------------------- |
-| `Tab`           | enters at the checked star, once |
-| `←` `→` `↑` `↓` | moves and selects                |
-| `Home` `End`    | first, last                      |
-
-The group needs a name. Either pass `aria-label`, or point `aria-labelledby` at a `Field.Legend` the
-way the form example does. Each option names itself `3 / 5`, wordless, because `3 out of 5 stars`
-is copy and copy is the project's. `label` is where that goes:
-
-```svelte
-<RatingGroup bind:value label={(value, count) => `${value} out of ${count} stars`} />
-```
-
-<Preview demo={statesDemo} />
-
-## Import
-
-```svelte
-<script lang="ts">
-	import RatingGroup from '#lib/components/coral/kit/rating-group/rating-group.svelte';
-</script>
-```
 
 ## Props
 
@@ -163,7 +164,62 @@ is copy and copy is the project's. `label` is where that goes:
 
 Everything else lands on the root element.
 
-## What it does not do
+## Keyboard
+
+Each star is a native radio, so the group behaves like any radio group: one tab stop, and the arrow
+keys move through it. `Home` and `End` are Coral's, because a native radio group leaves them out and
+a half-step rating is ten options wide.
+
+| Key             | Action                                                        |
+| --------------- | ------------------------------------------------------------- |
+| `Tab`           | Enters at the checked star, once.                             |
+| `←` `→` `↑` `↓` | Moves and selects. In a right-to-left page, `←` and `→` swap. |
+| `Space`         | Checks the focused star when none is checked yet.             |
+| `Home` / `End`  | Selects the first step or the last star.                      |
+
+A `readonly` rating leaves the tab order: it has no keys.
+
+## Accessibility
+
+Each star is a `<label>` wrapping an `sr-only` radio, so it is a real radio group and its
+arrow keys, form behaviour and validation are the platform's, not an imitation of them.
+
+The group needs a name. Either pass `aria-label`, or point `aria-labelledby` at a `Field.Legend` the
+way the form example does. Each option names itself `3 / 5`, wordless, because `3 out of 5 stars`
+is copy and copy is the project's. `label` is where that goes:
+
+```svelte
+<RatingGroup bind:value label={(value, count) => `${value} out of ${count} stars`} />
+```
+
+- **`readonly` is not a disabled control.** It leaves the tab order and becomes an image
+  (`role="img"`) with the rating as its name, which is what showing someone else's average actually
+  is.
+- **Focus is drawn on the star.** The radio is visually hidden, so the focus ring is drawn on the
+  star that holds it.
+
+## Customizing
+
+- `class` lands on the root and carries the size knob, `[--coral-star:2rem]`, and the gap.
+  `starClass` is merged onto every star.
+- `color` and `emptyColor` set the fill and the track; keep them theme tokens to stay themeable.
+- `star` replaces the glyph, rendered twice per star, as shown under [Icons](#icons).
+- `label` can be set once for the project with
+  [`setCoralDefaults`](/docs/conventions#project-wide-defaults) under `kit/rating-group`, and the
+  shared `locale` drives the number in the default label.
+
+There is no shadcn rating to drop down to: the pieces are native radios and a Lucide star. The
+arithmetic is in `rating.ts` beside the component (`fillOf`, `snap`, `stepsFor`); a hand-built
+rating starts from there and rebuilds the detached form owner, `Home` and `End`, the clipped fill
+and the read-only image.
+
+### Why flat props
+
+Flat props, because a rating has a defensible canonical case: some stars, a value, click one. The
+compound alternative (a root, a control, a context, an each, an item) is eight lines of ceremony
+to draw five stars, and it is the boilerplate Coral exists to delete.
+
+### What it does not do
 
 - **No clearing by clicking the current star.** Native radios cannot be unchecked, and the extra
   hidden radio it would take needs a label, which is copy. Bind `value` and set it to `0`.

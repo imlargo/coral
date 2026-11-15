@@ -17,32 +17,49 @@ category: Inputs
 	import piecesDemo from './demos/pieces.svelte?demo';
 </script>
 
-The shadcn docs are honest about this one: there is no date picker component, there is a recipe.
-Every project writes the same forty lines (a popover, a trigger button, a `DateFormatter`, a
-`getLocalTimeZone()`, an `open` flag that has to be closed by hand), and every project writes them
-slightly differently.
+The shadcn docs are honest about this one: there is no date picker component, there is a recipe. So
+a picker means writing the same forty lines by hand (a popover, a trigger button, a `DateFormatter`,
+a `getLocalTimeZone()`, an `open` flag that has to be closed by hand), each copy slightly different
+from the last. Date picker is those lines, with the closing, the range and the formatting settled
+once.
 
 <Preview demo={basicDemo} />
 
-## What Coral adds
+## When to use
 
-- **The popover closes itself**, and focus goes back to the trigger. The recipe leaves that to a
-  hand-written `onValueChange`, which is where it gets forgotten.
-- **A range closes when it is _complete_**, not on the first click (the single most common bug in a
-  hand-rolled range picker).
-- **The trigger label is formatted, and a range is formatted _as a range_**: `Jan 5 – 9, 2026`,
-  one month and one year, in whatever separator the locale uses.
-- **Presets know which of them is active**, which is the only reason a preset row is worth composing
-  rather than writing inline.
-- **No `@internationalized/date` import:** `Intl` formats the day; the calendar keeps owning the
-  dates.
-- **Days survive timezones and DST.** The recipe's `value.toDate(getLocalTimeZone())` hands `Intl`
-  local midnight, and midnight is the one instant a DST jump can delete. Where that happens, the
-  picker prints the day before the one that is selected.
-- **`onchange` fires when the user picks**, never on mount and never when `value` is assigned from
-  code.
+**Use it when**
 
-## Ranges
+- A form or a filter takes one day: a release date, an expiry for an API key.
+- A filter takes a range, often with shortcuts: deployments or builds over the last 7 days.
+- The day has to be submitted with a form as an ISO string.
+
+**Reach for something else when**
+
+- The calendar should stay on the page rather than in a popover: the shadcn `Calendar` or
+  `RangeCalendar`.
+- The value is a moment in time, not a day: the picker plus an `<Input type="time">` in its
+  `footer`, since there is no time here.
+- The date is shown, not picked: [relative time](/docs/kit/relative-time) for "3 hours ago".
+- Several scattered days are picked at once: the shadcn `Calendar` with `type="multiple"`.
+
+## Usage
+
+```svelte
+<script lang="ts">
+	import DatePicker from '#lib/components/coral/kit/date-picker/date-picker.svelte';
+	import type { DateValue } from '#lib/components/coral/kit/date-picker/types.js';
+
+	let releaseDate = $state<DateValue>();
+</script>
+
+<DatePicker bind:value={releaseDate} aria-label="Release date" />
+```
+
+`onchange` fires when the user picks, never on mount and never when `value` is assigned from code.
+
+## Examples
+
+### Ranges
 
 <Preview demo={rangeDemo} />
 
@@ -61,7 +78,7 @@ instead of testing `value === undefined`.
 one is the user still mid-gesture, and a caller that fetches on change would otherwise fire a
 request for a range with no end. Bind `value` if you do want every click.
 
-## Presets
+### Presets
 
 <Preview demo={presetsDemo} />
 
@@ -89,7 +106,7 @@ Identity cannot answer that question. A thunk hands back a fresh `CalendarDate` 
 compares the day fields instead, and is exported on its own for a preset row that lives outside the
 popover.
 
-## The calendar keeps everything it had
+### The calendar keeps everything it had
 
 <Preview demo={boundsDemo} />
 
@@ -106,7 +123,7 @@ One rename: the calendar's `placeholder` (the month on screen, a `DateValue`) is
 because `placeholder` is already the trigger's empty text everywhere else in Coral. Two props with
 one name, one a string and one a date, is a coin flip every caller loses once.
 
-## Forms
+### Forms
 
 <Preview demo={formDemo} />
 
@@ -118,15 +135,7 @@ to `${name}-end`).
 blocks submission while nothing is selected. On a range it holds for a half-picked one too, which
 is the user mid-gesture rather than a selection.
 
-## The pieces
-
-<Preview demo={piecesDemo} />
-
-`trigger` replaces the button entirely and receives `label` already formatted, so a custom trigger
-does not have to re-derive it. `footer` adds a strip below the calendar: a clear action, a hint, a
-time field.
-
-## Formatting
+### Formatting
 
 `format` is passed straight to `Intl.DateTimeFormat`, so anything it understands works:
 
@@ -139,13 +148,19 @@ Leave `timeZone` out of it. Coral turns the selected day into a `Date` at **loca
 that: a calendar day means that day where the reader is, and noon is the only hour no DST jump can
 delete.
 
-## Import
+The trigger label is formatted, and a range is formatted _as a range_: `Jan 5 – 9, 2026`, one month
+and one year, in whatever separator the locale uses. There is no `@internationalized/date` import
+to write: `Intl` formats the day, and the calendar keeps owning the dates.
 
-```svelte
-<script lang="ts">
-	import DatePicker from '#lib/components/coral/kit/date-picker/date-picker.svelte';
-</script>
-```
+The recipe's `value.toDate(getLocalTimeZone())` hands `Intl` local midnight, and midnight is the one
+instant a DST jump can delete. Where that happens, a hand-rolled picker prints the day before the
+one that is selected.
+
+### Empty, cleared and disabled
+
+With nothing selected the trigger prints `placeholder` in muted text. `clearable` adds a clear
+control beside the trigger once there is a selection; clearing calls `onchange` with `undefined`,
+or an empty range. `disabled` blocks the trigger and the calendar and hides the clear control.
 
 ## Props
 
@@ -191,7 +206,55 @@ Everything the wrapped calendar accepts stays available. On top of that:
 | `label` | `string`                 | Shown on the shortcut, and on the trigger while it is active.  |
 | `value` | `Value` \| `() => Value` | The selection it stands for. A function for anything relative. |
 
-## Deliberately absent
+## Keyboard
+
+The trigger opens the popover; inside it, the keys are the calendar primitive's, and focus is
+trapped in the popover while it is open.
+
+| Key               | Action                                                              |
+| ----------------- | ------------------------------------------------------------------- |
+| `Enter` / `Space` | On the trigger: opens the popover. On a day: selects it.            |
+| `←` / `→`         | Previous or next day, into the next month at the edges.             |
+| `↑` / `↓`         | The same weekday a week earlier or later.                           |
+| `Tab`             | Moves between the presets, the month buttons and the calendar.      |
+| `Escape`          | Closes the popover without picking; focus goes back to the trigger. |
+
+## Accessibility
+
+- **The popover closes itself**, and focus goes back to the trigger: after a day, after the second
+  end of a range, and after a preset. The recipe leaves that to a hand-written `onValueChange`,
+  which is where it gets forgotten.
+- **Named on the trigger.** The trigger takes `id` and `aria-*`, so a `<Label for>` names it, and
+  it carries `aria-required` when `required` is set.
+- **Presets say which is active** with `aria-pressed`, and the trigger prints the active preset's
+  label rather than the dates behind it.
+- **The clear control sits beside the trigger**, not inside it: a button within a button is invalid
+  HTML, and browsers recover by dropping one of the two. It is named by `clearLabel`.
+
+## Customizing
+
+- `class` is merged onto the trigger button, `contentClass` onto the popover content.
+- Everything the calendar accepts is forwarded to it, as shown under
+  [The calendar keeps everything it had](#the-calendar-keeps-everything-it-had).
+- `placeholder`, `clearLabel` and `format` can be set once for the project with
+  [`setCoralDefaults`](/docs/conventions#project-wide-defaults) under `kit/date-picker`; the shared
+  `locale` drives the calendar and the trigger label.
+
+The picker is the shadcn `Popover`, `Button` and `Calendar` or `RangeCalendar`. `presets.ts`
+(`activePreset`, `resolvePreset`) and `format.ts` (`formatDay`, `formatDayRange`, `toLocalDate`)
+are plain modules for a picker of your own. Dropping to the recipe means rebuilding the close and
+focus hand-back, the range that waits for its second end, the formatted label, the active preset
+and the form fields.
+
+### The pieces
+
+<Preview demo={piecesDemo} />
+
+`trigger` replaces the button entirely and receives `label` already formatted, so a custom trigger
+does not have to re-derive it. `footer` adds a strip below the calendar: a clear action, a hint, a
+time field.
+
+### Deliberately absent
 
 - **No `type="multiple"`:** the shadcn calendar has it, and surfacing it here would add a third
   shape (an array) to `value`, to `presets` and to `onchange`, for a selection the trigger cannot
