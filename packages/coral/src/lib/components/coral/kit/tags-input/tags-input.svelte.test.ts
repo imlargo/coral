@@ -1,6 +1,6 @@
 /**
  * @coral/kit/tags-input
- * @version 1.2.0
+ * @version 1.2.1
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -25,6 +25,22 @@ describe('adding', () => {
 		expect(props.value).toEqual(['design']);
 		expect(field().value).toBe('');
 		expect(onchange).toHaveBeenCalledWith(['design']);
+	});
+
+	it('leaves the Enter that accepts an input method suggestion to the input method', async () => {
+		const props = $state({ value: [] as string[] });
+		await render(TagsInput, props);
+
+		await userEvent.type(field(), 'とうきょう');
+		const press = new KeyboardEvent('keydown', {
+			key: 'Enter',
+			isComposing: true,
+			bubbles: true,
+			cancelable: true
+		});
+		field().dispatchEvent(press);
+		expect(props.value).toEqual([]);
+		expect(press.defaultPrevented).toBe(false);
 	});
 
 	it('turns the delimiter into a tag as it is typed', async () => {
