@@ -6,15 +6,21 @@
 	import Shortcut from './shortcut.svelte';
 
 	let {
+		disabled = false,
 		modal = false,
+		onclick,
 		onpress
 	}: {
+		disabled?: boolean;
 		modal?: boolean;
+		onclick?: () => void;
 		onpress?: () => void;
 	} = $props();
 </script>
 
-<p>Save <Shortcut keys="ctrl+s" platform="other" {onpress} /></p>
+<button type="button" {disabled} {onclick}>
+	Save <Shortcut keys="ctrl+s" platform="other" activate {onpress} />
+</button>
 
 {#if modal}
 	<div role="dialog" aria-modal="true" aria-label="Delete project">

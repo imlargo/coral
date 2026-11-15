@@ -162,13 +162,42 @@ const press = (key: string) => {
 	return event;
 };
 
-describe('behind a modal', () => {
-	it('stays quiet while a modal it is not part of is open', async () => {
+describe('activating its control', () => {
+	it('clicks the button it is drawn in', async () => {
+		const onclick = vi.fn();
+		await render(ShortcutHarness, { onclick });
+
+		expect(press('s').defaultPrevented).toBe(true);
+		expect(onclick).toHaveBeenCalledTimes(1);
+	});
+
+	it('runs onpress first, then clicks', async () => {
+		const order: string[] = [];
+		await render(ShortcutHarness, {
+			onpress: () => order.push('press'),
+			onclick: () => order.push('click')
+		});
+
+		press('s');
+		expect(order).toEqual(['press', 'click']);
+	});
+
+	it('does nothing while the control is disabled, and leaves the key to the browser', async () => {
 		const onpress = vi.fn();
-		await render(ShortcutHarness, { modal: true, onpress });
+		await render(ShortcutHarness, { disabled: true, onpress });
 
 		expect(press('s').defaultPrevented).toBe(false);
 		expect(onpress).not.toHaveBeenCalled();
+	});
+});
+
+describe('behind a modal', () => {
+	it('stays quiet while a modal it is not part of is open', async () => {
+		const onclick = vi.fn();
+		await render(ShortcutHarness, { modal: true, onclick });
+
+		expect(press('s').defaultPrevented).toBe(false);
+		expect(onclick).not.toHaveBeenCalled();
 	});
 
 	it('still fires from inside the modal', async () => {
@@ -188,13 +217,13 @@ describe('behind a modal', () => {
 	});
 
 	it('fires again once the modal has closed', async () => {
-		const onpress = vi.fn();
-		const props = $state({ modal: true, onpress });
+		const onclick = vi.fn();
+		const props = $state({ modal: true, onclick });
 		await render(ShortcutHarness, props);
 
 		props.modal = false;
 		await expect.poll(() => document.querySelector('[aria-modal]')).toBeNull();
 		press('s');
-		expect(onpress).toHaveBeenCalledTimes(1);
+		expect(onclick).toHaveBeenCalledTimes(1);
 	});
 });

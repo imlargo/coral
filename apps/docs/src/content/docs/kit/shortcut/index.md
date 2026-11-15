@@ -9,6 +9,7 @@ group: Kit
 	import basicDemo from './demos/basic.svelte?demo';
 	import platformsDemo from './demos/platforms.svelte?demo';
 	import inButtonDemo from './demos/in-button.svelte?demo';
+	import activateDemo from './demos/activate.svelte?demo';
 </script>
 
 `<Kbd>⌘</Kbd><Kbd>K</Kbd>` is right for half the readers, and the `keydown` listener next to it usually
@@ -51,6 +52,20 @@ left alone. This site's own search takes `mod+k` and `/`, which is why these dem
 Put `aria-keyshortcuts` on the control the shortcut activates, so assistive tech announces it there.
 `ariaKeyshortcuts()` in `keys.ts` produces the attribute's syntax from a combo.
 
+## On the control it presses
+
+<Preview demo={activateDemo} />
+
+`activate` binds the combo to the button or link the keys are drawn in: pressing it clicks that
+control, so the handler is written once, on the button. `onpress`, if given, runs first. While the
+control is disabled the shortcut does nothing and leaves the key to the browser.
+
+```svelte
+<Button onclick={save}>
+	Save <Shortcut keys="mod+s" activate />
+</Button>
+```
+
 ## Without drawing anything
 
 `listen` is exported on its own and returns its cleanup, which is the shape an `$effect` wants:
@@ -81,6 +96,7 @@ Everything the shadcn kbd group accepts stays available: `class`, `aria-*`, `ref
 | ---------------- | -------------------------------- | --------------- | --------------------------------------------- |
 | `keys`           | `string`                         | -               | The combo, as `mod+shift+k`. Required.        |
 | `onpress`        | `(event: KeyboardEvent) => void` | -               | Binds the combo. Omit to only draw it.        |
+| `activate`       | `boolean`                        | `false`         | Clicks the button or link it is drawn in.     |
 | `enabled`        | `boolean`                        | `true`          | Stops listening without unmounting.           |
 | `allowInFields`  | `boolean`                        | with a modifier | Whether it fires while typing in a field.     |
 | `preventDefault` | `boolean`                        | `true`          | Stops the browser's own action for the combo. |

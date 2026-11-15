@@ -12,6 +12,7 @@
 	let {
 		keys,
 		onpress,
+		activate = false,
 		enabled = true,
 		allowInFields,
 		preventDefault = true,
@@ -29,6 +30,10 @@
 
 	const resolved = $derived(platform ?? detected.current);
 	const drawn = $derived(tokens(parse(keys, resolved), resolved));
+
+	/** The control `activate` clicks: the closest button or link the keys are drawn in. */
+	const owner = () =>
+		ref?.closest<HTMLElement>('button, a[href], [role="button"], [role="menuitem"]');
 
 	/**
 	 * Whether a modal dialog the shortcut is not part of is open. Everything behind a modal is out
@@ -48,15 +53,20 @@
 	}
 
 	$effect(() => {
-		if (!onpress || !enabled) return;
+		if ((!onpress && !activate) || !enabled) return;
 		// `preventDefault` is applied here rather than by `listen`, so a covered shortcut leaves the
 		// key to whatever the modal does with it.
 		return listen(
 			keys,
 			(event) => {
 				if (covered()) return;
+				const control = activate ? owner() : undefined;
+				if (activate && (!control || control.matches(':disabled, [aria-disabled="true"]'))) {
+					return;
+				}
 				if (preventDefault) event.preventDefault();
 				onpress?.(event);
+				control?.click();
 			},
 			{ platform: resolved, allowInFields, preventDefault: false }
 		);
