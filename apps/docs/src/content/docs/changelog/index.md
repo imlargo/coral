@@ -18,6 +18,9 @@ migrate.
 
 ## 2026-11-14
 
+- `kit/shortcut` 1.1.0: New `activate` clicks the button or link the shortcut is drawn in, after
+  `onpress`, and does nothing while that control is disabled. A bound shortcut no longer fires, or
+  takes the key from the browser, while a modal dialog it is not part of is open.
 - `kit/file-input` 1.3.0: Takes files pasted while the zone has focus, such as a copied
   screenshot, through the same `accept`, `maxSize` and `maxFiles` as a pick or a drop. Removing a
   file moves focus to the next file, or the one before it at the end of the list, or back to the

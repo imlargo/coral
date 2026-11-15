@@ -1,12 +1,13 @@
 /**
  * @coral/kit/shortcut
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 import { describe, expect, it, vi } from 'vitest';
 import Shortcut from './shortcut.svelte';
+import ShortcutHarness from './shortcut-harness.test.svelte';
 
 const keycaps = () =>
 	Array.from(document.querySelectorAll('kbd[data-slot="kbd"]')).map(
@@ -152,5 +153,77 @@ describe('binding', () => {
 		window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true }));
 		window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, repeat: true }));
 		expect(onpress).toHaveBeenCalledTimes(1);
+	});
+});
+
+const press = (key: string) => {
+	const event = new KeyboardEvent('keydown', { key, ctrlKey: true, cancelable: true });
+	window.dispatchEvent(event);
+	return event;
+};
+
+describe('activating its control', () => {
+	it('clicks the button it is drawn in', async () => {
+		const onclick = vi.fn();
+		await render(ShortcutHarness, { onclick });
+
+		expect(press('s').defaultPrevented).toBe(true);
+		expect(onclick).toHaveBeenCalledTimes(1);
+	});
+
+	it('runs onpress first, then clicks', async () => {
+		const order: string[] = [];
+		await render(ShortcutHarness, {
+			onpress: () => order.push('press'),
+			onclick: () => order.push('click')
+		});
+
+		press('s');
+		expect(order).toEqual(['press', 'click']);
+	});
+
+	it('does nothing while the control is disabled, and leaves the key to the browser', async () => {
+		const onpress = vi.fn();
+		await render(ShortcutHarness, { disabled: true, onpress });
+
+		expect(press('s').defaultPrevented).toBe(false);
+		expect(onpress).not.toHaveBeenCalled();
+	});
+});
+
+describe('behind a modal', () => {
+	it('stays quiet while a modal it is not part of is open', async () => {
+		const onclick = vi.fn();
+		await render(ShortcutHarness, { modal: true, onclick });
+
+		expect(press('s').defaultPrevented).toBe(false);
+		expect(onclick).not.toHaveBeenCalled();
+	});
+
+	it('still fires from inside the modal', async () => {
+		const onpress = vi.fn();
+		await render(ShortcutHarness, { modal: true, onpress });
+
+		press('d');
+		expect(onpress).toHaveBeenCalledTimes(1);
+	});
+
+	it('still fires from a layer the modal opened, portaled after it', async () => {
+		const onpress = vi.fn();
+		await render(ShortcutHarness, { modal: true, onpress });
+
+		press('e');
+		expect(onpress).toHaveBeenCalledTimes(1);
+	});
+
+	it('fires again once the modal has closed', async () => {
+		const onclick = vi.fn();
+		const props = $state({ modal: true, onclick });
+		await render(ShortcutHarness, props);
+
+		props.modal = false;
+		await expect.poll(() => document.querySelector('[aria-modal]')).toBeNull();
+		press('s');
+		expect(onclick).toHaveBeenCalledTimes(1);
 	});
 });
