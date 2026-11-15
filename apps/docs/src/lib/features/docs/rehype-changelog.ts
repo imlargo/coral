@@ -105,7 +105,7 @@ function entry(item: HastNode, pages: (name: string) => boolean): HastNode | und
 		meta.push(element('Badge', { variant }, [text(word)]));
 	}
 
-	return element('li', { className: ['docs-changelog-entry'], dataKind: kind }, [
+	return element('li', { className: ['docs-changelog-entry'], dataKind: kind, dataName: name }, [
 		element('div', { className: ['docs-changelog-meta', 'not-prose'] }, meta),
 		element('div', {}, body)
 	]);

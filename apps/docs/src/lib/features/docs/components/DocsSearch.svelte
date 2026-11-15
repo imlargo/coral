@@ -1,8 +1,10 @@
 <script lang="ts">
 	import FileTextIcon from '@lucide/svelte/icons/file-text';
 	import HashIcon from '@lucide/svelte/icons/hash';
+	import HistoryIcon from '@lucide/svelte/icons/history';
+	import { page as current } from '$app/state';
 	import SearchIcon from '@lucide/svelte/icons/search';
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import { resolvePathname } from '#lib/utils/paths.js';
 	import { Button } from '#lib/components/ui/button/index.js';
 	import * as Command from '#lib/components/ui/command/index.js';
@@ -23,8 +25,43 @@
 	const results = $derived(engine && term ? engine.search(query) : []);
 	const hitCount = $derived(results.reduce((total, page) => total + page.hits.length, 0));
 
+	/** The docs pages opened last on this device, newest first. */
+	const RECENT_KEY = 'coral-docs-recent';
+	const RECENT_MAX = 5;
+	let recent = $state<string[]>([]);
+
 	onMount(() => {
 		shortcut = /Mac|iPhone|iPad|iPod/i.test(navigator.userAgent) ? '⌘K' : 'Ctrl K';
+		try {
+			const stored: unknown = JSON.parse(localStorage.getItem(RECENT_KEY) ?? '[]');
+			if (Array.isArray(stored)) recent = stored.filter((href) => typeof href === 'string');
+		} catch {
+			// Unreadable or blocked storage: start with no history.
+		}
+	});
+
+	$effect(() => {
+		const path = current.url.pathname;
+		if (!path.startsWith('/docs')) return;
+		untrack(() => {
+			recent = [path, ...recent.filter((href) => href !== path)].slice(0, RECENT_MAX);
+			try {
+				localStorage.setItem(RECENT_KEY, JSON.stringify(recent));
+			} catch {
+				// Remembered for this visit only.
+			}
+		});
+	});
+
+	const recentPages = $derived.by(() => {
+		if (!engine) return [];
+		const titles = new Map(
+			engine.browse().flatMap((group) => group.pages.map((p) => [p.href, p.title] as const))
+		);
+		return recent.flatMap((href) => {
+			const title = titles.get(href);
+			return title ? [{ href, title }] : [];
+		});
 	});
 
 	function prepare() {
@@ -129,6 +166,20 @@
 	<Command.List class="max-h-[min(24rem,60svh)]">
 		{#if !term}
 			{#if engine}
+				{#if recentPages.length}
+					<Command.Group heading="Recent" value="recent">
+						{#each recentPages as item (item.href)}
+							<Command.LinkItem
+								href={hrefFor({ href: item.href, anchor: '' })}
+								value="recent:{item.href}"
+								onSelect={close}
+							>
+								<HistoryIcon class="text-muted-foreground" />
+								{item.title}
+							</Command.LinkItem>
+						{/each}
+					</Command.Group>
+				{/if}
 				{#each engine.browse() as group (group.title)}
 					<Command.Group heading={group.title || undefined} value={group.title || 'pages'}>
 						{#each group.pages as page (page.href)}

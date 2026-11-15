@@ -6,6 +6,7 @@ group: Resources
 
 <script lang="ts">
 	import { Badge } from '#lib/components/ui/badge/index.js';
+	import ChangelogFilter from '#lib/features/docs/components/ChangelogFilter.svelte';
 </script>
 
 Every component carries its own version, in the header of each of its files and in `coral.json`,
@@ -15,6 +16,8 @@ brings in.
 
 Entries are grouped by the day they landed. A breaking change is marked as one and says how to
 migrate.
+
+<ChangelogFilter />
 
 ## 2026-11-14
 
