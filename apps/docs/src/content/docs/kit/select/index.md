@@ -2,7 +2,6 @@
 title: Select
 description: A short list of known options, with the trigger label, the value mapping and the change signal already wired.
 group: Kit
-category: Inputs
 ---
 
 <script lang="ts">

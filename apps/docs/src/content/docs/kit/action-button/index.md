@@ -2,7 +2,6 @@
 title: Action button
 description: A button that waits on its own request, blocks the second click, and keeps focus.
 group: Kit
-category: Actions and overlays
 ---
 
 <script lang="ts">

@@ -2,7 +2,6 @@
 title: Phone input
 description: A phone number formatted as it is typed, with a searchable country picker, bound as the E.164 a server stores.
 group: Kit
-category: Inputs
 ---
 
 <script lang="ts">

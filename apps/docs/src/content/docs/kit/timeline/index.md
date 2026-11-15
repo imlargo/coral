@@ -2,7 +2,6 @@
 title: Timeline
 description: Events grouped by the reader's own calendar days, read as a list with a time on every one, and grown with older ones without moving what was read.
 group: Kit
-category: Data display
 ---
 
 <script lang="ts">

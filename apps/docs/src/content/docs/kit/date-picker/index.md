@@ -2,7 +2,6 @@
 title: Date picker
 description: A popover, a calendar and a formatted trigger. One day or two, with shortcuts.
 group: Kit
-category: Inputs
 ---
 
 <script lang="ts">

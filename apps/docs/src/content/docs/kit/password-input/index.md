@@ -2,7 +2,6 @@
 title: Password input
 description: A password field with a visibility toggle that does not break password managers.
 group: Kit
-category: Inputs
 ---
 
 <script lang="ts">

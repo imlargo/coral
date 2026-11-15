@@ -2,7 +2,6 @@
 title: Shortcut
 description: Draws a keyboard shortcut the way the reader's platform prints it, and binds it.
 group: Kit
-category: Actions and overlays
 ---
 
 <script lang="ts">

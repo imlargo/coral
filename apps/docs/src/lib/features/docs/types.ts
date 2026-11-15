@@ -1,5 +1,4 @@
 import type { Component } from 'svelte';
-import type { ComponentCategory } from '#lib/features/docs/categories.js';
 
 /** A docs demo, as `import demo from './demos/<name>.svelte?demo'` gives it. */
 export interface Demo {
@@ -18,8 +17,6 @@ export interface DocsFrontmatter {
 	description?: string;
 	/** Search group this page is listed under: `Kit` for a component page. */
 	group: string;
-	/** Sidebar section of a component page, one of `COMPONENT_CATEGORIES`. */
-	category?: ComponentCategory;
 	/** ISO date (e.g. `2026-09-20`). Shown at the bottom of the page when set. */
 	updated?: string;
 }
@@ -32,9 +29,4 @@ export interface SidebarLink {
 export interface SidebarGroup {
 	title: string;
 	items: SidebarLink[];
-	/** Shown beside the title for a group of components, so a reader sees how many there are. */
-	count?: number;
 }
-
-/** What the changelog says about a component lately, drawn as a badge beside its link. */
-export type ReleaseBadge = 'New' | 'Updated';

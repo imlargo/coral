@@ -237,8 +237,7 @@ The rules most often missed, because nothing in the code enforces them.
   and embeds it with `<Preview demo={basicDemo} />`, so it only loads its own demos. Frontmatter `title` is what the
   sidebar shows, spelled out in sentence case ("Table of contents", not "Toc"), and it has to
   match `coral.json` (`coral-pages.test.ts` in the docs app checks it). `group` is the search
-  group (`Kit` for a component page) and `category` the sidebar section a component page is listed
-  under, one of `COMPONENT_CATEGORIES` in `features/docs/categories.ts` (checked by the same test).
+  group (`Kit` for a component page), which is also the sidebar section it is listed under.
   The install command, version, source link and primitives are not written into the page - every
   `kit/*` page gets them rendered from the manifest.
 - **A component page keeps one order of `##` sections:** an opening paragraph and the main

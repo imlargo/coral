@@ -91,7 +91,7 @@ you drop down to the parts it is made of, or to the shadcn primitive, without st
 
 ## Where to go next
 
-- [Components](/docs/components): every component, grouped by what it does.
+- [Components](/docs/components): every component, with its version.
 - [Installation](/docs/installation): requirements and the first component, for SvelteKit or Vite.
 - [Conventions](/docs/conventions): the rules every component follows, so one you have not used yet
   behaves like the ones you have.

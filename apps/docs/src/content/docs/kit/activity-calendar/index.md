@@ -2,7 +2,6 @@
 title: Activity calendar
 description: A year of daily counts as a grid of squares - the GitHub contribution graph, with the timezone and the scale done right.
 group: Kit
-category: Data display
 ---
 
 <script lang="ts">
