@@ -236,9 +236,15 @@ The rules most often missed, because nothing in the code enforces them.
   update. A page imports each demo it shows, `import basicDemo from './demos/basic.svelte?demo'`,
   and embeds it with `<Preview demo={basicDemo} />`, so it only loads its own demos. Frontmatter `title` is what the
   sidebar shows, spelled out in sentence case ("Table of contents", not "Toc"), and it has to
-  match `coral.json` (`coral-pages.test.ts` in the docs app checks it). `group` is the sidebar
-  section and search group: `Kit` for a component page. The install command is not written into
-  the page - every `kit/*` page gets one rendered for it.
+  match `coral.json` (`coral-pages.test.ts` in the docs app checks it). `group` is the search
+  group (`Kit` for a component page) and `category` the sidebar section a component page is listed
+  under, one of `COMPONENT_CATEGORIES` in `features/docs/categories.ts` (checked by the same test).
+  The install command, version, source link and primitives are not written into the page - every
+  `kit/*` page gets them rendered from the manifest.
+- **A component page keeps one order of `##` sections:** an opening paragraph and the main
+  preview, `When to use`, `Usage`, `Examples` (one `###` per case or state), `Props`, `Keyboard`,
+  `Accessibility`, `Customizing`. A design note may follow as a last section. Guide pages outside
+  `kit/` are listed by hand in `GUIDES` in `features/docs/sidebar.ts`.
 - **Change a demo, resync its `index.md`.** Prose quoting a demo's strings is the first thing to
   rot.
 - **A Props table is checked against `types.ts`** by `coral-props.test.ts`: every prop the
