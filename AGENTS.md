@@ -20,7 +20,7 @@ The repo is a pnpm workspace with two members: **`packages/coral`**, the library
 project at `#lib/components/coral/` (`$lib/...` on SvelteKit 2), beside shadcn's `ui/`.
 Currently: `kit/{action-button, activity-calendar, avatar, avatar-stack, breadcrumbs, combobox,
 command-palette, confirm-dialog, copy-button, country-select, date-picker, file-input, file-upload,
-follow-scroll, inline-edit, lightbox, number-input, password-input, phone-input, rating-group,
+follow-scroll, gauge, inline-edit, lightbox, number-input, password-input, phone-input, rating-group,
 relative-time, reorder-list, responsive-dialog, scrub-input, search-input, select, shortcut,
 show-more, stepper, tags-input, textarea, timeline, toc, tree-view}`, over `lib/{action, announce, debounce, defaults, focus, fold,
 hidden-field, intl, list-status, live-region, number, number-field, options, scale, trigger}`. There

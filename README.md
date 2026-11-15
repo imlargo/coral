@@ -132,7 +132,7 @@ and lose the alias and icon rewriting.
 
 ## Components
 
-Thirty-four in `kit/` so far. Each links to its full API, props table and live
+Thirty-five in `kit/` so far. Each links to its full API, props table and live
 demos:
 
 - **[action-button](https://coral.imlargo.dev/docs/kit/action-button):** a button that waits on
@@ -174,6 +174,9 @@ demos:
 - **[follow-scroll](https://coral.imlargo.dev/docs/kit/follow-scroll):** a scroller that stays at
   the end while output arrives, lets go the moment the reader scrolls back, and offers the way
   forward with a count of what they missed.
+- **[gauge](https://coral.imlargo.dev/docs/kit/gauge):** a reading inside a range, drawn as an
+  arc and exposed as a meter. The text a screen reader hears is the one the middle shows, and
+  `99.6%` never prints as `100%`.
 - **[inline-edit](https://coral.imlargo.dev/docs/kit/inline-edit):** rename in place. Keyboard
   reachable, Enter saves, Escape cancels without closing the dialog, an async save that fails keeps
   what was typed.
