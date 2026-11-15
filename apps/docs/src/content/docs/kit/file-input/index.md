@@ -140,8 +140,16 @@ Every prop a native file input takes is forwarded to it: `id`, `required`, `capt
 a surrounding `Field` labels it the usual way.
 
 The held files are a real list, one `<li>` per file, so their number is announced before they are
-read. An image preview carries an empty `alt`: the file's name is already the row's title, and
-repeating it makes a screen reader say it twice.
+read.
+
+Removing a file takes its remove button with it, and focus on an element that leaves the page falls
+to the body: the next Tab starts over at the top. Here focus moves to the row that took the removed
+one's place, or the one before it at the end of the list, and back to the field once the last file
+is gone. It works the same for rows drawn by the `file` snippet, as long as they hold something
+focusable. Focus the reader moved elsewhere is left where it is.
+
+An image preview carries an empty `alt`: the file's name is already the row's title, and repeating
+it makes a screen reader say it twice.
 
 ## Import
 

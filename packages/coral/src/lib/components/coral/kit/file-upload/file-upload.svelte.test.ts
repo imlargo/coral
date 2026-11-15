@@ -1,6 +1,6 @@
 /**
  * @coral/kit/file-upload
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import { render } from 'vitest-browser-svelte';
@@ -117,5 +117,43 @@ describe('one file at a time', () => {
 		await expect.poll(() => onupload).toHaveBeenCalled();
 		expect(props.uploads).toHaveLength(1);
 		expect(props.uploads[0]).toMatchObject({ status: 'done', result: 'https://cdn/a.txt' });
+	});
+});
+
+describe('focus as a row changes', () => {
+	it('moves from cancel to retry when the reader cancels', async () => {
+		const { upload } = manual();
+		await draw({ upload, 'aria-label': 'Attachments' });
+		await userEvent.upload(input(), new File(['a'], 'roadmap.pdf'));
+		await expect.poll(() => button('Cancel uploading roadmap.pdf')).toBeDefined();
+
+		button('Cancel uploading roadmap.pdf')!.focus();
+		await userEvent.keyboard('{Enter}');
+		await expect.poll(() => document.activeElement).toBe(button('Retry uploading roadmap.pdf'));
+	});
+
+	it('stays on the row when its upload finishes under the focused cancel button', async () => {
+		const { upload, started } = manual();
+		await draw({ upload, 'aria-label': 'Attachments' });
+		await userEvent.upload(input(), new File(['a'], 'roadmap.pdf'));
+		await expect.poll(() => started.length).toBe(1);
+
+		button('Cancel uploading roadmap.pdf')!.focus();
+		started[0].resolve('ok');
+		await expect.poll(() => document.activeElement).toBe(button('Remove roadmap.pdf'));
+	});
+
+	it('goes back to the picker when the last row is removed', async () => {
+		const { upload, started } = manual();
+		await draw({ upload, 'aria-label': 'Attachments' });
+		await userEvent.upload(input(), new File(['a'], 'roadmap.pdf'));
+		await expect.poll(() => started.length).toBe(1);
+		started[0].resolve('ok');
+		await expect.poll(() => button('Remove roadmap.pdf')).toBeDefined();
+
+		button('Remove roadmap.pdf')!.focus();
+		await userEvent.keyboard('{Enter}');
+		await expect.poll(() => rows().length).toBe(0);
+		expect(document.activeElement).toBe(input());
 	});
 });
