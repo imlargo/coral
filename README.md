@@ -132,7 +132,7 @@ and lose the alias and icon rewriting.
 
 ## Components
 
-Thirty-five in `kit/` so far. Each links to its full API, props table and live
+Thirty-six in `kit/` so far. Each links to its full API, props table and live
 demos:
 
 - **[action-button](https://coral.imlargo.dev/docs/kit/action-button):** a button that waits on
@@ -148,6 +148,9 @@ demos:
   list.
 - **[breadcrumbs](https://coral.imlargo.dev/docs/kit/breadcrumbs):** a trail that fits one line at
   any width, folding its middle into a menu, never its ends, with the current page marked as such.
+- **[color-picker](https://coral.imlargo.dev/docs/kit/color-picker):** a square, a hue strip, a
+  hex field and swatches, every part moved from the keyboard. The hue survives a drag through grey,
+  `#38f` is read as a hex, and the value is always `#rrggbb`.
 - **[combobox](https://coral.imlargo.dev/docs/kit/combobox):** a select with a search box.
   Accent-insensitive search, focus returned to the trigger, single or multiple, server-side search
   with debounce.
@@ -236,7 +239,8 @@ derived from, and the only place they are written down.
 
 `kit/select` and `kit/combobox` speak the `Option<T>` vocabulary in `lib/options`, and share
 `lib/hidden-field` with `kit/date-picker`: the clipped field that makes `name`, `form` and
-`required` work on a control the browser cannot validate on its own.
+`required` work on a control the browser cannot validate on its own. `kit/color-picker` uses it
+too.
 
 `kit/command-palette` composes `kit/shortcut`, `kit/avatar-stack` composes `kit/avatar`, and
 `kit/phone-input` composes `kit/country-select`, itself a `kit/combobox`, so those travel together.
