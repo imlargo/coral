@@ -2,7 +2,6 @@
 title: Segmented progress
 description: Steps or levels drawn as a row of segments - an onboarding flow, a password's strength - read as progress or as a meter.
 group: Kit
-category: Data display
 ---
 
 <script lang="ts">
