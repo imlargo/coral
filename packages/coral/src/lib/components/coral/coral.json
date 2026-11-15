@@ -281,7 +281,7 @@
 		"kit/shortcut": {
 			"title": "Shortcut",
 			"description": "Draws a keyboard shortcut the way the reader's platform prints it, and binds it.",
-			"version": "1.0.0",
+			"version": "1.1.0",
 			"shadcn": ["kbd"]
 		},
 		"kit/show-more": {

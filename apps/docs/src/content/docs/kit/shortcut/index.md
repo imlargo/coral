@@ -29,6 +29,9 @@ fires on every combo that contains it.
   AZERTY keyboard; the physical key is only consulted when Option has turned `k` into `˚`.
 - **Stays out of fields.** A plain key such as `s` or `?` does not fire while the reader is typing;
   combos with Control, Command or Alt do. Key repeat and IME composition are ignored.
+- **Quiet behind a modal.** While a dialog it is not part of is open, the shortcut neither fires nor
+  takes the key from the browser: the page behind a modal is out of reach of the pointer and Tab,
+  and a key should not reach it either.
 
 ## Platforms
 
