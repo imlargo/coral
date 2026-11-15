@@ -1,42 +1,11 @@
 <script lang="ts">
-	import { page } from '$app/state';
-	import { resolvePathname } from '#lib/utils/paths.js';
-	import * as Sidebar from '#lib/components/ui/sidebar/index.js';
-	import { DOCS_SIDEBAR_GROUPS } from '#lib/features/docs/sidebar.js';
-	import type { ComponentProps } from 'svelte';
-
-	let { ref = $bindable(null), ...restProps }: ComponentProps<typeof Sidebar.Root> = $props();
-
-	function isActive(href: string): boolean {
-		return page.url.pathname === href;
-	}
+	import DocsNav from '#lib/components/layout/docs/DocsNav.svelte';
 </script>
 
-<Sidebar.Root {...restProps} bind:ref collapsible="none" class="bg-transparent">
-	<!-- The scrollbar thumb stays transparent until the pointer is over the list. -->
-	<Sidebar.Content
-		class="[scrollbar-width:thin] [scrollbar-color:transparent_transparent] px-4 pt-4 hover:[scrollbar-color:var(--color-border)_transparent]"
-	>
-		{#each DOCS_SIDEBAR_GROUPS as group (group.title)}
-			<Sidebar.Group>
-				<Sidebar.GroupLabel>{group.title}</Sidebar.GroupLabel>
-				<Sidebar.GroupContent>
-					<Sidebar.Menu>
-						{#each group.items as item (item.href)}
-							<Sidebar.MenuItem>
-								<Sidebar.MenuButton isActive={isActive(item.href)}>
-									{#snippet child({ props })}
-										<a href={resolvePathname(item.href)} {...props}>{item.title}</a>
-									{/snippet}
-								</Sidebar.MenuButton>
-							</Sidebar.MenuItem>
-						{/each}
-					</Sidebar.Menu>
-				</Sidebar.GroupContent>
-			</Sidebar.Group>
-		{/each}
-	</Sidebar.Content>
-	<Sidebar.Footer class="px-6 py-4 text-xs text-muted-foreground">
-		Coral · open source, MIT
-	</Sidebar.Footer>
-</Sidebar.Root>
+<!-- Pinned beside the page under the navbar, scrolling on its own only when it is taller than the
+     viewport. Below `md` the same list lives in the navbar's sheet instead. -->
+<aside
+	class="sticky top-(--header-height) hidden h-[calc(100svh-var(--header-height))] w-64 shrink-0 [scrollbar-width:thin] [scrollbar-color:transparent_transparent] overflow-y-auto border-e px-4 py-6 hover:[scrollbar-color:var(--color-border)_transparent] md:block"
+>
+	<DocsNav />
+</aside>

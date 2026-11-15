@@ -88,16 +88,27 @@
 	{/each}
 {/snippet}
 
+<!-- Two triggers for one dialog: a full field where the navbar has room, an icon where it does not. -->
 <Button
 	variant="outline"
-	class="w-56 justify-start gap-2 text-muted-foreground"
+	class="hidden w-56 justify-start gap-2 text-muted-foreground md:inline-flex lg:w-64"
 	onclick={() => (open = true)}
 	onpointerenter={prepare}
 	onfocus={prepare}
 >
 	<SearchIcon />
-	<span class="flex-1 text-start">Search</span>
+	<span class="flex-1 text-start">Search docs</span>
 	<Kbd class={shortcut ? undefined : 'invisible'}>{shortcut ?? 'Ctrl K'}</Kbd>
+</Button>
+<Button
+	variant="ghost"
+	size="icon"
+	class="md:hidden"
+	aria-label="Search docs"
+	onclick={() => (open = true)}
+	onfocus={prepare}
+>
+	<SearchIcon />
 </Button>
 
 <!--
