@@ -16,8 +16,7 @@
 import { createHighlighter, type Highlighter } from 'shiki';
 import type { Highlighter as SvmdHighlighter } from '@svmd/core';
 
-// Code blocks run Catppuccin regardless of the shadcn theme around them, which stays neutral.
-// Their backgrounds are the flavor's own, so a block reads as a tinted panel against the page.
+// Token colors are Catppuccin's; the panel behind them is the shadcn theme's (see `layout.css`).
 const LIGHT = 'catppuccin-latte';
 const DARK = 'catppuccin-mocha';
 
