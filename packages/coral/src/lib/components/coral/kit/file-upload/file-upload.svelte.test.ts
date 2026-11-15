@@ -129,7 +129,9 @@ describe('focus as a row changes', () => {
 
 		button('Cancel uploading roadmap.pdf')!.focus();
 		await userEvent.keyboard('{Enter}');
-		await expect.poll(() => document.activeElement).toBe(button('Retry uploading roadmap.pdf'));
+		await expect
+			.poll(() => document.activeElement?.getAttribute('aria-label'))
+			.toBe('Retry uploading roadmap.pdf');
 	});
 
 	it('stays on the row when its upload finishes under the focused cancel button', async () => {
@@ -140,7 +142,10 @@ describe('focus as a row changes', () => {
 
 		button('Cancel uploading roadmap.pdf')!.focus();
 		started[0].resolve('ok');
-		await expect.poll(() => document.activeElement).toBe(button('Remove roadmap.pdf'));
+		// Polled by its name: the remove button does not exist until the upload has finished.
+		await expect
+			.poll(() => document.activeElement?.getAttribute('aria-label'))
+			.toBe('Remove roadmap.pdf');
 	});
 
 	it('goes back to the picker when the last row is removed', async () => {

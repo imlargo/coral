@@ -20,7 +20,8 @@ describe('keepFocus', () => {
 
 		button('Cancel a').focus();
 		props.items = [{ id: 'a', done: true }];
-		await expect.poll(() => document.activeElement).toBe(button('Remove a'));
+		// Polled by its text: the button it should land on does not exist until the swap.
+		await expect.poll(() => document.activeElement?.textContent?.trim()).toBe('Remove a');
 	});
 
 	it('moves to the row that took the removed one’s place, or the one before at the end', async () => {
