@@ -49,7 +49,7 @@ describe('hsv', () => {
 });
 
 describe('keyStep', () => {
-	const press = (key: string, shiftKey = false) => new KeyboardEvent('keydown', { key, shiftKey });
+	const press = (key: string, shiftKey = false) => ({ key, shiftKey });
 
 	it('moves a hundredth, and a tenth with Shift', () => {
 		expect(keyStep(press('ArrowRight'), 'x')).toEqual({ by: 0.01 });

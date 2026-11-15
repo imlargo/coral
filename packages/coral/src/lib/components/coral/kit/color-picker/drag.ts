@@ -49,7 +49,7 @@ export function drag(
  * along this axis.
  */
 export function keyStep(
-	event: KeyboardEvent,
+	event: Pick<KeyboardEvent, 'key' | 'shiftKey'>,
 	axis: 'x' | 'y'
 ): { by: number } | { to: number } | undefined {
 	const step = event.shiftKey ? 0.1 : 0.01;
