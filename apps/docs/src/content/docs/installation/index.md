@@ -4,83 +4,124 @@ description: One command per component. It lands in your project as source you o
 group: Getting started
 ---
 
-Coral is not an npm package. Every component is installed as source, straight into your
-`src/lib/components/coral/` - next to the `ui/` folder shadcn keeps there - and from that moment it
-is yours.
-
-What does the installing is the shadcn-svelte CLI you already have, pointed at Coral's registry.
+Coral is installed with the shadcn-svelte CLI, from Coral's registry, one component at a time. Each
+component lands in `src/lib/components/coral/`, next to the `ui/` folder shadcn-svelte keeps
+there, and from that moment it is yours.
 
 ## Requirements
 
-A SvelteKit project already initialized with shadcn-svelte, meaning it has a `components.json`,
-a `src/lib/components/ui/` folder and `src/lib/utils.ts` exporting `cn`:
+- **Svelte 5.** Every component is written with runes.
+- **Tailwind CSS v4**, as shadcn-svelte sets it up.
+- **A project initialized with shadcn-svelte**: a `components.json`, a `src/lib/components/ui/`
+  folder and `src/lib/utils.ts` exporting `cn`.
+
+Those paths, plus the icons your `components.json` names under `iconLibrary`, are the only things
+Coral reaches for outside its own folder. Coral never imports SvelteKit, so it runs in a plain
+Svelte + Vite project as well as in SvelteKit. The end-to-end install test in CI uses SvelteKit.
+
+## Set up shadcn-svelte
+
+Skip this if `components.json` already exists.
+
+### SvelteKit
+
+```bash
+pnpm dlx sv create my-app
+cd my-app
+pnpm dlx sv add tailwindcss
+pnpm dlx shadcn-svelte@latest init
+```
+
+SvelteKit already resolves `$lib`, so `init` only asks for your base color and where your global
+CSS lives.
+
+### Svelte + Vite
+
+A Vite project has no `$lib` alias until you add one, and shadcn-svelte's components import
+through it. Follow
+[shadcn-svelte's Vite guide](https://shadcn-svelte.com/docs/installation/vite): add Tailwind with
+`sv add tailwindcss`, point `$lib` at `src/lib` in `tsconfig.json`, `tsconfig.app.json` and
+`vite.config.ts`, then run `init`:
+
+```ts
+// vite.config.ts
+import path from 'node:path';
+import { defineConfig } from 'vite';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
+import tailwindcss from '@tailwindcss/vite';
+
+export default defineConfig({
+	plugins: [tailwindcss(), svelte()],
+	resolve: { alias: { $lib: path.resolve('./src/lib') } }
+});
+```
 
 ```bash
 pnpm dlx shadcn-svelte@latest init
 ```
 
-Those two paths are the only things Coral reaches for outside its own folder, and both are
-guaranteed by that setup - as are the icons, which come from whatever `iconLibrary` your
-`components.json` names.
+From here on, both setups install Coral the same way.
 
 ## Add a component
 
 ```bash
-pnpm dlx shadcn-svelte@latest add https://coral.imlargo.dev/r/kit-select.json
+pnpm dlx shadcn-svelte@latest add https://coral.imlargo.dev/r/kit-combobox.json
 ```
 
-Every component page carries its own command, for the package manager you use.
+Every component page prints its own command, for the package manager you pick. That one line:
 
-That one line does four things that the copy-the-folder install left to you:
+- **Installs the shadcn primitives it composes.** `kit-combobox` brings `popover`, `command`,
+  `button` and `badge`, in your style, if they are not there yet.
+- **Installs the Coral modules it shares.** `lib/options` (the `Option<T>` vocabulary),
+  `lib/fold` (accent folding) and the rest come along; you never ask for them by name.
+- **Rewrites imports to your aliases.** Coral is written against `#lib/components/ui/*` and
+  `#lib/utils.js`; what lands is written against whatever your `components.json` says.
+- **Maps icons to your icon library.** A project on `@tabler/icons-svelte` gets Tabler icons, not
+  a broken import.
 
-- **Installs the shadcn primitives the component imports.** `kit-select` pulls in `select` and
-  `button` from shadcn-svelte, in your style, and those pull in whatever they need in turn.
-- **Installs the shared modules it depends on.** `lib/options` is the `Option<T>` vocabulary,
-  `lib/hidden-field` the input that lets a select take part in a form; you never ask for them by
-  name.
-- **Rewrites the imports to your aliases.** Coral is written against `#lib/components/ui/*` and
-  `#lib/utils.js`; what lands in your project is written against whatever your `components.json`
-  says instead.
-- **Maps the icons to your icon library.** A project on `@tabler/icons-svelte` gets Tabler icons,
-  not a broken import - which is exactly the failure the copied folder used to hand you.
+## Use it
 
-## Where it lands
-
-Under your `components` alias, beside shadcn's `ui/`, in the shape the repo keeps it in:
-
-```
-src/lib/components/
-├─ ui/                        ← shadcn-svelte
-└─ coral/                     ← Coral
-   ├─ kit/select/select.svelte
-   ├─ kit/select/types.ts
-   └─ lib/options.ts
-```
-
-If your `components.json` points `components` somewhere else, Coral follows it there. Components
-import each other by relative path, so the folder keeps working wherever that alias points. Tests
-are not published: they are written against this repo's test setup, and a copy of them in your
-project would only pin you to it.
-
-From here the folder belongs to the project. Editing it is allowed, but a change worth keeping
-should come back upstream, or the copies drift apart.
-
-## Import by file path
-
-There are no barrels. One component, one folder, imported directly:
+There are no barrels. One component, one folder, imported by file path:
 
 ```svelte
 <script lang="ts">
-	import Select from '#lib/components/coral/kit/select/select.svelte';
+	import Combobox from '#lib/components/coral/kit/combobox/combobox.svelte';
+
+	const repositories = [
+		{ value: 'web', label: 'web' },
+		{ value: 'api', label: 'api' },
+		{ value: 'billing-worker', label: 'billing-worker' }
+	];
+
+	let repository = $state<string>();
 </script>
+
+<Combobox options={repositories} bind:value={repository} placeholder="Select a repository..." />
 ```
 
-That makes filenames public API. Renaming one breaks every project that already installed it, so a
-rename is a breaking change and bumps the component's major.
+`#lib` is the alias Coral's own source uses; in your project the import starts with your alias,
+usually `$lib`.
+
+## Where it lands
+
+Under your `components` alias, beside shadcn's `ui/`, in the same shape the repository keeps:
+
+```
+src/lib/components/
+├─ ui/                          ← shadcn-svelte
+└─ coral/                       ← Coral
+   ├─ kit/combobox/combobox.svelte
+   ├─ kit/combobox/types.ts
+   ├─ lib/fold.ts
+   └─ lib/options.ts
+```
+
+Coral's files reach each other by relative path, so the folder works wherever your alias points.
+Tests are not published: they are written against this repository's test setup.
 
 ## Everything at once
 
-One item pulls in every `kit/*` component, and through them every primitive they need:
+One item pulls in every component, and through them every primitive they need:
 
 ```bash
 pnpm dlx shadcn-svelte@latest add https://coral.imlargo.dev/r/coral.json
@@ -88,46 +129,22 @@ pnpm dlx shadcn-svelte@latest add https://coral.imlargo.dev/r/coral.json
 
 Useful to look around in a scratch project. In a real one, add what you use.
 
-## Updating
+## Without the CLI
 
-Re-run the same command with `--overwrite`:
+Every component page has a **Manual** tab: the primitives to add, the packages to install and
+every file to copy, with links to each. Or take the whole folder:
 
 ```bash
-pnpm dlx shadcn-svelte@latest add https://coral.imlargo.dev/r/kit-select.json -o
+pnpm dlx degit imlargo/coral/packages/coral/src/lib/components/coral src/lib/components/coral
 ```
 
-It overwrites the component's files with the current version and leaves everything else alone - so
-if you edited the copy, that is the moment the edit disappears. Check what you changed first; that
-is the trade Coral makes by handing you source instead of a dependency.
-
-## Versioning
-
-Each component carries its own version, in the file header and in
+Then add the primitives each component lists under `shadcn` in
 [`coral.json`](https://github.com/imlargo/coral/blob/main/packages/coral/src/lib/components/coral/coral.json),
-and follows semver. The registry item repeats it under `meta.version`, so
-`https://coral.imlargo.dev/r/kit-select.json` tells you what the current one is without installing
-anything.
+and point the `#lib/...` imports at your aliases. You keep the tests and lose the alias and icon
+rewriting.
 
-There is no single Coral version to track: you installed components, and what matters is which of
-them are behind. The [changelog](/docs/changelog) says what each version changed.
+## Next
 
-## Item names
-
-A registry item is its manifest name with the slash swapped: `kit/select` is published as
-`kit-select`, `lib/options` as `lib-options`. The prefix is not decoration - the CLI merges an
-item's dependency tree by name, so an item called `select` would collide with shadcn-svelte's own
-`select` and one of the two would be dropped, files and all.
-
-[`/r/index.json`](https://coral.imlargo.dev/r/index.json) lists every item the registry serves.
-
-## Or copy the folder
-
-The registry is the convenient path, not the only one. Coral is still a folder, and taking it
-whole still works:
-
-```bash
-npx degit imlargo/coral/packages/coral/src/lib/components/coral src/lib/components/coral
-```
-
-Then install the primitives each component declares under `shadcn` in `coral.json` yourself. You
-keep the tests and lose the alias and icon rewriting, which is the trade.
+- [Theming](/docs/theming): why Coral already looks like your app.
+- [Ownership and updates](/docs/ownership): updating, local edits and versions.
+- [Registry](/docs/registry): item names, the index and what an item pulls in.

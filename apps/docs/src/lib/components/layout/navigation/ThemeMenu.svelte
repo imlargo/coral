@@ -3,6 +3,7 @@
 	import { Button } from '#lib/components/ui/button/index.js';
 	import * as Popover from '#lib/components/ui/popover/index.js';
 	import ThemeCustomizer from '#lib/features/theme/ThemeCustomizer.svelte';
+	import { resolvePathname } from '#lib/utils/paths.js';
 </script>
 
 <Popover.Root>
@@ -22,5 +23,11 @@
 			</Popover.Description>
 		</Popover.Header>
 		<ThemeCustomizer />
+		<a
+			href={resolvePathname('/docs/theming')}
+			class="text-xs text-muted-foreground underline underline-offset-4 hover:text-foreground"
+		>
+			Copy this theme's CSS
+		</a>
 	</Popover.Content>
 </Popover.Root>

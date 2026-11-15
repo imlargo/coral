@@ -3,15 +3,37 @@ import { COMPONENT_CATEGORIES } from '#lib/features/docs/categories.js';
 import type { DocsFrontmatter, SidebarGroup, SidebarLink } from '#lib/features/docs/types.js';
 
 /** The pages that come first, in reading order. They barely change, so they are not derived. */
-const GETTING_STARTED: SidebarGroup = {
-	title: 'Getting started',
-	items: [
-		{ title: 'Introduction', href: '/docs' },
-		{ title: 'Installation', href: '/docs/installation' },
-		{ title: 'Conventions', href: '/docs/conventions' },
-		{ title: 'Changelog', href: '/docs/changelog' }
-	]
-};
+const GUIDES: SidebarGroup[] = [
+	{
+		title: 'Getting started',
+		items: [
+			{ title: 'Introduction', href: '/docs' },
+			{ title: 'Why Coral', href: '/docs/why-coral' },
+			{ title: 'Installation', href: '/docs/installation' },
+			{ title: 'Components', href: '/docs/components' },
+			{ title: 'Theming', href: '/docs/theming' }
+		]
+	},
+	{
+		title: 'Concepts',
+		items: [
+			{ title: 'Ownership and updates', href: '/docs/ownership' },
+			{ title: 'Architecture', href: '/docs/architecture' },
+			{ title: 'Conventions', href: '/docs/conventions' },
+			{ title: 'Accessibility', href: '/docs/accessibility' },
+			{ title: 'Registry', href: '/docs/registry' }
+		]
+	},
+	{
+		title: 'Resources',
+		items: [
+			{ title: 'FAQ', href: '/docs/faq' },
+			{ title: 'Changelog', href: '/docs/changelog' }
+		]
+	}
+];
+
+const GUIDE_HREFS = new Set(GUIDES.flatMap((group) => group.items.map((item) => item.href)));
 
 // Every other page is listed by its frontmatter: add `kit/<name>/index.md` and it appears, with no
 // second place to register it. A component page goes under its `category`, anything else under its
@@ -25,7 +47,7 @@ const others = getCollection('docs')
 			href: entry.slug ? `/docs/${entry.slug}` : '/docs'
 		};
 	})
-	.filter((page) => page.section !== GETTING_STARTED.title)
+	.filter((page) => !GUIDE_HREFS.has(page.href))
 	.sort((a, b) => a.title.localeCompare(b.title));
 
 const sections = [
@@ -38,7 +60,7 @@ const sections = [
 ];
 
 export const DOCS_SIDEBAR_GROUPS: SidebarGroup[] = [
-	GETTING_STARTED,
+	...GUIDES,
 	...sections.map((title) => {
 		const items = others
 			.filter((page) => page.section === title)
