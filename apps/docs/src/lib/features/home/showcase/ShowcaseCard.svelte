@@ -21,7 +21,7 @@
 	} = $props();
 </script>
 
-<Card.Root class="break-inside-avoid">
+<Card.Root size="sm" class="break-inside-avoid">
 	<Card.Header>
 		<Card.Title>{title}</Card.Title>
 		<Card.Description>{description}</Card.Description>
