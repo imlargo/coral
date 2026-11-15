@@ -18,6 +18,11 @@ migrate.
 
 ## 2026-11-14
 
+- `kit/color-picker` 1.0.0: new. A colour from a saturation and brightness square, a hue strip, a
+  hex field, swatches and, where the browser has one, the eyedropper, every part moved from the
+  keyboard. Bound as `#rrggbb`, live while dragging, with `onchange` once per gesture. `ColorPanel`,
+  `ColorArea` and `HueSlider` are the pieces, for a layout without the popover. Takes its copy and
+  `placeholder` from project defaults.
 - `kit/gauge` 1.0.0: new. A reading inside a known range drawn as an arc, exposed as a meter whose
   text is the one the middle shows. A value inside the range never prints as either end: `99.6%`
   reads `99%`. `sweep` sets the shape, `270` by default; `format` and `locale` write the number.

@@ -120,6 +120,13 @@
 			"version": "1.0.0",
 			"shadcn": ["breadcrumb", "dropdown-menu"]
 		},
+		"kit/color-picker": {
+			"title": "Color picker",
+			"description": "A colour from a square, a hue strip, a hex or a swatch - bound as the hex a server stores, and reachable from the keyboard on every part.",
+			"version": "1.0.0",
+			"shadcn": ["popover", "button", "input-group"],
+			"npm": ["@lucide/svelte"]
+		},
 		"kit/combobox": {
 			"title": "Combobox",
 			"description": "A select with a search box, filtering the way accented text is actually typed.",
