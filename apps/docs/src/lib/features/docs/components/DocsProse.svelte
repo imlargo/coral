@@ -10,14 +10,17 @@
 	import DocsBreadcrumbs from '#lib/features/docs/components/DocsBreadcrumbs.svelte';
 	import DocsPageActions from '#lib/features/docs/components/DocsPageActions.svelte';
 	import DocsPageFooter from '#lib/features/docs/components/DocsPageFooter.svelte';
+	import DocsPagerButtons from '#lib/features/docs/components/DocsPagerButtons.svelte';
 
 	let {
 		title,
 		description,
 		raw,
 		updated,
+		path,
 		prev,
 		next,
+		meta,
 		children
 	}: {
 		title: string;
@@ -26,6 +29,10 @@
 		updated?: string;
 		prev?: SidebarLink;
 		next?: SidebarLink;
+		/** The page's source file, as the content glob keys it: `/src/content/docs/...`. */
+		path?: string;
+		/** Drawn under the description: a component's version, source and primitives. */
+		meta?: Snippet;
 		children: Snippet;
 	} = $props();
 
@@ -93,16 +100,20 @@
 <article>
 	<DocsBreadcrumbs class="mb-5" />
 	<div class="flex flex-wrap items-start justify-between gap-4">
-		<div>
-			<h1 class="text-3xl font-semibold">{title}</h1>
+		<div class="min-w-0 flex-1 basis-80">
+			<h1 class="text-3xl font-semibold tracking-tight text-balance">{title}</h1>
 			{#if description}
-				<p class="mt-2 text-lg text-muted-foreground">{description}</p>
+				<p class="mt-2 text-lg text-pretty text-muted-foreground">{description}</p>
 			{/if}
+			{@render meta?.()}
 		</div>
-		<DocsPageActions {raw} />
+		<div class="flex items-center gap-2">
+			<DocsPageActions {raw} />
+			<DocsPagerButtons {prev} {next} />
+		</div>
 	</div>
 	<div bind:this={body} class="prose mt-8 max-w-none dark:prose-invert">
 		{@render children()}
 	</div>
-	<DocsPageFooter {updated} {prev} {next} />
+	<DocsPageFooter {updated} {prev} {next} {path} />
 </article>

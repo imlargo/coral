@@ -1,5 +1,6 @@
 import { error } from '@sveltejs/kit';
-import { isComponent, itemName } from 'coral/registry.config.js';
+import { isComponent } from 'coral/registry.config.js';
+import { componentMeta } from '#lib/features/docs/component-meta.js';
 import { getCollection, getEntry, getRawSource } from '#lib/features/docs/content.js';
 import type { DocsFrontmatter } from '#lib/features/docs/types.js';
 import { DOCS_PAGES } from '#lib/features/docs/sidebar.js';
@@ -21,13 +22,24 @@ export const load = async ({ params }) => {
 	const prev = index > 0 ? DOCS_PAGES[index - 1] : undefined;
 	const next = index !== -1 && index < DOCS_PAGES.length - 1 ? DOCS_PAGES[index + 1] : undefined;
 
-	// A component's page is its manifest name, so the install command comes from the slug.
-	const item = isComponent(params.slug) ? itemName(params.slug) : undefined;
+	// A component's page is its manifest name, so its version, files and install come from the slug.
+	const component = isComponent(params.slug) ? await componentMeta(params.slug) : undefined;
 
 	// The table of contents lists what svmd read from the page at build time, so it renders on the server.
 	const toc: TocHeading[] = headings.flatMap(({ depth, text, id }) =>
 		id && depth >= 2 && depth <= 3 ? [{ id, text, level: depth }] : []
 	);
 
-	return { Content, title, description, raw, updated, prev, next, item, toc };
+	return {
+		Content,
+		title,
+		description,
+		raw,
+		path: entry.path,
+		updated,
+		prev,
+		next,
+		component,
+		toc
+	};
 };

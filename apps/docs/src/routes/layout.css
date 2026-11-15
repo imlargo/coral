@@ -143,12 +143,16 @@
 /*
  * Shiki emits both themes as CSS variables (`defaultColor: false`, in `code-highlighter.ts`) and
  * writes no inline colors, so the theme switch costs nothing at runtime and needs no `!important`
- * to win.
+ * to win. Only the token colors are taken: the panel behind them is the shadcn theme's muted
+ * surface, so a code block follows whatever theme the site is read in.
  */
+.shiki {
+	background-color: color-mix(in oklab, var(--color-muted) 40%, var(--color-background));
+}
+
 .shiki,
 .shiki span {
 	color: var(--shiki-light);
-	background-color: var(--shiki-light-bg);
 	font-style: var(--shiki-light-font-style);
 	font-weight: var(--shiki-light-font-weight);
 	text-decoration: var(--shiki-light-text-decoration);
@@ -157,7 +161,6 @@
 .dark .shiki,
 .dark .shiki span {
 	color: var(--shiki-dark);
-	background-color: var(--shiki-dark-bg);
 	font-style: var(--shiki-dark-font-style);
 	font-weight: var(--shiki-dark-font-weight);
 	text-decoration: var(--shiki-dark-text-decoration);
