@@ -54,6 +54,12 @@
 			"version": "1.0.0",
 			"shadcn": ["spinner"]
 		},
+		"lib/keep-focus": {
+			"title": "Keep focus",
+			"description": "Keeps keyboard focus in a list when the control holding it leaves the page.",
+			"version": "1.0.0",
+			"shadcn": []
+		},
 		"lib/live-region": {
 			"title": "Live region",
 			"description": "The visually hidden region every component announces through, polite or assertive.",

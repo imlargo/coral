@@ -23,7 +23,7 @@ command-palette, confirm-dialog, copy-button, country-select, date-picker, file-
 follow-scroll, gauge, inline-edit, lightbox, number-input, password-input, phone-input, rating-group,
 relative-time, reorder-list, responsive-dialog, scrub-input, search-input, select, shortcut,
 show-more, stepper, tags-input, textarea, timeline, toc, tree-view}`, over `lib/{action, announce, debounce, defaults, focus, fold,
-hidden-field, intl, list-status, live-region, number, number-field, options, scale, trigger}`. There
+hidden-field, intl, keep-focus, list-status, live-region, number, number-field, options, scale, trigger}`. There
 is no `blocks/` or `product/` entry right now - both layers exist in the architecture below, waiting
 on the first thing that needs them.
 `packages/coral/src/lib/components/coral/coral.json` is the list that counts. Read it rather than

@@ -18,6 +18,8 @@ migrate.
 
 ## 2026-11-14
 
+- `lib/keep-focus` 1.0.0: new. Keeps keyboard focus in a list of rows when the control holding it
+  leaves the page.
 - `kit/color-picker` 1.0.0: new. A colour from a saturation and brightness square, a hue strip, a
   hex field, swatches and, where the browser has one, the eyedropper, every part moved from the
   keyboard. Bound as `#rrggbb`, live while dragging, with `onchange` once per gesture. `ColorPanel`,
