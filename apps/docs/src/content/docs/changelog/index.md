@@ -16,6 +16,12 @@ brings in.
 Entries are grouped by the day they landed. A breaking change is marked as one and says how to
 migrate.
 
+## 2026-11-14
+
+- `kit/gauge` 1.0.0: new. A reading inside a known range drawn as an arc, exposed as a meter whose
+  text is the one the middle shows. A value inside the range never prints as either end: `99.6%`
+  reads `99%`. `sweep` sets the shape, `270` by default; `format` and `locale` write the number.
+
 ## 2026-10-30
 
 - `kit/combobox` 1.3.0: New `oncreate` adds a row that creates an option from the search term when
