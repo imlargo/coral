@@ -33,6 +33,7 @@ import DatePicker from './components/coral/kit/date-picker/date-picker.svelte';
 import FileInput from './components/coral/kit/file-input/file-input.svelte';
 import FileUpload from './components/coral/kit/file-upload/file-upload.svelte';
 import FollowScroll from './components/coral/kit/follow-scroll/follow-scroll.svelte';
+import Gauge from './components/coral/kit/gauge/gauge.svelte';
 import InlineEdit from './components/coral/kit/inline-edit/inline-edit.svelte';
 import Lightbox from './components/coral/kit/lightbox/lightbox.svelte';
 import NumberInput from './components/coral/kit/number-input/number-input.svelte';
@@ -181,6 +182,11 @@ const cases: [string, () => unknown][] = [
 	[
 		'follow-scroll',
 		() => draw(FollowScroll, { class: 'h-24', children: html('<p>line</p><p>line</p>') })
+	],
+	['gauge', () => draw(Gauge, { value: 72, 'aria-label': 'Build minutes used' })],
+	[
+		'gauge, ring, empty',
+		() => draw(Gauge, { value: 0, sweep: 360, 'aria-label': 'Build minutes used' })
 	],
 	['inline-edit', () => draw(InlineEdit, { value: 'Central Office' })],
 	[
