@@ -180,6 +180,12 @@
 			"shadcn": ["button"],
 			"npm": ["@lucide/svelte"]
 		},
+		"kit/gauge": {
+			"title": "Gauge",
+			"description": "A reading inside a known range, drawn as an arc - disk used, a quota, a score - and spoken as the number it shows.",
+			"version": "1.0.0",
+			"shadcn": []
+		},
 		"kit/inline-edit": {
 			"title": "Inline edit",
 			"description": "Text that turns into a field in place - rename a project, a column, a file.",
