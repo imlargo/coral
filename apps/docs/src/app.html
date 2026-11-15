@@ -5,6 +5,18 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="text-scale" content="scale" />
 		%sveltekit.head%
+		<!-- A theme picked on an earlier visit, before first paint. See features/theme. -->
+		<script>
+			try {
+				const css = localStorage.getItem('coral-docs-theme-css');
+				if (css) {
+					const style = document.createElement('style');
+					style.id = 'coral-docs-theme';
+					style.textContent = css;
+					document.head.appendChild(style);
+				}
+			} catch {}
+		</script>
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>
