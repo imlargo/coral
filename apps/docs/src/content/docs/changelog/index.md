@@ -18,11 +18,13 @@ migrate.
 
 ## 2026-11-14
 
-- `kit/file-input` 1.3.0: Removing a file moves focus to the next file, or the one before it at
-  the end of the list, or back to the field, instead of dropping it to the page.
+- `kit/file-input` 1.3.0: Takes files pasted while the zone has focus, such as a copied
+  screenshot, through the same `accept`, `maxSize` and `maxFiles` as a pick or a drop. Removing a
+  file moves focus to the next file, or the one before it at the end of the list, or back to the
+  field, instead of dropping it to the page.
 - `kit/file-upload` 1.1.0: Focus stays in the list while a row's controls change under it: cancel
   turning into retry, an upload finishing, a row being removed. It goes back to the picker once the
-  list is empty.
+  list is empty. Files can be pasted into the picker.
 - `lib/keep-focus` 1.0.0: new. Keeps keyboard focus in a list of rows when the control holding it
   leaves the page.
 - `kit/color-picker` 1.0.0: new. A colour from a saturation and brightness square, a hue strip, a

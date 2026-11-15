@@ -185,6 +185,72 @@ describe('removing', () => {
 	});
 });
 
+describe('pasting', () => {
+	/** A paste on the focused field, the way a copied screenshot arrives. */
+	function paste(...files: File[]) {
+		return pasteAt(field(), ...files);
+	}
+
+	function pasteAt(target: EventTarget, ...files: File[]) {
+		const transfer = new DataTransfer();
+		for (const entry of files) transfer.items.add(entry);
+		const event = new ClipboardEvent('paste', {
+			clipboardData: transfer,
+			bubbles: true,
+			cancelable: true
+		});
+		target.dispatchEvent(event);
+		return event;
+	}
+
+	it('takes files pasted while the zone has focus', async () => {
+		const onchange = vi.fn();
+		const props = $state({ value: [] as File[], onchange });
+		await renderInput(props);
+
+		field().focus();
+		const event = paste(file('screenshot.png', 'x', 'image/png'));
+		await expect.poll(() => props.value.map((entry) => entry.name)).toEqual(['screenshot.png']);
+		expect(event.defaultPrevented).toBe(true);
+		expect(onchange).toHaveBeenCalledTimes(1);
+	});
+
+	it('holds a pasted file to the same rules as a picked one', async () => {
+		const onreject = vi.fn();
+		const props = $state({ value: [] as File[], accept: 'image/*', onreject });
+		await renderInput(props);
+
+		field().focus();
+		paste(file('notes.txt'));
+		await expect.poll(() => onreject.mock.calls.length).toBe(1);
+		expect(onreject.mock.calls[0][0][0].reason).toBe('type');
+		expect(props.value).toEqual([]);
+	});
+
+	it('leaves a paste with no files to the browser', async () => {
+		await renderInput({});
+		field().focus();
+		expect(paste().defaultPrevented).toBe(false);
+	});
+
+	it('takes a paste the browser aimed at the page, while the field has focus', async () => {
+		const props = $state({ value: [] as File[] });
+		await renderInput(props);
+
+		field().focus();
+		pasteAt(document.body, file('screenshot.png', 'x', 'image/png'));
+		await expect.poll(() => props.value.length).toBe(1);
+	});
+
+	it('ignores a paste while the field does not have focus', async () => {
+		const props = $state({ value: [] as File[] });
+		await renderInput(props);
+
+		pasteAt(document.body, file('screenshot.png', 'x', 'image/png'));
+		expect(props.value).toEqual([]);
+	});
+});
+
 describe('focus after a removal', () => {
 	const remove = (name: string) =>
 		document.querySelector<HTMLButtonElement>(`button[aria-label="Remove ${name}"]`)!;

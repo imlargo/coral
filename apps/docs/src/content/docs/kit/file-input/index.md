@@ -24,6 +24,9 @@ that grows a second row when the same file is dropped twice. This is that input 
   the input is real and the zone is its `<label>`.
 - **Drag and drop that actually works**, and stays highlighted while the pointer moves over the
   contents of the zone.
+- **Paste works too.** A screenshot is copied far more often than it is saved: with the zone
+  focused, `mod+v` takes the files on the clipboard through the same `accept`, `maxSize` and
+  `maxFiles` as a pick or a drop, and turns away the same ones to `onreject`.
 - **`accept` that does not reject valid files.** The bug below.
 - **One selection, one source of truth:** `value` is the state, not a mirror of some private copy.
 - **Sizes go through `Intl`**, so the decimal separator follows the locale: `1,5 MB` where that is
