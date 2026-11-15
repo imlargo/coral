@@ -19,25 +19,42 @@ a `pointermove` listener that reads `clientX`, and it has three holes: dragging 
 text, slow drags of a pixel at a time round to nothing, and there is no way back once the pointer
 has started moving.
 
+Coral closes all three. Distance too short for a step is carried to the next move instead of being
+rounded away, so a careful drag moves the number as reliably as a fast one. The drag selects no
+text, and Escape mid-drag returns the value to what it was when the drag began.
+
 <Preview demo={basicDemo} class="min-h-72" />
 
-## What Coral adds
+## When to use
 
-- **A pixel at a time still counts.** Distance too short for a step is carried to the next move
-  instead of being rounded away, so a careful drag moves the number as reliably as a fast one.
-- **Escape puts it back.** Mid-drag, the value returns to what it was when the drag began. The same
-  key while typing restores the field.
-- **Shift is coarse everywhere.** On the handle and on the arrow keys alike, which is one rule to
-  learn rather than two.
-- **A drag is one action.** `onscrubstart` and `onscrubend` bracket it, so an editor records one
-  undo entry per drag rather than one per step.
-- **The drag survives the pointer leaving.** It is captured, so a fast sweep that runs off the
-  handle, or off the field entirely, keeps driving the number until the button comes up.
-- **The label is a label.** A real `<label>`, so assistive tech names the field with it and a plain
-  click focuses and selects the number. Dragging does not steal that focus, and does not select
-  text on the way.
+**Use it when**
 
-## Bounds, steps and units
+- A dozen numbers sit in a column and are adjusted by feel: an inspector, a settings panel for a
+  chart, a canvas editor.
+- Each field has a short name that can double as the handle: `W`, `Opacity`, `Timeout`.
+- An editor needs one undo entry per drag rather than per step.
+
+**Reach for something else when**
+
+- The number sits in a form, read once and typed into: [Number input](/docs/kit/number-input)
+  gives it `−` and `+` buttons, currency and percent formatting.
+- Where the value sits in its range matters more than its exact figure: shadcn's `Slider`.
+
+## Usage
+
+```svelte
+<script lang="ts">
+	import ScrubInput from '#lib/components/coral/kit/scrub-input/scrub-input.svelte';
+
+	let timeout = $state(3000);
+</script>
+
+<ScrubInput label="Timeout" bind:value={timeout} min={0} max={30000} step={100} suffix="ms" />
+```
+
+## Examples
+
+### Bounds, steps and units
 
 <Preview demo={boundsDemo} class="min-h-64" />
 
@@ -50,24 +67,21 @@ Bounds hold from every direction: the drag, the arrow keys and a typed number al
 Clamping only on commit is deliberate - with a max of `30000`, the `3` and the `300` of `30000` are
 both fine on the way, and only the finished number can be wrong.
 
-## One drag, one undo
+Shift is coarse everywhere, on the handle and on the arrow keys alike, which is one rule to learn
+rather than two.
+
+### One drag, one undo
 
 <Preview demo={historyDemo} class="min-h-80" />
 
-## Scrub or steppers
+A drag is one action. `onscrubstart` and `onscrubend` bracket it, so an editor records one undo
+entry per drag rather than one per step. `onscrubend` fires for a cancelled drag too, with the value
+it was put back to.
 
-[Number input](/docs/kit/number-input) is the same value with `−` and `+` buttons around it. Use it
-in a form, where a field is read once and typed into; reach for this one in an inspector, where a
-dozen numbers sit in a column and are adjusted by feel. They share their arithmetic, so a value
-moved by one behaves exactly as it would in the other.
+### Readonly and disabled
 
-## Import
-
-```svelte
-<script lang="ts">
-	import ScrubInput from '#lib/components/coral/kit/scrub-input/scrub-input.svelte';
-</script>
-```
+Both stop the drag and the keys, and the handle's cursor goes back to the default. `disabled` also
+stops a click on the handle from focusing the field.
 
 ## Props
 
@@ -98,28 +112,23 @@ Everything the shadcn input accepts stays available - `name`, `id`, `placeholder
 
 ## Keyboard
 
-| Key                     | Does                                     |
-| ----------------------- | ---------------------------------------- |
-| `↑` / `↓`               | Step by `step`                           |
-| `Shift` + `↑` / `↓`     | Step by `largeStep`                      |
-| `Page Up` / `Page Down` | Step by `largeStep`                      |
-| `Home` / `End`          | Jump to `min` / `max`, when bounded      |
-| `Escape`                | Put back the value the field already had |
+With focus in the field, and while a drag is under way:
+
+| Key                     | Action                                           |
+| ----------------------- | ------------------------------------------------ |
+| `↑` / `↓`               | Steps by `step`.                                 |
+| `Shift` + `↑` / `↓`     | Steps by `largeStep`.                            |
+| `Page Up` / `Page Down` | Steps by `largeStep`.                            |
+| `Home` / `End`          | Jumps to `min` / `max`, when bounded.            |
+| `Enter`                 | Commits what was typed, clamped to the bounds.   |
+| `Escape`                | Puts back the value the field already had.       |
+| `Shift` while dragging  | Each step of the drag moves by `largeStep`.      |
+| `Escape` while dragging | Ends the drag and returns the value it began at. |
 
 `←` and `→` are left alone: in a text field they move the caret, and taking that away makes the
 number awkward to edit. So are `Home` and `End` while there is no `min` or `max` to jump to, and
 `Escape` while there is no edit to put back - the first Escape is the field's, the second is the
 dialog's around it, the rule `search-input` and `inline-edit` follow too.
-
-## The screen edge
-
-A drag ends where the screen does. The web's answer to that is Pointer Lock, and desktop design
-tools use it to sweep a value as far as the hand goes. In a browser it also reports movement
-inconsistently once a drag is under way, warping the pointer back and forth and reporting each warp
-as hundreds of pixels nobody moved. Measured here, that is a number that jumps to its bound
-mid-drag, so the drag stays on plain coordinates, which are exact.
-
-For a longer sweep: hold Shift, lower `pixelsPerStep`, or type the number.
 
 ## Accessibility
 
@@ -131,11 +140,27 @@ its own: the keyboard already steps the field, and a second control for the same
 second tab stop that adds nothing. Pointer dragging is an extra the pointer gets, not the only way
 in.
 
+- **The label is a label.** A plain click on it focuses the field and selects the number, ready to
+  be typed over. Dragging does not steal that focus, and does not select text on the way.
+- **The drag survives the pointer leaving.** It is captured, so a fast sweep that runs off the
+  handle, or off the field entirely, keeps driving the number until the button comes up.
+
 Stepping is handled rather than left to the browser, because engines disagree on what Shift and the
 paging keys do to a number input, and the coarse modifier has to mean the same thing as it does on
 the handle. The handler is the one number input uses, in `lib/number-field.ts`.
 
-## scrub.ts
+## Customizing
+
+`class` lands on the input, `groupClass` on the bordered group around the handle, the field and the
+suffix, and `handleClass` on the handle. The `handle` snippet replaces the handle's contents (an
+icon, an axis glyph) and receives `scrubbing`, which is also on the handle as `data-scrubbing`
+while a drag is under way. The handle stays a `<label>` whatever the snippet draws.
+
+The only project-wide default it reads is the shared `locale` from
+[`setCoralDefaults`](/docs/conventions#project-wide-defaults). A caller's `onkeydown` runs before
+the component's, so calling `preventDefault` on it takes that key away from the stepping.
+
+### scrub.ts
 
 The drag arithmetic is exported on its own, so the same sweep can drive something that is not a
 field - a canvas handle, a zoom control:
@@ -150,4 +175,16 @@ zoom += taken.steps;
 ```
 
 The clamping and rounding come from [`lib/number`](/docs/kit/number-input), shared with the number
-input so both fields land on the same values.
+input so both fields land on the same values. Dropping to a raw shadcn `input-group` means writing
+back the pointer capture, the carried distance, the Escape that reverts a drag, the commit-time
+clamp and the spinbutton attributes.
+
+## The screen edge
+
+A drag ends where the screen does. The web's answer to that is Pointer Lock, and desktop design
+tools use it to sweep a value as far as the hand goes. In a browser it also reports movement
+inconsistently once a drag is under way, warping the pointer back and forth and reporting each warp
+as hundreds of pixels nobody moved. Measured here, that is a number that jumps to its bound
+mid-drag, so the drag stays on plain coordinates, which are exact.
+
+For a longer sweep: hold Shift, lower `pixelsPerStep`, or type the number.

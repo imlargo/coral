@@ -18,7 +18,35 @@ offer to save it never comes.
 
 <Preview demo={basicDemo} />
 
-## What Coral adds
+## When to use
+
+**Use it when**
+
+- The field is a credential: a sign-in password, a new password, the current one on a
+  change-password form.
+- The reader should be able to check what they typed before submitting.
+
+**Reach for something else when**
+
+- The secret is shown once and copied rather than typed, like a freshly created API key: a
+  read-only shadcn `Input` with a [Copy button](/docs/kit/copy-button).
+- The code is a fixed number of digits, like a one-time passcode: shadcn's `InputOTP`.
+
+## Usage
+
+```svelte
+<script lang="ts">
+	import PasswordInput from '#lib/components/coral/kit/password-input/password-input.svelte';
+
+	let password = $state('');
+</script>
+
+<PasswordInput bind:value={password} name="password" aria-label="Password" />
+```
+
+## Examples
+
+### Showing and hiding
 
 - **Hidden again on submit.** The field goes back to `type="password"` inside the form's `submit`
   event, before the browser reads it, so saving and autofill keep working.
@@ -30,7 +58,7 @@ offer to save it never comes.
 - **Nothing sent to a spellchecker.** Spellcheck, autocorrect and autocapitalize are off. A shown
   password is a text field to the browser, and enhanced spellcheck services upload text fields.
 
-## In a form
+### In a form
 
 <Preview demo={formDemo} />
 
@@ -40,13 +68,9 @@ Show the password and submit: the form reports `type="password"`. Turn this off 
 `autocomplete` defaults to `current-password`. Set `new-password` on sign-up and change-password
 forms, which is what tells a password manager to offer a generated one.
 
-## Import
+### Disabled
 
-```svelte
-<script lang="ts">
-	import PasswordInput from '#lib/components/coral/kit/password-input/password-input.svelte';
-</script>
-```
+`disabled` blocks the field and the toggle together.
 
 ## Props
 
@@ -67,8 +91,32 @@ Everything the shadcn input accepts stays available: `name`, `id`, `placeholder`
 | `groupClass`        | `string`                     | -                  | Merged onto the bordered group.                             |
 | `capsLockIndicator` | `Snippet`                    | -                  | Replaces the indicator. Render nothing to drop the warning. |
 
+## Keyboard
+
+Nothing beyond the native elements: the field takes typing, and `Tab` reaches the toggle, a real
+button that `Enter` or `Space` presses. Caps Lock is read from every key press in the field.
+
 ## Accessibility
 
 The toggle is a `type="button"` with `aria-pressed` and `aria-controls` pointing at the field, so it
-never submits the form and assistive tech knows what it changes. The Caps Lock warning is a polite
-status message and the icon is hidden, so it is heard once rather than read as part of the field.
+never submits the form and assistive tech knows what it changes. Its name stays `toggleLabel` in
+both states; the pressed state says which one is current. The Caps Lock warning is a polite status
+message and the icon is hidden, so it is heard once rather than read as part of the field. It is
+cleared when the field loses focus, since Caps Lock can change while focus is elsewhere.
+
+## Customizing
+
+`class` lands on the input and `groupClass` on the bordered group around the field, the indicator
+and the toggle. The group is shadcn's `input-group`, so the focus ring and the disabled and invalid
+states are the theme's.
+
+The `capsLockIndicator` snippet replaces the icon, and renders only while Caps Lock is on. The
+announcement comes from `capsLockLabel` through the component's own live region, not from the
+snippet.
+
+`toggleLabel` and `capsLockLabel` can be stated once under `'kit/password-input'` in
+[`setCoralDefaults`](/docs/conventions#project-wide-defaults); a prop at the call site still wins.
+
+`onkeydown`, `onkeyup` and `onblur` are forwarded to the field, after the component reads Caps
+Lock. Dropping to a raw shadcn `input-group` means writing back the submit-time hide, the caret
+restore, the `aria-pressed` toggle and the Caps Lock read and announcement.

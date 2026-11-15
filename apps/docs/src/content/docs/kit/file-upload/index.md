@@ -12,29 +12,56 @@ category: Files and media
 </script>
 
 [File input](/docs/kit/file-input) picks and validates files and stops there, on purpose: it is an
-input, not an uploader. What every project then writes around it is the upload, and the hand-rolled
-version goes wrong in the same places. Progress is faked or missing, because `fetch` reports none
-and each project wires `XMLHttpRequest` its own way. One failure inside a batch is lost: the batch
-says it succeeded, or every file is sent again. Cancel hides the row and leaves the request running.
-Ten files start at once and saturate the connection or the server's limits.
+input, not an uploader. What gets written around it is the upload, and the hand-rolled version goes
+wrong in the same places. Progress is faked or missing, because `fetch` reports none and wiring
+`XMLHttpRequest` is left to each caller. One failure inside a batch is lost: the batch says it
+succeeded, or every file is sent again. Cancel hides the row and leaves the request running. Ten
+files start at once and saturate the connection or the server's limits.
 
 <Preview demo={basicDemo} />
 
-## What Coral adds
+## When to use
 
-- **A queue, a few at a time.** `concurrency` files are in flight; the rest wait their turn and
-  start as slots free up.
-- **Real progress per file**, as your handler reports it, drawn as a bar and written as a percentage
-  that is read along with the file.
-- **Cancel aborts, retry resends.** Cancelling hands your handler an aborted signal rather than
-  hiding the row; retrying sends that one file again, on the same row.
-- **One failure is one row.** A file that did not make it says so where it sits, with the others
-  untouched, and the tally at the end names how many landed, failed or were stopped - announced as
-  well as reported.
-- **The upload is yours.** Coral never fetches: `upload` receives the file, an abort signal and a
-  progress callback, and resolves to whatever you want back.
+**Use it when**
 
-## The handler
+- Files upload the moment they are picked, each with its own progress: build artifacts, release
+  assets, attachments on an issue.
+- A batch can partly fail, and the reader should retry one file rather than the whole set.
+- Cancelling must stop the request, not only hide the row.
+
+**Reach for something else when**
+
+- The files go to the server with the rest of a form on submit: [file input](/docs/kit/file-input),
+  with `name` on it.
+- A single request sends everything at once and reports nothing per file: file input, and your
+  own `fetch` built from its `value`.
+
+## Usage
+
+```svelte
+<script lang="ts">
+	import FileUpload from '#lib/components/coral/kit/file-upload/file-upload.svelte';
+	import type { UploadHandler } from '#lib/components/coral/kit/file-upload/types.js';
+
+	const upload: UploadHandler<Response> = (file, { signal }) =>
+		fetch('/api/artifacts', { method: 'POST', body: file, signal });
+</script>
+
+<FileUpload {upload} multiple />
+```
+
+Coral never fetches: `upload` receives the file, an abort signal and a progress callback, and
+resolves to whatever you want back.
+
+## Examples
+
+### A queue, a few at a time
+
+`concurrency` files are in flight; the rest wait their turn and start as slots free up. Progress is
+real, as your handler reports it, drawn as a bar and written as a percentage that is read along
+with the file.
+
+### The handler
 
 ```ts
 import type { UploadHandler } from '#lib/components/coral/kit/file-upload/types.js';
@@ -59,21 +86,26 @@ const upload: UploadHandler<string> = (file, { signal, onprogress }) =>
 
 A handler that uses `fetch` works too, with `signal` passed through and no progress until it lands.
 
-## Failures and retries
+### Failures and retries
 
 <Preview demo={failingDemo} />
 
 `failedMessage` receives what the handler threw, so the row can say the server's own reason. The
 retry sends only that file; the tally is announced again once the batch settles.
 
-## Import
+One failure is one row. A file that did not make it says so where it sits, with the others
+untouched, and the tally at the end names how many landed, failed or were stopped.
 
-```svelte
-<script lang="ts">
-	import FileUpload from '#lib/components/coral/kit/file-upload/file-upload.svelte';
-	import type { UploadHandler } from '#lib/components/coral/kit/file-upload/types.js';
-</script>
-```
+### Cancel and remove
+
+Cancelling hands your handler an aborted signal rather than hiding the row, and the row stays with
+a retry. A row that is done, failed or cancelled can be removed; one still queued or on its way can
+only be cancelled.
+
+### Disabled
+
+`disabled` reaches the picker: no new files can be picked, dropped or pasted. Rows already in the
+list keep their cancel, retry and remove controls.
 
 ## Props
 
@@ -108,6 +140,17 @@ Everything [file input](/docs/kit/file-input) takes stays available and reaches 
 | `result`   | `R`                                                            | What the handler resolved to. |
 | `error`    | `unknown`                                                      | What it threw.                |
 
+## Keyboard
+
+The picker's keys are [file input](/docs/kit/file-input#keyboard)'s. The rows add their own
+buttons.
+
+| Key                  | Action                                                                               |
+| -------------------- | ------------------------------------------------------------------------------------ |
+| `Tab`                | Reaches the picker, then each row's controls.                                        |
+| `Enter` / `Space`    | On the picker: opens the file dialog. On a row control: cancels, retries or removes. |
+| `Cmd` / `Ctrl` + `V` | On the picker: queues the files on the clipboard.                                    |
+
 ## Accessibility
 
 The picker is [file input](/docs/kit/file-input)'s, keyboard-operable as a label around a real
@@ -121,3 +164,21 @@ takes its cancel button away, a removed row takes everything. Focus never falls 
 moves to the first control left in the same row, then to the row that took its place, and to the
 picker once the list is empty, including in rows drawn by the `row` snippet. Files can also be
 pasted into the focused picker, the way [file input](/docs/kit/file-input) takes them.
+
+## Customizing
+
+- `listClass` is merged onto the list of uploads. `class`, `zone`, `label` and `hint` reach the
+  picker, as on [file input](/docs/kit/file-input).
+- `row` replaces each row and receives `{ upload, cancel, retry, remove }`; focus is still kept in
+  the list when its controls change.
+- `concurrency` and every label and message (`cancelLabel`, `retryLabel`, `removeLabel`,
+  `progressMessage`, `failedMessage`, `cancelledMessage`, `settledMessage`) can be set once for the
+  project with [`setCoralDefaults`](/docs/conventions#project-wide-defaults) under
+  `kit/file-upload`. The shared `locale` formats the default percentage.
+- `uploads` is bindable, so a form can read what landed; the queue is its only writer.
+
+The queue is `UploadQueue` in `queue.svelte.ts` beside the component: `add`, `cancel`, `retry`,
+`remove`, and the summary, with no markup. A different list, such as a table of uploads, can be
+built on it. The rows are the shadcn `Attachment`, `Progress` and `Spinner` over a
+[file input](/docs/kit/file-input); dropping to those means rebuilding the queue, the abort on
+cancel, the per-file states and the settled announcement.

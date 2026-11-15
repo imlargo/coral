@@ -12,33 +12,45 @@ category: Files and media
 	import constrainedDemo from './demos/constrained.svelte?demo';
 </script>
 
-Almost every app grows one, and it is almost always the same hand-rolled shape: a `<div>` with an
-`onclick` over a hidden `<input type="file">`, a MIME check that turns away valid files, and a list
-that grows a second row when the same file is dropped twice. This is that input with those fixed.
+The hand-rolled file picker has a familiar shape: a `<div>` with an `onclick` over a hidden
+`<input type="file">`, a MIME check that turns away valid files, and a list that grows a second row
+when the same file is dropped twice. This is that input with those fixed.
 
 <Preview demo={basicDemo} />
 
-## What Coral adds
+## When to use
 
-- **The keyboard can open it.** Putting `onclick` on a `<div>` and hiding the input with `hidden`
-  removes it from the accessibility tree, and the result cannot be operated without a mouse. Here
-  the input is real and the zone is its `<label>`.
-- **Drag and drop that actually works**, and stays highlighted while the pointer moves over the
-  contents of the zone.
-- **Paste works too.** A screenshot is copied far more often than it is saved: with the zone
-  focused, `mod+v` takes the files on the clipboard through the same `accept`, `maxSize` and
-  `maxFiles` as a pick or a drop, and turns away the same ones to `onreject`.
-- **`accept` that does not reject valid files.** The bug below.
-- **One selection, one source of truth:** `value` is the state, not a mirror of some private copy.
-- **Sizes go through `Intl`**, so the decimal separator follows the locale: `1,5 MB` where that is
-  how the number is written, rather than a hardcoded `1.5 MB`.
-- **The same file twice is once.** A hand-rolled input appends blindly, so dropping the same file
-  again puts two identical rows on screen and posts it twice.
-- **Images show what they are.** An image file is previewed from an object URL, and that URL is
-  released when the file leaves the selection - otherwise the bytes behind it stay in memory for as
-  long as the page is open.
+**Use it when**
 
-## The rows
+- A form takes files and submits them with everything else: an avatar, a build artifact, a
+  screenshot attached to an issue.
+- Files arrive by click, drop or paste and must pass a type, size and count check first.
+- Your own uploader needs a picker to sit on, through the `file` snippet.
+
+**Reach for something else when**
+
+- Each file uploads as soon as it is picked, with progress and retry:
+  [file upload](/docs/kit/file-upload), which is built on this input.
+- Only a text value is needed, such as a URL to a file already hosted: the shadcn `Input`.
+
+## Usage
+
+```svelte
+<script lang="ts">
+	import FileInput from '#lib/components/coral/kit/file-input/file-input.svelte';
+
+	let files = $state<File[]>([]);
+</script>
+
+<FileInput bind:value={files} accept="image/*" maxSize={2_000_000} />
+```
+
+`value` is the selection, not a mirror of some private copy: bind it, and every pick, drop, paste
+and removal is written there.
+
+## Examples
+
+### The rows
 
 Each held file is an `attachment`, in the `idle` state: picked, not uploaded. Images get a thumbnail
 and everything else a file icon, with the name, the size and a remove button that is named after the
@@ -47,34 +59,55 @@ file rather than just "Remove".
 `idle` is the honest state for a picker, and the remaining ones - `uploading`, `processing`,
 `error`, `done` - are what an uploader drives through the `file` snippet below.
 
-## An input, not an uploader
+Sizes go through `Intl`, so the decimal separator follows the reader's locale: `1,5 MB` where that
+is how the number is written, rather than a hardcoded `1.5 MB`. An image file is previewed from an
+object URL, and that URL is released when the file leaves the selection - otherwise the bytes behind
+it stay in memory for as long as the page is open.
 
-Coral stops at `File[]`. There is no progress, no retry, no remote URL, no queue. All of that needs
-to know where the bytes are going, and Coral does not.
+### Drop and paste
 
-The boundary is easy to cross by accident. A file picker that wants to look like an uploader ends up
-rendering a progress bar driven by this:
+Dropping works, and the zone stays highlighted while the pointer moves over its contents: enters and
+leaves are counted, so moving onto the icon inside does not switch the highlight off.
+
+A screenshot is copied far more often than it is saved: with the zone focused, `mod+v` takes the
+files on the clipboard through the same `accept`, `maxSize` and `maxFiles` as a pick or a drop, and
+turns away the same ones to `onreject`. Text on the clipboard is left to the browser.
+
+The same file twice is once. A hand-rolled input appends blindly, so dropping the same file again
+puts two identical rows on screen and posts it twice.
+
+### Constraints and rejections
+
+<Preview demo={constrainedDemo} />
+
+`accept`, `maxSize` and `maxFiles` filter what gets in. What gets turned away goes to `onreject`, as
+structured data:
 
 ```ts
-// Don't. This measures nothing.
-$effect(() => {
-	if (files.length > 0 && uploadProgress < 100) {
-		const timer = setTimeout(() => (uploadProgress = Math.min(uploadProgress + 10, 100)), 80);
-		return () => clearTimeout(timer);
-	}
-});
+type FileRejection = {
+	file: File;
+	reason: 'type' | 'size' | 'count';
+};
 ```
 
-A bar that fills at a fixed rate the moment a file is chosen, with no request behind it: the
-appearance of an uploader, which is all a component without an API can offer.
+**Coral renders no error text.** The message is copy, copy belongs to the project, and so does where
+it goes: inline under the field, or a toast. Coral says what happened and stays out of it.
 
-The real seam is the `file` snippet: Coral holds the selection and renders the zone, the project
-renders each row with whatever its own uploader knows - including the attachment states the default
-row deliberately leaves alone.
+The consequence to respect: **set a constraint, wire `onreject`**, or files are dropped in silence.
 
-<Preview demo={customRowDemo} />
+Every rejection is reported, not just the first. Keeping only `errors[0]` and discarding the rest
+means dropping five oversized files explains one of them.
 
-## The `accept` bug
+#### `multiple` and `maxFiles`
+
+One number, not two. `multiple` opens the door, `maxFiles` says how many fit, and without `multiple`
+the limit is 1 whatever `maxFiles` says. A single-file input **replaces** what it holds rather than
+refusing the new file.
+
+The shape to avoid is carrying both a `variant: 'single' | 'multiple'` and a `maxFiles`, defaulted
+to `'single'` and `5`: two props that contradict each other before anyone touches them.
+
+### The `accept` bug
 
 A pure MIME check looks obviously right and is wrong:
 
@@ -99,97 +132,7 @@ Coral needs no table. A file the browser refuses to type can only be judged by i
 
 The server is the real gate either way; the point is not to turn away a file the person is looking at.
 
-## Constraints and rejections
-
-<Preview demo={constrainedDemo} />
-
-`accept`, `maxSize` and `maxFiles` filter what gets in. What gets turned away goes to `onreject`, as
-structured data:
-
-```ts
-type FileRejection = {
-	file: File;
-	reason: 'type' | 'size' | 'count';
-};
-```
-
-**Coral renders no error text.** The message is copy, copy belongs to the project, and so does where
-it goes: inline under the field, or a toast. Coral says what happened and stays out of it.
-
-The consequence to respect: **set a constraint, wire `onreject`**, or files are dropped in silence.
-
-Every rejection is reported, not just the first. Keeping only `errors[0]` and discarding the rest
-means dropping five oversized files explains one of them.
-
-### `multiple` and `maxFiles`
-
-One number, not two. `multiple` opens the door, `maxFiles` says how many fit, and without `multiple`
-the limit is 1 whatever `maxFiles` says. A single-file input **replaces** what it holds rather than
-refusing the new file.
-
-The shape to avoid is carrying both a `variant: 'single' | 'multiple'` and a `maxFiles`, defaulted
-to `'single'` and `5`: two props that contradict each other before anyone touches them.
-
-## Accessibility
-
-The zone is a `<label>` wrapping a real `<input type="file">` that is `sr-only` rather than `hidden`.
-That single change is the difference between a picker the keyboard can open and one it cannot:
-
-- The click is native. No `onclick`, no `.click()` call, no `a11y_click_events_have_key_events`
-  suppression, which a clickable `<div>` needs just to compile.
-- Tab reaches the input; the zone shows the focus ring through `has-[input:focus-visible]`.
-- Space and Enter open the picker, because that is what a focused file input does.
-
-Every prop a native file input takes is forwarded to it: `id`, `required`, `capture`, `aria-*`, so
-a surrounding `Field` labels it the usual way.
-
-The held files are a real list, one `<li>` per file, so their number is announced before they are
-read.
-
-Removing a file takes its remove button with it, and focus on an element that leaves the page falls
-to the body: the next Tab starts over at the top. Here focus moves to the row that took the removed
-one's place, or the one before it at the end of the list, and back to the field once the last file
-is gone. It works the same for rows drawn by the `file` snippet, as long as they hold something
-focusable. Focus the reader moved elsewhere is left where it is.
-
-An image preview carries an empty `alt`: the file's name is already the row's title, and repeating
-it makes a screen reader say it twice.
-
-## Import
-
-```svelte
-<script lang="ts">
-	import FileInput from '#lib/components/coral/kit/file-input/file-input.svelte';
-	import type { FileRejection } from '#lib/components/coral/kit/file-input/types.js';
-</script>
-```
-
-## Props
-
-Everything a native file input accepts is forwarded to it. On top of that:
-
-| Prop          | Type                                      | Default                               | Description                             |
-| ------------- | ----------------------------------------- | ------------------------------------- | --------------------------------------- |
-| `value`       | `File[]`                                  | `[]`                                  | Bindable. The selection.                |
-| `onchange`    | `(files: File[]) => void`                 | -                                     | Pick, drop or removal. Never on mount.  |
-| `onreject`    | `(rejections: FileRejection[]) => void`   | -                                     | What was turned away, and why.          |
-| `accept`      | `string`                                  | `''`                                  | `image/*,.pdf`. Empty takes anything.   |
-| `multiple`    | `boolean`                                 | `false`                               | Allows more than one file.              |
-| `maxFiles`    | `number`                                  | unbounded                             | Only read when `multiple`.              |
-| `maxSize`     | `number`                                  | unbounded                             | Bytes, per file.                        |
-| `disabled`    | `boolean`                                 | `false`                               | Blocks the zone and the remove buttons. |
-| `label`       | `string`                                  | `Drop files here, or click to browse` | The line inside the zone.               |
-| `hint`        | `string`                                  | from `accept` + `maxSize`             | The line under it. `''` renders none.   |
-| `removeLabel` | `(file: File) => string`                  | `Remove <name>`                       | Accessible label for a remove button.   |
-| `class`       | `string`                                  | -                                     | Merged onto the zone - height, padding. |
-| `listClass`   | `string`                                  | -                                     | Merged onto the file list.              |
-| `zone`        | `Snippet<[{ dragging, disabled, hint }]>` | -                                     | Replaces the contents of the zone.      |
-| `file`        | `Snippet<[{ file, index, remove }]>`      | -                                     | Replaces each row. The uploader seam.   |
-
-`hint` defaults to a summary built from the constraints: `PDF, IMAGE · 1 MB`. It is deliberately
-wordless: extensions and categories reduce to bare tokens, so nothing in it needs translating.
-
-## Forms
+### Forms
 
 The field underneath holds what has been picked, so it takes part in a form like any other: `name`
 submits the files, `required` makes the browser hold the form up until there is one, and a reset
@@ -216,3 +159,112 @@ Code that uploads through `fetch` can still build its own request from `value`:
 const body = new FormData();
 for (const file of files) body.append('attachments', file);
 ```
+
+### An input, not an uploader
+
+Coral stops at `File[]`. There is no progress, no retry, no remote URL, no queue. All of that needs
+to know where the bytes are going, and Coral does not.
+
+The boundary is easy to cross by accident. A file picker that wants to look like an uploader ends up
+rendering a progress bar driven by this:
+
+```ts
+// Don't. This measures nothing.
+$effect(() => {
+	if (files.length > 0 && uploadProgress < 100) {
+		const timer = setTimeout(() => (uploadProgress = Math.min(uploadProgress + 10, 100)), 80);
+		return () => clearTimeout(timer);
+	}
+});
+```
+
+A bar that fills at a fixed rate the moment a file is chosen, with no request behind it: the
+appearance of an uploader, which is all a component without an API can offer.
+
+The real seam is the `file` snippet: Coral holds the selection and renders the zone, the project
+renders each row with whatever its own uploader knows - including the attachment states the default
+row deliberately leaves alone.
+
+<Preview demo={customRowDemo} />
+
+### Disabled
+
+`disabled` blocks the zone, the drop, the paste and every remove button, and dims the zone. The
+files already held stay listed.
+
+## Props
+
+Everything a native file input accepts is forwarded to it. On top of that:
+
+| Prop          | Type                                      | Default                               | Description                             |
+| ------------- | ----------------------------------------- | ------------------------------------- | --------------------------------------- |
+| `value`       | `File[]`                                  | `[]`                                  | Bindable. The selection.                |
+| `onchange`    | `(files: File[]) => void`                 | -                                     | Pick, drop or removal. Never on mount.  |
+| `onreject`    | `(rejections: FileRejection[]) => void`   | -                                     | What was turned away, and why.          |
+| `accept`      | `string`                                  | `''`                                  | `image/*,.pdf`. Empty takes anything.   |
+| `multiple`    | `boolean`                                 | `false`                               | Allows more than one file.              |
+| `maxFiles`    | `number`                                  | unbounded                             | Only read when `multiple`.              |
+| `maxSize`     | `number`                                  | unbounded                             | Bytes, per file.                        |
+| `disabled`    | `boolean`                                 | `false`                               | Blocks the zone and the remove buttons. |
+| `label`       | `string`                                  | `Drop files here, or click to browse` | The line inside the zone.               |
+| `hint`        | `string`                                  | from `accept` + `maxSize`             | The line under it. `''` renders none.   |
+| `removeLabel` | `(file: File) => string`                  | `Remove <name>`                       | Accessible label for a remove button.   |
+| `class`       | `string`                                  | -                                     | Merged onto the zone - height, padding. |
+| `listClass`   | `string`                                  | -                                     | Merged onto the file list.              |
+| `zone`        | `Snippet<[{ dragging, disabled, hint }]>` | -                                     | Replaces the contents of the zone.      |
+| `file`        | `Snippet<[{ file, index, remove }]>`      | -                                     | Replaces each row. The uploader seam.   |
+
+`hint` defaults to a summary built from the constraints: `PDF, IMAGE · 1 MB`. It is deliberately
+wordless: extensions and categories reduce to bare tokens, so nothing in it needs translating.
+
+## Keyboard
+
+The field is a native file input, focused through its zone.
+
+| Key                  | Action                                                                    |
+| -------------------- | ------------------------------------------------------------------------- |
+| `Tab`                | Reaches the zone, then each remove button.                                |
+| `Enter` / `Space`    | On the zone: opens the file dialog. On a remove button: removes the file. |
+| `Cmd` / `Ctrl` + `V` | On the zone: adds the files on the clipboard.                             |
+
+## Accessibility
+
+The zone is a `<label>` wrapping a real `<input type="file">` that is `sr-only` rather than `hidden`.
+That single change is the difference between a picker the keyboard can open and one it cannot:
+
+- The click is native. No `onclick`, no `.click()` call, no `a11y_click_events_have_key_events`
+  suppression, which a clickable `<div>` needs just to compile.
+- Tab reaches the input; the zone shows the focus ring through `has-[input:focus-visible]`.
+- Space and Enter open the picker, because that is what a focused file input does.
+
+Every prop a native file input takes is forwarded to it: `id`, `required`, `capture`, `aria-*`, so
+a surrounding `Field` labels it the usual way.
+
+The held files are a real list, one `<li>` per file, so their number is announced before they are
+read.
+
+Removing a file takes its remove button with it, and focus on an element that leaves the page falls
+to the body: the next Tab starts over at the top. Here focus moves to the row that took the removed
+one's place, or the one before it at the end of the list, and back to the field once the last file
+is gone. It works the same for rows drawn by the `file` snippet, as long as they hold something
+focusable. Focus the reader moved elsewhere is left where it is.
+
+An image preview carries an empty `alt`: the file's name is already the row's title, and repeating
+it makes a screen reader say it twice.
+
+## Customizing
+
+- `class` is merged onto the zone (height, padding), `listClass` onto the file list.
+- `zone` replaces the contents of the zone and receives `{ dragging, disabled, hint }`. The zone
+  also carries `data-dragging` and `data-disabled` for styling from outside.
+- `file` replaces each row and receives `{ file, index, remove }`: the uploader seam shown under
+  [An input, not an uploader](#an-input-not-an-uploader).
+- `label` and `removeLabel` can be set once for the project with
+  [`setCoralDefaults`](/docs/conventions#project-wide-defaults) under `kit/file-input`.
+
+The rules are plain modules beside the component, for a picker of your own: `accept.ts`
+(`matchesAccept`, `describeAccept`), `collect.ts` (`collect`, which applies the constraints and
+returns the rejections) and `format-bytes.ts` (`formatBytes`). Focus after a removal is
+`lib/keep-focus`. The rows are the shadcn `Attachment` and the zone's default contents are `Empty`;
+dropping to those means rebuilding the label around a focusable input, the drag counting, the
+paste, keeping the field's `files` in step with `value`, the form reset and the preview URLs.

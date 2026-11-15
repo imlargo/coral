@@ -18,10 +18,6 @@ category: Data display
 Counts per day, one square each, weeks as columns. Coral draws the calendar, buckets the counts and
 handles the keyboard; what the numbers mean stays with the project.
 
-<Preview demo={basicDemo} class="justify-start overflow-x-auto" />
-
-## What Coral adds
-
 - **The squares land on the right day.** `new Date('2026-01-05')` is UTC midnight, which in a UTC-5 zone is
   the 4th, so the naive grid is a day off all year, only for readers west of Greenwich.
 - **A scale that survives real data:** levels come from quantiles of the non-empty days, not from
@@ -32,7 +28,49 @@ handles the keyboard; what the numbers mean stays with the project.
 - **Repeats are summed.** Activity arrives as events; three commits on Tuesday are three rows.
 - **Missing days are drawn, not skipped.** A gap in the data is an empty square, not a missing column.
 
-## The data
+<Preview demo={basicDemo} class="justify-start overflow-x-auto" />
+
+## When to use
+
+**Use it when**
+
+- Daily counts over months are the point: builds, deployments, commits, API requests per day.
+- The reader looks for patterns by weekday and by season more than for exact numbers.
+- A day should open its own detail, like the deployments made on it.
+
+**Reach for something else when**
+
+- The reader needs exact values or a trend over time: a line or bar chart reads both better.
+- One number against a range is the question, like seats used on a plan: use
+  [Gauge](/docs/kit/gauge).
+- Events need their order and description, not a count: use [Timeline](/docs/kit/timeline).
+
+## Usage
+
+```svelte
+<script lang="ts">
+	import ActivityCalendar from '#lib/components/coral/kit/activity-calendar/activity-calendar.svelte';
+	import type {
+		ActivityCell,
+		ActivityDay
+	} from '#lib/components/coral/kit/activity-calendar/types.js';
+</script>
+```
+
+```svelte
+<ActivityCalendar
+	caption="Deployments per day"
+	data={[
+		{ date: '2026-03-02', count: 4 },
+		{ date: '2026-03-03', count: 1 }
+	]}
+	label={(cell) => `${cell.count} deployments`}
+/>
+```
+
+## Examples
+
+### The data
 
 ```ts
 type ActivityDay<T = unknown> = {
@@ -49,7 +87,7 @@ Every wrapper worth comparing against keys them into a `Map` and silently keeps 
 Without `start` and `end` the grid spans the earliest and latest days in the data. Pass both to hold
 a window still while the data underneath it changes.
 
-### `'YYYY-MM-DD'` is a day, a `Date` is a moment
+#### `'YYYY-MM-DD'` is a day, a `Date` is a moment
 
 The two are read differently, on purpose:
 
@@ -66,7 +104,7 @@ a clock in it is a real instant, and its day is the day it happened where you ar
 Dates are normalised to **local noon** rather than midnight. Midnight is the one instant a DST jump
 can delete, and where it does the browser rolls back to the previous day.
 
-## Levels
+### Levels
 
 Four steps above zero by default. The cuts are quantiles of the **non-empty** days:
 
@@ -89,34 +127,7 @@ than the scale has room for.
 
 <Preview demo={thresholdsDemo} class="justify-start overflow-x-auto" />
 
-## Colour
-
-Coral picks none. The ramp is mixed between two theme tokens:
-
-```css
-color-mix(in oklab, var(--primary) 50%, var(--muted));
-```
-
-What Coral defines is the _distance_ between the ends, which is the data, not the appearance. Move
-the ends with `color` and `emptyColor`; a chart token is usually what you want.
-
-`color-mix` rather than an opacity ramp: opacity would fade the focus ring along with the square, and
-let whatever sits behind the grid bleed through the quiet days.
-
-## Size
-
-Two CSS custom properties, set through `class`:
-
-```svelte
-<ActivityCalendar {data} class="[--coral-cell:1rem] [--coral-gap:0.25rem]" />
-```
-
-<Preview demo={scaleDemo} class="justify-start overflow-x-auto" />
-
-Everything in the grid derives from the square, so those two are the whole knob. They are custom
-properties rather than props because a grid is sized, not styled.
-
-## Copy
+### Copy
 
 The default square label is `3 · Jan 5, 2026`. It is deliberately wordless: `3 contributions` is copy,
 copy is the project's, and Coral does not know what is being counted.
@@ -126,19 +137,7 @@ once fixes both.
 
 <Preview demo={labelledDemo} class="justify-start overflow-x-auto" />
 
-## The pieces
-
-For anything richer than a line of text, `tooltip` replaces the body outright and receives the same
-cell, including whatever `meta` you hung on the day. `legend` replaces the swatch row and is handed
-the ramp and the cuts, so a legend that reads `1 ▢▢▢▢▢ 12+` needs nothing Coral did not already
-compute.
-
-<Preview demo={piecesDemo} class="justify-start overflow-x-auto" />
-
-`meta` is generic and untouched: Coral carries it from `data` to the snippet and to `onselect`, and
-never reads it.
-
-## Selection
+### Selection
 
 <Preview demo={selectDemo} class="justify-start overflow-x-auto" />
 
@@ -146,36 +145,10 @@ never reads it.
 picked, not where it is held. The selection opens a panel, filters a list or pushes a route, and it
 belongs to whichever of those owns it.
 
-## Keyboard and screen readers
+### Empty data
 
-The grid is one tab stop. Inside it:
-
-| Key          | Moves           |
-| ------------ | --------------- |
-| `←` `→`      | one week        |
-| `↑` `↓`      | one day         |
-| `Home` `End` | first, last day |
-
-Sideways is seven days along the same list the arrows step through, so movement cannot fall off the
-ragged first and last columns the way `(week, weekday)` coordinates can.
-
-It is a real `<table>`: months are column headers, weekdays are row headers, and `caption` names
-the whole grid. Every row names itself
-for a screen reader and only every other one says it out loud, because seven labels at that size
-collide. Each square carries its `label` as its accessible name, so the tooltip is decoration rather
-than the only way to read a value.
-
-## Import
-
-```svelte
-<script lang="ts">
-	import ActivityCalendar from '#lib/components/coral/kit/activity-calendar/activity-calendar.svelte';
-	import type {
-		ActivityCell,
-		ActivityDay
-	} from '#lib/components/coral/kit/activity-calendar/types.js';
-</script>
-```
+Days missing from `data` are drawn as empty squares. With no data at all and no `start` and `end`,
+there is no range to draw and the grid has no squares; pass both to draw an empty window instead.
 
 ## Props
 
@@ -204,6 +177,86 @@ than the only way to read a value.
 | `legend`       | `Snippet<[LegendContext]>`   | -                 | Replaces the legend row.                      |
 
 Everything else lands on the root element.
+
+## Keyboard
+
+The grid is one tab stop: Tab reaches the last square that had focus, or the first one. Inside it:
+
+| Key               | Action                                 |
+| ----------------- | -------------------------------------- |
+| `←` / `→`         | Moves one week.                        |
+| `↑` / `↓`         | Moves one day.                         |
+| `Home` / `End`    | Moves to the first or last day.        |
+| `Enter` / `Space` | Runs `onselect` on the focused square. |
+
+Sideways is seven days along the same list the arrows step through, so movement cannot fall off the
+ragged first and last columns the way `(week, weekday)` coordinates can. Movement stops at the first
+and last day rather than wrapping, and in a right-to-left page `←` and `→` swap.
+
+## Accessibility
+
+It is a real `<table>`: months are column headers, weekdays are row headers, and `caption` names
+the whole grid. Every row names itself
+for a screen reader and only every other one says it out loud, because seven labels at that size
+collide. Each square carries its `label` as its accessible name, so the tooltip is decoration rather
+than the only way to read a value.
+
+Every square is a button, with or without `onselect`, so the tooltip opens on keyboard focus as well
+as on hover. The default legend is a row of swatches with no words, hidden from screen readers.
+
+## Customizing
+
+- **`class`** is merged onto the root and carries the two size properties below; **`cellClass`** is
+  merged onto every square, and `data-level` on each square says which step it is on.
+- **Snippets:** `cell` renders inside a square, over the fill, for marking a day; `tooltip` and
+  `legend` are described under **The pieces**.
+- **Project-wide defaults.** `weekStart` and `label` can be stated once with
+  [`setCoralDefaults`](/docs/conventions#project-wide-defaults) under `'kit/activity-calendar'`,
+  and `locale` follows the project's shared one; a prop at the call site still wins.
+
+### Colour
+
+Coral picks none. The ramp is mixed between two theme tokens:
+
+```css
+color-mix(in oklab, var(--primary) 50%, var(--muted));
+```
+
+What Coral defines is the _distance_ between the ends, which is the data, not the appearance. Move
+the ends with `color` and `emptyColor`; a chart token is usually what you want.
+
+`color-mix` rather than an opacity ramp: opacity would fade the focus ring along with the square, and
+let whatever sits behind the grid bleed through the quiet days.
+
+### Size
+
+Two CSS custom properties, set through `class`:
+
+```svelte
+<ActivityCalendar {data} class="[--coral-cell:1rem] [--coral-gap:0.25rem]" />
+```
+
+<Preview demo={scaleDemo} class="justify-start overflow-x-auto" />
+
+Everything in the grid derives from the square, so those two are the whole knob. They are custom
+properties rather than props because a grid is sized, not styled.
+
+### The pieces
+
+For anything richer than a line of text, `tooltip` replaces the body outright and receives the same
+cell, including whatever `meta` you hung on the day. `legend` replaces the swatch row and is handed
+the ramp and the cuts, so a legend that reads `1 ▢▢▢▢▢ 12+` needs nothing Coral did not already
+compute.
+
+<Preview demo={piecesDemo} class="justify-start overflow-x-auto" />
+
+`meta` is generic and untouched: Coral carries it from `data` to the snippet and to `onselect`, and
+never reads it.
+
+`buildGrid` and `stepFor` in `grid.ts`, and `thresholdsFor` and `levelFor` in `levels.ts`, are pure
+and exported, for a different drawing of the same days. Rebuilding over shadcn's `Tooltip` alone
+means writing back the local-day reading, the quantile scale, the single tooltip and the roving tab
+stop.
 
 ## What it does not do
 

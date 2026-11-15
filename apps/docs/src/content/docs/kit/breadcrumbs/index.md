@@ -19,19 +19,44 @@ a long repository name pushes everything else off the screen.
 
 <Preview demo={basicDemo} />
 
-## What Coral adds
+## When to use
 
-- **It fits.** The trail is measured against the room it has and the middle is folded into a menu,
-  as many crumbs as it takes and no more. Give the window back and they come back.
-- **Both ends stay.** The root and the current page are never folded, because a trail that has lost
-  where it starts or where it is has stopped being a trail. A long name on either end truncates, and
-  keeps its full text in the title.
-- **Every page stays reachable.** The folded pages are links in the menu, in order, with their names
-  in full.
-- **The current page is the current page.** It is marked `aria-current="page"` and not linked, which
-  is what the primitive's `Page` part is for.
+**Use it when**
 
-## Folding
+- A page sits deep in a hierarchy and the reader needs the way back up: a team, a project, a
+  repository, a file.
+- Names in the trail can be long, like a repository or a branch, and the header has fixed room.
+
+**Reach for something else when**
+
+- The hierarchy is the navigation itself, opened and browsed level by level:
+  [Tree view](/docs/kit/tree-view).
+- The trail is two levels deep and never long: shadcn's `breadcrumb` parts, written out directly.
+- The reader moves through steps in order rather than up a hierarchy:
+  [Stepper](/docs/kit/stepper).
+
+## Usage
+
+```svelte
+<script lang="ts">
+	import Breadcrumbs from '#lib/components/coral/kit/breadcrumbs/breadcrumbs.svelte';
+	import type { Crumb } from '#lib/components/coral/kit/breadcrumbs/types.js';
+
+	const trail: Crumb[] = [
+		{ label: 'Projects', href: '/projects' },
+		{ label: 'api-gateway', href: '/projects/api-gateway' },
+		{ label: 'Deployments' }
+	];
+</script>
+
+<Breadcrumbs items={trail} />
+```
+
+Crumbs go root first; the last one is the current page and needs no `href`.
+
+## Examples
+
+### Folding
 
 <Preview demo={foldedDemo} class="min-h-32" />
 
@@ -40,21 +65,15 @@ trail never has to change shape to find out whether it fits, and the fold runs f
 crumb forward: what disappears first is the middle of the path, and what stays is the root, the
 fold, and the pages nearest to where the reader is.
 
-## Your own crumbs
+As many crumbs fold as it takes and no more; give the window back and they come back. A long name
+on either end truncates, and keeps its full text in the title.
+
+### Your own crumbs
 
 <Preview demo={customDemo} />
 
 The `item` snippet replaces what a crumb shows (an icon beside the root, a status dot) and the
 link or the current-page mark stays around it. `separator` replaces the glyph between crumbs.
-
-## Import
-
-```svelte
-<script lang="ts">
-	import Breadcrumbs from '#lib/components/coral/kit/breadcrumbs/breadcrumbs.svelte';
-	import type { Crumb } from '#lib/components/coral/kit/breadcrumbs/types.js';
-</script>
-```
 
 ## Props
 
@@ -77,6 +96,18 @@ that:
 | `label` | `string` | What the crumb says, and the title when it truncates. |
 | `href`  | `string` | Where it goes. The current page needs none.           |
 
+## Keyboard
+
+Every crumb but the current page is a link, reached with `Tab` and followed with `Enter`. The fold
+control is the shadcn dropdown menu's trigger:
+
+| Key                     | Action                                                 |
+| ----------------------- | ------------------------------------------------------ |
+| `Enter` / `Space` / `↓` | On the fold control, opens the menu of folded pages.   |
+| `↓` / `↑`               | In the menu, moves between the folded pages.           |
+| `Enter`                 | In the menu, follows the focused page's link.          |
+| `Escape`                | Closes the menu and returns focus to the fold control. |
+
 ## Accessibility
 
 The `<nav>` is the primitive's, named `breadcrumb`, and the trail is an ordered list, so a screen
@@ -84,3 +115,24 @@ reader hears how deep it is. The current page carries `aria-current="page"`. The
 button with `foldedLabel` as its name, and it opens a menu of links the arrow keys walk, so no page
 is reachable by mouse alone. The measuring copy is `aria-hidden` and invisible: it exists for the
 measurement and for nothing else.
+
+- **Both ends stay.** The root and the current page are never folded, because a trail that has lost
+  where it starts or where it is has stopped being a trail.
+- **Every page stays reachable.** The folded pages are links in the menu, in order, with their
+  names in full.
+- **The current page is the current page.** It is marked `aria-current="page"` and not linked,
+  which is what the primitive's `Page` part is for.
+
+## Customizing
+
+- **Class props.** `class` merges onto the `<nav>`, `listClass` onto the list.
+- **Snippets.** `item` replaces what a crumb shows and receives the crumb, its index and whether it
+  is the current page; the link or the current-page mark stays around it. `separator` replaces the
+  glyph inside the primitive's separator.
+- **Project-wide defaults.** `foldedLabel` can be stated once under `'kit/breadcrumbs'` with
+  `setCoralDefaults`: see [Project-wide defaults](/docs/conventions#project-wide-defaults).
+
+`fit.ts` exports `foldCount`, the arithmetic that decides how many crumbs fold given their widths
+and the room available, for a trail drawn some other way. Dropping to shadcn's `breadcrumb` parts
+means rebuilding the measurement off a hidden copy, the fold menu, and the current page drawn as a
+`Page` rather than a link.

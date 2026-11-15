@@ -16,47 +16,53 @@ category: Inputs
 </script>
 
 Wrapping a select is the first thing most projects do with the primitive and the last thing any of
-them revisit: derive the trigger label, map the value in and out of the primitive's own keys,
-decide what cleared means. Written by hand, no two copies of those few lines stay the same for long.
+them revisit: derive the trigger label, map the value in and out of the primitive's own string
+keys, decide what cleared means. Written by hand, no two copies of those few lines stay the same
+for long, and each one opens with `options.find((o) => o.value === value)?.label ?? placeholder`.
+
+Coral writes them once. The trigger label derives itself, a numeric id goes in and a numeric id
+comes out, `onchange` fires when the user changes something (not on mount, not when `value` is
+assigned from code), and typeahead works with the list closed, the way a native `<select>` does,
+because the labels are handed to the primitive up front.
 
 <Preview demo={basicDemo} />
 
-## What Coral adds
+## When to use
 
-- **The trigger label derives itself.** The hand-rolled version opens with the same line every
-  time: `options.find((o) => o.value === value)?.label ?? placeholder`.
-- **The value keeps its type.** `options` is `Option<T>[]`, so a numeric id goes in and a numeric id
-  comes out. bits-ui keys items by string; the mapping happens here, once.
-- **`onchange` fires when the user changes something.** Not on mount, not when `value` is assigned
-  from code.
-- **Typeahead works with the list closed**, the way a native `<select>` does, because the labels are
-  handed to the primitive up front.
-- **Groups, descriptions and a clear control** come with the same `Option<T>` the combobox uses.
-- **A list that is loading, or empty, says so**, seen and heard, the way the combobox does.
+**Use it when**
 
-## Select or combobox?
+- The list is short and known: a status, a role, a priority, an environment.
+- The reader picks exactly one value and can scan every option without typing.
+- The value is not a string (an id, an enum member) and should come back with its type.
 
-They are not interchangeable and the boundary is worth stating once:
+**Reach for something else when**
 
-| Use            | When                                                                             |
-| -------------- | -------------------------------------------------------------------------------- |
-| **`select`**   | The list is short and known - a status, a role, a priority. No search.           |
-| **`combobox`** | The list is long, needs a search box, comes from the server, or is multi-select. |
+- The list is long, comes from a server, or needs a search box: [Combobox](/docs/kit/combobox).
+- Several values can be picked: [Combobox](/docs/kit/combobox) with `type="multiple"`.
+- The options are countries: [Country select](/docs/kit/country-select) already has the list.
 
-Both open a `listbox` of `option`s. The difference is the trigger: a select's is a button, nothing
-to type into, and the platform's own typeahead while it is focused and shut. A combobox's is a text
-input, which announces itself as editable and sets the expectation that typing narrows the list.
+## Usage
 
-That expectation is the whole point when there is a search behind it, and a liability when there is
-not. Stripping the search out of a combobox leaves a text field that ignores what you type into it.
+```svelte
+<script lang="ts">
+	import Select from '#lib/components/coral/kit/select/select.svelte';
+	import type { Option } from '#lib/components/coral/lib/options.js';
 
-**There is no `type="multiple"` here, on purpose.** A multi-select is not a select with one more
-prop: it needs a checkbox per row, badges in the trigger, and, as soon as the list is long enough
-for anyone to want more than two of its entries, a search box. That component is the combobox.
-Multiple selection arrives with search attached; keeping it out of `select` costs no one anything
-and keeps this component the size of the problem it solves.
+	const roles: Option[] = [
+		{ value: 'owner', label: 'Owner' },
+		{ value: 'admin', label: 'Admin' },
+		{ value: 'member', label: 'Member' }
+	];
 
-## Typed values
+	let role = $state<string>();
+</script>
+
+<Select options={roles} bind:value={role} placeholder="Select a role..." />
+```
+
+## Examples
+
+### Typed values
 
 <Preview demo={typedValuesDemo} />
 
@@ -65,14 +71,15 @@ same collapse onto one item, and any object value becomes `[object Object]`, so 
 the list shares a key. Coral keys items by their position instead, which cannot collide with
 itself, and hands the value back untouched.
 
-## Groups
+### Groups
 
 <Preview demo={groupsDemo} />
 
 Pass `OptionGroup[]` instead of `Option[]` and each run gets a heading. Do not mix the two shapes in
-one array: the first entry decides how the whole array is read.
+one array: the first entry decides how the whole array is read. Groups, descriptions and the clear
+control come with the same `Option<T>` the combobox uses.
 
-## Clearable
+### Clearable
 
 <Preview demo={clearableDemo} />
 
@@ -83,7 +90,7 @@ that reports one when nothing is selected pushes the check onto every caller.
 The clear control sits beside the trigger rather than inside it. The trigger is a `<button>`, and a
 button nested in a button is invalid HTML that browsers recover from by dropping one of the two.
 
-## Options from a request
+### Options from a request
 
 <Preview demo={loadingDemo} />
 
@@ -93,7 +100,13 @@ already listed and announces `loadingMessage`; a list that ends up with no optio
 `emptyMessage` instead. Both are drawn as an option nothing can pick, because a listbox may own
 nothing else, and both are spoken only while the list is open.
 
-## Forms
+### Disabled and invalid
+
+`disabled` blocks the trigger and hides the clear control. A disabled option stays in the list and
+cannot be picked. `aria-invalid` is put on the trigger, where shadcn's select draws its invalid
+state.
+
+### Forms
 
 <Preview demo={formDemo} />
 
@@ -109,15 +122,6 @@ dialog, a sticky toolbar. `required` blocks submission while nothing is selected
 > from constraint validation and `required` on one does nothing at all. It stays out of the tab
 > order and out of the accessibility tree; the only thing that reaches it is the browser's own
 > validation message.
-
-## Import
-
-```svelte
-<script lang="ts">
-	import Select from '#lib/components/coral/kit/select/select.svelte';
-	import type { Option } from '#lib/components/coral/lib/options.js';
-</script>
-```
 
 ## Props
 
@@ -160,6 +164,22 @@ Shared with the combobox, from `#lib/components/coral/lib/options.js`:
 | `description` | `string`   | Second line under the label.                                  |
 | `keywords`    | `string[]` | Search synonyms. Read by the combobox; ignored by the select. |
 
+## Keyboard
+
+Focus stays on the trigger the whole time; the open list follows it through
+`aria-activedescendant`.
+
+| Key                           | Action                                                                              |
+| ----------------------------- | ----------------------------------------------------------------------------------- |
+| `Enter` / `Space` / `↓` / `↑` | On the closed trigger: opens the list.                                              |
+| A letter                      | Selects the option whose label starts with it while shut; highlights it while open. |
+| `↓` / `↑`                     | Highlights the next or previous option.                                             |
+| `Page Down` / `Page Up`       | Moves the highlight ten options.                                                    |
+| `Home` / `End`                | Highlights the first or last option.                                                |
+| `Enter` / `Space`             | Picks the highlighted option and closes the list.                                   |
+| `Escape` / `Alt` + `↑`        | Closes the list without picking.                                                    |
+| `Tab`                         | Closes the list and moves on.                                                       |
+
 ## Accessibility
 
 The primitive owns the listbox semantics, roving focus and typeahead. Coral adds three things:
@@ -178,8 +198,53 @@ The primitive owns the listbox semantics, roving focus and typeahead. Coral adds
   reachable by keyboard.
 
 `id`, `aria-label`, `aria-labelledby`, `aria-describedby` and `aria-invalid` go to the trigger, which
-is what a `<Label for>` or a form library's control hands out.
+is what a `<Label for>` or a form library's control hands out. A list that is loading, or empty,
+says so inside itself and through a live region, seen and heard, the way the combobox does.
+
+## Customizing
+
+`class` lands on the trigger and `contentClass` on the dropdown; `size` picks the primitive's
+trigger height.
+
+### Snippets
 
 The `trigger` snippet replaces the label, not the button: the chevron and the trigger element
 belong to the primitive. For a trigger that is not a button-with-a-label at all, use the combobox's
-`trigger` snippet, which replaces the whole element.
+`trigger` snippet, which replaces the whole element. The `option` snippet replaces the body of each
+row and keeps the check.
+
+### Project-wide defaults
+
+A project states its own `placeholder`, `emptyMessage`, `loadingMessage` and `clearLabel` once,
+under `'kit/select'` in [`setCoralDefaults`](/docs/conventions#project-wide-defaults); a prop
+passed at a call site still wins.
+
+### The pieces
+
+The select is drawn with shadcn's `select` and `button`, and reads `lib/options` for the option
+shapes, `lib/list-status` and `lib/live-region` for the loading and empty rows, and
+`lib/hidden-field` for the field that submits. Dropping to the raw shadcn select means writing back
+the label derivation, the index keys that keep `T` intact, the `onchange` that ignores
+programmatic assignments, the clear control, the fallback name and the combobox role.
+
+## Select or combobox?
+
+They are not interchangeable and the boundary is worth stating once:
+
+| Use            | When                                                                             |
+| -------------- | -------------------------------------------------------------------------------- |
+| **`select`**   | The list is short and known - a status, a role, a priority. No search.           |
+| **`combobox`** | The list is long, needs a search box, comes from the server, or is multi-select. |
+
+Both open a `listbox` of `option`s. The difference is the trigger: a select's is a button, nothing
+to type into, and the platform's own typeahead while it is focused and shut. A combobox's is a text
+input, which announces itself as editable and sets the expectation that typing narrows the list.
+
+That expectation is the whole point when there is a search behind it, and a liability when there is
+not. Stripping the search out of a combobox leaves a text field that ignores what you type into it.
+
+**There is no `type="multiple"` here, on purpose.** A multi-select is not a select with one more
+prop: it needs a checkbox per row, badges in the trigger, and, as soon as the list is long enough
+for anyone to want more than two of its entries, a search box. That component is the combobox.
+Multiple selection arrives with search attached; keeping it out of `select` costs no one anything
+and keeps this component the size of the problem it solves.
