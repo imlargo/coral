@@ -11,6 +11,9 @@
 	import ThemeStrip from '#lib/features/home/ThemeStrip.svelte';
 	import { resolvePathname } from '#lib/utils/paths.js';
 
+	/** The prose column every section but the showcase keeps. */
+	const column = 'mx-auto w-full max-w-screen-xl px-4 sm:px-6';
+
 	const latest = $derived<string | undefined>(page.data.release?.latest);
 	const dateFormat = new Intl.DateTimeFormat('en-US', {
 		month: 'short',
@@ -75,39 +78,43 @@
 	<meta name="description" content={config.branding.seo.description} />
 </svelte:head>
 
-<div class="mx-auto grid max-w-screen-xl gap-20 px-4 pt-16 pb-24 sm:px-6 md:gap-28 md:pt-24">
-	<section aria-labelledby="hero-title" class="grid max-w-3xl gap-6">
-		{#if latest}
-			<Badge href={resolvePathname('/docs/changelog')} variant="outline">
-				What's new
-				<span class="text-muted-foreground">
-					<time datetime={latest}>{dateFormat.format(new Date(`${latest}T00:00:00Z`))}</time>
-				</span>
-				<ArrowRightIcon />
-			</Badge>
-		{/if}
-		<h1 id="hero-title" class="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
-			The components you were going to build on shadcn-svelte anyway.
-		</h1>
-		<p class="max-w-2xl text-lg text-pretty text-muted-foreground">
-			A combobox that folds accents, a confirm dialog that survives a failed request, a date range
-			that waits for its end. Installed as source with the shadcn-svelte CLI, and styled by your
-			theme.
-		</p>
-		<div class="flex flex-wrap gap-3">
-			<Button href={resolvePathname('/docs/installation')}>Get started</Button>
-			<Button href={resolvePathname('/docs/components')} variant="outline">
-				Browse components
-			</Button>
+<div class="grid gap-20 pt-16 pb-24 md:gap-28 md:pt-24">
+	<section aria-labelledby="hero-title" class="{column} grid gap-6">
+		<div class="grid max-w-3xl gap-6">
+			{#if latest}
+				<Badge href={resolvePathname('/docs/changelog')} variant="outline">
+					What's new
+					<span class="text-muted-foreground">
+						<time datetime={latest}>{dateFormat.format(new Date(`${latest}T00:00:00Z`))}</time>
+					</span>
+					<ArrowRightIcon />
+				</Badge>
+			{/if}
+			<h1 id="hero-title" class="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
+				The components you were going to build on shadcn-svelte anyway.
+			</h1>
+			<p class="max-w-2xl text-lg text-pretty text-muted-foreground">
+				A combobox that folds accents, a confirm dialog that survives a failed request, a date range
+				that waits for its end. Installed as source with the shadcn-svelte CLI, and styled by your
+				theme.
+			</p>
+			<div class="flex flex-wrap gap-3">
+				<Button href={resolvePathname('/docs/installation')}>Get started</Button>
+				<Button href={resolvePathname('/docs/components')} variant="outline">
+					Browse components
+				</Button>
+			</div>
+			<CommandLine
+				command="pnpm dlx shadcn-svelte@latest add {itemUrl('kit-combobox')}"
+				class="max-w-2xl overflow-hidden rounded-lg border"
+			/>
 		</div>
-		<CommandLine
-			command="pnpm dlx shadcn-svelte@latest add {itemUrl('kit-combobox')}"
-			class="max-w-2xl overflow-hidden rounded-lg border"
-		/>
 	</section>
 
+	<!-- Wider than the prose column on purpose: the collage is the page's main exhibit, and on a
+	     wide screen it takes the room for more columns rather than leaving the margins empty. -->
 	<section aria-labelledby="showcase-title" class="grid gap-6">
-		<div class="flex flex-wrap items-end justify-between gap-4">
+		<div class="{column} flex flex-wrap items-end justify-between gap-4">
 			<div class="grid max-w-2xl gap-2">
 				<h2 id="showcase-title" class="text-2xl font-semibold tracking-tight">Try it here</h2>
 				<p class="text-muted-foreground">
@@ -117,10 +124,12 @@
 			</div>
 			<ThemeStrip />
 		</div>
-		<Showcase />
+		<div class="px-2 sm:px-4">
+			<Showcase />
+		</div>
 	</section>
 
-	<section aria-labelledby="resolves-title" class="grid gap-8">
+	<section aria-labelledby="resolves-title" class="{column} grid gap-8">
 		<div class="grid max-w-2xl gap-2">
 			<h2 id="resolves-title" class="text-2xl font-semibold tracking-tight">What Coral resolves</h2>
 			<p class="text-muted-foreground">
@@ -145,7 +154,7 @@
 		</ul>
 	</section>
 
-	<section aria-labelledby="examples-title">
+	<section aria-labelledby="examples-title" class={column}>
 		<Card.Root>
 			<Card.Header>
 				<Card.Title id="examples-title" class="text-xl">One product, several screens</Card.Title>
@@ -163,7 +172,7 @@
 		</Card.Root>
 	</section>
 
-	<section aria-labelledby="start-title" class="grid gap-8">
+	<section aria-labelledby="start-title" class="{column} grid gap-8">
 		<h2 id="start-title" class="text-2xl font-semibold tracking-tight">Start with one command</h2>
 		<ol class="grid gap-6 lg:grid-cols-3">
 			{#each steps as step, index (step.title)}
