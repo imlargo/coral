@@ -2,6 +2,7 @@
 title: Gauge
 description: A reading inside a known range, drawn as an arc - disk used, a quota, a score - and spoken as the number it shows.
 group: Kit
+category: Data display
 ---
 
 <script lang="ts">

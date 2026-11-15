@@ -2,6 +2,7 @@
 title: Lightbox
 description: Images and videos full screen, moved through by keyboard, touch or pointer, with the reader told where they are and returned to the thumbnail they left.
 group: Kit
+category: Files and media
 ---
 
 <script lang="ts">

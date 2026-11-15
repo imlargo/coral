@@ -2,6 +2,7 @@
 title: Relative time
 description: Timestamps like 5 minutes ago that stay true, in the reader's language, without a timer per second.
 group: Kit
+category: Data display
 ---
 
 <script lang="ts">

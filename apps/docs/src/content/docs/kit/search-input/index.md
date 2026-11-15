@@ -2,6 +2,7 @@
 title: Search input
 description: A search field that debounces, deduplicates, clears with Escape, and leaves dialogs open.
 group: Kit
+category: Inputs
 ---
 
 <script lang="ts">

@@ -2,6 +2,7 @@
 title: Copy button
 description: Copies text to the clipboard, says so out loud, and says so when it could not.
 group: Kit
+category: Actions and overlays
 ---
 
 <script lang="ts">

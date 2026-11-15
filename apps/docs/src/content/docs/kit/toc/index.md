@@ -2,6 +2,7 @@
 title: Table of contents
 description: A table of contents that highlights the section being read, including the last one.
 group: Kit
+category: Navigation
 ---
 
 <script lang="ts">

@@ -2,6 +2,7 @@
 title: Combobox
 description: A select with a search box, filtering the way accented text is actually typed.
 group: Kit
+category: Inputs
 ---
 
 <script lang="ts">

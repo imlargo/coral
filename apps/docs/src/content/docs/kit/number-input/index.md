@@ -2,6 +2,7 @@
 title: Number input
 description: A number field with steppers, bounds that hold, and arithmetic that stays exact.
 group: Kit
+category: Inputs
 ---
 
 <script lang="ts">

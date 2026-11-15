@@ -2,6 +2,7 @@
 title: Show more
 description: Clamps long content to a few lines, and only offers to expand what actually overflows.
 group: Kit
+category: Data display
 ---
 
 <script lang="ts">
