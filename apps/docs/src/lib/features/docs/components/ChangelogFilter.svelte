@@ -28,7 +28,8 @@
 			let visible = 0;
 			for (const entry of day.querySelectorAll<HTMLElement>('.docs-changelog-entry')) {
 				const match =
-					(!name || entry.dataset.name === name) && (!breaking || entry.dataset.kind === 'breaking');
+					(!name || entry.dataset.name === name) &&
+					(!breaking || entry.dataset.kind === 'breaking');
 				entry.hidden = !match;
 				if (match) visible++;
 			}
