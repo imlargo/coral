@@ -4,53 +4,95 @@ description: An ergonomics layer on top of shadcn-svelte, installed into the pro
 group: Getting started
 ---
 
-Coral is an open-source ergonomics layer on top of shadcn-svelte. It does one thing: remove the
-code that gets rewritten in every project (the combobox with search, the date picker with ranges,
-the confirm dialog that waits on a request) and hand it over already resolved, without closing the
-door on taking it apart.
+shadcn-svelte gives a project primitives: a popover, a command menu, a calendar, a dialog. Coral
+gives it the components every product then builds out of them: a combobox whose search finds
+`Açaí` when someone types `acai`, a date picker that waits for the end of a range before closing, a
+confirm dialog that waits on the request and stays open when it fails.
 
-It is not a design system, not a fork of shadcn, not a primitives library, and not an npm package.
-It is a folder - installed one component at a time from
-[Coral's registry](/docs/installation), or copied whole.
+Each one is installed with the shadcn-svelte CLI you already use, lands in your project as source
+next to shadcn's `ui/`, and from then on is your code.
 
-## The three boundaries
+## What Coral is
 
-**Coral defines no appearance.** No colors, no typography, no shadows, no radii. Everything visual
-comes from the project's shadcn theme, so Coral only ever uses layout utilities: `flex`, `gap-*`,
-`w-full`. A component that hardcodes a size or a color has already failed.
+- **A registry of components, not a package.** There is no `coral` dependency in your
+  `package.json`. `shadcn-svelte add` copies a component's files into
+  `src/lib/components/coral/`, with the primitives and shared modules it needs.
+- **Behavior, not appearance.** Coral writes no colors, radii, shadows or type sizes. It composes
+  shadcn primitives and draws everything else with your theme's tokens, so it looks like the rest of
+  your app because it is styled by the same theme. Try the palette menu in the navbar: every page
+  and demo here follows it.
+- **Generic.** No component knows about invoices, students or tickets. It takes options, values and
+  callbacks, and your `features/` decide what they mean.
 
-**Coral knows no domain.** No `Invoice`, no `Student`, no `Contract`. Domain lives in the
-consuming project's `features/`.
+## What it resolves
 
-**Coral imports in one direction only.** `blocks/` composes `kit/`, `kit/` composes shadcn
-primitives and other `kit/`. Never the reverse, never the underlying headless library
-(`bits-ui`) directly, never project code. And nothing is duplicated: if two components need the
-same logic, it gets extracted into a third one or into `lib/`.
+The work Coral takes off your hands is the part that is easy to get wrong and tedious to get right:
+filtering that folds accents, keyboard navigation, focus that goes back where it came from,
+announcements for screen readers, loading and empty states inside the list, a handler that can fail
+without losing what the user typed. [Why Coral](/docs/why-coral) goes through it case by case.
+
+## How it works
+
+1. **Start from shadcn-svelte.** Any project with a `components.json` and the `ui/` folder the
+   shadcn-svelte CLI writes is ready. [Installation](/docs/installation) covers SvelteKit and a
+   plain Svelte + Vite project.
+2. **Add a component.** One command per component, printed on its page for your package manager.
+   It brings the primitives the component composes, in your style, and rewrites its imports to your
+   aliases.
+3. **Own it.** The files are yours to read, edit and commit. Updating is the same command again, a
+   decision you make per component. [Ownership and updates](/docs/ownership) explains the trade.
+
+```bash
+pnpm dlx shadcn-svelte@latest add https://coral.imlargo.dev/r/kit-combobox.json
+```
+
+```svelte
+<script lang="ts">
+	import Combobox from '#lib/components/coral/kit/combobox/combobox.svelte';
+
+	const fruits = [
+		{ value: 'acai', label: 'Açaí' },
+		{ value: 'guava', label: 'Guava' },
+		{ value: 'lychee', label: 'Lychee' }
+	];
+
+	let fruit = $state<string>();
+</script>
+
+<Combobox options={fruits} bind:value={fruit} placeholder="Pick a fruit..." />
+```
+
+## The boundaries
+
+Three rules keep the folder safe to drop into any project. They are why Coral can be copied into
+yours without bringing a look, a data model or a dependency graph with it.
+
+**No appearance.** Only layout utilities (`flex`, `gap-*`, `w-full`) and, for state no primitive
+draws, such as a focus ring or a drag target, the theme's own tokens (`border-ring`, `bg-accent`).
+A component that hardcodes a color or a size has failed. [Theming](/docs/theming) shows what that
+buys.
+
+**No domain.** Coral knows options, values, files, dates and handlers. What they stand for in your
+product lives in your code.
+
+**One-way imports.** A component imports shadcn primitives, other Coral components and Coral's
+`lib/`, and nothing else from your project: never the headless library underneath (`bits-ui`),
+never your types. [Architecture](/docs/architecture) lays out the layers.
 
 ## What earns a place
 
-A component enters Coral only after the same pattern has been written **twice** in real production
-work. An app-level composition (a `block`) waits for **three**.
+A component enters Coral only after the same pattern has been written twice in real production
+work. What it contributes has to be resolved behavior; a wrapper that only saves typing does not
+belong. That is why the catalogue grows slowly, and why each page says what the component handles
+for you before it lists a single prop.
 
-What Coral contributes when it composes is resolved behavior, not syntactic sugar: filtering,
-keyboard navigation, shared state through context, accessibility, debounce, loading and empty
-states. A composed component that only saves typing does not belong here.
+Every composed component also exposes its pieces. If a case goes beyond what a component offers,
+you drop down to the parts it is made of, or to the shadcn primitive, without starting over.
 
-Between two possible designs, the one with less API surface wins.
+## Where to go next
 
-## API shape
-
-There is no mandatory form: the interface is determined by the nature of the component.
-
-**Flat props** when a defensible canonical case exists and customization is marginal: avatar,
-badge, skeleton, empty state.
-
-**Composition** with sub-components and shared state through context when the parts vary
-independently and there is no real "normal case": responsive dialog, stepper, form dialog.
-
-**When in doubt, composition.** A flat API that falls short forces a rewrite of the component and
-breaks everyone already using it. A verbose composition only asks for a shortcut on top, and
-breaks nothing.
-
-The acid test: if a special case means abandoning Coral and rebuilding from raw shadcn, Coral
-failed. Every component exposes its pieces.
+- [Components](/docs/components): every component, grouped by what it does.
+- [Installation](/docs/installation): requirements and the first component, for SvelteKit or Vite.
+- [Conventions](/docs/conventions): the rules every component follows, so one you have not used yet
+  behaves like the ones you have.
+- [FAQ](/docs/faq): the questions people ask before adopting it.

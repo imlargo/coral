@@ -1,7 +1,7 @@
 ---
 title: Changelog
 description: What changed in each component, version by version, newest first.
-group: Getting started
+group: Resources
 ---
 
 <script lang="ts">
@@ -10,7 +10,7 @@ group: Getting started
 
 Every component carries its own version, in the header of each of its files and in `coral.json`,
 so there is no single Coral release to read about. Find the `@version` your copy reports, then read
-the entries for that component above it: they are what [updating](/docs/installation#updating)
+the entries for that component above it: they are what [updating](/docs/ownership#updating)
 brings in.
 
 Entries are grouped by the day they landed. A breaking change is marked as one and says how to
