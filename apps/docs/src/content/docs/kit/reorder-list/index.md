@@ -2,7 +2,6 @@
 title: Reorder list
 description: Drag to reorder with a mouse, a finger or the keyboard - and persist once per drop.
 group: Kit
-category: Navigation
 ---
 
 <script lang="ts">

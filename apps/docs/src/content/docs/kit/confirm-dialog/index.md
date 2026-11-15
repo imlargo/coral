@@ -2,7 +2,6 @@
 title: Confirm dialog
 description: Are you sure? - with the request it guards, and what happens when that request fails.
 group: Kit
-category: Actions and overlays
 ---
 
 <script lang="ts">

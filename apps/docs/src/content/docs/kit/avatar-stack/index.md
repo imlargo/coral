@@ -2,7 +2,6 @@
 title: Avatar stack
 description: Overlapping avatars with a count for the rest - and a list a screen reader can read.
 group: Kit
-category: Data display
 ---
 
 <script lang="ts">

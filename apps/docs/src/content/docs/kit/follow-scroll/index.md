@@ -2,7 +2,6 @@
 title: Follow scroll
 description: A scroller that stays at the end while new content arrives - and stops the moment the reader scrolls away.
 group: Kit
-category: Navigation
 ---
 
 <script lang="ts">

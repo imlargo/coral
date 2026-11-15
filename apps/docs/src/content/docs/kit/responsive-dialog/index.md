@@ -2,7 +2,6 @@
 title: Responsive dialog
 description: A dialog on wide screens and a drawer on narrow ones, written once.
 group: Kit
-category: Actions and overlays
 ---
 
 <script lang="ts">

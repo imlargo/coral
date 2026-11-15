@@ -2,7 +2,6 @@
 title: File upload
 description: Picked files sent a few at a time, each with its real progress, its own cancel and retry, and a tally at the end.
 group: Kit
-category: Files and media
 ---
 
 <script lang="ts">

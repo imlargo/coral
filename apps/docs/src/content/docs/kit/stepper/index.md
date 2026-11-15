@@ -2,7 +2,6 @@
 title: Stepper
 description: Multi-step flows with validation that waits, steps that cannot be skipped, and focus that follows.
 group: Kit
-category: Navigation
 ---
 
 <script lang="ts">

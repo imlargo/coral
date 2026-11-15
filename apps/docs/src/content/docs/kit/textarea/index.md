@@ -2,7 +2,6 @@
 title: Textarea
 description: A textarea that grows with its text, up to a line count you set, with a counter that agrees with the limit.
 group: Kit
-category: Inputs
 ---
 
 <script lang="ts">

@@ -2,7 +2,6 @@
 title: Tags input
 description: A field that turns typed and pasted text into tags, with one rule for both.
 group: Kit
-category: Inputs
 ---
 
 <script lang="ts">

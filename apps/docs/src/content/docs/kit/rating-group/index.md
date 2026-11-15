@@ -2,7 +2,6 @@
 title: Rating group
 description: Stars you can pick and stars you can only read. Native radios underneath, so the keyboard, the form and the screen reader come for free.
 group: Kit
-category: Inputs
 ---
 
 <script lang="ts">

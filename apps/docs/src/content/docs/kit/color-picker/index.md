@@ -2,7 +2,6 @@
 title: Color picker
 description: A colour from a square, a hue strip, a hex or a swatch - bound as the hex a server stores, and reachable from the keyboard on every part.
 group: Kit
-category: Inputs
 ---
 
 <script lang="ts">

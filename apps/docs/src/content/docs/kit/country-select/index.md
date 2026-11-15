@@ -2,7 +2,6 @@
 title: Country select
 description: Every country, named and sorted in the reader's language, and found by its English name or its code.
 group: Kit
-category: Inputs
 ---
 
 <script lang="ts">

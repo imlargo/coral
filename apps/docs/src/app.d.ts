@@ -21,7 +21,7 @@ declare global {
 		interface PageData {
 			/** A docs page's table of contents, from the headings svmd read at build time. */
 			toc?: import('#lib/components/coral/kit/toc/headings.js').TocHeading[];
-			/** What the changelog says lately, from the root layout: the What's new pill and badges. */
+			/** What the changelog says lately, from the root layout: the What's new pill. */
 			release?: import('#lib/features/docs/releases.js').ReleaseSummary;
 		}
 		// interface PageState {}
