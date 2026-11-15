@@ -2,6 +2,7 @@
 title: Avatar
 description: A person's image with an initials fallback, wired in one line.
 group: Kit
+category: Data display
 ---
 
 <script lang="ts">

@@ -2,6 +2,7 @@
 title: Inline edit
 description: Text that turns into a field in place - rename a project, a column, a file.
 group: Kit
+category: Inputs
 ---
 
 <script lang="ts">

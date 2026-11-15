@@ -2,6 +2,7 @@
 title: File input
 description: Pick files by click or drop, validate them, show what was picked. An input, not an uploader.
 group: Kit
+category: Files and media
 ---
 
 <script lang="ts">

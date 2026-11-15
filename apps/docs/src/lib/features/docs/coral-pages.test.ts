@@ -11,6 +11,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { isComponent } from 'coral/registry.config.js';
 import manifest from '#lib/components/coral/coral.json' with { type: 'json' };
+import { COMPONENT_CATEGORIES } from './categories.ts';
 
 const CONTENT = path.resolve(import.meta.dirname, '../../../content/docs');
 
@@ -31,6 +32,9 @@ describe('docs pages', () => {
 			expect(frontmatter, `${name}/index.md has no frontmatter`).toBeDefined();
 			expect(frontmatter).toContain(`title: ${entry.title}`);
 			expect(frontmatter).toContain(`description: ${entry.description}`);
+
+			const category = /^category: (.+)$/m.exec(frontmatter ?? '')?.[1];
+			expect(COMPONENT_CATEGORIES, `${name}/index.md needs a known category`).toContain(category);
 		}
 	);
 });

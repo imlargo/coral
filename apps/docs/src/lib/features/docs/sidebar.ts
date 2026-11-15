@@ -1,4 +1,5 @@
 import { getCollection } from '#lib/features/docs/content.js';
+import { COMPONENT_CATEGORIES } from '#lib/features/docs/categories.js';
 import type { DocsFrontmatter, SidebarGroup, SidebarLink } from '#lib/features/docs/types.js';
 
 /** The pages that come first, in reading order. They barely change, so they are not derived. */
@@ -12,30 +13,38 @@ const GETTING_STARTED: SidebarGroup = {
 	]
 };
 
-// Every other page is listed under the `group` in its frontmatter: add `kit/<name>/index.md` and
-// it appears, with no second place to register it. Sorted by folder, then title, which keeps a
-// `product/` vertical's pages together.
+// Every other page is listed by its frontmatter: add `kit/<name>/index.md` and it appears, with no
+// second place to register it. A component page goes under its `category`, anything else under its
+// `group`.
 const others = getCollection('docs')
 	.map((entry) => {
 		const data = entry.data as unknown as DocsFrontmatter;
 		return {
 			title: data.title,
-			group: data.group,
-			folder: entry.slug.slice(0, entry.slug.lastIndexOf('/')),
+			section: data.category ?? data.group,
 			href: entry.slug ? `/docs/${entry.slug}` : '/docs'
 		};
 	})
-	.filter((page) => page.group !== GETTING_STARTED.title)
-	.sort((a, b) => a.folder.localeCompare(b.folder) || a.title.localeCompare(b.title));
+	.filter((page) => page.section !== GETTING_STARTED.title)
+	.sort((a, b) => a.title.localeCompare(b.title));
 
-const groupTitles = [...new Set(others.map((page) => page.group))];
+const sections = [
+	...COMPONENT_CATEGORIES.filter((title) => others.some((page) => page.section === title)),
+	...new Set(
+		others
+			.map((page) => page.section)
+			.filter((title) => !(COMPONENT_CATEGORIES as readonly string[]).includes(title))
+	)
+];
 
 export const DOCS_SIDEBAR_GROUPS: SidebarGroup[] = [
 	GETTING_STARTED,
-	...groupTitles.map((title) => ({
-		title,
-		items: others.filter((page) => page.group === title).map(({ title, href }) => ({ title, href }))
-	}))
+	...sections.map((title) => {
+		const items = others
+			.filter((page) => page.section === title)
+			.map(({ title, href }) => ({ title, href }));
+		return { title, items, count: items.length };
+	})
 ];
 
 // Flat, ordered list of every page — same order as the sidebar, groups included, just without the

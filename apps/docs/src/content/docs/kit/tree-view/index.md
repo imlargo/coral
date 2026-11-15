@@ -2,6 +2,7 @@
 title: Tree view
 description: A hierarchy the keyboard can walk - the WAI-ARIA tree pattern, from a plain array.
 group: Kit
+category: Data display
 ---
 
 <script lang="ts">

@@ -2,6 +2,7 @@
 title: Breadcrumbs
 description: A trail that fits on one line at any width, folding its middle into a menu, with the current page marked as the current page.
 group: Kit
+category: Navigation
 ---
 
 <script lang="ts">

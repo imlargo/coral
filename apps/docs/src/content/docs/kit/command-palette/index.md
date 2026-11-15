@@ -2,6 +2,7 @@
 title: Command palette
 description: ⌘K over your own actions - with recents, per-action shortcuts, and a run that can fail.
 group: Kit
+category: Actions and overlays
 ---
 
 <script lang="ts">

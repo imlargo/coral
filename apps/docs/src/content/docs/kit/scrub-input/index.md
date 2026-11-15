@@ -2,6 +2,7 @@
 title: Scrub input
 description: A number field whose label is a drag handle - drag it, type it, or step it with the arrow keys.
 group: Kit
+category: Inputs
 ---
 
 <script lang="ts">

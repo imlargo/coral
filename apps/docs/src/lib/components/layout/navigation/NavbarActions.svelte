@@ -3,10 +3,18 @@
 	import SunIcon from '@lucide/svelte/icons/sun';
 	import MoonIcon from '@lucide/svelte/icons/moon';
 	import { Button } from '#lib/components/ui/button/index.js';
+	import ThemeMenu from '#lib/components/layout/navigation/ThemeMenu.svelte';
 	import { config } from '#lib/config/app.js';
 </script>
 
-<Button variant="ghost" size="icon" onclick={toggleMode} aria-label="Toggle theme">
+<ThemeMenu />
+
+<Button
+	variant="ghost"
+	size="icon"
+	onclick={toggleMode}
+	aria-label={mode.current === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+>
 	{#if mode.current === 'dark'}
 		<SunIcon />
 	{:else}
@@ -15,7 +23,7 @@
 </Button>
 
 <Button
-	variant="outline"
+	variant="ghost"
 	size="icon"
 	href={config.links.github || undefined}
 	target="_blank"

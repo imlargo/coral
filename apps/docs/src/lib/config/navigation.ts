@@ -3,20 +3,8 @@ export interface NavLink {
 	href: string;
 }
 
-export interface NavGroup {
-	title: string;
-	items: NavLink[];
-}
-
-export type NavEntry = NavLink | NavGroup;
-
-export function isNavGroup(entry: NavEntry): entry is NavGroup {
-	return 'items' in entry;
-}
-
-// Add/remove entries here — the navbar derives from this list.
-// A plain entry renders as a link; one with `items` renders as a dropdown group.
-export const NAV_ITEMS: NavEntry[] = [
-	{ title: 'Home', href: '/' },
-	{ title: 'Docs', href: '/docs' }
+// The navbar and the mobile menu both read this list.
+export const NAV_ITEMS: NavLink[] = [
+	{ title: 'Docs', href: '/docs' },
+	{ title: 'Changelog', href: '/docs/changelog' }
 ];

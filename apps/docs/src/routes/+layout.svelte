@@ -5,8 +5,12 @@
 	import { config } from '#lib/config/app.js';
 	import type { LayoutProps } from './$types';
 	import Navbar from '#lib/components/layout/navigation/Navbar.svelte';
+	import SiteFooter from '#lib/components/layout/SiteFooter.svelte';
+	import { SiteTheme, setSiteTheme } from '#lib/features/theme/theme.svelte.js';
 
 	let { children }: LayoutProps = $props();
+
+	setSiteTheme(new SiteTheme());
 </script>
 
 <svelte:head>
@@ -23,12 +27,14 @@
 	Skip to main content
 </a>
 
-<div>
+<div class="flex min-h-svh flex-col">
 	<Navbar></Navbar>
 
-	<!-- Skip-link target only, not the `main` landmark: nested layouts (e.g. the docs
-	     sidebar's Sidebar.Inset) render their own `<main>`, and HTML forbids nesting two. -->
-	<div id="main-content" tabindex="-1">
+	<!-- Skip-link target only, not the `main` landmark: each nested layout renders its own `<main>`,
+	     beside the asides it keeps out of it, and HTML forbids nesting two. -->
+	<div id="main-content" tabindex="-1" class="flex-1">
 		{@render children?.()}
 	</div>
+
+	<SiteFooter />
 </div>
