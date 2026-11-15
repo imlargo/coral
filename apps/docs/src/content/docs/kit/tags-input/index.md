@@ -144,6 +144,9 @@ back in the field.
 | Any printable key      | On a tag         | Back to the field, with the character typed.           |
 | `Tab`                  | Anywhere         | The remove controls are real buttons, in order.        |
 
+While an input method is composing, `Enter` accepts its suggestion and adds nothing: the word is not
+finished yet.
+
 Arrow directions are read off the element, so they reverse inside an RTL subtree without being told.
 
 ## Import

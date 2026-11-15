@@ -18,6 +18,8 @@ migrate.
 
 ## 2026-11-14
 
+- `kit/tags-input` 1.2.1: Enter while an input method is composing is left to the input method,
+  instead of turning the half-typed word into a tag.
 - `kit/shortcut` 1.1.0: New `activate` clicks the button or link the shortcut is drawn in, after
   `onpress`, and does nothing while that control is disabled. A bound shortcut no longer fires, or
   takes the key from the browser, while a modal dialog it is not part of is open.
