@@ -24,6 +24,8 @@ import ActivityCalendar from './components/coral/kit/activity-calendar/activity-
 import Avatar from './components/coral/kit/avatar/avatar.svelte';
 import AvatarStack from './components/coral/kit/avatar-stack/avatar-stack.svelte';
 import Breadcrumbs from './components/coral/kit/breadcrumbs/breadcrumbs.svelte';
+import ColorPanel from './components/coral/kit/color-picker/color-panel.svelte';
+import ColorPicker from './components/coral/kit/color-picker/color-picker.svelte';
 import Combobox from './components/coral/kit/combobox/combobox.svelte';
 import CommandPalette from './components/coral/kit/command-palette/command-palette.svelte';
 import ConfirmDialog from './components/coral/kit/confirm-dialog/confirm-dialog.svelte';
@@ -130,6 +132,19 @@ const cases: [string, () => unknown][] = [
 					{ label: 'Environments', href: '/projects/api-gateway/environments' },
 					{ label: 'Deployments' }
 				]
+			})
+	],
+	['color-picker', () => draw(ColorPicker, { value: '#2563eb', 'aria-label': 'Brand colour' })],
+	[
+		'color-picker, open',
+		() => draw(ColorPicker, { value: '#2563eb', open: true, 'aria-label': 'Brand colour' })
+	],
+	[
+		'color-panel, with swatches',
+		() =>
+			draw(ColorPanel, {
+				value: '#2563eb',
+				swatches: ['#16a34a', { value: '#2563eb', label: 'Blue' }]
 			})
 	],
 	['combobox', () => draw(Combobox, { options: fruits, 'aria-label': 'Fruit' })],
