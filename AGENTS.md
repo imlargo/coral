@@ -21,7 +21,7 @@ project at `#lib/components/coral/` (`$lib/...` on SvelteKit 2), beside shadcn's
 Currently: `kit/{action-button, activity-calendar, avatar, avatar-stack, breadcrumbs, color-picker, combobox,
 command-palette, confirm-dialog, copy-button, country-select, date-picker, file-input, file-upload,
 follow-scroll, gauge, inline-edit, lightbox, number-input, password-input, phone-input, rating-group,
-relative-time, reorder-list, responsive-dialog, scrub-input, search-input, select, shortcut,
+relative-time, reorder-list, responsive-dialog, scrub-input, search-input, segmented-progress, select, shortcut,
 show-more, stepper, tags-input, textarea, timeline, toc, tree-view}`, over `lib/{action, announce, debounce, defaults, focus, fold,
 hidden-field, intl, keep-focus, list-status, live-region, number, number-field, options, scale, trigger}`. There
 is no `blocks/` or `product/` entry right now - both layers exist in the architecture below, waiting
