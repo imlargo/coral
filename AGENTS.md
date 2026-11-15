@@ -18,7 +18,7 @@ The repo is a pnpm workspace with two members: **`packages/coral`**, the library
 **`apps/docs`**, the site that documents it. Coral itself lives in
 **`packages/coral/src/lib/components/coral/`**, one self-contained folder that lands in the target
 project at `#lib/components/coral/` (`$lib/...` on SvelteKit 2), beside shadcn's `ui/`.
-Currently: `kit/{action-button, activity-calendar, avatar, avatar-stack, breadcrumbs, combobox,
+Currently: `kit/{action-button, activity-calendar, avatar, avatar-stack, breadcrumbs, color-picker, combobox,
 command-palette, confirm-dialog, copy-button, country-select, date-picker, file-input, file-upload,
 follow-scroll, gauge, inline-edit, lightbox, number-input, password-input, phone-input, rating-group,
 relative-time, reorder-list, responsive-dialog, scrub-input, search-input, select, shortcut,
