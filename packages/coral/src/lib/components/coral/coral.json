@@ -271,6 +271,12 @@
 			"shadcn": ["input-group", "spinner"],
 			"npm": ["@lucide/svelte"]
 		},
+		"kit/segmented-progress": {
+			"title": "Segmented progress",
+			"description": "Steps or levels drawn as a row of segments - an onboarding flow, a password's strength - read as progress or as a meter.",
+			"version": "1.0.0",
+			"shadcn": []
+		},
 		"kit/select": {
 			"title": "Select",
 			"description": "A short list of known options, with the trigger label, the value mapping and the change signal already wired.",

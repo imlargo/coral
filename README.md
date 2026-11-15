@@ -132,7 +132,7 @@ and lose the alias and icon rewriting.
 
 ## Components
 
-Thirty-six in `kit/` so far. Each links to its full API, props table and live
+Thirty-seven in `kit/` so far. Each links to its full API, props table and live
 demos:
 
 - **[action-button](https://coral.imlargo.dev/docs/kit/action-button):** a button that waits on
@@ -209,6 +209,9 @@ demos:
 - **[search-input](https://coral.imlargo.dev/docs/kit/search-input):** debounced, deduplicated
   `onsearch`, a minimum length that clears instead of freezing results, and an Escape that does not
   close the dialog around it.
+- **[segmented-progress](https://coral.imlargo.dev/docs/kit/segmented-progress):** steps or levels
+  as a row of segments. An onboarding flow is a progressbar heard as "Step 2 of 4" with the current
+  step drawn wider; a password's strength is a meter heard as the word for its level.
 - **[select](https://coral.imlargo.dev/docs/kit/select):** a self-deriving trigger label, a `value`
   that keeps its own type instead of bits-ui's string keys, and an `onchange` that only fires on
   real user changes.

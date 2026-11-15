@@ -19,6 +19,12 @@ migrate.
 
 <ChangelogFilter />
 
+## 2026-11-15
+
+- `kit/segmented-progress` 1.0.0: new. Steps or levels drawn as a row of segments. As progress it
+  is a progressbar heard as "Step 2 of 4", with the current step drawn wider; as a meter it is lit
+  to a level and heard as the words given for it.
+
 ## 2026-11-14
 
 - `kit/tags-input` 1.2.1: Enter while an input method is composing is left to the input method,

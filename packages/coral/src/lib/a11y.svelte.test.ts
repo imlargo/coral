@@ -46,6 +46,7 @@ import RelativeTime from './components/coral/kit/relative-time/relative-time.sve
 import ReorderList from './components/coral/kit/reorder-list/reorder-list.svelte';
 import ScrubInput from './components/coral/kit/scrub-input/scrub-input.svelte';
 import SearchInput from './components/coral/kit/search-input/search-input.svelte';
+import SegmentedProgress from './components/coral/kit/segmented-progress/segmented-progress.svelte';
 import Select from './components/coral/kit/select/select.svelte';
 import Shortcut from './components/coral/kit/shortcut/shortcut.svelte';
 import ShowMore from './components/coral/kit/show-more/show-more.svelte';
@@ -236,6 +237,20 @@ const cases: [string, () => unknown][] = [
 	],
 	['scrub-input', () => draw(ScrubInput, { label: 'Width', value: 12 })],
 	['search-input', () => draw(SearchInput, { 'aria-label': 'Search', value: 'ki' })],
+	[
+		'segmented-progress',
+		() => draw(SegmentedProgress, { count: 4, value: 2, 'aria-label': 'Workspace setup' })
+	],
+	[
+		'segmented-progress, meter',
+		() =>
+			draw(SegmentedProgress, {
+				type: 'meter',
+				count: 4,
+				value: 3,
+				'aria-label': 'Password strength'
+			})
+	],
 	['select', () => draw(Select, { options: fruits, 'aria-label': 'Fruit' })],
 	['select, open', () => draw(Select, { options: fruits, open: true, 'aria-label': 'Fruit' })],
 	[
